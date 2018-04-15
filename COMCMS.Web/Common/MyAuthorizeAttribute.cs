@@ -84,7 +84,7 @@ namespace COMCMS.Web.Common
                     }
                     else
                     {
-                        context.Result = new RedirectResult("/AdminCP/Error/NotAuthorize");
+                        context.Result = new RedirectResult("/AdminCP/Index/NotAuthorize");
                         return;
                     }
                 }

@@ -21,7 +21,6 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     /// <summary>
     /// 后台上传文件帮助类
     /// </summary>
-    [Area("AdminCP")]
     public class UploadController : AdminBaseController
     {
         private readonly SystemSetting _attachsetting;

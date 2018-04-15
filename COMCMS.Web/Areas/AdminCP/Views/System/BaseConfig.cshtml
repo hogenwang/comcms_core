@@ -1,5 +1,235 @@
-﻿
+﻿@model COMCMS.Core.Config
 @{
-    
+    ViewBag.title = "编辑网站基本设置";
 }
-<h1>这是标题</h1>
+<div class="wrapper wrapper-content">
+    <div class="row">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editBaseConfigForm", @class = "form-horizontal m-t" }))
+        {
+            <div class="tabs-container">
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#tab-1" aria-expanded="true"> 站点基本设置</a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="#tab-2" aria-expanded="false"> 优化及其他设置</a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="#tab-3" aria-expanded="false"> 微信/商家高级对接设置</a>
+                    </li>
+                    <li class="">
+                        <a data-toggle="tab" href="#tab-4" aria-expanded="false"> 商品运费设置</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane active">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">站点名称：</label>
+                                <div class="col-sm-8">
+                                    <input id="SiteName" name="SiteName" minlength="2" maxlength="200" type="text" class="form-control" required aria-required="true" placeholder="请入输网站的名称" value="@Model.SiteName">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">站点URL：</label>
+                                <div class="col-sm-8">
+                                    <input id="SiteUrl" name="SiteUrl" maxlength="50" type="text" class="form-control" placeholder="请输网站的网址" value="@Model.SiteUrl">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">站点LOGO：</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <input id="SiteLogo" name="SiteLogo" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个网站LOGO" value="@Model.SiteLogo">
+                                        <span class="input-group-addon my-upload-span upload-img"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">站长邮箱：</label>
+                                <div class="col-sm-8">
+                                    <input id="SiteEmail" name="SiteEmail" maxlength="100" type="text" class="form-control" placeholder="站长邮箱" value="@Model.SiteEmail">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">公司电话：</label>
+                                <div class="col-sm-8">
+                                    <input id="SiteTel" name="SiteTel" maxlength="50" type="text" class="form-control" placeholder="请输入公司电话,400电话等" value="@Model.SiteTel">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">版权所有：</label>
+                                <div class="col-sm-8">
+                                    <textarea id="Copyright" name="Copyright" class="form-control" placeholder="网站底部版权所有,支持HTML">@Model.Copyright</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">关闭网站：</label>
+                                <div class="col-sm-8">
+                                    <label class="checkbox-inline i-checks">
+                                        <input type="checkbox" value="1" name="IsCloseSite" id="IsCloseSite" @(Model.IsCloseSite ? "checked = \"checked\"" : "")> 关闭网站（网站将显示已关闭）
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">关闭的原因：</label>
+                                <div class="col-sm-8">
+                                    <textarea id="CloseReason" name="CloseReason" class="form-control" placeholder="网站关闭时出现的提示信息,支持HTML">@Model.CloseReason</textarea>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">小程序显示清除缓存：</label>
+                                <div class="col-sm-8">
+                                    <label class="checkbox-inline i-checks">
+                                        <input type="checkbox" value="1" name="IsResetData" id="IsResetData" @(Model.IsResetData == 1 ? "checked = \"checked\"" : "")> 小程序显示清除缓存（小程序显示清除缓存）
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-2" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">首页关键字：</label>
+                                <div class="col-sm-8">
+                                    <input id="Keyword" name="Keyword" maxlength="200" type="text" class="form-control" placeholder="请输首页关键字，建议不同关键字以,（英文逗号）分隔" value="@Model.Keyword">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">首页描述：</label>
+                                <div class="col-sm-8">
+                                    <input id="Description" name="Description" minlength="2" maxlength="200" type="text" class="form-control" placeholder="请输网站描述，200字以内" value="@Model.Description">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">自定义首页标题：</label>
+                                <div class="col-sm-8">
+                                    <input id="IndexTitle" name="IndexTitle" minlength="2" maxlength="200" type="text" class="form-control" placeholder="默认按站点名称显示，如果希望更好优化，首页可以设置自定义标题" value="@Model.IndexTitle">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">在线QQ：</label>
+                                <div class="col-sm-8">
+                                    <textarea id="OnlineQQ" name="OnlineQQ" class="form-control" placeholder="每一行输入一个QQ号码,QQ号码跟昵称，使用“|”分割，如：『123456|张小姐』,多个请键入回车输入HTML">@Model.OnlineQQ</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-3" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="alert alert-info">
+                                微信高级对接，需要有微信高级验证，否则将有部分功能无法使用
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">公众号名称：</label>
+                                <div class="col-sm-8">
+                                    <input id="OfficialName" name="OfficialName" maxlength="50" type="text" class="form-control" placeholder="填写公众号名称" value="@Model.OfficialName">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">公众号原始ID：</label>
+                                <div class="col-sm-8">
+                                    <input id="OfficialOriginalId" name="OfficialOriginalId" maxlength="50" type="text" class="form-control" placeholder="填写公众号原始ID" value="@Model.OfficialOriginalId">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">公众平台微信号：</label>
+                                <div class="col-sm-8">
+                                    <input id="WexinAccount" name="WexinAccount" maxlength="50" type="text" class="form-control" placeholder="填写公众平台微信号" value="@Model.WexinAccount">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">ToKen：</label>
+                                <div class="col-sm-8">
+                                    <input id="Token" name="Token" maxlength="50" type="text" class="form-control" placeholder="ToKen值必须与公众平台对应" value="@Model.Token">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">AppId：</label>
+                                <div class="col-sm-8">
+                                    <input id="AppId" name="AppId" maxlength="50" type="text" class="form-control" placeholder="该公众号的AppId" value="@Model.AppId">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">AppSecret：</label>
+                                <div class="col-sm-8">
+                                    <input id="AppSecret" name="AppSecret" maxlength="50" type="text" class="form-control" placeholder="该公众号的AppSecret" value="@Model.AppSecret">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">EncodingAESKey：</label>
+                                <div class="col-sm-8">
+                                    <input id="EncodingAESKey" name="EncodingAESKey" maxlength="50" type="text" class="form-control" placeholder="该公众号的EncodingAESKey，如果有的话" value="@Model.EncodingAESKey">
+                                </div>
+                            </div>
+                            <div class="alert alert-info">
+                                以下是微信小程序、微信商家配置，请勿填成公众号设置
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">AppId：</label>
+                                <div class="col-sm-8">
+                                    <input id="WXAppId" name="WXAppId" maxlength="50" type="text" class="form-control" placeholder="微信小程序的AppId" value="@Model.WXAppId">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">AppSecret：</label>
+                                <div class="col-sm-8">
+                                    <input id="WXAppSecret" name="WXAppSecret" maxlength="50" type="text" class="form-control" placeholder="微信小程序的AppSecret" value="@Model.WXAppSecret">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">微信商家ID：</label>
+                                <div class="col-sm-8">
+                                    <input id="MCHId" name="MCHId" maxlength="50" type="text" class="form-control" placeholder="微信商家ID" value="@Model.MCHId">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">微信商家key：</label>
+                                <div class="col-sm-8">
+                                    <input id="MCHKey" name="MCHKey" maxlength="100" type="text" class="form-control" placeholder="微信商家key" value="@Model.MCHKey">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="tab-4" class="tab-pane">
+                        <div class="panel-body">
+                            <div class="alert alert-info">
+                                运费设置，仅针对商品订单
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">默认运费：</label>
+                                <div class="col-sm-8">
+                                    <input id="DefaultFare" name="DefaultFare" maxlength="50" type="text" class="form-control" placeholder="默认运费" value="@Model.DefaultFare">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">免运费金额：</label>
+                                <div class="col-sm-8">
+                                    <input id="MaxFreeFare" name="MaxFreeFare" maxlength="50" type="text" class="form-control" placeholder="满此最大免费运费金额后免运费，0为关闭" value="@Model.MaxFreeFare">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row white-bg">
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        }
+    </div>
+
+</div>
+<script>
+    $(function () {
+        DoPost("editBaseConfigForm");
+        //初始化上传控件
+        $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp" });
+    })
+</script>

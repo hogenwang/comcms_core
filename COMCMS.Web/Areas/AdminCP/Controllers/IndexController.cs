@@ -65,5 +65,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             return View();
         }
         #endregion
+
+        #region 显示没权限
+        [AllowAnonymous]
+        //显示没有权限
+        public IActionResult NotAuthorize()
+        {
+            return View();
+        }
+        #endregion
     }
 }

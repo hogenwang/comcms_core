@@ -10,7 +10,9 @@
     <link href="~/hplus/css/animate.min.css" rel="stylesheet" />
     <link href="~/hplus/css/login.css" rel="stylesheet" />
     <link href="~/hplus/js/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
-    
+    <link href="~/hplus/css/plugins/iCheck/custom.css" rel="stylesheet" />
+    <link href="~/js/treegrid/jquery.treegrid.css" rel="stylesheet" />
+    <link href="~/js/webuploader/webuploader.css" rel="stylesheet" />
     <environment names="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
@@ -22,6 +24,14 @@
         <script src="~/hplus/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
         <script src="~/hplus/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
         <script src="~/hplus/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+        <!-- Bootstrap table -->
+        <script src="~/js/treegrid/jquery.treegrid.min.js"></script>
+        <script src="~/js/treegrid/jquery.treegrid.bootstrap3.js"></script>
+        <script src="~/hplus/js/content.js?v=1.0.0"></script>
+        <script src="~/hplus/js/common.js"></script>
+        <script src="~/hplus/js/plugins/iCheck/icheck.min.js"></script>
+        <script src="~/js/webuploader/webuploader.min.js"></script>
+        <script src="~/js/uploader.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
@@ -44,6 +54,13 @@
         <script src="~/hplus/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
         <script src="~/hplus/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
         <script src="~/hplus/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+        <script src="~/js/treegrid/jquery.treegrid.min.js"></script>
+        <script src="~/js/treegrid/jquery.treegrid.bootstrap3.js"></script>
+        <script src="~/hplus/js/content.js?v=1.0.0"></script>
+        <script src="~/hplus/js/common.js"></script>
+        <script src="~/hplus/js/plugins/iCheck/icheck.min.js"></script>
+        <script src="~/js/webuploader/webuploader.min.js"></script>
+        <script src="~/js/uploader.js"></script>
     </environment>
 </head>
 <body class="gray-bg">
@@ -53,6 +70,12 @@
         function closethisdialog() {
             parent.layer.close(index);
         }
+        $(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        })
     </script>
 </body>
 </html>
