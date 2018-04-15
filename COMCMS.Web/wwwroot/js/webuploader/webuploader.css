@@ -1,0 +1,77 @@
+.webuploader-container {
+	position: relative;
+    height:100%
+}
+.webuploader-container label{
+    margin-bottom:0px
+}
+.webuploader-element-invisible {
+	position: absolute !important;
+	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px,1px,1px,1px);
+}
+.webuploader-pick {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	background: #00b7ee;
+	padding: 0px 15px;
+	color: #fff;
+	text-align: center;
+	border-radius: 3px;
+    height:100% !important;
+	overflow: hidden;
+}
+.webuploader-pick-hover {
+	background: #00a2d4;
+}
+
+.webuploader-pick-disable {
+	opacity: 0.6;
+	pointer-events:none;
+}
+
+.my-upload-span {
+    padding: 0px;
+    overflow:hidden;
+    position:relative;
+}
+
+    .my-upload-span lable {
+        margin-bottom: 0px
+    }
+/*=====================以下部分是WebUploader必须的====================*/
+.webuploader-container {
+    position: relative;
+}
+
+.webuploader-element-invisible {
+    position: absolute !important;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px,1px,1px,1px);
+}
+
+.webuploader-pick {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    line-height: 30px;
+    height: 30px;
+    cursor: pointer;
+    background: #18a689;
+    color: #fff;
+    text-align: center;
+    overflow: hidden;
+    zoom: 1;
+    *display: inline;
+}
+
+.webuploader-pick-hover {
+    background: #18a689;
+}
+
+.webuploader-pick-disable {
+    opacity: 0.6;
+    pointer-events: none;
+}
+/*=====================以上部分是WebUploader必须的====================*/

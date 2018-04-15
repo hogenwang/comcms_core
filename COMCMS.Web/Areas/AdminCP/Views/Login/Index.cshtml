@@ -1,0 +1,77 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理平台登录</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/hplus/css/style.css" rel="stylesheet" />
+    <link href="~/hplus/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/hplus/css/animate.min.css" rel="stylesheet" />
+    <link href="~/hplus/css/login.css" rel="stylesheet" />
+
+    <!--[if lt IE 8]>
+    <meta http-equiv="refresh" content="0;Ie" />
+    <![endif]-->
+    <script>if (window.top !== window.self) { window.top.location = window.location; }</script>
+    <script src="~/js/des.js"></script>
+    <script>var encrypt_key = '@ViewBag.key';</script>
+</head>
+<body class="gray-bg">
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div class="text-center m-b-md" style="font-size:64px">
+                COMCMS
+            </div>
+            <h3>欢迎使用 COMCMS 后台管理平台</h3>
+            <form asp-controller="Login" asp-area="AdminCP" asp-action="Login"  id="loginForm" class="m-t" role="form" method="post" asp-antiforgery="true">
+                <div class="form-group">
+                    <input type="text" name="username" id="username" class="form-control" placeholder="用户名" required="">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" id="password" class="form-control" placeholder="密码" required="">
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
+                <p class="text-muted text-center">
+                    COMCMS © 2014-@DateTime.Now.Year
+                </p>
+            </form>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/validation/jquery.validate.js"></script>
+        <script src="~/js/validation/messages_zh.js"></script>
+        <script src="~/js/layer/layer.js"></script>
+        <script src="~/js/jquery.form.js"></script>
+        <script src="~/js/rtpost.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/validation/jquery.validate.min.js"></script>
+        <script src="~/js/validation/messages_zh.min.js"></script>
+        <script src="~/js/layer/layer.js"></script>
+        <script src="~/js/jquery.form.min.js"></script>
+        <script src="~/js/rtpost.js"></script>
+    </environment>
+    <script>
+        $(function () {
+            var rules = {
+                password: {
+                    required: true,
+                    minlength: 5
+                }
+            };
+            DoAdminLogin("loginForm", rules);
+        });
+    </script>
+
+</body>
+</html>

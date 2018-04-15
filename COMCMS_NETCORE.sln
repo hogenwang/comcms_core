@@ -5,7 +5,11 @@ VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMCMS.Web", "COMCMS.Web\COMCMS.Web.csproj", "{BEE79494-B5B8-49D0-8040-818AE601C800}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COMCMS.Core", "COMCMS.Core\COMCMS.Core.csproj", "{280AD487-F41E-42F7-95E7-187164485AD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMCMS.Core", "COMCMS.Core\COMCMS.Core.csproj", "{280AD487-F41E-42F7-95E7-187164485AD4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COMCMS.Common", "COMCMS.Common\COMCMS.Common.csproj", "{B282EB59-2330-4834-8F0A-6369F5A0288B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XCoder(代码生成器)", "XCoder\XCoder(代码生成器).csproj", "{71539325-194B-4D56-8D88-562B33004406}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{280AD487-F41E-42F7-95E7-187164485AD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{280AD487-F41E-42F7-95E7-187164485AD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{280AD487-F41E-42F7-95E7-187164485AD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B282EB59-2330-4834-8F0A-6369F5A0288B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B282EB59-2330-4834-8F0A-6369F5A0288B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B282EB59-2330-4834-8F0A-6369F5A0288B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B282EB59-2330-4834-8F0A-6369F5A0288B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71539325-194B-4D56-8D88-562B33004406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71539325-194B-4D56-8D88-562B33004406}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71539325-194B-4D56-8D88-562B33004406}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71539325-194B-4D56-8D88-562B33004406}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
