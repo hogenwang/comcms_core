@@ -68,6 +68,8 @@ namespace COMCMS.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+            //其他错误页面处理
+            app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
             //启用Session
             app.UseSession();
             app.UseStaticFiles();

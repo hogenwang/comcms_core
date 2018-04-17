@@ -1,0 +1,73 @@
+﻿@model int
+@{
+    ViewData["Title"] = "Error";
+    Layout = null;
+}
+@{
+    var statusCode = Model;
+    var statusmessage = "";
+    var tipmessage = "服务器好像出开了个小差...";
+    switch (statusCode)
+    {
+        case 400:
+            statusmessage = "Bad request: The request cannot be fulfilled due to bad syntax";
+            break;
+        case 403:
+            statusmessage = "Forbidden";
+            break;
+        case 404:
+            statusmessage = "系统找不到本页面";
+            tipmessage = "您所访问的页面好像被吃了...";
+            break;
+        case 408:
+            statusmessage = "The server timed out waiting for the request";
+            break;
+        case 500:
+            statusmessage = "Internal Server Error - server was unable to finish processing the request";
+            break;
+        default:
+            statusmessage = "That's odd... Something we didn't expect happened";
+            break;
+    }
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@(Model)错误</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/hplus/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/hplus/css/style.css" rel="stylesheet" />
+    <link href="~/css/animate.min.css" rel="stylesheet" />
+    <base target="_blank">
+
+</head>
+
+<body class="gray-bg">
+    <div class="middle-box text-center animated fadeInDown">
+        <h1>@Model</h1>
+        <h3 class="font-bold">@statusmessage</h3>
+        <div class="error-desc">
+            @(tipmessage)
+            <br />
+            当前页面：@ViewBag.url
+            <br />您可以返回主页看看
+            <br /><a href="/" class="btn btn-primary m-t">返回</a>
+        </div>
+    </div>
+
+    <!-- js -->
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    </environment>
+
+</body>
+</html>

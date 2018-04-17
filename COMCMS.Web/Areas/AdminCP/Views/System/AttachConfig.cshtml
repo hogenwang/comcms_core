@@ -1,0 +1,147 @@
+﻿@model COMCMS.Core.Models.AttachConfigEntity
+@{
+    ViewBag.title = "编辑网站附件设置";
+}
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.Title</h5>
+            <div class="ibox-tools">
+            </div>
+        </div>
+        <div class="ibox-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editAttachConfigForm", @class = "form-horizontal m-t" }))
+            {
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">重命名文件名：</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" asp-for="IsRandomFileName">
+                            <option value="0" >不重命名</option>
+                            <option value="1" >随机重命名</option>
+                            <option value="2" >日期重命名</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">图片最大尺寸：</label>
+                    <div class="col-sm-8 form-inline">
+                        <input type="number" placeholder="请输入图片最大宽度" name="ImgMaxWidth" id="ImgMaxWidth" class="form-control" value="@Model.ImgMaxWidth">
+                        X
+                        <input type="number" placeholder="请输入图片最大高度" name="ImgMaxHeight" id="ImgMaxHeight" class="form-control" value="@Model.ImgMaxHeight">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">缩略图：</label>
+                    <div class="col-sm-8">
+                        <label class="checkbox-inline i-checks">
+                            <input type="checkbox" value="1" name="IsCreateThum" id="IsCreateThum" @(Model.IsCreateThum == 1 ? "checked = \"checked\"" : "")> 图片生成缩略图
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">缩略图质量：</label>
+                    <div class="col-sm-8">
+                        <input id="ThumQty" name="ThumQty" maxlength="3" type="number" max="100" class="form-control" required aria-required="true" placeholder="设置图片附件缩略图的质量参数，范围为 0～100 的整数，数值越大结果图片效果越好，但尺寸也越大" value="@Model.ThumQty">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">缩略图大小：</label>
+                    <div class="col-sm-8 form-inline">
+                        <input type="number" placeholder="请输入缩略图宽度" name="ThumMaxWidth" id="ThumMaxWidth" class="form-control" value="@Model.ThumMaxWidth">
+                        X
+                        <input type="number" placeholder="请输入缩略图高度" name="ThumMaxHeight" id="ThumMaxHeight" class="form-control" value="@Model.ThumMaxHeight">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">开启水印功能：</label>
+                    <div class="col-sm-8">
+                        <label class="checkbox-inline i-checks">
+                            <input type="checkbox" value="1" name="IsWaterMark" id="IsWaterMark" @(Model.IsWaterMark == 1 ? "checked = \"checked\"" : "")> 图片自动加上水印 （勾选则上传图片将自动加上水印）
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">水印图片质量：</label>
+                    <div class="col-sm-8">
+                        <input id="WaterMarkQty" name="WaterMarkQty" maxlength="3" type="number" max="100" class="form-control" required aria-required="true" placeholder="加水印图片质量，范围为 0～100 的整数，数值越大结果图片效果越好，但尺寸也越大" value="@Model.WaterMarkQty">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">水印文件：</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input id="WaterMarkImg" type="text" class="form-control upload-path" name="WaterMarkImg" value="@Model.WaterMarkImg" placeholder="水印文件，只支持jpg、png" aria-required="true">
+                            <span class="input-group-addon my-upload-span upload-img"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">水印透明度：</label>
+                    <div class="col-sm-8">
+                        <input id="WaterMarkQty" name="WaterMarkQty" maxlength="3" type="number" max="100" class="form-control" required aria-required="true" placeholder="水印透明度，范围为 0～100 的整数" value="@Model.WaterMarkDiaphaneity">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">水印位置：</label>
+                    <div class="col-sm-8">
+                        <p>
+                            <label class="checkbox-inline">
+                                <input type="radio" value="1" name="WaterMarkPlace" id="WaterMarkPlace_1">1
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="radio" value="2" name="WaterMarkPlace" id="WaterMarkPlace_2">2
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="radio" value="3" name="WaterMarkPlace" id="WaterMarkPlace_3">3
+                            </label>
+                        </p>
+                        <p>
+                            <label class="checkbox-inline">
+                                <input type="radio" value="4" name="WaterMarkPlace" id="WaterMarkPlace_4">4
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="radio" value="5" name="WaterMarkPlace" id="WaterMarkPlace_5">5
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="radio" value="6" name="WaterMarkPlace" id="WaterMarkPlace_6">6
+                            </label>
+                        </p>
+                        <p>
+                            <label class="checkbox-inline">
+                                <input type="radio" value="7" name="WaterMarkPlace" id="WaterMarkPlace_7">7
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="radio" value="8" name="WaterMarkPlace" id="WaterMarkPlace_8">8
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="radio" value="9" name="WaterMarkPlace" id="WaterMarkPlace_9">9
+                            </label>
+                        </p>
+                        <script>
+                                $("#WaterMarkPlace_@Model.WaterMarkPlace").prop("checked", "checked");
+                        </script>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-3">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>
+<script>
+    $(function () {
+        //加载上传
+        $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp", notwater: true });
+        DoPost("editAttachConfigForm");
+    })
+</script>

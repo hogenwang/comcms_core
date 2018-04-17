@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.title = "查看/编辑Robots配置";
+}
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.Title</h5>
+            <div class="ibox-tools">
+            </div>
+        </div>
+        <div class="ibox-content">
+            <form asp-area="AdminCP" asp-controller="System" asp-action="Robots" name="editRobotsConfigForm" id="editRobotsConfigForm" class="form-horizontal m-t" method="post">
+                <div class="alert alert-info alert-dismissable">
+                    <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+                    <p>注意：本选项仅供<b>专业人士</b>使用，请不要擅自修改，否则，网站将可能正常被搜索引擎收录！</p>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">内容：</label>
+                    <div class="col-sm-8">
+                        <textarea id="content" name="content" class="form-control" rows="10" placeholder="您可以填写Robots内容">@ViewBag.content</textarea>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-3">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+<script>
+    $(function () {
+        DoPost("editRobotsConfigForm");
+    })
+</script>
