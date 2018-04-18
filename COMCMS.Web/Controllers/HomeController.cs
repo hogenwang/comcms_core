@@ -34,7 +34,7 @@ namespace COMCMS.Web.Controllers
             ViewBag.siteName = cfg.SiteName;
 
             ViewBag.c = CookiesHelper.GetCookie("abc");
-            ViewBag.d = Utils.SIGNSALT;
+            ViewBag.d = Utils.GetServerUrl();
 
             return View();
         }

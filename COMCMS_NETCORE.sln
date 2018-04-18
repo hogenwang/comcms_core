@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMCMS.Web", "COMCMS.Web\CO
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMCMS.Core", "COMCMS.Core\COMCMS.Core.csproj", "{280AD487-F41E-42F7-95E7-187164485AD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COMCMS.Common", "COMCMS.Common\COMCMS.Common.csproj", "{B282EB59-2330-4834-8F0A-6369F5A0288B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMCMS.Common", "COMCMS.Common\COMCMS.Common.csproj", "{B282EB59-2330-4834-8F0A-6369F5A0288B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XCoder(代码生成器)", "XCoder\XCoder(代码生成器).csproj", "{71539325-194B-4D56-8D88-562B33004406}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COMCMS.API", "COMCMS.API\COMCMS.API.csproj", "{ED1581D0-7E94-4ADC-B2B4-0A523EA3B512}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{71539325-194B-4D56-8D88-562B33004406}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71539325-194B-4D56-8D88-562B33004406}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71539325-194B-4D56-8D88-562B33004406}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED1581D0-7E94-4ADC-B2B4-0A523EA3B512}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED1581D0-7E94-4ADC-B2B4-0A523EA3B512}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED1581D0-7E94-4ADC-B2B4-0A523EA3B512}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED1581D0-7E94-4ADC-B2B4-0A523EA3B512}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

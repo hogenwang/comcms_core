@@ -5,3 +5,87 @@
 <h3>@ViewData["Message"]</h3>
 
 <p>Use this area to provide additional information.</p>
+<script src="~/js/md5.min.js"></script>
+<script>
+    //获取随机数
+    function randomNum(minNum, maxNum) {
+        switch (arguments.length) {
+            case 1:
+                return parseInt(Math.random() * minNum + 1, 10);
+                break;
+            case 2:
+                return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
+                break;
+            default:
+                return 0;
+                break;
+        }
+    }
+    //排序
+    function sortObject(obj) {
+        //console.log(typeof (obj) == "object")
+        if (typeof (obj) == "object") {
+            let newObj = {}
+            Object.keys(obj).sort().map(x => {
+                //console.log(x);
+                newObj[x] = obj[x];
+            })
+            //console.log("new:", newObj);
+            return newObj;
+        }
+    }
+    //签名数组
+    function mySignObject(obj) {
+        //我的签名，先加入两个参数，一个是时间戳，一个是随机字符
+        //然后排序，取出所有值，拼接在一起，然后md5一次得到 signature ，然后再放到对象后面
+        if (typeof (obj) == "object") {
+            let timeStamp = new Date().getTime();
+            let random = randomNum(100000, 999999);
+            obj.timeStamp = timeStamp;
+            obj.random = random;
+            let newObj = sortObject(obj);
+            //console.log('处理后：',newObj);
+            //拼接
+            let strVal = '';
+            Object.keys(newObj).sort().map(x => {
+                strVal += newObj[x];
+            })
+            console.log('拼接字符',strVal);
+            //生成签名
+            let signature = md5(strVal + "comcms");
+            newObj.signature = signature;
+            return newObj;
+            //console.log(newObj);
+        }
+    }
+    //生成query验签
+    function createQuerySign(obj) {
+        if (typeof (obj) == "object") {
+            let sign = mySignObject(obj);
+            if (sign) {
+                let queryStr = '';
+                Object.keys(sign).sort().map(x => {
+                    //console.log(x);
+                    queryStr += x + "=" + sign[x] + "&";
+                });
+                //console.log('拼接：',queryStr);
+                if (queryStr != '') {
+                    //清除最后一个&
+                    queryStr = '?' + queryStr.substr(0, queryStr.length - 1);
+                }
+
+                return queryStr;
+            }
+            else {
+                return '';
+            }
+        } else {
+            return '';
+        }
+    }
+
+    var q = { id: 1 };
+    //var str = mySignObject(q);
+    var strRe = createQuerySign(q);
+    console.log(strRe);
+</script>

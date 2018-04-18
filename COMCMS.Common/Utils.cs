@@ -40,8 +40,21 @@ namespace COMCMS.Common
         /// <summary>
         /// 与小程序验签的盐值
         /// </summary>
-        public static readonly string SIGNSALT = ConfigurationManager.AppSettings["SignSalt"];
+        public static readonly string SIGNSALT = "comcms";// ConfigurationManager.AppSettings["SignSalt"];
 
+
+        /// <summary>
+        /// 订单状态 "未确认", "已确认", "已完成", "已取消" 
+        /// </summary>
+        public static string[] OrdersState = { "未确认", "已确认", "已完成", "已取消" };
+        /// <summary>
+        /// 支付状态 { "未支付", "已支付", "已退款" }
+        /// </summary>
+        public static string[] PaymentState = { "未支付", "已支付", "已退款" };
+        /// <summary>
+        /// 配送状态 "未配送", "配货中", "已配送", "已收到", "退货中", "已退货"
+        /// </summary>
+        public static string[] DeliverState = { "未配送", "配货中", "已配送", "已收到", "退货中", "已退货" };
         #endregion
 
         #region 验证部分
@@ -97,6 +110,25 @@ namespace COMCMS.Common
         {
             return Regex.IsMatch(strUrl, @"^(http|https)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{1,10}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&%\$#\=~_\-]+))*$");
         }
+        /// <summary>
+        /// 获取当前网站根目录网址 不带 /
+        /// </summary>
+        /// <returns></returns>
+        public static string GetServerUrl()
+        {
+            string http = "http://";
+            if (MyHttpContext.Current.Request.IsHttps) //判断是否是https
+            {
+                http = "https://";
+            }
+            string port = MyHttpContext.Current.Request.Host.Port.ToString();
+            if (port == "80" || port == "443")
+                return http + MyHttpContext.Current.Request.Host.Host;
+            else
+                return http + MyHttpContext.Current.Request.Host.Host + ":" + port;
+
+        }
+
         /// <summary>
         /// 判断是否为base64字符串
         /// </summary>
@@ -629,6 +661,30 @@ namespace COMCMS.Common
                 return userHostAddress;
             }
             return "127.0.0.1";
+        }
+
+
+        /// <summary>
+        /// 时间戳转换成DateTime格式
+        /// </summary>
+        /// <param name="timeStamp"></param>
+        /// <returns></returns>
+        public static DateTime StampToDateTime(string timeStamp)
+        {
+            DateTime dateTimeStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+            long lTime = long.Parse(timeStamp + "0000");
+            TimeSpan toNow = new TimeSpan(lTime);
+            return dateTimeStart.Add(toNow);
+        }
+
+        /// <summary>  
+        /// 获取时间戳  
+        /// </summary>  
+        /// <returns></returns>  
+        public static string GetTimeStamp()
+        {
+            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return Convert.ToInt64(ts.TotalSeconds).ToString();
         }
         #endregion
 

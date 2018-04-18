@@ -28,7 +28,7 @@ namespace COMCMS.Common
             //NewLife.Log.XTrace.WriteLine("拼接字符：" + signdata);
             string mysign = Utils.MD5(signdata + Utils.SIGNSALT);
             //NewLife.Log.XTrace.WriteLine("签名：" + mysign);
-            return mysign == signature;
+            return mysign.ToUpper() == signature.ToUpper();
         }
         #endregion
 

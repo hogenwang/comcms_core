@@ -11,8 +11,8 @@ using XCode;
 
 namespace COMCMS.Web.Controllers.api
 {
-    [Route("api/[controller]")]
-    public class IndexController : Controller
+    [Route("api/[controller]/[action]")]
+    public class IndexController : APIBaseController
     {
         // GET: api/<controller>
         [HttpGet]
@@ -22,11 +22,30 @@ namespace COMCMS.Web.Controllers.api
             return cfg;
         }
 
-        // GET api/<controller>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        #region 测试验签
+        /// <summary>
+        /// 测试验签
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <param name="random"></param>
+        /// <param name="timeStamp"></param>
+        /// <param name="signature"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public object CheckSign(string id, string random = "", string timeStamp = "", string signature = "")
         {
-            return "value";
+            if (!AutoCheckQueryStringSignature())
+            {
+                reJson.message = "验签失败！";
+                return reJson;
+            }
+            else
+            {
+                reJson.code = 0;
+                reJson.message = "验签成功！";
+                return reJson;
+            }
         }
+        #endregion
     }
 }
