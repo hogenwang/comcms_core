@@ -18,6 +18,26 @@ using Microsoft.AspNetCore.Http.Internal;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
+    #region CKEditor错误返回实体类
+    /// <summary>
+    /// CKEditor错误返回实体类
+    /// </summary>
+    public class CKFileUploadError
+    {
+        public CKFileUploadErrorMessage error { get; set; } = new CKFileUploadErrorMessage();
+    }
+    public class CKFileUploadErrorMessage
+    {
+        /// <summary>
+        /// 错误代码
+        /// </summary>
+        public int number { get; set; } = 100;
+        /// <summary>
+        /// 错误信息
+        /// </summary>
+        public string message { get; set; }
+    }
+    #endregion
     /// <summary>
     /// 后台上传文件帮助类
     /// </summary>
@@ -32,7 +52,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             _env = env;
             _attachsetting = attachsetting.Value;
         }
-
+        
         #region CKEditor 上传图片
         /// <summary>
         /// ckeditor 上传图片
@@ -43,14 +63,21 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             string callback = Request.Query["CKEditorFuncNum"];//要求返回值
             var upload = Request.Form.Files[0];
-            string tpl = "<script type=\"text/javascript\">window.parent.CKEDITOR.tools.callFunction(\"{1}\", \"{0}\", \"{2}\");</script>";
+            //string tpl = "<script type=\"text/javascript\">window.parent.CKEDITOR.tools.callFunction(\"{1}\", \"{0}\", \"{2}\");</script>";
+            CKFileUploadError errorJson = new CKFileUploadError();
             if (upload == null)
-                return Content(string.Format(tpl, "", callback, "请选择一张图片！"), "text/html");
+            {
+                
+                errorJson.error.message = "请选择一张图片!";
+                return Json(errorJson);
+            }
             //判断是否是图片类型
             List<string> imgtypelist = new List<string> { "image/pjpeg", "image/png", "image/x-png", "image/gif", "image/bmp", "image/jpeg" };
             if (imgtypelist.FindIndex(x => x == upload.ContentType) == -1)
             {
-                return Content(string.Format(tpl, "", callback, "请上传一张图片！"), "text/html");
+                errorJson.error.message = "请选择一张图片!";
+                return Json(errorJson);
+                //return Content(string.Format(tpl, "", callback, "请上传一张图片！"), "text/html");
             }
             var data = Request.Form.Files["upload"];
             string filepath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\images\\";
@@ -157,9 +184,19 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             catch (Exception ex)
             {
-                return Content(string.Format(tpl, "", callback, "图片上传失败：" + ex.Message), "text/html");
+                errorJson.error.message = "图片上传失败，" + ex.Message + "!";
+                return Json(errorJson);
+                //return Content(string.Format(tpl, "", callback, "图片上传失败：" + ex.Message), "text/html");
             }
-            return Content(string.Format(tpl, $"/{attach.AttachPatch}/images/{imgPath.Replace("\\", "/")}/" + imgname, callback, ""), "text/html");
+            dynamic successJson = new
+            {
+                fileName = imgname,
+                uploaded = 1,
+                url = $"/{attach.AttachPatch}/images/{imgPath.Replace("\\", "/")}/" + imgname
+            };
+            return Json(successJson);
+            //{"fileName":"20180413145904.png","uploaded":1,"url":"\/userfiles\/files\/Public%20Folder\/20180413145904.png"}
+            //return Content(string.Format(tpl, $"/{attach.AttachPatch}/images/{imgPath.Replace("\\", "/")}/" + imgname, callback, ""), "text/html");
         }
         #endregion
 
@@ -169,13 +206,20 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             string callback = Request.Query["CKEditorFuncNum"];//要求返回值
             var upload = Request.Form.Files[0];
             string tpl = "<script type=\"text/javascript\">window.parent.CKEDITOR.tools.callFunction(\"{1}\", \"{0}\", \"{2}\");</script>";
+            CKFileUploadError errorJson = new CKFileUploadError();
             if (upload == null)
-                return Content(string.Format(tpl, "", callback, "请选择一个文件！"), "text/html");
+            {
+                errorJson.error.message = "请选择一个文件！";
+                return Json(errorJson);
+            }
+            //return Content(string.Format(tpl, "", callback, "请选择一个文件！"), "text/html");
             string sFileNameNoExt = Utils.GetFileNameWithoutExtension(upload.FileName);//文件名字，不带扩展名
             string sFullExtension = Utils.GetFileExtName(upload.FileName);//扩展名
             if (string.IsNullOrEmpty(sFullExtension))
             {
-                return Content(string.Format(tpl, "", callback, $"错误的文件类型！"), "text/html");
+                errorJson.error.message = "错误的文件类型！";
+                return Json(errorJson);
+                //return Content(string.Format(tpl, "", callback, $"错误的文件类型！"), "text/html");
             }
             //判断是否是允许文件扩展名
             string sAllowedExtensions = _attachsetting.FileAllowedExtensions;
@@ -190,7 +234,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             if (listAllowedExtensions.Find(x => x == sFullExtension.ToLower().Replace(".", "")) == null)
             {
-                return Content(string.Format(tpl, "", callback, $"{sFullExtension}的文件类型，不允许上传！"), "text/html");
+                errorJson.error.message = $"{sFullExtension}的文件类型，不允许上传！";
+                return Json(errorJson);
+                //return Content(string.Format(tpl, "", callback, $"{sFullExtension}的文件类型，不允许上传！"), "text/html");
             }
             //判断是否是图片，如果是图片，后面需要生成缩略图并可能的话，就加上水印
             bool isImage = false;
@@ -299,9 +345,18 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             catch (Exception ex)
             {
-                return Content(string.Format(tpl, "", callback, "文件上传失败：" + ex.Message), "text/html");
+                errorJson.error.message = "文件上传失败：" + ex.Message;
+                return Json(errorJson);
+                //return Content(string.Format(tpl, "", callback, "文件上传失败：" + ex.Message), "text/html");
             }
-            return Content(string.Format(tpl, $"/{attach.AttachPatch}/fales/{imgPath.Replace("\\", "/")}/" + imgname, callback, ""), "text/html");
+            dynamic successJson = new
+            {
+                fileName = imgname,
+                uploaded = 1,
+                url = $"/{attach.AttachPatch}/images/{imgPath.Replace("\\", "/")}/" + imgname
+            };
+            return Json(successJson);
+            //return Content(string.Format(tpl, $"/{attach.AttachPatch}/fales/{imgPath.Replace("\\", "/")}/" + imgname, callback, ""), "text/html");
 
         }
         #endregion

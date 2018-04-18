@@ -8,8 +8,8 @@ CKEDITOR.editorConfig = function( config ) {
 	//config.language = 'zh-cn';
 	// config.uiColor = '#AADC6E';
     config.baseHref = "http://" + location.host;
-    config.filebrowserImageUploadUrl = '/Admin/Upload/CKUploadImage';
-    config.filebrowserUploadUrl = '/Admin/Upload/CKUploadFile';
+    config.filebrowserImageUploadUrl = '/AdminCP/Upload/CKUploadImage?action=uploadimg';
+    config.filebrowserUploadUrl = '/AdminCP/Upload/CKUploadFile?action=uploadfile';
     config.font_names = '宋体/宋体;黑体/黑体;楷体/楷体;幼圆/幼圆;微软雅黑/微软雅黑;' + config.font_names;
     config.allowedContent = true;
     config.extraPlugins = 'html5video,lineheight,widget,widgetselection,clipboard,lineutils';

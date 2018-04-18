@@ -135,8 +135,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         {
             if (!string.IsNullOrWhiteSpace(model.WaterMarkImg))
             {
-                
-                if (!System.IO.File.Exists(Path.Combine(_env.WebRootPath, model.WaterMarkImg)))
+                string imgPath = _env.WebRootPath + model.WaterMarkImg.Replace("/", "\\");
+                NewLife.Log.XTrace.WriteLine(_env.WebRootPath + "|" + Path.Combine(_env.WebRootPath, model.WaterMarkImg) + "|" + imgPath);
+                if (!System.IO.File.Exists(imgPath))
                 {
                     tip.Message = "水印图片不存在，请重新上传！";
                     return Json(tip);
