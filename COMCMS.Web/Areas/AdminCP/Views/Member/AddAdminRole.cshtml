@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewBag.title = "添加新管理组";
+}
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.title</h5>
+            <div class="ibox-tools">
+            </div>
+        </div>
+        <div class="ibox-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addadminroleForm", @class = "form-horizontal m-t" }))
+            {
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#tab-1" aria-expanded="true"> 管理组基本设置</a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="#tab-2" aria-expanded="false"> 管理组权限设置</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">管理组名称：</label>
+                                    <div class="col-sm-8">
+                                        <input id="RoleName" name="RoleName" maxlength="200" type="text" class="form-control" value="" required aria-required="true" placeholder="填写管理组名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">是否超级管理员：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="IsSuperAdmin" name="IsSuperAdmin">
+                                            <option value="0">普通管理员</option>
+                                            <option value="1">超级管理员</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">管理组简介：</label>
+                                    <div class="col-sm-8">
+                                        <input id="RoleDescription" type="text" class="form-control" name="RoleDescription" placeholder="管理组简介，非必填" value="" maxlength="200">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">不允许删除：</label>
+                                    <div class="col-sm-8">
+                                        <label class="checkbox-inline i-checks">
+                                            <input type="checkbox" value="1" name="NotAllowDel" id="NotAllowDel"> 不允许删除（勾选则该管理组不允许直接删除）
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="alert alert-info">
+                                    温馨提示：如果选择『超级管理员』级别，则默认拥有所有权限，不需要在此勾选权限；若版面不正常，请最大化查看
+                                </div>
+                                <table class="tree table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>菜单名称</th>
+                                            <th>菜单Key</th>
+                                            <th>权限详情</th>
+                                        </tr>
+                                    </thead>
+                                    @foreach (AdminMenu m in ViewBag.MenuList)
+                                    {
+                                        <tr class="treegrid-@m.Id @(m.PId !=0?"treegrid-parent-"+m.PId:"") ">
+                                            <td>
+                                                <label class="checkbox-inline i-checks">
+                                                    <input type="checkbox" value="@m.Id" name="menuid" id="menuid_@m.Id">
+                                                    @if (!string.IsNullOrWhiteSpace(m.ClassName))
+                                                    {
+                                                        <i class="fa @m.ClassName"></i>
+                                                    }
+                                                    @m.MenuName
+                                                </label>
+                                            </td>
+                                            <td>@m.MenuKey</td>
+                                            <td>
+                                                @foreach (var e in @m.ListEvent)
+                                                {
+                                                    <span>
+                                                        <label class="checkbox-inline i-checks">
+                                                            <input type="checkbox" value="@e.Id" name="EventKey_@(m.Id)" id="@(e.MenuKey)_@(e.Id)_@(m.Id)">
+                                                            @e.EventName
+                                                        </label>
+                                                    </span>
+                                                }
+
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                                <script type="text/javascript">
+                                        $(document).ready(function() {
+                                            $('.tree').treegrid();
+                                        });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row white-bg">
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-3">
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                            <button class="btn btn-default" type="button" onclick="closethisdialog();"><i class="fa fa-close"></i> 取消 </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>
+<script>
+    $(function () {
+        DoPost("addadminroleForm");
+    })
+</script>

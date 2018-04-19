@@ -1,0 +1,85 @@
+﻿@model COMCMS.Core.Admin
+@{
+    ViewBag.title = "编辑我的信息";
+}
+<div class="wrapper wrapper-content ">
+    <div class="row">
+        <div class="tabs-container">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#tab-1" aria-expanded="true"> 编辑我的信息</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane active">
+                    <div class="panel-body">
+                        <div class="alert alert-info">
+                            您可以修改密码，请务必设置一个比较复杂的密码，以免被爆破！
+                        </div>
+                        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editmyinfoForm", @class = "form-horizontal m-t" }))
+                        {
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">用户名：</label>
+                                <div class="col-sm-8">
+                                    <input id="UserName" name="UserName" minlength="2" maxlength="20" type="text" class="form-control" required aria-required="true" placeholder="用户名，可以中英文，但不能少于5个字符" value="@Model.UserName">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">旧密码：</label>
+                                <div class="col-sm-8">
+                                    <input id="txtOldPwd" name="txtOldPwd" type="password" class="form-control" placeholder="如果修改密码，则必须填写，否则，请留空" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">新密码：</label>
+                                <div class="col-sm-8">
+                                    <input id="txtNewPwd" name="txtNewPwd" type="password" class="form-control" placeholder="如果修改登录密码，请填写，否则，请留空" value="">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">重复新密码：</label>
+                                <div class="col-sm-8">
+                                    <input id="txtreNewPwd" name="txtreNewPwd" type="password" class="form-control" placeholder="如果修改密码，请重复输入一次新密码，否则请流控" value="">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">真实姓名：</label>
+                                <div class="col-sm-8">
+                                    <input id="RealName" name="RealName" type="text" maxlength="20" class="form-control" placeholder="您可以设置真实姓名" value="@Model.RealName">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">手机号码：</label>
+                                <div class="col-sm-8">
+                                    <input id="Tel" name="Tel" maxlength="20" type="text" class="form-control" placeholder="您可以填写手机号码" value="@Model.Tel">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">电子邮箱：</label>
+                                <div class="col-sm-8">
+                                    <input id="Email" name="Email" maxlength="50" type="email" class="form-control" placeholder="您可以填写Email" value="@Model.Email">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<script>
+    $(function () {
+        DoPost("editmyinfoForm");
+    })
+</script>
