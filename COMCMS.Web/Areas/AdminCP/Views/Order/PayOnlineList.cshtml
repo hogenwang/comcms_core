@@ -1,0 +1,198 @@
+﻿
+@{
+    ViewBag.title = "在线支付记录";
+}
+
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.Title</h5>
+            <div class="ibox-tools">
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="panel panel-default">
+                <div class="panel-heading">筛选条件</div>
+                <div class="panel-body">
+                    <form id="formSearch" class="form-horizontal form-inline" onsubmit="return doSearch();">
+                        <div>
+                            <label class="control-label">支付类型：</label>
+                            <select class="form-control" name="mytype" id="mytype">
+                                <option value="0">不限状态</option>
+                                <option value="1">商品订单</option>
+                                <option value="2">快餐订单</option>
+                                <option value="3">酒店预定</option>
+                                <option value="99" selected>代理商认证费订单</option>
+                            </select>
+                            <label class="control-label">关键字：</label>
+                            <input type="text" placeholder="标题关键字" name="keyword" id="keyword" class="form-control">
+                            <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary" onclick="doSearch();">查询</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <table id="tb_departments"></table>
+
+            <script>
+                    $(function () {
+
+                        //1.初始化Table
+                        var oTable = new TableInit();
+                        oTable.Init();
+
+                        //2.初始化Button的点击事件
+                        var oButtonInit = new ButtonInit();
+                        oButtonInit.Init();
+
+                    });
+                    function doSearch() {
+                        var params = $('#tb_departments').bootstrapTable('getOptions');
+                        //console.log(params);
+                        params.queryParams = function (params) {
+
+                            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                                limit: params.limit,   //页面大小
+                                page: (params.offset / params.limit) + 1,  //页码
+                                mytype: $("#mytype").val(),
+                                keyword: $("#keyword").val()
+                            };
+                            return temp;
+                        }
+                        $('#tb_departments').bootstrapTable('refresh', params);
+                        return false;
+                    }
+                    var TableInit = function () {
+                        var oTableInit = new Object();
+                        //初始化Table
+                        oTableInit.Init = function () {
+                            $('#tb_departments').bootstrapTable({
+                                url: '/AdminCP/Order/GetPayOnlineList',         //请求后台的URL（*）
+                                method: 'get',                      //请求方式（*）
+                                toolbar: '#toolbar',                //工具按钮用哪个容器
+                                striped: true,                      //是否显示行间隔色
+                                cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                                pagination: true,                   //是否显示分页（*）
+                                sortable: false,                     //是否启用排序
+                                sortOrder: "asc",                   //排序方式
+                                queryParams: oTableInit.queryParams,//传递参数（*）
+                                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                                pageNumber: 1,                       //初始化加载第一页，默认第一页
+                                pageSize: 25,                       //每页的记录行数（*）
+                                pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                                search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                                strictSearch: true,
+                                showColumns: true,                  //是否显示所有的列
+                                showRefresh: true,                  //是否显示刷新按钮
+                                minimumCountColumns: 2,             //最少允许的列数
+                                clickToSelect: true,                //是否启用点击选中行
+                                height: 0,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                                showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                                cardView: false,                    //是否显示详细视图
+                                detailView: false,                   //是否显示父子表
+                                columns: [{
+                                    checkbox: true
+                                }, {
+                                    field: 'Id',
+                                    title: 'ID'
+                                }, {
+                                        field: 'PayOrderNum',
+                                    title: '支付单号'
+                                },
+                                {
+                                    field: 'MyType',
+                                    title: '订单类型',
+                                    formatter: function (value, row, index) {
+                                        switch (value) {
+                                            case 1:
+                                                return "商品订单";
+                                            case 2:
+                                                return "快餐订单";
+                                            case 3:
+                                                return "酒店预定";
+                                        }
+                                    }
+                                },
+                                {
+                                    field: 'Title',
+                                    title: '订单标题'
+                                },
+                                {
+                                    field: 'OrderNum',
+                                    title: '订单号'
+                                },
+                                {
+                                    field: 'AddTime',
+                                    title: '支付时间',
+                                    formatter: function (value, row, index) {
+                                        return value.replace("T", " ");
+                                    }
+                                },
+                                {
+                                    field: 'UserName',
+                                    title: '支付用户'
+                                },
+                                {
+                                    field: 'TotalPrice',
+                                    title: '商品总价'
+                                },
+                                {
+                                    field: 'TotalQty',
+                                    title: '商品数量'
+                                },
+                                {
+                                    field: 'PayType',
+                                    title: '支付类型'
+                                },
+                                {
+                                    field: 'IP',
+                                    title: '用户IP'
+                                },
+                                {
+                                    field: 'ReceiveTime',
+                                    title: '支付完成时间',
+                                    formatter: function (value, row, index) {
+                                        return value.replace("T", " ");
+                                    }
+                                }
+                                ]
+                            });
+                        };
+
+                        //得到查询的参数
+                        oTableInit.queryParams = function (params) {
+                            var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                                limit: params.limit,   //页面大小
+                                page: (params.offset / params.limit) + 1,  //页码
+                                mytype: $("#mytype").val(),
+                                departmentname: $("#keyword").val()
+                            };
+                            return temp;
+                        };
+                        return oTableInit;
+                    };
+
+                    function actionFormatter(value, row, index) {
+                        return [
+                            '<a href="javascript:;" class="btn btn-xs btn-primary" title="编辑" onclick="top.showDialog(\'eidtads\', \'查看/编辑订单详情\', \'/AdminCP/Order/EditOrder/' + value + '\', 0, 0)"><i class="fa fa-edit"></i> 查看/编辑</a>',
+                        '<a href="javascript:;" class="btn btn-xs btn-danger m-l-xs" title="删除" onclick="doDel(\'/AdminCP/Order/DelOrder\',' + value + ');"><i class="fa fa-close"></i> 删除</a>',
+                        ].join('');
+                    }
+
+                    var ButtonInit = function () {
+                        var oInit = new Object();
+                        var postdata = {};
+
+                        oInit.Init = function () {
+                            //初始化页面上面的按钮事件
+                        };
+
+                        return oInit;
+                    };
+            </script>
+        </div>
+    </div>
+
+
+</div>
+

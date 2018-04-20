@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Web;
 using Newtonsoft.Json;
 using COMCMS.Common;
+using System.Text;
+using System.IO;
 
 namespace COMCMS.Core
 {
@@ -58,4 +60,16 @@ namespace COMCMS.Core
         }
     }
 
+    public static class Extension
+    {
+        public static void EchoTip(this JsonTip json)
+        {
+            string strJson = JsonTip.GetJsonString(json);
+            
+            Byte[] bytes = Encoding.UTF8.GetBytes(strJson);
+            Stream stream = new MemoryStream(bytes);
+            MyHttpContext.Current.Response.ContentType = "text/plain";
+            MyHttpContext.Current.Response.Body = stream;
+        }
+    }
 }

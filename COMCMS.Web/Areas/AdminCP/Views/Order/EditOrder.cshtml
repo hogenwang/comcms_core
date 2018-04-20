@@ -1,0 +1,350 @@
+﻿@model COMCMS.Core.Order
+@{
+    ViewBag.title = "查看/编辑订单详情";
+}
+<div class="wrapper wrapper-content">
+
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editOrderForm", @class = "form-horizontal m-t", onsubmit = "return false;" }))
+    {
+        <div class="tabs-container">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#tab-1" aria-expanded="true"> 订单基本信息</a>
+                </li>
+                <li class="">
+                    <a data-toggle="tab" href="#tab-2" aria-expanded="false"> 订单日志</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane active">
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">订单号：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">@Model.OrderNum</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">用户：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">@Model.UserName (@Model.UId)</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">订单标题：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">@Model.Title</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品金额：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">@Model.TotalPrice.ToString("N2")</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">运费：</label>
+                            <div class="col-sm-8 form-inline">
+                                <label class="control-label">@Model.Fare.ToString("N2")</label>
+                                @if (Model.PaymentStatus == "未支付")
+                                {
+                                    <input type="text" value="@Model.Fare.ToString("N2")" class="form-control" name="Fare" id="Fare" /> <button class="btn btn-primary btn-sm" onclick="doChangeFare();" type="button">修改运费</button>
+                                }
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">总支付金额：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">@Model.TotalPay.ToString("N2") = @Model.TotalPrice.ToString("N2") + @Model.Fare.ToString("N2") (总支付价格 = 订单总价格 + 运费)</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">收货人：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">@Model.RealName</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">电话：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">
+                                    @Model.Tel
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">详细地址：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">@Model.Address</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">订单状态：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">
+                                    @Model.OrderStatus
+                                    @if (Model.OrderStatus == Utils.OrdersState[0])
+                                    {
+                                        <button class="btn btn-primary btn-sm" onclick="doAction('/AdminCP/Order/ConfirmOrder',@Model.Id,'您确认收到订单？将订单改成已确认？')" type="button">确认订单</button>
+                                    }
+                                    @if (Model.OrderStatus == Utils.OrdersState[1] && Model.PaymentStatus == Utils.PaymentState[1] && !string.IsNullOrEmpty(Model.DeliverNO))
+                                    {
+                                        <button class="btn btn-primary btn-sm" onclick="doAction('/AdminCP/Order/CompleteOrder',@Model.Id,'您确认订单已经完成？将订单改成【已完成】？')" type="button">订单已完成</button>
+                                    }
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">跟单员：</label>
+                            <div class="col-sm-8 form-inline">
+                                <label class="control-label">
+                                    姓名：<input type="text" value="@Model.Flag1" class="form-control" name="Flag1" id="Flag1" placeholder="跟单员姓名" />
+                                    电话：<input type="text" value="@Model.Flag2" class="form-control" name="Flag2" id="Flag2" placeholder="跟单员电话" />
+                                    <button class="btn btn-primary btn-sm" onclick="doChangeFlowerInfo();" type="button">修改跟单信息</button>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">支付状态：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">@Model.PaymentStatus</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">配送状态：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">@Model.DeliverStatus</label>
+                            </div>
+                        </div>
+                        @if (Model.PaymentStatus == Utils.PaymentState[1])
+                        {
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">物流配送：</label>
+                                <div class="col-sm-8">
+                                    <label class="control-label">
+                                        物流：@Model.DeliverType 单号：@Model.DeliverNO
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                        @if (Model.PaymentStatus == Utils.PaymentState[1] && Model.OrderStatus == Utils.OrdersState[1])
+                        {
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">修改物流配送：</label>
+                                <div class="col-sm-8 form-inline">
+                                    <label class="control-label">
+                                        物流：<input type="text" value="@Model.DeliverType" class="form-control" name="DeliverType" id="DeliverType" placeholder="物流类型，如顺丰、申通" />
+                                        单号：<input type="text" value="@Model.DeliverNO" class="form-control" name="DeliverNO" id="DeliverNO" placeholder="快递单号" />
+                                        <button class="btn btn-primary btn-sm" onclick="doChangeDeliver();" type="button">修改物流信息</button>
+                                    </label>
+                                </div>
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">下单时间：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">@Model.AddTime.ToString("yyyy-MM-dd HH:mm")</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">下单IP：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">@Model.IP</label>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">是否完成：</label>
+                            <div class="col-sm-8">
+                                <label class="control-label">@(Model.IsEnd == 1 ? "是" : "否")</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">商品列表：</label>
+                            <div class="col-sm-8">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>产品名称</th>
+                                            <th>产品规格</th>
+                                            <th>产品单价</th>
+                                            <th>商品数量</th>
+                                            <th>金额</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="loantb">
+                                        @foreach (OrderDetail item in ViewBag.list)
+                                        {
+                                            Product p = Product.FindById(item.PId);
+                                            <tr>
+                                                <td>@p.Title</td>
+                                                <td>@item.Spec</td>
+                                                <td>¥ @item.Price.ToString("N2")</td>
+                                                <td>@item.Qty</td>
+                                                <td>¥ @((item.Price * item.Qty).ToString("N2"))</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-2" class="tab-pane">
+                    <div class="panel-body">
+                        <div class="alert alert-info">
+                            订单日志
+                        </div>
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>用户ID</th>
+                                    <th>操作日志</th>
+                                </tr>
+                            </thead>
+                            <tbody id="loantb">
+                                @foreach (COMCMS.Core.OrderLog item in ViewBag.OrderLogList)
+                                {
+                                    <tr>
+                                        <td>@item.Id</td>
+                                        <td>@item.UId</td>
+                                        <td>@item.Actions</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row white-bg">
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-3">
+                    <input type="hidden" value="@Model.Id" id="Id" name="Id" />
+                    <button class="btn btn-default" type="button" onclick="closethisdialog();"><i class="fa fa-close"></i> 关闭页面 </button>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+<script>
+    function doChangeFare() {
+        var Fare = $("#Fare").val();
+        if (Fare == "") {
+            alert('请输入一个运费金额！');
+            return false;
+        }
+        var Id = $("#Id").val();
+        var loading = layer.load(0, {
+            shade: [0.2, '#000'] //0.1透明度的背景
+        });
+        $.ajax({
+            type: "POST",
+            url: "/AdminCP/Order/DoChangeOrderFare",
+            data: { id: Id, fare: Fare },
+            dataType: "JSON",
+            success: function (data) {
+                if (data.Status == "success") {
+                    layer.close(loading);
+                    layer.msg(data.Message, {
+                        time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        window.location.href = window.location.href;
+                    });
+                } else {
+                    layer.close(loading);
+                    layer.alert(data.Message, { icon: 2 });
+                }
+            },
+            error: function () {
+                layer.close(loading);
+                layer.alert('执行错误，请联系管理员！', { icon: 2 });
+            }
+        });
+        return false;
+    }
+    function doChangeDeliver() {
+        var DeliverType = $("#DeliverType").val();
+        var DeliverNO = $("#DeliverNO").val();
+        if (DeliverNO == "") {
+            alert('请输入运单号！');
+            return false;
+        }
+        var Id = $("#Id").val();
+        var loading = layer.load(0, {
+            shade: [0.2, '#000'] //0.1透明度的背景
+        });
+        $.ajax({
+            type: "POST",
+            url: "/AdminCP/Order/DoChangeOrderDeliver",
+            data: { id: Id, DeliverType: DeliverType, DeliverNO: DeliverNO },
+            dataType: "JSON",
+            success: function (data) {
+                if (data.Status == "success") {
+                    layer.close(loading);
+                    layer.msg(data.Message, {
+                        time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        window.location.href = window.location.href;
+                    });
+                } else {
+                    layer.close(loading);
+                    layer.alert(data.Message, { icon: 2 });
+                }
+            },
+            error: function () {
+                layer.close(loading);
+                layer.alert('执行错误，请联系管理员！', { icon: 2 });
+            }
+        });
+        return false;
+    }
+
+    function doChangeFlowerInfo() {
+        var Flag1 = $("#Flag1").val();
+        var Flag2 = $("#Flag2").val();
+        if (Flag1 == "") {
+            alert('请输入跟单员姓名！');
+            return false;
+        }
+        if (Flag2 == "") {
+            alert('请输入跟单员电话！');
+            return false;
+        }
+        var Id = $("#Id").val();
+        var loading = layer.load(0, {
+            shade: [0.2, '#000'] //0.1透明度的背景
+        });
+        $.ajax({
+            type: "POST",
+            url: "/AdminCP/Order/DoChangeOrderFlowerInfo",
+            data: { id: Id, Flag1: Flag1, Flag2: Flag2 },
+            dataType: "JSON",
+            success: function (data) {
+                if (data.Status == "success") {
+                    layer.close(loading);
+                    layer.msg(data.Message, {
+                        time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        window.location.href = window.location.href;
+                    });
+                } else {
+                    layer.close(loading);
+                    layer.alert(data.Message, { icon: 2 });
+                }
+            },
+            error: function () {
+                layer.close(loading);
+                layer.alert('执行错误，请联系管理员！', { icon: 2 });
+            }
+        });
+        return false;
+    }
+</script>

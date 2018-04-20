@@ -1,0 +1,93 @@
+﻿@model COMCMS.Core.Guestbook
+@{
+    ViewBag.title = "编辑/审核留言详情";
+}
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.title</h5>
+            <div class="ibox-tools">
+            </div>
+        </div>
+        <div class="ibox-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editGuestbookForm", @class = "form-horizontal m-t" }))
+            {
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">留言栏目：</label>
+                    <div class="col-sm-8">
+                        <select class="form-control m-b" asp-for="KId">
+                            @foreach (var m in ViewBag.ListKinds)
+                            {
+                                <option value="@m.Id">@m.KindName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">留言标题：</label>
+                    <div class="col-sm-8">
+                        <label class="control-label">@Model.Title</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">用户：</label>
+                    <div class="col-sm-8">
+                        <label class="control-label">@Model.Nickname</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">留言详情：</label>
+                    <div class="col-sm-8">
+                        <label class="control-label">@Model.Content</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">留言时间：</label>
+                    <div class="col-sm-8">
+                        <label class="control-label">@Model.AddTime.ToString("yyyy-MM-dd HH:mm")</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">审核：</label>
+                    <div class="col-sm-8">
+                        <label class="checkbox-inline i-checks">
+                            <input type="checkbox" value="1" name="IsVerify" id="IsVerify" @(Model.IsVerify == 1 ? "checked" : "")> 审核通过
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">回复者：</label>
+                    <div class="col-sm-8">
+                        <input id="ReplyUser" name="ReplyUser" maxlength="200" type="text" class="form-control" required aria-required="true" placeholder="如果回复留言，请填写回复者" value="@Model.ReplyNickName">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">回复内容：</label>
+                    <div class="col-sm-8">
+                        <textarea id="Reply" name="Reply" class="form-control" placeholder="可以输入栏目的详细介绍" required>@Model.ReplyContent</textarea>
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-3">
+                        <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                        <button class="btn btn-default" type="button" onclick="closethisdialog();"><i class="fa fa-close"></i> 取消 </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    $(function () {
+        DoPost("editGuestbookForm");
+    })
+</script>
