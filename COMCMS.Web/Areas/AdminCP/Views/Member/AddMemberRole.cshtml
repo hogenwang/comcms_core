@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.title = "添加新用户组";
+}
+<div class="wrapper wrapper-content ">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.Title</h5>
+            <div class="ibox-tools">
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="alert alert-info">
+                说明：“父级返现百分比”和“爷级返现百分比”为本代理级别的下级业绩的抽点。比如说，下级消费1000，那如果“父级返现百分比”为10%。则他有团队业绩提成100。0则没有任何提成。
+            </div>
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addmemberroleForm", @class = "form-horizontal m-t" }))
+            {
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">用户组名称：</label>
+                    <div class="col-sm-8">
+                        <input id="RoleName" name="RoleName" maxlength="200" type="text" class="form-control" value="" required aria-required="true" placeholder="填写用户组名称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">用户组简介：</label>
+                    <div class="col-sm-8">
+                        <input id="RoleDescription" type="text" class="form-control" name="RoleDescription" placeholder="用户组简介，非必填" value="" maxlength="200">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">不允许删除：</label>
+                    <div class="col-sm-8">
+                        <label class="checkbox-inline i-checks">
+                            <input type="checkbox" value="1" name="NotAllowDel" id="NotAllowDel"> 不允许删除（勾选则该管理组不允许直接删除）
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序：</label>
+                    <div class="col-sm-8">
+                        <input id="Rank" type="number" class="form-control" name="Rank" placeholder="排序" value="" maxlength="3">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">返现百分比：</label>
+                    <div class="col-sm-8">
+                        <input id="CashBack" type="text" class="form-control" name="CashBack" placeholder="30为30%，消费后返现百分比到自己账号" value="" maxlength="10">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">父级返现百分比：</label>
+                    <div class="col-sm-8">
+                        <input id="ParentCashBack" type="text" class="form-control" name="ParentCashBack" placeholder="15为15%，消费后返现百分比到父级账号" value="" maxlength="10">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">爷级返现百分比：</label>
+                    <div class="col-sm-8">
+                        <input id="GrandfatherCashBack" type="text" class="form-control" name="GrandfatherCashBack" placeholder="15为15%，消费后返现百分比到爷级账号" value="" maxlength="10">
+                    </div>
+                </div>
+                <div class="form-group hide">
+                    <label class="col-sm-3 control-label">入驻费用：</label>
+                    <div class="col-sm-8">
+                        <input id="JoinPrice" type="text" class="form-control" name="JoinPrice" placeholder="入驻成为本用户组费用" value="" maxlength="20">
+                    </div>
+                </div>
+                <div class="form-group hide">
+                    <label class="col-sm-3 control-label">返现减半：</label>
+                    <div class="col-sm-8">
+                        <label class="checkbox-inline i-checks">
+                            <input type="checkbox" value="1" name="IsHalved" id="IsHalved"> 超过父级级别是否减半（勾选，则如果自己超过父级级别，提成减半）
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group hide">
+                    <label class="col-sm-3 control-label">年业务量：</label>
+                    <div class="col-sm-8">
+                        <input id="YearsPerformance" type="text" class="form-control" name="YearsPerformance" placeholder="年业务量，不达标自动降级" value="" maxlength="10">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-3">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                        <button class="btn btn-default" type="button" onclick="closethisdialog();"><i class="fa fa-close"></i> 取消 </button>
+                    </div>
+                </div>
+
+            }
+        </div>
+    </div>
+
+
+</div>
+<script>
+    $(function () {
+        DoPost("addmemberroleForm");
+    })
+</script>

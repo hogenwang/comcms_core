@@ -1,0 +1,148 @@
+﻿
+@{
+    ViewBag.title = "添加商品栏目";
+}
+<div class="wrapper wrapper-content ">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.title</h5>
+            <div class="ibox-tools">
+            </div>
+        </div>
+        <div class="ibox-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addArticleKindForm", @class = "form-horizontal m-t" }))
+            {
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">上级栏目：</label>
+                    <div class="col-sm-8">
+                        <select class="form-control m-b" name="PId" id="PId">
+                            <option value="0">一级栏目</option>
+                            @foreach (var m in ViewBag.ListTree)
+                            {
+                                <option value="@m.Id">@m.KindName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">栏目名称：</label>
+                    <div class="col-sm-8">
+                        <input id="KindName" name="KindName" maxlength="200" type="text" class="form-control" required aria-required="true" placeholder="填写栏目名称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">副标题：</label>
+                    <div class="col-sm-8">
+                        <input id="SubTitle" type="text" class="form-control" name="SubTitle" placeholder="栏目副标题，非必填" maxlength="200">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Banner图片：</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input id="BannerImg" name="BannerImg" maxlength="250" type="text" class="form-control" placeholder="请选择或上传一个Banner图片" value="">
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-primary" onclick="BrowseServer('BannerImg')">
+                                    选择图片
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序：</label>
+                    <div class="col-sm-8">
+                        <input id="Rank" type="number" class="form-control" name="Rank" value="0" maxlength="20" placeholder="越小排得越前" aria-required="true">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">列表商品数量：</label>
+                    <div class="col-sm-8">
+                        <input id="PageSize" type="number" class="form-control" name="PageSize" value="15" maxlength="20" placeholder="商品列表页面每页商品显示条数，仅对商品列表页面有效" aria-required="true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">显示下级栏目商品：</label>
+                    <div class="col-sm-8">
+                        <label class="checkbox-inline i-checks">
+                            <input type="checkbox" value="1" name="IsShowSubDetail" id="IsShowSubDetail" checked> 显示下级栏目商品（勾选则该栏目列表，显示下级栏目商品。）
+                        </label>
+                    </div>
+                </div>
+
+                @*<div class="form-group">
+                        <label class="col-sm-3 control-label">栏目模板：</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="TemplateFile" id="TemplateFile">
+                                @foreach (var s in ViewBag.ListTpl)
+                                {
+                                    <option value="@s" >@s</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">商品模板：</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="DetailTemplateFile" id="DetailTemplateFile">
+                                @foreach (var s in ViewBag.ListTpl)
+                                {
+                                    <option value="@s">@s</option>
+                                }
+                            </select>
+                        </div>
+                    </div>*@
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">隐藏栏目：</label>
+                    <div class="col-sm-8">
+                        <label class="checkbox-inline i-checks">
+                            <input type="checkbox" value="1" name="IsHide" id="IsHide"> 隐藏栏目（栏目在前台不显示）
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">栏目关键字：</label>
+                    <div class="col-sm-8">
+                        <input id="Keyword" type="text" class="form-control" name="Keyword" value="" maxlength="250" placeholder="优化搜索引擎搜录" aria-required="true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">栏目描述：</label>
+                    <div class="col-sm-8">
+                        <input id="Description" type="text" class="form-control" name="Description" value="" maxlength="250" placeholder="优化搜索引擎搜录" aria-required="true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">跳转链接：</label>
+                    <div class="col-sm-8">
+                        <input id="LinkURL" type="text" class="form-control" name="LinkURL" value="" maxlength="200" placeholder="填写则点击该类别自动跳转到该地址" aria-required="true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">栏目介绍：</label>
+                    <div class="col-sm-8">
+                        <textarea id="KindInfo" name="KindInfo" class="form-control" placeholder="可以输入栏目的详细介绍"></textarea>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-3">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                        <button class="btn btn-default" type="button" onclick="closethisdialog();"><i class="fa fa-close"></i> 取消 </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>
+<script>
+    $(function () {
+        DoPost("addArticleKindForm");
+        CKEDITOR.replace('KindInfo');
+    })
+</script>
+

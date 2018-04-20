@@ -584,5 +584,430 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             return Json(tip);
         }
         #endregion
+
+        #region 用户组管理
+        [MyAuthorize( "viewlist",  "memberrole")]
+        public IActionResult MemberRole()
+        {
+            IList<MemberRoles> list = MemberRoles.FindAll(MemberRoles._.Id > 0, MemberRoles._.Rank.Asc(), null, 0, 0);
+            Core.Admin.WriteLogActions("查看用户组列表;");
+            return View(list);
+        }
+
+        //添加管理组
+        [MyAuthorize("add", "memberrole")]
+        public IActionResult AddMemberRole()
+        {
+            //获取所有的菜单列表
+            IList<AdminMenu> list = AdminMenu.GetListTree(0, -1, false, false);
+            ViewBag.MenuList = list;
+            Core.Admin.WriteLogActions("查看添加用户组;");
+            return View();
+        }
+        //执行添加用户组
+        [HttpPost]
+        [MyAuthorize("add", "memberrole", "JSON")]
+        public IActionResult AddMemberRole(FormCollection fc)
+        {
+            string RoleName = fc["RoleName"];
+            string RoleDescription = fc["RoleDescription"];
+            string NotAllowDel = fc["NotAllowDel"];
+            string Rank = fc["Rank"];
+            string CashBack = fc["CashBack"];
+            string ParentCashBack = fc["ParentCashBack"];
+            string GrandfatherCashBack = fc["GrandfatherCashBack"];
+            string IsHalved = fc["IsHalved"];
+            string YearsPerformance = fc["YearsPerformance"];
+            string JoinPrice = fc["JoinPrice"];
+
+            if (string.IsNullOrEmpty(RoleName))
+            {
+                tip.Message = "用户组名称不能为空！";
+                return Json(tip);
+            }
+            if (!Utils.IsInt(Rank))
+            {
+                tip.Message = "排序只能是数字！";
+                return Json(tip);
+            }
+            if (!Utils.IsDecimal(CashBack))
+            {
+                tip.Message = "返现金额格式错误！";
+                return Json(tip);
+            }
+            if (!Utils.IsDecimal(ParentCashBack))
+            {
+                tip.Message = "父级返现金额格式错误！";
+                return Json(tip);
+            }
+            if (!Utils.IsDecimal(ParentCashBack))
+            {
+                tip.Message = "爷级返现金额格式错误！";
+                return Json(tip);
+            }
+            if (!Utils.IsDecimal(YearsPerformance))
+            {
+                tip.Message = "年销售额格式错误！";
+                return Json(tip);
+            }
+            if (!Utils.IsDecimal(JoinPrice))
+            {
+                tip.Message = "入驻费用格式错误！";
+                return Json(tip);
+            }
+            MemberRoles entity = new MemberRoles();
+            entity.RoleName = RoleName;
+            entity.RoleDescription = RoleDescription;
+            entity.NotAllowDel = !string.IsNullOrEmpty(NotAllowDel) && NotAllowDel == "1" ? 1 : 0;
+            entity.IsHalved = !string.IsNullOrEmpty(IsHalved) && IsHalved == "1" ? 1 : 0;
+            entity.Rank = int.Parse(Rank);
+            entity.CashBack = decimal.Parse(CashBack);
+            entity.ParentCashBack = decimal.Parse(ParentCashBack);
+            entity.GrandfatherCashBack = decimal.Parse(GrandfatherCashBack);
+            entity.YearsPerformance = decimal.Parse(YearsPerformance);
+            entity.JoinPrice = decimal.Parse(JoinPrice);
+            entity.Insert();
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "添加用户组成功";
+            tip.ReturnUrl = "close";
+            Core.Admin.WriteLogActions($"添加新用户组（{entity.Id}）;");
+            return Json(tip);
+        }
+        //编辑用户组
+        [MyAuthorize("edit", "memberrole")]
+        public IActionResult EditMemberRole(int id)
+        {
+            MemberRoles entity = MemberRoles.Find(MemberRoles._.Id == id);
+            if (entity == null)
+            {
+                return EchoTipPage("系统找不到本记录！", 0, true, "");
+            }
+            Core.Admin.WriteLogActions($"查看/编辑用户组（{id}）详情;");
+            return View(entity);
+        }
+        [HttpPost]
+        [MyAuthorize("edit", "memberrole", "JSON")]
+        public IActionResult EditMemberRole(MemberRoles model)
+        {
+            if (model.Id <=0)
+            {
+                tip.Message = "错误参数传递！";
+                return Json(tip);
+            }
+
+            if (string.IsNullOrEmpty(model.RoleName))
+            {
+                tip.Message = "用户组名称不能为空！";
+                return Json(tip);
+            }
+
+            if (model.CashBack <0)
+            {
+                tip.Message = "返现金额格式错误！";
+                return Json(tip);
+            }
+            if (model.ParentCashBack <0)
+            {
+                tip.Message = "父级返现金额格式错误！";
+                return Json(tip);
+            }
+            if (model.GrandfatherCashBack<0)
+            {
+                tip.Message = "爷级返现金额格式错误！";
+                return Json(tip);
+            }
+            if (model.YearsPerformance <0)
+            {
+                tip.Message = "年销售额格式错误！";
+                return Json(tip);
+            }
+            if (model.JoinPrice <0)
+            {
+                tip.Message = "入驻费用格式错误！";
+                return Json(tip);
+            }
+
+            MemberRoles entity = MemberRoles.Find(MemberRoles._.Id == model.Id);
+            if (entity == null)
+            {
+                tip.Message = "系统找不到本记录！";
+                return Json(tip);
+            }
+            entity.RoleName = model.RoleName;
+            entity.RoleDescription = model.RoleDescription;
+            entity.NotAllowDel = model.NotAllowDel;
+            entity.IsHalved = model.IsHalved;
+            entity.Rank = model.Rank;
+            entity.CashBack = model.CashBack;
+            entity.ParentCashBack = model.ParentCashBack;
+            entity.GrandfatherCashBack = model.GrandfatherCashBack;
+            entity.YearsPerformance = model.YearsPerformance;
+            entity.JoinPrice = model.JoinPrice;
+            entity.Update();
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "编辑用户组成功";
+            tip.ReturnUrl = "close";
+            Core.Admin.WriteLogActions($"编辑用户组（{entity.Id}）;");
+            return Json(tip);
+        }
+
+        //删除用户组
+        [HttpPost]
+        [MyAuthorize("del", "memberrole", "JSON")]
+        public IActionResult DelMemberRole(int id)
+        {
+            MemberRoles entity = MemberRoles.Find(MemberRoles._.Id == id);
+            if (entity == null)
+            {
+                tip.Message = "系统找不到本用户组详情！";
+                return Json(tip);
+            }
+            if (entity.NotAllowDel == 1)
+            {
+                tip.Message = "本管理组设定不允许删除，如果需要删除，请先解除限制！";
+                return Json(tip);
+            }
+
+            //删除管理组，并删除旗下所有管理员
+            Core.Admin.WriteLogActions($"执行删除用户组（{entity.Id}:{entity.RoleName}）详情;");
+            entity.Delete();
+
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "删除用户组成功";
+            return Json(tip);
+        }
+
+        #endregion
+
+        #region 用户管理
+        [MyAuthorize("viewlist", "members")]
+        public IActionResult Members()
+        {
+            //加载用户组
+            IList<MemberRoles> list = MemberRoles.FindAll(MemberRoles._.Id > 0, MemberRoles._.Rank.Asc(), null, 0, 0);
+            ViewBag.RoleList = list;
+            Core.Admin.WriteLogActions("查看用户列表;");
+            return View();
+        }
+        [MyAuthorize("viewlist", "members", "JSON")]
+        public IActionResult GetMembers(string keyword, int page = 1, int limit = 20, int roleid = 0, int groupid = 0)
+        {
+            int numPerPage, currentPage, startRowIndex;
+            long totalCount = 0;
+
+            numPerPage = limit;
+            currentPage = page;
+            startRowIndex = (currentPage - 1) * numPerPage;
+            Expression ex = Member._.Id > 0;
+
+            if (roleid > 0)
+                ex &= Member._.RoleId == roleid;
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+                ex &= (Member._.RealName.Contains(keyword) | Member._.Tel.Contains(keyword));
+
+            IList<Member> list = Member.FindAll(ex, null, null, startRowIndex, numPerPage);
+            totalCount = Member.FindCount(ex, null, null, startRowIndex, numPerPage);
+            return Content(JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
+        }
+        //查看，编辑用户信息
+        [MyAuthorize("add", "members")]
+        public IActionResult AddMember()
+        {
+            IList<MemberRoles> list = MemberRoles.FindAll(MemberRoles._.Id > 0, MemberRoles._.Rank.Asc(), null, 0, 0);
+            ViewBag.RoleList = list;
+            ViewBag.allmember = Member.FindAll(Member._.Id > 0 & Member._.IsLock != 1, null, null, 0, 0);
+
+            Core.Admin.WriteLogActions($"查看添加用户页面;");
+            Member model = new Member();
+            return View(model);
+        }
+        [HttpPost]
+        [MyAuthorize("add", "members", "JSON")]
+        public IActionResult AddMember(Member model)
+        {
+            if (string.IsNullOrEmpty(model.UserName))
+            {
+                tip.Message = "用户名必须是一个手机号码！";
+                return Json(tip);
+            }
+            //判断用户是否存在
+            if (Member.FindCount(Member._.UserName == model.UserName, null, null, 0, 0) > 0)
+            {
+                tip.Message = "用户名已经存在！";
+                return Json(tip);
+            }
+
+            if (string.IsNullOrEmpty(model.PassWord) || model.PassWord.Length < 6)
+            {
+                tip.Message = "密码必须不小于6个字符";
+                return Json(tip);
+            }
+            string PassWord2 = Request.Form["PassWord2"];
+            if (model.PassWord != PassWord2)
+            {
+                tip.Message = "两次输入密码不一致，请重新输入！";
+                return Json(tip);
+            }
+            if (!string.IsNullOrEmpty(model.Email) && !Utils.IsValidEmail(model.Email))
+            {
+                tip.Message = "邮箱格式错误！";
+                return Json(tip);
+            }
+            if (model.RoleId <= 0)
+            {
+                tip.Message = "请选择一个用户组！";
+                return Json(tip);
+            }
+            if (model.Parent == 0 && model.Grandfather != 0)
+                model.Grandfather = 0;
+            //执行添加
+            Member entity = new Member();
+            entity.UserName = model.UserName;
+            entity.Salt = Utils.GetRandomChar(20);
+            entity.PassWord = Utils.MD5(entity.Salt + model.PassWord);
+            entity.Email = model.Email;
+            entity.Tel = model.Tel;
+            entity.Parent = model.Parent;
+            entity.Grandfather = model.Grandfather;
+            entity.IsLock = 0;
+            entity.RoleId = model.RoleId;
+            entity.RealName = model.RealName;
+            entity.RegIP = "127.0.0.1";
+            entity.RegTime = DateTime.Now;
+            entity.Balance = 0;
+            entity.GiftBalance = 0;
+            entity.ExtCredits1 = 0;
+            entity.ExtCredits2 = 0;
+            entity.ExtCredits3 = 0;
+            entity.ExtCredits4 = 0;
+            entity.ExtCredits5 = 0;
+            entity.TotalCredits = 0;
+            entity.YearsPerformance = 0;
+            entity.Insert();
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "添加用户成功";
+            tip.ReturnUrl = "close";
+            Core.Admin.WriteLogActions($"添加用户({entity.Id}/{entity.UserName});");
+            return Json(tip);
+        }
+
+
+        //查看，编辑用户信息
+        [MyAuthorize("edit", "members")]
+        public IActionResult EditMember(int id)
+        {
+            IList<MemberRoles> list = MemberRoles.FindAll(MemberRoles._.Id > 0, MemberRoles._.Rank.Asc(), null, 0, 0);
+            ViewBag.RoleList = list;
+
+            Member entity = Member.Find(Core.Member._.Id == id);
+            if (entity == null)
+            {
+                return EchoTipPage("系统找不到本记录！");
+            }
+            ViewBag.allmember = Member.FindAll(Member._.Id > 0 & Member._.IsLock != 1 & Member._.Id != entity.Id, null, null, 0, 0);
+            //获取用户余额变化记录
+            IList<BalanceChangeLog> listbalancelogs = BalanceChangeLog.FindAll(BalanceChangeLog._.UId == entity.Id, null, null, 0, 0);
+            ViewBag.listbalancelogs = listbalancelogs;
+
+            IList<RebateChangeLog> listrechargebalancelogs = RebateChangeLog.FindAll(RebateChangeLog._.UId == entity.Id, null, null, 0, 0);
+            ViewBag.listrechargebalancelogs = listrechargebalancelogs;
+
+
+
+            Core.Admin.WriteLogActions($"查看/编辑用户({entity.UserName});");
+            return View(entity);
+        }
+        [HttpPost]
+        [MyAuthorize("edit", "members", "JSON")]
+        public IActionResult EditMember(Member model)
+        {
+            if (model.Id <= 0)
+            {
+                tip.Message = "错误请求";
+                return Json(tip);
+            }
+            Member entity = Member.FindById(model.Id);
+            if (entity == null)
+            {
+                tip.Message = "系统找不到本记录";
+                return Json(tip);
+            }
+            if (!string.IsNullOrEmpty(model.PassWord))
+            {
+                if (string.IsNullOrEmpty(model.PassWord) || model.PassWord.Length < 6)
+                {
+                    tip.Message = "密码必须不小于6个字符";
+                    return Json(tip);
+                }
+                string PassWord2 = Request.Form["PassWord2"];
+                if (model.PassWord != PassWord2)
+                {
+                    tip.Message = "两次输入密码不一致，请重新输入！";
+                    return Json(tip);
+                }
+                entity.PassWord = Utils.MD5(entity.Salt + model.PassWord);
+            }
+            if (string.IsNullOrEmpty(model.UserName))
+            {
+                tip.Message = "用户名必须是一个手机号码！";
+                return Json(tip);
+            }
+            //判断用户是否存在
+            if (Member.FindCount(Member._.UserName == model.UserName & Member._.Id != entity.Id, null, null, 0, 0) > 0)
+            {
+                tip.Message = "用户名已经存在，请重新填写一个！";
+                return Json(tip);
+            }
+            string IsVerifySellers = Request.Form["IsVerifySellers"];
+            entity.UserName = model.UserName;
+            entity.Email = model.Email;
+            entity.Tel = model.UserName;
+            entity.Parent = model.Parent;
+            entity.Grandfather = model.Grandfather;
+            entity.RoleId = model.RoleId;
+            entity.RealName = model.RealName;
+            entity.Phone = model.Phone;
+            entity.Alipay = model.Alipay;
+            entity.Bank = model.Bank;
+            entity.BankCardNO = model.BankCardNO;
+            entity.Skype = model.Skype;
+            if (IsVerifySellers == "")
+            {
+                entity.IsVerifySellers = 1;
+            }
+            else
+                entity.IsVerifySellers = 0;
+
+            entity.Update();
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "编辑用户成功";
+            tip.ReturnUrl = "close";
+            Core.Admin.WriteLogActions($"编辑用户({entity.Id}/{entity.UserName});");
+            return Json(tip);
+        }
+
+        /// <summary>
+        /// 删除用户
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [MyAuthorize("del", "members", "JSON")]
+        public IActionResult DelMember(int id)
+        {
+            Member he = Member.Find(Member._.Id == id);
+            if (he == null)
+            {
+                tip.Message = "系统找不到本用户！";
+                return Json(tip);
+            }
+            he.Delete();
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "删除用户成功！";
+            Core.Admin.WriteLogActions($"删除用户({he.Id}|{he.UserName});");
+            return Json(tip);
+        }
+        #endregion
     }
 }

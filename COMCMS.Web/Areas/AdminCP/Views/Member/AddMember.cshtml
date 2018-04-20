@@ -1,0 +1,176 @@
+﻿@model COMCMS.Core.Member
+@{
+    ViewBag.title = "添加用户";
+}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.Title</h5>
+            <div class="ibox-tools">
+            </div>
+        </div>
+        <div class="ibox-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addMemberForm", @class = "form-horizontal m-t" }))
+            {
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#tab-1" aria-expanded="true"> 用户基本设置</a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="#tab-2" aria-expanded="false"> 余额信息</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">所属用户组：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control m-b" name="RoleId" id="RoleId">
+                                            @foreach (var m in ViewBag.RoleList)
+                                            {
+                                                <option value="@m.Id">@m.RoleName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">用户名/手机号码：</label>
+                                    <div class="col-sm-8">
+                                        <input id="UserName" name="UserName" maxlength="20" type="text" class="form-control" value="@Model.UserName" required aria-required="true" placeholder="登录用户名">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">密码：</label>
+                                    <div class="col-sm-8">
+                                        <input id="PassWord" name="PassWord" maxlength="20" type="password" class="form-control" value="" required aria-required="true" placeholder="请填写一个用户密码">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">重复密码：</label>
+                                    <div class="col-sm-8">
+                                        <input id="PassWord2" name="PassWord2" maxlength="20" type="password" class="form-control" value="" required aria-required="true" placeholder="请再次填写用户密码">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">真实姓名：</label>
+                                    <div class="col-sm-8">
+                                        <input id="Realname" name="Realname" maxlength="20" type="text" class="form-control" value="@Model.RealName" aria-required="true" placeholder="真实姓名">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">电子邮件：</label>
+                                    <div class="col-sm-8">
+                                        <input id="Email" name="Email" maxlength="100" type="text" class="form-control" value="@Model.Email" aria-required="true" placeholder="电子邮件">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">父级用户：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control m-b" name="Parent" id="Parent">
+                                            <option value="0">顶层用户，无父级用户</option>
+                                            @foreach (COMCMS.Core.Member m in ViewBag.allmember)
+                                            {
+                                                <option value="@m.Id" >@m.UserName（@m.RealName）</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">爷级用户：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control m-b" name="Grandfather" id="Grandfather">
+                                            <option value="0">顶层用户，无爷级用户</option>
+                                            @foreach (COMCMS.Core.Member m in ViewBag.allmember)
+                                            {
+                                                <option value="@m.Id" >@m.UserName（@m.RealName）</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="display:none">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">QQ：</label>
+                                        <div class="col-sm-8">
+                                            <input id="QQ" name="QQ" maxlength="20" type="text" class="form-control" value="@Model.QQ
+                                                   " required aria-required="true" placeholder="QQ">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">微信：</label>
+                                        <div class="col-sm-8">
+                                            <input id="Weixin" name="Weixin" maxlength="20" type="text" class="form-control" value="@Model.Weixin
+                                                   " required aria-required="true" placeholder="微信" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">省份：</label>
+                                        <div class="col-sm-8">
+                                            <input id="Province" name="Province" maxlength="20" type="text" class="form-control" value="@Model.Province
+                                                   " required aria-required="true" placeholder="省份">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">城市：</label>
+                                        <div class="col-sm-8">
+                                            <input id="City" name="City" maxlength="20" type="text" class="form-control" value="@Model.City
+                                                   " required aria-required="true" placeholder="城市">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">区域：</label>
+                                        <div class="col-sm-8">
+                                            <input id="District" name="District" maxlength="20" type="text" class="form-control" value="@Model.District
+                                                   " required aria-required="true" placeholder="区域">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">详细地址：</label>
+                                        <div class="col-sm-8">
+                                            <input id="Address" name="Address" maxlength="20" type="text" class="form-control" value="@Model.Address
+                                                   " required aria-required="true" placeholder="详细地址">
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="form-group">
+                                        <label class="col-sm-3 control-label">银行卡号码：</label>
+                                        <div class="col-sm-8">
+                                            <input id="BankCardNO" name="BankCardNO" maxlength="20" type="text" class="form-control" value="@Model.BankCardNO" required aria-required="true" placeholder="银行卡号码" readonly>
+                                        </div>
+                                    </div>*@
+                            </div>
+                        </div>
+
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="alert alert-info">
+                                    温馨提示：此部分信息只读。
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row white-bg">
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-3">
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                            <button class="btn btn-default" type="button" onclick="closethisdialog();"><i class="fa fa-close"></i> 取消 </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>
+<script>
+    $(function () {
+        DoPost("addMemberForm");
+    })
+</script>

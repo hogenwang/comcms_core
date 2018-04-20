@@ -1,0 +1,396 @@
+﻿@model COMCMS.Core.Member
+@{
+    ViewBag.title = "查看/编辑用户详情";
+}
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.title</h5>
+            <div class="ibox-tools">
+            </div>
+        </div>
+        <div class="ibox-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editMemberForm", @class = "form-horizontal m-t" }))
+            {
+                <div class="tabs-container">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#tab-1" aria-expanded="true"> 用户基本设置</a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="#tab-2" aria-expanded="false"> 详细信息</a>
+                        </li>
+                        <li class="">
+                            <a data-toggle="tab" href="#tab-3" aria-expanded="false"> 余额变化记录</a>
+                        </li>
+                        <li class="hide">
+                            <a data-toggle="tab" href="#tab-5" aria-expanded="false"> 赠送余额变化记录</a>
+                        </li>
+                        <li class="hide">
+                            <a data-toggle="tab" href="#tab-6" aria-expanded="false"> 销售返现变化记录</a>
+                        </li>
+                        <li class="hide">
+                            <a data-toggle="tab" href="#tab-4" aria-expanded="false"> 手动充值</a>
+                        </li>
+                        <li class="hide">
+                            <a data-toggle="tab" href="#tab-7" aria-expanded="false"> 手动清除返现</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">所属用户组：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control m-b" asp-for="RoleId">
+                                            @foreach (var m in ViewBag.RoleList)
+                                            {
+                                                <option value="@m.Id">@m.RoleName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">昵称：</label>
+                                    <div class="col-sm-8">
+                                        <input id="Nickname" name="Nickname" maxlength="20" type="text" class="form-control" value="@Model.Nickname" aria-required="true" placeholder="昵称" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group hidden">
+                                    <label class="col-sm-3 control-label">用户名：</label>
+                                    <div class="col-sm-8">
+                                        <input id="UserName" name="UserName" maxlength="20" type="text" class="form-control" value="@Model.UserName" required aria-required="true" placeholder="登录用户名">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">手机号码：</label>
+                                    <div class="col-sm-8">
+                                        <input id="Tel" name="Tel" maxlength="20" type="text" class="form-control" value="@Model.Tel" aria-required="true" placeholder="用户手机号码">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">修改密码：</label>
+                                    <div class="col-sm-8">
+                                        <input id="PassWord" name="PassWord" maxlength="20" type="password" class="form-control" value="" aria-required="true" placeholder="如果修改密码，请填写，不修改，留空">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">重复密码：</label>
+                                    <div class="col-sm-8">
+                                        <input id="PassWord2" name="PassWord2" maxlength="20" type="password" class="form-control" value="" aria-required="true" placeholder="请再次填写用户密码">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">真实姓名：</label>
+                                    <div class="col-sm-8">
+                                        <input id="Realname" name="Realname" maxlength="20" type="text" class="form-control" value="@Model.RealName" aria-required="true" placeholder="真实姓名">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">电子邮件：</label>
+                                    <div class="col-sm-8">
+                                        <input id="Email" name="Email" maxlength="100" type="text" class="form-control" value="@Model.Email" aria-required="true" placeholder="电子邮件">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">父级用户：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control m-b" asp-for="Parent">
+                                            <option value="0">顶层用户，无父级用户</option>
+                                            @foreach (COMCMS.Core.Member m in ViewBag.allmember)
+                                            {
+                                                <option value="@m.Id">@System.Web.HttpUtility.UrlDecode(m.RealName)</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">爷级用户：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control m-b" name="Grandfather" id="Grandfather" asp-for="Grandfather">
+                                            <option value="0">顶层用户，无爷级用户</option>
+                                            @foreach (COMCMS.Core.Member m in ViewBag.allmember)
+                                            {
+                                                <option value="@m.Id">@System.Web.HttpUtility.UrlDecode(m.RealName)</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="display:none">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">QQ：</label>
+                                        <div class="col-sm-8">
+                                            <input id="QQ" name="QQ" maxlength="20" type="text" class="form-control" value="@Model.QQ
+                                                   " required aria-required="true" placeholder="QQ">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">微信：</label>
+                                        <div class="col-sm-8">
+                                            <input id="Weixin" name="Weixin" maxlength="20" type="text" class="form-control" value="@Model.Weixin
+                                                   " required aria-required="true" placeholder="微信" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">省份：</label>
+                                        <div class="col-sm-8">
+                                            <input id="Province" name="Province" maxlength="20" type="text" class="form-control" value="@Model.Province
+                                                   " required aria-required="true" placeholder="省份">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">城市：</label>
+                                        <div class="col-sm-8">
+                                            <input id="City" name="City" maxlength="20" type="text" class="form-control" value="@Model.City
+                                                   " required aria-required="true" placeholder="城市">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">区域：</label>
+                                        <div class="col-sm-8">
+                                            <input id="District" name="District" maxlength="20" type="text" class="form-control" value="@Model.District
+                                                   " required aria-required="true" placeholder="区域">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">详细地址：</label>
+                                        <div class="col-sm-8">
+                                            <input id="Address" name="Address" maxlength="20" type="text" class="form-control" value="@Model.Address
+                                                   " required aria-required="true" placeholder="详细地址">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">可用余额：</label>
+                                    <div class="col-sm-8">
+                                        <label class="control-label">@Model.Balance.ToString("N2")</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">赠送余额：</label>
+                                    <div class="col-sm-8">
+                                        <label class="control-label">@Model.GiftBalance.ToString("N2")</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">分销返现余额：</label>
+                                    <div class="col-sm-8">
+                                        <label class="control-label">@Model.ExtCredits1.ToString("N2")</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">联系电话：</label>
+                                    <div class="col-sm-8">
+                                        <input id="Phone" name="Phone" type="text" maxlength="20" class="form-control" placeholder="可以设置一个其他的联系电话" value="@Model.Phone">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">支付宝账号：</label>
+                                    <div class="col-sm-8">
+                                        <input id="Alipay" name="Alipay" type="text" maxlength="50" class="form-control" placeholder="请填写您的支付宝账号" value="@Model.Alipay">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">PayPal账号：</label>
+                                    <div class="col-sm-8">
+                                        <input id="Skype" name="Skype" type="text" maxlength="100" class="form-control" placeholder="请填写您的PayPal账号" value="@Model.Skype">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">银行卡号码：</label>
+                                    <div class="col-sm-8">
+                                        <input id="BankCardNO" name="BankCardNO" maxlength="20" type="text" class="form-control" value="@Model.BankCardNO" aria-required="true" placeholder="银行卡号码" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">开户行：</label>
+                                    <div class="col-sm-8">
+                                        <input id="Bank" name="Bank" maxlength="20" type="text" class="form-control" value="@Model.Bank" aria-required="true" placeholder="开户银行" readonly>
+                                    </div>
+                                </div>
+                                <div class="form-group hidden">
+                                    <label class="col-sm-3 control-label">已缴费代理商：</label>
+                                    <div class="col-sm-8">
+                                        <label class="checkbox-inline i-checks">
+                                            <input type="checkbox" value="1" name="IsVerifySellers" id="IsVerifySellers" @(Model.IsVerifySellers == 1 ? "checked" : "")> 已经缴费（注意，如果手动勾选，该用户会变成已经缴费的代理商，请慎重使用本功能）
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row white-bg">
+                                    <div class="hr-line-dashed"></div>
+                                    <div class="form-group">
+                                        <div class="col-sm-4 col-sm-offset-3">
+                                            <input type="hidden" name="Id" value="@Model.Id" id="Id" />
+                                            <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                                            <button class="btn btn-default" type="button" onclick="closethisdialog();"><i class="fa fa-close"></i> 取消 </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="tab-2" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="alert alert-info">
+                                    温馨提示：此部分信息只读。
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">注册时间：</label>
+                                    <div class="col-sm-8">
+                                        <label class="control-label">@Model.RegTime.ToString("yyyy-MM-dd HH:mm")</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">注册IP：</label>
+                                    <div class="col-sm-8">
+                                        <label class="control-label">@Model.RegIP</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">最后登录时间：</label>
+                                    <div class="col-sm-8">
+                                        <label class="control-label">@Model.LastLoginTime.ToString("yyyy-MM-dd HH:mm")</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">最后登录IP：</label>
+                                    <div class="col-sm-8">
+                                        <label class="control-label">@Model.LastLoginIP</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">登录次数：</label>
+                                    <div class="col-sm-8">
+                                        <label class="control-label">@Model.LoginCount</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">用户推广二维码：<br />仅限有生成过</label>
+                                    <div class="col-sm-8">
+                                        <label class="control-label"><img src="/userfiles/qrcode/invite/@(Model.Id).png" /></label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div id="tab-3" class="tab-pane">
+
+                            <table class="table table-bordered" style="margin-top:15px">
+                                <thead>
+                                    <tr>
+                                        <th>类型</th>
+                                        <th>变化值</th>
+                                        <th>变化前</th>
+                                        <th>变化后</th>
+                                        <th>时间</th>
+                                        <th>理由</th>
+                                    </tr>
+                                </thead>
+                                @foreach (COMCMS.Core.BalanceChangeLog b in ViewBag.listbalancelogs)
+                                {
+                                    <tr>
+                                        <td>@COMCMS.Core.Member.GetBalanceTypeName(b.TypeId)</td>
+                                        <td>@b.Reward.ToString("N2")</td>
+                                        <td>@b.BeforChange.ToString("N2")</td>
+                                        <td>@b.AfterChange.ToString("N2")</td>
+                                        <td>@b.AddTime.ToString("yyyy-MM-dd HH:mm")</td>
+                                        <td>@b.Actions</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                        <div id="tab-5" class="tab-pane">
+                        </div>
+                        <div id="tab-6" class="tab-pane">
+
+                            <table class="table table-bordered" style="margin-top:15px">
+                                <thead>
+                                    <tr>
+                                        <th>类型</th>
+                                        <th>变化值</th>
+                                        <th>变化前</th>
+                                        <th>变化后</th>
+                                        <th>时间</th>
+                                        <th>理由</th>
+                                    </tr>
+                                </thead>
+                                @foreach (COMCMS.Core.RebateChangeLog b in ViewBag.listrechargebalancelogs)
+                                {
+                                    <tr>
+                                        <td>@COMCMS.Core.Member.GetBalanceTypeName(b.TypeId)</td>
+                                        <td>@b.Reward.ToString("N2")</td>
+                                        <td>@b.BeforChange.ToString("N2")</td>
+                                        <td>@b.AfterChange.ToString("N2")</td>
+                                        <td>@b.AddTime.ToString("yyyy-MM-dd HH:mm")</td>
+                                        <td>@b.Actions</td>
+                                    </tr>
+                                }
+                            </table>
+                        </div>
+                        <div id="tab-4" class="tab-pane">
+                            <div style="height:20px"></div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">充值金额：</label>
+                                    <div class="col-sm-8">
+                                        <input id="price" name="price" maxlength="20" type="text" class="form-control" value="" aria-required="true" placeholder="请输入充值金额，大于0为充值，小于0为扣款">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">理由：</label>
+                                    <div class="col-sm-8">
+                                        <input id="reason" name="reason" maxlength="30" type="text" class="form-control" value="" aria-required="true" placeholder="记录充值或者扣款原因，30个字符以内">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">充值金额：</label>
+                                    <div class="col-sm-8">
+                                        <button class="btn btn-warning" type="button" onclick="doRecharge(@Model.Id)"><i class="fa fa-save"></i> 确认充值 </button> 说明：充值后，无法撤回，请确认金额
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-7" class="tab-pane">
+                            <div style="height:20px"></div>
+                            <div class="form-group">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">用户返现余额：</label>
+                                    <div class="col-sm-8">
+                                        <label class="control-label">@Model.ExtCredits1.ToString("N2")</label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">清除返现金额：</label>
+                                    <div class="col-sm-8">
+                                        <input id="pricex" name="pricex" maxlength="20" type="text" class="form-control" value="" aria-required="true" placeholder="请输入扣除返现金额，小于0为扣款，必须小于0">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">理由：</label>
+                                    <div class="col-sm-8">
+                                        <input id="reasonx" name="reasonx" maxlength="30" type="text" class="form-control" value="" aria-required="true" placeholder="记录充值或者扣款原因，30个字符以内">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">确认扣款：</label>
+                                    <div class="col-sm-8">
+                                        <button class="btn btn-warning" type="button" onclick="doDeduction(@Model.Id)"><i class="fa fa-save"></i> 确认扣除 </button> 说明：扣除后，无法撤销
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>
+<script>
+    $(function () {
+        DoPost("editMemberForm");
+    })
+</script>

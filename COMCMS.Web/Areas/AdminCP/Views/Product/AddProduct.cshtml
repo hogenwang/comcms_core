@@ -1,0 +1,222 @@
+﻿@model COMCMS.Core.Product
+@{
+    ViewBag.title = "添加商品详情";
+}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.title</h5>
+            <div class="ibox-tools">
+            </div>
+        </div>
+        <div class="ibox-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addProductForm", @class = "form-horizontal m-t" }))
+            {
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">商品分类：</label>
+                    <div class="col-sm-8">
+                        <select class="form-control m-b" name="KId" id="KId">
+                            @foreach (var m in ViewBag.ListKinds)
+                            {
+                                <option value="@m.Id" >@m.KindName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">商品标题：</label>
+                    <div class="col-sm-8">
+                        <input id="Title" name="Title" maxlength="200" type="text" class="form-control" required aria-required="true" placeholder="填写商品标题" value="@Model.Title">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">副标题：</label>
+                    <div class="col-sm-8">
+                        <input id="SubTitle" type="text" class="form-control" name="SubTitle" placeholder="栏目副标题，非必填" maxlength="200" value="@Model.SubTitle">
+                    </div>
+                </div>
+                @*<div class="form-group">
+                        <label class="col-sm-3 control-label">标题颜色：</label>
+                        <div class="col-sm-8">
+                            <input id="TitleColor" type="text" class="form-control" name="TitleColor" placeholder="标题颜色，可以填写一个如：#FF0000等" maxlength="20" value="@Model.TitleColor">
+                        </div>
+                    </div>*@
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">商品价格：</label>
+                    <div class="col-sm-8">
+                        <input id="Price" type="text" class="form-control" name="Price" placeholder="商品销售价格" maxlength="50" value="@Model.Price.ToString("N2")">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">商品市场价：</label>
+                    <div class="col-sm-8">
+                        <input id="MarketPrice" type="text" class="form-control" name="MarketPrice" placeholder="商品市场价，仅供对比" maxlength="50" value="@Model.MarketPrice.ToString("N2")">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">商品运费：</label>
+                    <div class="col-sm-8">
+                        <input id="Fare" type="text" class="form-control" name="Fare" placeholder="运费，0为免运费" maxlength="50" value="@Model.Fare.ToString("N2")">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">添加时间：</label>
+                    <div class="col-sm-8">
+                        <input id="AddTime" type="text" class="form-control" name="AddTime" placeholder="商品来源，不填前台显示：网络" required onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss',readOnly:true})" value="@Model.AddTime.ToString("yyyy-MM-dd HH:mm:ss")">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序：</label>
+                    <div class="col-sm-8">
+                        <input id="Sequence" type="number" class="form-control" name="Sequence" value="@Model.Sequence" maxlength="20" placeholder="越小排得越前" aria-required="true">
+                    </div>
+                </div>
+                @*<div class="form-group">
+                        <label class="col-sm-3 control-label">TAG：</label>
+                        <div class="col-sm-8">
+                            <input id="Tags" type="text" class="form-control" name="Tags" value="@Model.Tags" maxlength="250" placeholder="TAG关键字，不同关键字请用“,”（英文逗号）隔开" aria-required="true">
+                        </div>
+                    </div>*@
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">商品点击数量：</label>
+                    <div class="col-sm-8">
+                        <input id="Hits" type="number" class="form-control" name="Hits" value="@Model.Hits" maxlength="20" placeholder="商品点击数量，仅对商品列表页面有效" aria-required="true">
+                    </div>
+                </div>
+                @*<div class="form-group">
+                        <label class="col-sm-3 control-label">跳转链接：</label>
+                        <div class="col-sm-8">
+                            <input id="LinkURL" type="text" class="form-control" name="LinkURL" value="@Model.LinkURL" maxlength="200" placeholder="填写则点击该类别自动跳转到该地址" aria-required="true">
+                        </div>
+                    </div>*@
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">其他属性：</label>
+                    <div class="col-sm-8">
+                        <label class="checkbox-inline i-checks">
+                            <input type="checkbox" value="1" name="IsNew" id="IsNew" @(Model.IsNew == 1 ? "checked" : "")> 最新商品
+                        </label>
+                        <label class="checkbox-inline i-checks hide">
+                            <input type="checkbox" value="1" name="IsRecommend" id="IsRecommend" @(Model.IsRecommend == 1 ? "checked" : "")> 推荐商品
+                        </label>
+                        <label class="checkbox-inline i-checks">
+                            <input type="checkbox" value="1" name="IsHotSales" id="IsHotSales" @(Model.IsHotSales == 1 ? "checked" : "")> 热销商品
+                        </label>
+                        <label class="checkbox-inline i-checks hide">
+                            <input type="checkbox" value="1" name="IsHide" id="IsHide" @(Model.IsHide == 1 ? "checked" : "")> 隐藏商品
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">商品图片：</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input id="Pic" name="Pic" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个图片" value="@Model.Pic">
+                            <span class="input-group-addon my-upload-span upload-img"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">商品介绍：</label>
+                    <div class="col-sm-8">
+                        <textarea id="Content" name="Content" class="form-control" placeholder="可以输入栏目的详细介绍" required>@Model.Content</textarea>
+                    </div>
+                </div>
+                <div id="MoreImages">
+                    @if (!string.IsNullOrEmpty(Model.ItemImg))
+                    {
+                        string[] arrimg = Model.ItemImg.Split(new string[] { "|||" }, StringSplitOptions.None);
+                        int i = 1;
+                        foreach (string s in arrimg)
+                        {
+                            if (!string.IsNullOrEmpty(s) && COMCMS.Common.Utils.IsImgFilename(s))
+                            {
+
+
+                                <div class="form-group" id="ImgRow@(i)">
+                                    <label class="col-sm-3 control-label"><button type="button" class="btn btn-danger btn-sm" onclick="delmyImgRow('ImgRow@(i)')"> <i class="fa fa-close"></i> 删除</button></label>
+                                    <div class="col-sm-8">
+                                        <div class="input-group">
+                                            <input id="ImgUrlnImgRow@(i)" name="nImgUrl" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个图片" value="@s">
+                                            <span class="input-group-addon my-upload-span upload-img"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                i++;
+                            }
+                        }
+                    }
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">更多图片(相册)：</label>
+                    <div class="col-sm-8">
+                        <button class="btn btn-info" type="button" onclick="addImagesrow();"><i class="fa fa-plus"></i> 添加图片 </button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">关键字：</label>
+                    <div class="col-sm-8">
+                        <input id="Keyword" type="text" class="form-control" name="Keyword" maxlength="250" placeholder="优化搜索引擎搜录" aria-required="true" value="@Model.Keyword">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">描述：</label>
+                    <div class="col-sm-8">
+                        <input id="Description" type="text" class="form-control" name="Description" value="@Model.Description" maxlength="250" placeholder="优化搜索引擎搜录" aria-required="true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">规格尺寸：</label>
+                    <div class="col-sm-8">
+                        <input id="Spec" type="text" class="form-control" name="Spec" value="@Model.Spec" maxlength="250" placeholder="商品规格" aria-required="true">
+                    </div>
+                </div>
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-3">
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                        <button class="btn btn-default" type="button" onclick="closethisdialog();"><i class="fa fa-close"></i> 取消 </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+    var htmlText = '<div class="form-group" id="nImgRow{0}">';
+    htmlText += '<label class="col-sm-3 control-label"><button type="button" class="btn btn-danger btn-sm" onclick="delmyImgRow(\'nImgRow{0}\')"> <i class="fa fa-close"></i> 删除</button></label>';
+    htmlText += '<div class="col-sm-8">';
+    htmlText += '<div class="input-group">';
+    htmlText += '<input id="nImgUrlnImgRow{0}" name="nImgUrl" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个图片" value="">';
+    htmlText += '<span class="input-group-addon my-upload-span upload-img" id="newimg_{0}"></span>';
+    htmlText += '</div></div></div>';
+
+    var items = 1;
+
+    function addImagesrow() {
+        var newHtmlTr = htmlText.replace(/\{0\}/g, "new" + items);
+        $('#MoreImages').append(newHtmlTr);
+        $("#newimg_new" + items).InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
+        items += 1;
+
+
+    }
+    function delmyImgRow(id) {
+        $("#" + id).remove();
+    }
+
+    $(function () {
+        //初始化上传控件
+        $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
+        $("#TitleColor").colorpicker();
+        CKEDITOR.replace('Content');
+        DoPost("addProductForm");
+    })
+</script>
