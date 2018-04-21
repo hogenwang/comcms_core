@@ -60,16 +60,16 @@ namespace COMCMS.Core
         }
     }
 
-    public static class Extension
-    {
-        public static void EchoTip(this JsonTip json)
-        {
-            string strJson = JsonTip.GetJsonString(json);
+    //public static class Extension
+    //{
+    //    public static void EchoTip(this JsonTip json)
+    //    {
+    //        string strJson = JsonTip.GetJsonString(json);
             
-            Byte[] bytes = Encoding.UTF8.GetBytes(strJson);
-            Stream stream = new MemoryStream(bytes);
-            MyHttpContext.Current.Response.ContentType = "text/plain";
-            MyHttpContext.Current.Response.Body = stream;
-        }
-    }
+    //        Byte[] bytes = Encoding.UTF8.GetBytes(strJson);
+    //        Stream stream = new MemoryStream(bytes);
+    //        MyHttpContext.Current.Response.ContentType = "text/plain";
+    //        MyHttpContext.Current.Response.Body = stream;
+    //    }
+    //}
 }

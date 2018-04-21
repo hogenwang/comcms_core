@@ -1,0 +1,334 @@
+﻿@model COMCMS.Core.Ads
+@{
+    ViewBag.Title = "添加广告";
+    if (string.IsNullOrEmpty(Model.Content))
+    {
+        Model.Content = "[]";
+    }
+}
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.Title</h5>
+            <div class="ibox-tools">
+            </div>
+        </div>
+        <div class="ibox-content">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editAdsForm", @class = "form-horizontal m-t" }))
+            {
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">广告分类：</label>
+                    <div class="col-sm-8">
+                        <select class="form-control m-b" asp-for="KId" id="KId">
+                            @foreach (var m in ViewBag.ListKinds)
+                            {
+                                <option value="@m.Id" >@m.KindName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">广告标题：</label>
+                    <div class="col-sm-8">
+                        <input id="Title" name="Title" maxlength="100" type="text" value="@Model.Title" class="form-control" required aria-required="true" placeholder="填写广告标题">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">禁用广告：</label>
+                    <div class="col-sm-8">
+                        <label class="checkbox-inline i-checks">
+                            <input type="checkbox" value="1" name="IsDisabled" id="IsDisabled" @(Model.IsDisabled ? "checked" : "")> 禁用广告（该广告不显示）
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序：</label>
+                    <div class="col-sm-8">
+                        <input id="Sequence" type="number" class="form-control" name="Sequence" value="@Model.Sequence" maxlength="20" placeholder="越小排得越前" aria-required="true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">广告类型：</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" asp-for="TId" name="TId" onchange="ChangeType()">
+                            <option value="0" >HTML代码</option>
+                            <option value="1" >文字广告</option>
+                            <option value="2" >图片广告</option>
+                            <option value="3" >Flash广告</option>
+                            <option value="4">幻灯片广告</option>
+                            <option value="7" >视频广告</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" id="adstype_0">
+                    <label class="col-sm-3 control-label">HTML代码：</label>
+                    <div class="col-sm-8">
+                        <textarea class="form-control" id="txtScript" name="txtScript" rows="3" placeholder="请输入广告HTML代码"></textarea>
+                    </div>
+                </div>
+                <div id="adstype_1" class="hide">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">文字内容(必填)：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="txt_Txt" name="txt_Txt" value="" placeholder="请输入文字广告的显示内容">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">文字链接(必填)：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="txt_Link" name="txt_Link" value="" placeholder="请输入文字广告指向的 URL 链接地址">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">文字样式(选填)：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="txt_Style" name="txt_Style" value="" placeholder="请输入文字广告的内容显示字体样式，即style内容">
+                        </div>
+                    </div>
+                </div>
+                <div id="adstype_2" class="hide">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">图片地址(必填)：</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input id="img_Img" name="img_Img" maxlength="250" type="text" class="form-control upload-path" placeholder="请输入图片广告的图片调用地址" value="">
+                                <span class="input-group-addon my-upload-span upload-img"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">图片链接(必填)：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="img_Link" name="img_Link" value="" placeholder="请输入图片广告图片链接地址">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">图片宽度(选填)：</label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" id="img_Width" name="img_Width" value="" placeholder="请输入图片广告的宽度，单位为像素">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">图片高度(选填)：</label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" id="img_Height" name="img_Height" value="" placeholder="请输入图片广告的高度，单位为像素">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">图片替换文字(选填)：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="img_Alt" name="img_Alt" value="" placeholder="请输入图片广告的鼠标悬停文字信息">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="adstype_3" class="hide">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Flash 地址(必填)：</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input type="text" class="form-control upload-path" id="flash_Swf" name="flash_Swf" value="" placeholder="请输入 Flash 广告的调用地址">
+                                <span class="input-group-addon my-upload-span upload-swf"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Flash 宽度(必填)：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="flash_Width" name="flash_Width" value="" placeholder="请输入 Flash 广告的宽度，单位为像素">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">图片高度(选填)：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="flash_Height" name="flash_Height" value="" placeholder="请输入 Flash 广告的高度，单位为像素">
+                        </div>
+                    </div>
+                </div>
+                <div id="adstype_4" class="hide">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">幻灯片宽度(必填)：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="slide_Width" name="slide_Width" value="" placeholder="请输入幻灯片广告的宽度，单位为像素">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">幻灯片高度(必填)：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="slide_Height" name="slide_Height" value="" placeholder="请输入幻灯片广告的高度，单位为像素">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">幻灯片详情：</label>
+                        <div class="col-sm-8">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width:30%">图片（必填）</th>
+                                        <th>链接地址（必填）</th>
+                                        <th>图片标题</th>
+                                        <th style="width:80px">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="SildeImgs">
+                                    <tr>
+                                        <td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_0" name="slide_Img" value="" placeholder="请输入图片地址"><span class="input-group-addon my-upload-span upload-img" id="basic-addon2"></span></div></td>
+                                        <td><input type="text" class="form-control" id="slide_Link_0" name="slide_Link" value="" placeholder="请输入链接地址"></td>
+                                        <td><input type="text" class="form-control" id="slide_Alt_0" name="slide_Alt" value="" placeholder="请输入图片标题"></td>
+                                        <td><button type="button" class="btn btn-sm btn-success" onClick="addSlideRow();"><i class="fa fa-plus-square"></i> 添加</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="adstype_7" class="hide">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">视频地址(必填)：</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input id="video_Src" name="video_Src" maxlength="250" type="text" class="form-contro upload-pathl" placeholder="请输入视频地址，必须是h264编码MP4" value="">
+                                <span class="input-group-addon my-upload-span upload-img"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">视频封面(选填)：</label>
+                        <div class="col-sm-8">
+                            <div class="input-group">
+                                <input id="video_Poster" name="video_Poster" maxlength="250" type="text" class="form-control upload-path" placeholder="请输入视频封面图片地址" value="">
+                                <span class="input-group-addon my-upload-span upload-img"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">视频宽度(选填)：</label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" id="video_Width" name="video_Width" value="" placeholder="请输入图片广告的宽度，单位为像素">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">视频高度(选填)：</label>
+                        <div class="col-sm-8">
+                            <input type="number" class="form-control" id="video_Height" name="video_Height" value="" placeholder="请输入图片广告的高度，单位为像素">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">视频标题(选填)：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="video_Title" name="video_Title" value="" placeholder="请输入图片广告的鼠标悬停文字信息">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-3">
+                        <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                        <button class="btn btn-default" type="button" onclick="closethisdialog();"><i class="fa fa-close"></i> 取消 </button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+
+</div>
+
+<script>
+        function ChangeType() {
+            var styles, key, val;
+            val = $('#TId').val();
+            styles = new Array('0', '1', '2', '3', '4', '7');
+            for (key in styles) {
+                if (styles[key] == val) {
+                    $("#adstype_" + styles[key]).removeClass('hide');
+                } else {
+                    $("#adstype_" + styles[key]).addClass('hide');
+                }
+            }
+        }
+    var htmlText = '<tr id="slideTR_{0}">';
+    htmlText += '<td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_{0}" name="slide_Img" value="" placeholder="请输入图片地址"><span class="input-group-addon my-upload-span upload-img" id="basic-addon_{0}"></span></div></td>';
+    htmlText += '<td><input type="text" class="form-control" id="slide_Link_{0}" name="slide_Link" value="" placeholder="请输入链接地址"></td>';
+    htmlText += '<td><input type="text" class="form-control" id="slide_Alt_{0}" name="slide_Alt" value="" placeholder="请输入图片标题"></td>';
+    htmlText += '<td><button type="button" class="btn btn-sm btn-danger" onclick="delmySlideRow({0})"><i class="fa fa-minus-square"></i> 删除</button></td></tr>';
+        var items = 1;
+
+        function addSlideRow() {
+            var lastitem = items - 1;
+            var newHtmlTr = htmlText.replace(/\{0\}/g, items);
+            $('#SildeImgs').append(newHtmlTr);
+            $("#basic-addon_" + items).InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
+            items += 1;
+        }
+        function delmySlideRow(id) {
+            $("#slideTR_" + id).remove();
+        }
+
+        var jsonstr =@Html.Raw(Model.Content);
+        $(function () {
+            DoPost("editAdsForm");
+            $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
+            $(".upload-swf").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderFile", swf: "/js/webuploader/uploader.swf", filetypes: "swf", notwater: true });
+            //加载内容
+            FillAds(@Model.TId,jsonstr);
+            ChangeType();
+        })
+
+
+        //JS加载广告内容
+        function FillAds(tid, content) {
+            var json = content;
+            switch (tid) {
+                case 0: //代码
+                    $('#txtScript').val(json.content);
+                    break;
+                case 1: //文字类型
+                    $('#txt_Txt').val(json.txt);
+                    $('#txt_Link').val(json.link);
+                    $('#txt_Style').val(json.style);
+                    break;
+                case 2: //图片类
+                    $('#img_Img').val(json.img);
+                    $('#img_Link').val(json.link);
+                    if(json.width !=0){
+                        $('#img_Width').val(json.width);
+                    }
+                    if(json.height !=0){
+                        $('#img_Height').val(json.height);
+                    }
+                    $('#img_Alt').val(json.alt);
+                    break;
+                case 3://Flash类型
+                    $('#flash_Swf').val(json.swf);
+                    $('#flash_Height').val(json.height);
+                    $('#flash_Width').val(json.width);
+                    break;
+                case 4://幻灯片
+                    for (i = 0; i < json.length; i++) {
+                        if (i == 0) {
+                            $("#slide_Width").val(json[0].width);
+                            $("#slide_Height").val(json[0].height);
+                        }
+                        else {
+                            addSlideRow();//增加一行
+                        }
+                        $("#slide_Img_" + i).val(json[i].img);
+                        $("#slide_Link_" + i).val(json[i].link);
+                        $("#slide_Alt_" + i).val(json[i].alt);
+                    }
+                    break;
+                case 7://视频
+                    $('#video_Src').val(json.src);
+                    $('#video_Poster').val(json.poster);
+                    $('#video_Width').val(json.width);
+                    $('#video_Height').val(json.height);
+                    $('#video_Title').val(json.title);
+                    break;
+            }
+        }
+</script>

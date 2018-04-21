@@ -8,6 +8,8 @@ using COMCMS.Web.Models;
 using COMCMS.Common;
 using COMCMS.Core;
 using XCode;
+using System.Text;
+using System.IO;
 
 namespace COMCMS.Web.Controllers
 {
@@ -43,5 +45,20 @@ namespace COMCMS.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        #region 测试
+        public IActionResult Test()
+        {
+            JsonTip json = new JsonTip();
+            string strJson = JsonTip.GetJsonString(json);
+
+            //Byte[] bytes = Encoding.UTF8.GetBytes(strJson);
+            //Stream stream = new MemoryStream(bytes);
+            //MyHttpContext.Current.Response.ContentType = "text/plain";
+            //MyHttpContext.Current.Response.Body = stream;
+
+            return Content("ok");
+        }
+        #endregion
     }
 }

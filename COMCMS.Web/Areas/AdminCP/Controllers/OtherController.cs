@@ -149,7 +149,147 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             DateTime StartTime, EndTime;
             StartTime = Convert.ToDateTime("2000-01-01");
             EndTime = Convert.ToDateTime("2999-01-01");
-            GetRequestAdsString(model.TId, ref content);
+            #region 获取数据
+            switch (model.TId)
+            {
+                case 0://代码
+                    ScriptAds script = new ScriptAds();
+                    script.content = Request.Form["txtScript"];
+                    if (string.IsNullOrEmpty(script.content))
+                    {
+                        tip.Message = "代码不能为空！";
+                        return Json(tip);
+                    }
+                    content = JsonConvert.SerializeObject(script);
+                    break;
+                case 1://文字
+                    TextAds text = new TextAds();
+                    text.txt = Request.Form["txt_Txt"];
+                    text.link = Request.Form["txt_Link"];
+                    text.style = Request.Form["txt_Style"];
+                    if (string.IsNullOrEmpty(text.txt))
+                    {
+                        tip.Message = "文字内容不能为空！";
+                        return Json(tip);
+                    }
+                    if (string.IsNullOrEmpty(text.link))
+                    {
+                        tip.Message = "文字链接不能为空！";
+                        return Json(tip);
+                    }
+                    content = JsonConvert.SerializeObject(text);
+                    break;
+                case 2://图片
+                    ImgAds img = new ImgAds();
+                    img.img = Request.Form["img_Img"];
+                    img.link = Request.Form["img_Link"];
+                    img.alt = Request.Form["img_Alt"];
+                    string iw = Request.Form["img_Width"];
+                    string ih = Request.Form["img_Height"];
+                    if (!string.IsNullOrEmpty(iw) && Utils.IsInt(iw))
+                        img.width = int.Parse(iw);
+                    if (!string.IsNullOrEmpty(ih) && Utils.IsInt(ih))
+                        img.height = int.Parse(ih);
+                    if (string.IsNullOrEmpty(img.img))
+                    {
+                        tip.Message = "图片地址不能为空！";
+                        return Json(tip);
+                    }
+                    if (string.IsNullOrEmpty(img.link))
+                    {
+                        tip.Message = "图片链接不能为空！";
+                        return Json(tip);
+                    }
+                    content = JsonConvert.SerializeObject(img);
+                    break;
+                case 3://Flash
+                    FlashAds flash = new FlashAds();
+                    flash.swf = Request.Form["flash_Swf"];
+                    string fw = Request.Form["flash_Width"];
+                    string fh = Request.Form["flash_Height"];
+                    if (string.IsNullOrEmpty(flash.swf))
+                    {
+                        tip.Message = "Flash 地址不能为空！";
+                        return Json(tip);
+                    }
+
+                    if (string.IsNullOrEmpty(fw) || !Utils.IsInt(fw))
+                    {
+                        tip.Message = "Flash 宽度不能为空或者不是整数！";
+                        return Json(tip);
+                    }
+                    else
+                    {
+                        flash.width = int.Parse(fw);
+                    }
+                    if (string.IsNullOrEmpty(fh) || !Utils.IsInt(fh))
+                    {
+                        tip.Message = "Flash 高度不能为空或者不是整数！";
+                        return Json(tip);
+                    }
+                    else
+                    {
+                        flash.height = int.Parse(fh);
+                    }
+                    content = JsonConvert.SerializeObject(flash);
+                    break;
+                case 4://幻灯片
+                    string sw = Request.Form["slide_Width"];
+                    string sh = Request.Form["slide_Height"];
+                    if (string.IsNullOrEmpty(sw) || !Utils.IsInt(sw))
+                    {
+                        tip.Message = "幻灯片宽度不能为空或者不是整数！";
+                        return Json(tip);
+                    }
+                    if (string.IsNullOrEmpty(sh) || !Utils.IsInt(sh))
+                    {
+                        tip.Message = "幻灯片高度不能为空或者不是整数！";
+                        return Json(tip); ;
+                    }
+                    string[] arrsimg = Request.Form["slide_Img"];// SImg.Split(new string[] { "," }, StringSplitOptions.None);
+                    string[] arrslink = Request.Form["slide_Link"]; //SLink.Split(new string[] { "," }, StringSplitOptions.None);
+                    string[] arralt = Request.Form["slide_Alt"]; //SAlt.Split(new string[] { "," }, StringSplitOptions.None);
+                    List<ImgAds> listimg = new List<ImgAds>();
+                    for (int i = 0; i < arrsimg.Length; i++)
+                    {
+                        if (!string.IsNullOrEmpty(arrsimg[i]) && !string.IsNullOrEmpty(arrslink[i]))//图片跟地址都不为空
+                        {
+                            ImgAds tplimgads = new ImgAds();
+                            tplimgads.img = arrsimg[i];
+                            tplimgads.link = arrslink[i];
+                            tplimgads.height = int.Parse(sh);
+                            tplimgads.width = int.Parse(sw);
+                            tplimgads.alt = arralt[i];
+                            listimg.Add(tplimgads);
+                        }
+                    }
+                    if (listimg == null || listimg.Count <= 0)
+                    {
+                        tip.Message = "幻灯片请至少添加一张图片！";
+                        return Json(tip); ;
+                    }
+                    content = JsonConvert.SerializeObject(listimg);
+                    break;
+                case 7://视频广告
+                    VideoAds video = new VideoAds();
+                    video.poster = Request.Form["video_Poster"];
+                    video.src = Request.Form["video_Src"];
+                    video.title = Request.Form["video_Title"];
+                    string vw = Request.Form["video_Width"];
+                    string vh = Request.Form["video_Height"];
+                    if (!string.IsNullOrEmpty(vw) && Utils.IsInt(vw))
+                        video.width = int.Parse(vw);
+                    if (!string.IsNullOrEmpty(vh) && Utils.IsInt(vh))
+                        video.height = int.Parse(vh);
+                    if (string.IsNullOrEmpty(video.src))
+                    {
+                        tip.Message = "视频广告地址不能为空！";
+                        return Json(tip);
+                    }
+                    content = JsonConvert.SerializeObject(video);
+                    break;
+            }
+            #endregion
             model.StartTime = StartTime;
             model.EndTime = EndTime;
             model.Content = content;
@@ -207,7 +347,149 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             DateTime StartTime, EndTime;
             StartTime = Convert.ToDateTime("2000-01-01");
             EndTime = Convert.ToDateTime("2999-01-01");
-            GetRequestAdsString(model.TId, ref content);
+
+            #region 获取数据
+            switch (model.TId)
+            {
+                case 0://代码
+                    ScriptAds script = new ScriptAds();
+                    script.content = Request.Form["txtScript"];
+                    if (string.IsNullOrEmpty(script.content))
+                    {
+                        tip.Message = "代码不能为空！";
+                        return Json(tip);
+                    }
+                    content = JsonConvert.SerializeObject(script);
+                    break;
+                case 1://文字
+                    TextAds text = new TextAds();
+                    text.txt = Request.Form["txt_Txt"];
+                    text.link = Request.Form["txt_Link"];
+                    text.style = Request.Form["txt_Style"];
+                    if (string.IsNullOrEmpty(text.txt))
+                    {
+                        tip.Message = "文字内容不能为空！";
+                        return Json(tip);
+                    }
+                    if (string.IsNullOrEmpty(text.link))
+                    {
+                        tip.Message = "文字链接不能为空！";
+                        return Json(tip);
+                    }
+                    content = JsonConvert.SerializeObject(text);
+                    break;
+                case 2://图片
+                    ImgAds img = new ImgAds();
+                    img.img = Request.Form["img_Img"];
+                    img.link = Request.Form["img_Link"];
+                    img.alt = Request.Form["img_Alt"];
+                    string iw = Request.Form["img_Width"];
+                    string ih = Request.Form["img_Height"];
+                    if (!string.IsNullOrEmpty(iw) && Utils.IsInt(iw))
+                        img.width = int.Parse(iw);
+                    if (!string.IsNullOrEmpty(ih) && Utils.IsInt(ih))
+                        img.height = int.Parse(ih);
+                    if (string.IsNullOrEmpty(img.img))
+                    {
+                        tip.Message = "图片地址不能为空！";
+                        return Json(tip);
+                    }
+                    if (string.IsNullOrEmpty(img.link))
+                    {
+                        tip.Message = "图片链接不能为空！";
+                        return Json(tip);
+                    }
+                    content = JsonConvert.SerializeObject(img);
+                    break;
+                case 3://Flash
+                    FlashAds flash = new FlashAds();
+                    flash.swf = Request.Form["flash_Swf"];
+                    string fw = Request.Form["flash_Width"];
+                    string fh = Request.Form["flash_Height"];
+                    if (string.IsNullOrEmpty(flash.swf))
+                    {
+                        tip.Message = "Flash 地址不能为空！";
+                        return Json(tip);
+                    }
+
+                    if (string.IsNullOrEmpty(fw) || !Utils.IsInt(fw))
+                    {
+                        tip.Message = "Flash 宽度不能为空或者不是整数！";
+                        return Json(tip);
+                    }
+                    else
+                    {
+                        flash.width = int.Parse(fw);
+                    }
+                    if (string.IsNullOrEmpty(fh) || !Utils.IsInt(fh))
+                    {
+                        tip.Message = "Flash 高度不能为空或者不是整数！";
+                        return Json(tip);
+                    }
+                    else
+                    {
+                        flash.height = int.Parse(fh);
+                    }
+                    content = JsonConvert.SerializeObject(flash);
+                    break;
+                case 4://幻灯片
+                    string sw = Request.Form["slide_Width"];
+                    string sh = Request.Form["slide_Height"];
+                    if (string.IsNullOrEmpty(sw) || !Utils.IsInt(sw))
+                    {
+                        tip.Message = "幻灯片宽度不能为空或者不是整数！";
+                        return Json(tip);
+                    }
+                    if (string.IsNullOrEmpty(sh) || !Utils.IsInt(sh))
+                    {
+                        tip.Message = "幻灯片高度不能为空或者不是整数！";
+                        return Json(tip); ;
+                    }
+                    string[] arrsimg = Request.Form["slide_Img"];// SImg.Split(new string[] { "," }, StringSplitOptions.None);
+                    string[] arrslink = Request.Form["slide_Link"]; //SLink.Split(new string[] { "," }, StringSplitOptions.None);
+                    string[] arralt = Request.Form["slide_Alt"]; //SAlt.Split(new string[] { "," }, StringSplitOptions.None);
+                    List<ImgAds> listimg = new List<ImgAds>();
+                    for (int i = 0; i < arrsimg.Length; i++)
+                    {
+                        if (!string.IsNullOrEmpty(arrsimg[i]) && !string.IsNullOrEmpty(arrslink[i]))//图片跟地址都不为空
+                        {
+                            ImgAds tplimgads = new ImgAds();
+                            tplimgads.img = arrsimg[i];
+                            tplimgads.link = arrslink[i];
+                            tplimgads.height = int.Parse(sh);
+                            tplimgads.width = int.Parse(sw);
+                            tplimgads.alt = arralt[i];
+                            listimg.Add(tplimgads);
+                        }
+                    }
+                    if (listimg == null || listimg.Count <= 0)
+                    {
+                        tip.Message = "幻灯片请至少添加一张图片！";
+                        return Json(tip); ;
+                    }
+                    content = JsonConvert.SerializeObject(listimg);
+                    break;
+                case 7://视频广告
+                    VideoAds video = new VideoAds();
+                    video.poster = Request.Form["video_Poster"];
+                    video.src = Request.Form["video_Src"];
+                    video.title = Request.Form["video_Title"];
+                    string vw = Request.Form["video_Width"];
+                    string vh = Request.Form["video_Height"];
+                    if (!string.IsNullOrEmpty(vw) && Utils.IsInt(vw))
+                        video.width = int.Parse(vw);
+                    if (!string.IsNullOrEmpty(vh) && Utils.IsInt(vh))
+                        video.height = int.Parse(vh);
+                    if (string.IsNullOrEmpty(video.src))
+                    {
+                        tip.Message = "视频广告地址不能为空！";
+                        return Json(tip);
+                    }
+                    content = JsonConvert.SerializeObject(video);
+                    break;
+            }
+            #endregion
+
             model.StartTime = StartTime;
             model.EndTime = EndTime;
             model.Content = content;
@@ -239,186 +521,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             return Json(tip);
         }
 
-        #region 获取广告代码
-        /// <summary>
-        /// 获取
-        /// </summary>
-        /// <param name="tid">ID</param>
-        /// <returns></returns>
-        private void GetRequestAdsString(int tid, ref string adsString)
-        {
-            JsonTip mytip = new JsonTip();
-            mytip.Status = JsonTip.ERROR;
-
-            string str = "";
-            switch (tid)
-            {
-                case 0://代码
-                    ScriptAds script = new ScriptAds();
-                    script.content = Request.Form["txtScript"];
-                    if (string.IsNullOrEmpty(script.content))
-                    {
-                        mytip.Message = "代码不能为空！";
-                        mytip.EchoTip();
-                        return;
-                    }
-                    else
-                    {
-                        str = JsonConvert.SerializeObject(script);
-                    }
-                    break;
-                case 1://文字类
-                    TextAds text = new TextAds();
-                    text.txt = Request.Form["txt_Txt"];
-                    text.link = Request.Form["txt_Link"];
-                    text.style = Request.Form["txt_Style"];
-                    if (string.IsNullOrEmpty(text.txt))
-                    {
-                        mytip.Message = "文字内容不能为空！";
-                        mytip.EchoTip();
-                        return;
-                    }
-                    if (string.IsNullOrEmpty(text.link))
-                    {
-                        mytip.Message = "文字链接不能为空！";
-                        mytip.EchoTip();
-                        return;
-                    }
-                    str = JsonConvert.SerializeObject(text);
-                    break;
-                case 2://图片类
-                    ImgAds img = new ImgAds();
-                    img.img = Request.Form["img_Img"];
-                    img.link = Request.Form["img_Link"];
-                    img.alt = Request.Form["img_Alt"];
-                    string iw = Request.Form["img_Width"];
-                    string ih = Request.Form["img_Height"];
-                    if (!string.IsNullOrEmpty(iw) && Utils.IsInt(iw))
-                        img.width = int.Parse(iw);
-                    if (!string.IsNullOrEmpty(ih) && Utils.IsInt(ih))
-                        img.height = int.Parse(ih);
-                    if (string.IsNullOrEmpty(img.img))
-                    {
-                        mytip.Message = "图片地址不能为空！";
-                        mytip.EchoTip();
-                        return;
-                    }
-                    if (string.IsNullOrEmpty(img.link))
-                    {
-                        mytip.Message = "图片链接不能为空！";
-                        mytip.EchoTip();
-                        return;
-                    }
-                    str = JsonConvert.SerializeObject(img);
-                    break;
-                case 3://Flash类
-                    FlashAds flash = new FlashAds();
-                    flash.swf = Request.Form["flash_Swf"];
-                    string fw = Request.Form["flash_Width"];
-                    string fh = Request.Form["flash_Height"];
-                    if (string.IsNullOrEmpty(flash.swf))
-                    {
-                        mytip.Message = "Flash 地址不能为空！";
-                        mytip.EchoTip();
-                        return;
-                    }
-
-                    if (string.IsNullOrEmpty(fw) || !Utils.IsInt(fw))
-                    {
-                        mytip.Message = "Flash 宽度不能为空或者不是整数！";
-                        mytip.EchoTip();
-                        return;
-                    }
-                    else
-                    {
-                        flash.width = int.Parse(fw);
-                    }
-
-                    if (string.IsNullOrEmpty(fh) || !Utils.IsInt(fh))
-                    {
-                        mytip.Message = "Flash 高度不能为空或者不是整数！";
-                        mytip.EchoTip();
-                        return;
-                    }
-                    else
-                    {
-                        flash.height = int.Parse(fh);
-                    }
-                    str = JsonConvert.SerializeObject(flash);
-                    break;
-                case 4://幻灯片
-                    string sw = Request.Form["slide_Width"];
-                    string sh = Request.Form["slide_Height"];
-                    if (string.IsNullOrEmpty(sw) || !Utils.IsInt(sw))
-                    {
-                        mytip.Message = "幻灯片宽度不能为空或者不是整数！";
-                        mytip.EchoTip();
-                        return;
-                    }
-                    if (string.IsNullOrEmpty(sh) || !Utils.IsInt(sh))
-                    {
-                        mytip.Message = "幻灯片高度不能为空或者不是整数！";
-                        mytip.EchoTip();
-                        return;
-                    }
-                    string SImg = Request.Form["slide_Img"];
-                    string SLink = Request.Form["slide_Link"];
-                    string SAlt = Request.Form["slide_Alt"];
-                    if (string.IsNullOrEmpty(SImg))
-                    {
-                        mytip.Message = "幻灯片图片不能为空！";
-                        mytip.EchoTip();
-                        return;
-                    }
-                    if (string.IsNullOrEmpty(SLink))
-                    {
-                        mytip.Message = "幻灯片图片链接不能为空！";
-                        mytip.EchoTip();
-                        return;
-                    }
-                    string[] arrsimg = SImg.Split(new string[] { "," }, StringSplitOptions.None);
-                    string[] arrslink = SLink.Split(new string[] { "," }, StringSplitOptions.None);
-                    string[] arralt = SAlt.Split(new string[] { "," }, StringSplitOptions.None);
-                    List<ImgAds> listimg = new List<ImgAds>();
-                    for (int i = 0; i < arrsimg.Length; i++)
-                    {
-                        if (!string.IsNullOrEmpty(arrsimg[i]) && !string.IsNullOrEmpty(arrslink[i]))//图片跟地址都不为空
-                        {
-                            ImgAds tplimgads = new ImgAds();
-                            tplimgads.img = arrsimg[i];
-                            tplimgads.link = arrslink[i];
-                            tplimgads.height = int.Parse(sh);
-                            tplimgads.width = int.Parse(sw);
-                            tplimgads.alt = arralt[i];
-                            //listimg.Add(new ImgAds { img = arrsimg[i], link = arrslink[i], height = int.Parse(sh), width = int.Parse(sw), alt = arralt[i] });
-                            listimg.Add(tplimgads);
-                        }
-                    }
-                    str = JsonConvert.SerializeObject(listimg);
-                    break;
-                case 7://视频广告
-                    VideoAds video = new VideoAds();
-                    video.poster = Request.Form["video_Poster"];
-                    video.src = Request.Form["video_Src"];
-                    video.title = Request.Form["video_Title"];
-                    string vw = Request.Form["video_Width"];
-                    string vh = Request.Form["video_Height"];
-                    if (!string.IsNullOrEmpty(vw) && Utils.IsInt(vw))
-                        video.width = int.Parse(vw);
-                    if (!string.IsNullOrEmpty(vh) && Utils.IsInt(vh))
-                        video.height = int.Parse(vh);
-                    if (string.IsNullOrEmpty(video.src))
-                    {
-                        mytip.Message = "视频广告地址不能为空！";
-                        mytip.EchoTip();
-                        return;
-                    }
-                    str = JsonConvert.SerializeObject(video);
-                    break;
-            }
-            adsString = str;
-        }
-        #endregion
+        
 
         #endregion
 
@@ -442,6 +545,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "广告分类名称不能为空！";
                 return Json(tip);
             }
+            
             model.Insert();
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "添加友情链接分类成功";
@@ -557,7 +661,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "网站链接不能为空！";
                 return Json(tip);
             }
-
+            model.IsHide = Request.Form["IsHide"] == "1";
             model.Insert();
 
             tip.Status = JsonTip.SUCCESS;
@@ -608,7 +712,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "系统找不到本记录！";
                 return Json(tip);
             }
-
+            model.IsHide = Request.Form["IsHide"] == "1";
             model.Update();
 
             tip.Status = JsonTip.SUCCESS;
