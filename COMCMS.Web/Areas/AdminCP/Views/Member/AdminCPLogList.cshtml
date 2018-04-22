@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.title = "留言管理";
+    ViewBag.title = "后台管理日志";
 }
 <div class="wrapper wrapper-content ">
     <div class="ibox float-e-margins">
@@ -15,15 +15,11 @@
                 <div class="panel-body">
                     <form id="formSearch" class="form-horizontal form-inline" onsubmit="doSearch(); return false; ">
                         <div>
-                            <label class="control-label">留言分类：</label>
+                            @*<label class="control-label">留言分类：</label>
 
                             <select class="form-control" name="kid" id="kid">
                                 <option value="0">所有分类</option>
-                                @foreach (var m in ViewBag.ListKinds)
-                                {
-                                    <option value="@m.Id">@m.KindName</option>
-                                }
-                            </select>
+                              </select>*@
                             <label class="control-label">关键字：</label>
                             <input type="text" placeholder="标题关键字" name="keyword" id="keyword" class="form-control">
                             <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary" onclick="doSearch();">查询</button>
@@ -65,7 +61,7 @@
                         //初始化Table
                         oTableInit.Init = function () {
                             $('#tb_departments').bootstrapTable({
-                                url: '/AdminCP/Guestbook/GetGuesbookList',         //请求后台的URL（*）
+                                url: '/AdminCP/Member/GetAdminCPLogList',         //请求后台的URL（*）
                                 method: 'get',                      //请求方式（*）
                                 toolbar: '#toolbar',                //工具按钮用哪个容器
                                 striped: true,                      //是否显示行间隔色
@@ -94,27 +90,32 @@
                                 }, {
                                     field: 'Id',
                                     title: 'ID'
-                                }, {
-                                        field: 'GuestbookKind.KindName',
-                                    title: '所属分类'
-                                }, {
-                                    field: 'Title',
-                                    title: '留言标题'
+                                },{
+                                        field: 'UserName',
+                                    title: '登录用户名'
+                                    },
+                                    {
+                                        field: 'LoginIP',
+                                        title: '登录IP'
+                                    },
+                                {
+                                    field: 'LoginTime',
+                                    title: '登录时间'
                                 },
                                 {
-                                    field: 'AddTime',
-                                    title: '留言时间'
-                                },
-                                {
-                                    field: 'IsRead',
-                                    title: '是否未读',
+                                    field: 'IsLoginOK',
+                                    title: '是否登录成功',
                                     formatter: function (value, row, index) {
                                         if (value == 0) {
-                                            return '未读'
+                                            return '失败'
                                         }
-                                        return '';
+                                        return '成功';
                                     }
-                                },
+                                    },
+                                    {
+                                        field: 'LastUpdateTime',
+                                        title: '最后操作时间'
+                                    },
                                 {
                                     field: 'Id',
                                     title: '操作',
@@ -139,8 +140,7 @@
 
                     function actionFormatter(value, row, index) {
                         return [
-                            '<a href="javascript:;" class="btn btn-xs btn-primary" title="编辑" onclick="top.showDialog(\'eidtguestbook\', \'查看/审核留言详情\', \'/AdminCP/Guestbook/EditGuestbook/' + value + '\', 0, 0)"><i class="fa fa-edit"></i> 查看/审核</a>',
-                        '<a href="javascript:;" class="btn btn-xs btn-danger m-l-xs" title="删除" onclick="doDel(\'/AdminCP/Guestbook/DelGuestbook\',' + value + ');"><i class="fa fa-close"></i> 删除</a>',
+                            '<a href="javascript:;" class="btn btn-xs btn-primary" title="编辑" onclick="top.showDialog(\'viewadminlogdetail\', \'查看管理日志详情\', \'/AdminCP/Member/ViewAdminLogDetail/' + value + '\', 0, 0)"><i class="fa fa-edit"></i> 查看详情</a>'
                         ].join('');
                     }
 

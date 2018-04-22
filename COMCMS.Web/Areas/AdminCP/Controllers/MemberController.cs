@@ -962,7 +962,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             string IsVerifySellers = Request.Form["IsVerifySellers"];
             entity.UserName = model.UserName;
             entity.Email = model.Email;
-            entity.Tel = model.UserName;
+            entity.Tel = model.Tel;
             entity.Parent = model.Parent;
             entity.Grandfather = model.Grandfather;
             entity.RoleId = model.RoleId;
@@ -1007,6 +1007,62 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             tip.Message = "删除用户成功！";
             Core.Admin.WriteLogActions($"删除用户({he.Id}|{he.UserName});");
             return Json(tip);
+        }
+        #endregion
+
+        #region 后台管理日志列表
+        [MyAuthorize("viewlist", "admincplog")]
+        public IActionResult AdminCPLogList()
+        {
+            return View();
+        }
+        [MyAuthorize("viewlist", "admincplog")]
+        public IActionResult GetAdminCPLogList(string keyword, int page = 1, int limit = 20)
+        {
+            int numPerPage, currentPage, startRowIndex;
+
+            numPerPage = limit;
+            currentPage = page;
+            startRowIndex = (currentPage - 1) * numPerPage;
+            Expression ex = AdminLog._.Id > 0;
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                if (Utils.IsInt(keyword))
+                {
+                    ex &= (AdminLog._.Id == int.Parse(keyword) | AdminLog._.UserName.Contains(keyword));
+                }
+                else
+                {
+                    ex &= AdminLog._.UserName.Contains(keyword);
+                }
+            }
+            string kid = Request.Query["kid"];
+            //if (Utils.IsInt(kid) && int.Parse(kid) > 0)
+            //{
+            //    ex &= AdminLog._.KId == int.Parse(kid);
+            //}
+            IList<AdminLog> list = AdminLog.FindAll(ex, AdminLog._.Id.Desc(), null, startRowIndex, numPerPage);
+            long totalCount = AdminLog.FindCount(ex, AdminLog._.Id.Desc(), null, startRowIndex, numPerPage);
+            Core.Admin.WriteLogActions("后台管理日志留言列表(page:" + page + ");");
+            return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
+        }
+
+        #endregion
+
+        #region 查看管理日志详情
+        [MyAuthorize("view", "admincplog")]
+        public IActionResult ViewAdminLogDetail(int id)
+        {
+            AdminLog entity = AdminLog.Find(AdminLog._.Id == id);
+            if (entity == null)
+            {
+                return EchoTipPage("系统找不到本记录！");
+            }
+
+            Core.Admin.WriteLogActions("查看管理日志详情(" + id + ");");
+
+            return View(entity);
         }
         #endregion
     }
