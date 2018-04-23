@@ -122,7 +122,7 @@ namespace COMCMS.Common
                 http = "https://";
             }
             string port = MyHttpContext.Current.Request.Host.Port.ToString();
-            if (port == "80" || port == "443")
+            if (string.IsNullOrEmpty(port) || port == "80" || port == "443")
                 return http + MyHttpContext.Current.Request.Host.Host;
             else
                 return http + MyHttpContext.Current.Request.Host.Host + ":" + port;
