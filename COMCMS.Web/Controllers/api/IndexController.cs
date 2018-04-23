@@ -11,7 +11,7 @@ using XCode;
 
 namespace COMCMS.Web.Controllers.api
 {
-    [Route("api/[controller]/[action]")]
+    
     public class IndexController : APIBaseController
     {
         // GET: api/<controller>

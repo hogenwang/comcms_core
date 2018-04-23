@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace COMCMS.Web.Controllers.api
 {
     [Produces("application/json")]
+    [Route("api/[controller]/[action]")]
     public class APIBaseController : Controller
     {
         #region 通用信息

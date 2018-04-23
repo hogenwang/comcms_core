@@ -16,8 +16,6 @@ namespace COMCMS.Web.Controllers.api
     /// <summary>
     /// 支付API
     /// </summary>
-    [Produces("application/json")]
-    [Route("api/Payment")]
     public class PaymentController : APIBaseController
     {
         #region 微信小程序订单支付
