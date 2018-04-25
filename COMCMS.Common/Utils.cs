@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 using System.Security.Cryptography;
 using System.Reflection;
 using System.Configuration;
+using System.Net;
+using System.IO;
 
 namespace COMCMS.Common
 {
@@ -790,6 +792,134 @@ namespace COMCMS.Common
                 return str.Substring(0, str.LastIndexOf(strchar));
             }
             return str;
+        }
+
+        /// <summary>
+        /// HTTP GET方式请求数据.
+        /// </summary>
+        /// <param name="url">URL.</param>
+        /// <returns></returns>
+        public static string HttpGet(string url)
+        {
+            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+            request.Method = "GET";
+            //request.ContentType = "application/x-www-form-urlencoded";
+            request.Accept = "*/*";
+            request.Proxy = null;
+            request.Timeout = 15000;
+            request.AllowAutoRedirect = false;
+
+            WebResponse response = null;
+            string responseStr = null;
+
+            try
+            {
+                response = request.GetResponse();
+
+                if (response != null)
+                {
+                    StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+                    responseStr = reader.ReadToEnd();
+                    reader.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                NewLife.Log.XTrace.WriteException(ex);
+                throw;
+            }
+            finally
+            {
+                request = null;
+                response = null;
+            }
+
+            return responseStr;
+        }
+
+        /// <summary>
+        /// 后台发送POST请求
+        /// </summary>
+        /// <param name="url">服务器地址</param>
+        /// <param name="data">发送的数据</param>
+        /// <returns></returns>
+        public static Stream HttpPost(string url, string data)
+        {
+            try
+            {
+                //创建post请求
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json;charset=UTF-8";
+                byte[] payload = Encoding.UTF8.GetBytes(data);
+                request.ContentLength = payload.Length;
+
+
+                //发送post的请求
+                Stream writer = request.GetRequestStream();
+                writer.Write(payload, 0, payload.Length);
+                writer.Close();
+
+                //接受返回来的数据
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream stream = response.GetResponseStream();
+                return stream;
+                //StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                //string value = reader.ReadToEnd();
+
+                //reader.Close();
+                //stream.Close();
+                //response.Close();
+
+                //return value;
+            }
+            catch (Exception ex)
+            {
+                NewLife.Log.XTrace.WriteException(ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 后台发送POST请求
+        /// </summary>
+        /// <param name="url">服务器地址</param>
+        /// <param name="data">发送的数据</param>
+        /// <returns></returns>
+        public static string HttpPostAndReturnString(string url, string data)
+        {
+            try
+            {
+                //创建post请求
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+                request.Method = "POST";
+                request.ContentType = "application/json;charset=UTF-8";
+                byte[] payload = Encoding.UTF8.GetBytes(data);
+                request.ContentLength = payload.Length;
+
+
+                //发送post的请求
+                Stream writer = request.GetRequestStream();
+                writer.Write(payload, 0, payload.Length);
+                writer.Close();
+
+                //接受返回来的数据
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream stream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+                string value = reader.ReadToEnd();
+
+                reader.Close();
+                stream.Close();
+                response.Close();
+
+                return value;
+            }
+            catch (Exception ex)
+            {
+                NewLife.Log.XTrace.WriteException(ex);
+                return "";
+            }
         }
         #endregion
 
