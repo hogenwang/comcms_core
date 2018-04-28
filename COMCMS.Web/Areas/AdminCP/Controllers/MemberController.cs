@@ -12,6 +12,7 @@ using COMCMS.Core.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
+using System.Web;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -804,7 +805,16 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 ex &= Member._.RoleId == roleid;
 
             if (!string.IsNullOrWhiteSpace(keyword))
-                ex &= (Member._.RealName.Contains(keyword) | Member._.Tel.Contains(keyword));
+            {
+                if (Utils.IsInt(keyword))
+                {
+                    ex &= (Member._.Id == int.Parse(keyword) | Member._.Tel.Contains(keyword));
+                }
+                else
+                {
+                    ex &= (Member._.UserName.Contains(keyword) | Member._.Nickname.Contains(HttpUtility.UrlEncode(keyword)) | Member._.RealName.Contains(keyword));
+                }
+            }
 
             IList<Member> list = Member.FindAll(ex, null, null, startRowIndex, numPerPage);
             totalCount = Member.FindCount(ex, null, null, startRowIndex, numPerPage);
