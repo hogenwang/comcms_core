@@ -143,6 +143,7 @@ namespace COMCMS.Web.Controllers.api
         /// 同步微信信息
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
         public object SyncWeixinInfo(string sessionkey, string userInfo, int inviteid = 0, string random = "", string timeStamp = "", string signature = "")
         {
             if (!AutoCheckQueryStringSignature())
