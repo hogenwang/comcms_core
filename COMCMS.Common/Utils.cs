@@ -673,7 +673,9 @@ namespace COMCMS.Common
         /// <returns></returns>
         public static DateTime StampToDateTime(string timeStamp)
         {
-            DateTime dateTimeStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+            //TimeZoneInfo.ConvertTimeFromUtc()
+
+            DateTime dateTimeStart = TimeZoneInfo.ConvertTime(new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc), TimeZoneInfo.Local);
             long lTime = long.Parse(timeStamp + "0000");
             TimeSpan toNow = new TimeSpan(lTime);
             return dateTimeStart.Add(toNow);

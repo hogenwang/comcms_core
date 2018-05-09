@@ -205,7 +205,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         {
             string callback = Request.Query["CKEditorFuncNum"];//要求返回值
             var upload = Request.Form.Files[0];
-            string tpl = "<script type=\"text/javascript\">window.parent.CKEDITOR.tools.callFunction(\"{1}\", \"{0}\", \"{2}\");</script>";
+            //string tpl = "<script type=\"text/javascript\">window.parent.CKEDITOR.tools.callFunction(\"{1}\", \"{0}\", \"{2}\");</script>";
             CKFileUploadError errorJson = new CKFileUploadError();
             if (upload == null)
             {

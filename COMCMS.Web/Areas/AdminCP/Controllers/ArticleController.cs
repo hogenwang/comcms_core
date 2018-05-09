@@ -184,6 +184,10 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         #endregion
 
         #region 文章
+        /// <summary>
+        /// 文章栏目管理
+        /// </summary>
+        /// <returns></returns>
         [MyAuthorize("viewlist", "article")]
         public IActionResult ArticleList()
         {

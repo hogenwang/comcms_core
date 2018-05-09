@@ -13,6 +13,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Senparc.Weixin.MP" Version="14.12.3" />
     <PackageReference Include="Senparc.Weixin.WxOpen" Version="1.9.1" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.3" />
     <PackageReference Include="ZKWeb.System.Drawing" Version="4.0.1" />
   </ItemGroup>
 
