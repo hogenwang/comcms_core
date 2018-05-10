@@ -9,7 +9,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" />
     <PackageReference Include="MySqlConnector" Version="0.40.3" />
-    <PackageReference Include="NewLife.XCode" Version="9.7.6701.38516" />
+    <PackageReference Include="NewLife.XCode" Version="9.7.6703.38907" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Senparc.Weixin.MP" Version="14.12.3" />
     <PackageReference Include="Senparc.Weixin.WxOpen" Version="1.9.1" />
@@ -271,6 +271,15 @@
     <None Include="wwwroot\editor\ckeditor\plugins\wsc\LICENSE.md" />
     <None Include="wwwroot\editor\ckeditor\plugins\wsc\README.md" />
     <None Include="wwwroot\editor\ckeditor\skins\moono-lisa\readme.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="app.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

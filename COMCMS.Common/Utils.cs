@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Configuration;
 using System.Net;
 using System.IO;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 
 namespace COMCMS.Common
 {
@@ -15,6 +17,17 @@ namespace COMCMS.Common
     /// </summary>
     public class Utils
     {
+
+        public static IConfiguration Configuration { get; set; }
+
+        static Utils()
+        {
+            //ReloadOnChange = true 当appsettings.json被修改时重新加载            
+            Configuration = new ConfigurationBuilder()
+            .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
+            .Build();
+        }
+
         #region 静态变量
         /// <summary>
         /// 得到正则编译参数设置
@@ -30,7 +43,7 @@ namespace COMCMS.Common
         {
             get
             {
-                string strPrefixKey = ConfigurationManager.AppSettings["COMCMSPrefixKey"];
+                string strPrefixKey = Configuration["SystemSetting:COMCMSPrefixKey"];// ConfigurationManager.AppSettings["COMCMSPrefixKey"];
                 if (string.IsNullOrEmpty(strPrefixKey))
                 {
                     strPrefixKey = "comcmsntc_";
