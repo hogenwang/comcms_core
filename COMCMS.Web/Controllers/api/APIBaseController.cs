@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using COMCMS.Common;
+using COMCMS.Web.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +11,7 @@ namespace COMCMS.Web.Controllers.api
 {
     [Produces("application/json")]
     [Route("api/[controller]/[action]")]
+    [WebAPIHandleError]
     public class APIBaseController : Controller
     {
         #region 通用信息

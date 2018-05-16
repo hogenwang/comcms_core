@@ -47,5 +47,15 @@ namespace COMCMS.Web.Controllers.api
             }
         }
         #endregion
+
+        #region 测试出错
+        [HttpGet]
+        public object GetTest()
+        {
+            int a = 1,b=0;
+            var c = a / b;
+            return reJson;
+        }
+        #endregion
     }
 }
