@@ -6,6 +6,7 @@ using COMCMS.Common;
 using COMCMS.Web.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NewLife.Log;
 
 namespace COMCMS.Web.Controllers.api
 {
@@ -14,8 +15,14 @@ namespace COMCMS.Web.Controllers.api
     [WebAPIHandleError]
     public class APIBaseController : Controller
     {
+        public APIBaseController()
+        {
+            string url = MyHttpContext.Current.Request.Path;
+            string querystring = MyHttpContext.Current.Request.QueryString.ToString();
+            XTrace.WriteLine($"访问API：{url}?{querystring}");
+        }
         #region 通用信息
-        public ReJSON reJson = new ReJSON();
+        public ReJSON reJson = new ReJSON() { code = 40000 };
         #endregion
 
         #region 验证签名
