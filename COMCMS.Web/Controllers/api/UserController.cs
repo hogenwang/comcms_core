@@ -206,5 +206,16 @@ namespace COMCMS.Web.Controllers.api
             return reJson;
         }
         #endregion
+
+        #region 测试
+        [HttpGet]
+        public object Test()
+        {
+            
+            reJson.code = 0;
+            reJson.message = "测试信息，成功！";
+            return reJson;
+        }
+        #endregion
     }
 }
