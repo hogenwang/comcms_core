@@ -29,6 +29,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         #endregion
 
         #region 低版本IE界面
+        //判断低版本IE
         public IActionResult Ie()
         {
             return View();
@@ -73,7 +74,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //验证用户
             if (string.IsNullOrEmpty(username))
             {
-                tip.Message = "请输入用户名！";
+                tip.Message = "请输入用户名！"+ key;
                 return Json(tip);
             }
             if (string.IsNullOrEmpty(password) || Utils.GetStringLength(password) < 5)

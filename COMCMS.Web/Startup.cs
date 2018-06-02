@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.WebEncoders;
+using Microsoft.AspNetCore.Mvc;
 using COMCMS.Common;
 using COMCMS.Web.Models;
 using COMCMS.Web.Common;
@@ -31,13 +32,29 @@ namespace COMCMS.Web
         {
             //注入自己的HttpContext
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddMvc().AddSessionStateTempDataProvider();
+            //services.AddMvc().AddSessionStateTempDataProvider();
+
+            services.Configure<CookiePolicyOptions>(options =>
+            {
+                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
+                //options.CheckConsentNeeded = context => true;
+                options.MinimumSameSitePolicy = SameSiteMode.None;
+            });
+
+            services.AddMyHttpContextAccessor();
+
+            services.AddDistributedMemoryCache();
             //添加Session 服务
-            services.AddSession();
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(120);
+                options.Cookie.HttpOnly = true;
+                
+            });
             //部分系统配置
             services.Configure<SystemSetting>(Configuration.GetSection("SystemSetting"));
 
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1); ;
             //防止汉字被自动编码
             services.Configure<WebEncoderOptions>(options =>
             {
@@ -61,18 +78,25 @@ namespace COMCMS.Web
 
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
+
                 app.UseDeveloperExceptionPage();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
+            
+
             //其他错误页面处理
             app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
             //启用Session
             app.UseSession();
+
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
+            app.UseCookiePolicy();
+            app.UseStaticHttpContext();
 
             app.UseMvc(routes =>
             {
@@ -95,7 +119,7 @@ namespace COMCMS.Web
             });
 
             //加入HttpContext
-            MyHttpContext.ServiceProvider = svp;
+            //MyHttpContext.ServiceProvider = svp;
         }
     }
 }

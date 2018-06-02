@@ -11,6 +11,10 @@ namespace COMCMS.Common
     /// </summary>
     public class CookiesHelper
     {
+        public CookiesHelper()
+        {
+        }
+
         #region 获取Cookies
         /// <summary>
         /// 读cookie值

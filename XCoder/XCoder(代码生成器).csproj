@@ -57,7 +57,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="data.project.xml" />
+    <Content Include="data.project.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="生成实体类.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>生成实体类.log</LastGenOutput>

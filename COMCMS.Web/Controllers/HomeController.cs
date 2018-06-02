@@ -12,6 +12,7 @@ using System.Text;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace COMCMS.Web.Controllers
 {
@@ -23,9 +24,18 @@ namespace COMCMS.Web.Controllers
             Configuration = new ConfigurationBuilder()
 .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
 .Build();
+
         }
         public IActionResult Index()
         {
+            CookieOptions op = new CookieOptions
+            {
+                Expires = DateTime.Now.AddMinutes(10),
+                Path = "/",
+                HttpOnly = true
+            };
+            Response.Cookies.Append("abc", "123456", op);//用户名
+
             return View();
         }
 
@@ -35,17 +45,20 @@ namespace COMCMS.Web.Controllers
             CookiesHelper.WriteCookie("abc", Utils.GetRandomChar(20), 10);
             //sessiong
             SessionHelper.WriteSession("bcd", Utils.GetRandomChar(20));
+            HttpContext.Session.SetString("abc", "123456");
+
             return View();
         }
 
         public IActionResult Contact()
         {
+            
             ViewData["Message"] = "Your contact page.";
             string prekey = Utils.PrefixKey;
             Article a = Article.FindById(1);
             ViewBag.siteName = a.Title;
-
-            ViewBag.c = CookiesHelper.GetCookie("abc");
+            string abc = HttpContext.Session.GetString("abc");
+            ViewBag.c = CookiesHelper.GetCookie("abc")+ abc;
             ViewBag.d = prekey;
             return View();
         }
@@ -102,5 +115,25 @@ namespace COMCMS.Web.Controllers
             return Content(s);
         }
         #endregion
+
+
+        const string SessionKeyName = "_Name";
+        const string SessionKeyYearsMember = "_YearsMember";
+        const string SessionKeyDate = "_Date";
+
+        public IActionResult Index3()
+        {
+            // Requires using Microsoft.AspNetCore.Http;
+            HttpContext.Session.SetString(SessionKeyName, "Rick");
+            HttpContext.Session.SetInt32(SessionKeyYearsMember, 3);
+            return RedirectToAction("SessionNameYears");
+        }
+        public IActionResult SessionNameYears()
+        {
+            var name = HttpContext.Session.GetString(SessionKeyName);
+            var yearsMember = HttpContext.Session.GetInt32(SessionKeyYearsMember);
+
+            return Content($"Name: \"{name}\",  Membership years: \"{yearsMember}\"");
+        }
     }
 }
