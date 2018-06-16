@@ -52,7 +52,7 @@ namespace COMCMS.Core
         [DisplayName("ICP备案")]
         [Description("ICP备案")]
         [DataObjectField(false, false, true, 50)]
-        [BindColumn("ICP", "ICP备案", "nvarchar(50)")]
+        [BindColumn("Icp", "ICP备案", "nvarchar(50)")]
         public String Icp { get { return _Icp; } set { if (OnPropertyChanging(__.Icp, value)) { _Icp = value; OnPropertyChanged(__.Icp); } } }
 
         private String _SiteEmail;

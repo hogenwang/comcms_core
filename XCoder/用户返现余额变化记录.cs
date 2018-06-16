@@ -60,7 +60,7 @@ namespace COMCMS.Core
         [DisplayName("登录IP")]
         [Description("登录IP")]
         [DataObjectField(false, false, true, 20)]
-        [BindColumn("IP", "登录IP", "nvarchar(20)")]
+        [BindColumn("Ip", "登录IP", "nvarchar(20)")]
         public String Ip { get { return _Ip; } set { if (OnPropertyChanging(__.Ip, value)) { _Ip = value; OnPropertyChanged(__.Ip); } } }
 
         private String _Actions;

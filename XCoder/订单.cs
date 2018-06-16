@@ -316,7 +316,7 @@ namespace COMCMS.Core
         [DisplayName("下单IP")]
         [Description("下单IP")]
         [DataObjectField(false, false, true, 20)]
-        [BindColumn("IP", "下单IP", "nvarchar(20)")]
+        [BindColumn("Ip", "下单IP", "nvarchar(20)")]
         public String Ip { get { return _Ip; } set { if (OnPropertyChanging(__.Ip, value)) { _Ip = value; OnPropertyChanged(__.Ip); } } }
 
         private Int32 _IsInvoice;

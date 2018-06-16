@@ -92,7 +92,7 @@ namespace COMCMS.Core
         [DisplayName("用户IP")]
         [Description("用户IP")]
         [DataObjectField(false, false, true, 20)]
-        [BindColumn("IP", "用户IP", "nvarchar(20)")]
+        [BindColumn("Ip", "用户IP", "nvarchar(20)")]
         public String Ip { get { return _Ip; } set { if (OnPropertyChanging(__.Ip, value)) { _Ip = value; OnPropertyChanged(__.Ip); } } }
 
         private String _Nickname;
@@ -124,7 +124,7 @@ namespace COMCMS.Core
         [DisplayName("QQ")]
         [Description("QQ")]
         [DataObjectField(false, false, true, 20)]
-        [BindColumn("QQ", "QQ", "nvarchar(20)")]
+        [BindColumn("Qq", "QQ", "nvarchar(20)")]
         public String Qq { get { return _Qq; } set { if (OnPropertyChanging(__.Qq, value)) { _Qq = value; OnPropertyChanged(__.Qq); } } }
 
         private String _Skype;

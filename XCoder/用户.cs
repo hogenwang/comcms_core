@@ -172,7 +172,7 @@ namespace COMCMS.Core
         [DisplayName("QQ")]
         [Description("QQ")]
         [DataObjectField(false, false, true, 20)]
-        [BindColumn("QQ", "QQ", "nvarchar(20)")]
+        [BindColumn("Qq", "QQ", "nvarchar(20)")]
         public String Qq { get { return _Qq; } set { if (OnPropertyChanging(__.Qq, value)) { _Qq = value; OnPropertyChanged(__.Qq); } } }
 
         private String _Weixin;
@@ -220,7 +220,7 @@ namespace COMCMS.Core
         [DisplayName("身份证")]
         [Description("身份证")]
         [DataObjectField(false, false, true, 20)]
-        [BindColumn("IDNO", "身份证", "nvarchar(20)")]
+        [BindColumn("Idno", "身份证", "nvarchar(20)")]
         public String Idno { get { return _Idno; } set { if (OnPropertyChanging(__.Idno, value)) { _Idno = value; OnPropertyChanged(__.Idno); } } }
 
         private String _Country;

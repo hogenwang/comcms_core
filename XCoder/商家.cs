@@ -292,7 +292,7 @@ namespace COMCMS.Core
         [DisplayName("QQ")]
         [Description("QQ")]
         [DataObjectField(false, false, true, 20)]
-        [BindColumn("QQ", "QQ", "nvarchar(20)")]
+        [BindColumn("Qq", "QQ", "nvarchar(20)")]
         public String Qq { get { return _Qq; } set { if (OnPropertyChanging(__.Qq, value)) { _Qq = value; OnPropertyChanged(__.Qq); } } }
 
         private String _Skype;

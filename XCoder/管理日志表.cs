@@ -36,7 +36,7 @@ namespace COMCMS.Core
         [DisplayName("唯一ID")]
         [Description("唯一ID")]
         [DataObjectField(false, false, true, 50)]
-        [BindColumn("GUID", "唯一ID", "nvarchar(50)")]
+        [BindColumn("Guid", "唯一ID", "nvarchar(50)")]
         public String Guid { get { return _Guid; } set { if (OnPropertyChanging(__.Guid, value)) { _Guid = value; OnPropertyChanged(__.Guid); } } }
 
         private String _UserName;

@@ -52,15 +52,13 @@ namespace COMCMS.Web.Controllers
 
         public IActionResult Contact()
         {
-            
-            ViewData["Message"] = "Your contact page.";
-            string prekey = Utils.PrefixKey;
-            Article a = Article.FindById(1);
-            ViewBag.siteName = a.Title;
-            string abc = HttpContext.Session.GetString("abc");
-            ViewBag.c = CookiesHelper.GetCookie("abc")+ abc;
-            ViewBag.d = prekey;
-            return View();
+            Link l = new Link();
+            l.Title = "心😃💪 💪";
+            l.Sequence = 0;
+            l.IsHide = false;
+            l.LinkURL = "http://www.baidu.com";
+            l.Insert();
+            return View(l);
         }
 
         public IActionResult Error()
