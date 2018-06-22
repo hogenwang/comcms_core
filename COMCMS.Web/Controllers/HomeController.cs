@@ -13,12 +13,15 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
 using Microsoft.AspNetCore.Http;
+using System.Collections.Concurrent;
+using Newtonsoft.Json;
 
 namespace COMCMS.Web.Controllers
 {
     public class HomeController : Controller
     {
         public static IConfiguration Configuration { get; set; }
+        public ConcurrentDictionary<string, string> AllSession = new ConcurrentDictionary<string, string>();
         public HomeController()
         {
             Configuration = new ConfigurationBuilder()
@@ -36,6 +39,8 @@ namespace COMCMS.Web.Controllers
             };
             Response.Cookies.Append("abc", "123456", op);//用户名
 
+            
+
             return View();
         }
 
@@ -52,12 +57,7 @@ namespace COMCMS.Web.Controllers
 
         public IActionResult Contact()
         {
-            Link l = new Link();
-            l.Title = "心😃💪 💪";
-            l.Sequence = 0;
-            l.IsHide = false;
-            l.LinkURL = "http://www.baidu.com";
-            l.Insert();
+            Link l = Link.Find(Link._.Id == 1);
             return View(l);
         }
 
@@ -114,24 +114,19 @@ namespace COMCMS.Web.Controllers
         }
         #endregion
 
-
-        const string SessionKeyName = "_Name";
-        const string SessionKeyYearsMember = "_YearsMember";
-        const string SessionKeyDate = "_Date";
-
-        public IActionResult Index3()
+        #region MyRegion
+        public IActionResult Test3()
         {
-            // Requires using Microsoft.AspNetCore.Http;
-            HttpContext.Session.SetString(SessionKeyName, "Rick");
-            HttpContext.Session.SetInt32(SessionKeyYearsMember, 3);
-            return RedirectToAction("SessionNameYears");
-        }
-        public IActionResult SessionNameYears()
-        {
-            var name = HttpContext.Session.GetString(SessionKeyName);
-            var yearsMember = HttpContext.Session.GetInt32(SessionKeyYearsMember);
+            bool isok = false;
+            if(AllSession.TryAdd(HttpContext.Session.Id, HttpContext.Session.Id))
+            {
+                isok = true;
+            }
 
-            return Content($"Name: \"{name}\",  Membership years: \"{yearsMember}\"");
+            return Content(isok.ToString() + ":" + JsonConvert.SerializeObject(AllSession));
         }
+        #endregion
+
+
     }
 }
