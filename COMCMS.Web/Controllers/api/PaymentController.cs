@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using COMCMS.Common;
 using COMCMS.Core;
+using COMCMS.Web.Filter;
 using XCode;
 using NewLife.Log;
 using Senparc.Weixin.MP;
@@ -16,45 +17,46 @@ namespace COMCMS.Web.Controllers.api
     /// <summary>
     /// 支付API
     /// </summary>
-    public class PaymentController : APIBaseController
+    public class PaymentController : Controller
     {
         #region 微信小程序订单支付
         [HttpGet]
-        public object DoPayOrder(string ordernum, string random = "", string timeStamp = "", string signature = "")
+        [CheckFilter]
+        public ReJson DoPayOrder(string ordernum, string random = "", string timeStamp = "", string signature = "")
         {
-            if (!AutoCheckQueryStringSignature())
-            {
-                return reJson;
-            }
-
             //获取订单
             Order entity = Order.Find(Order._.OrderNum == ordernum);
             if (entity == null)
             {
-                reJson.code = 40000;
-                reJson.message = "系统找不到本订单！";
-                return reJson;
+                //reJson.code = 40000;
+                //reJson.message = "系统找不到本订单！";
+                //return reJson;
+
+                return new ReJson(40000, "系统找不到本订单！");
             }
             //判断订单状态
             if (entity.OrderStatus == Utils.OrdersState[3])
             {
-                reJson.code = 40000;
-                reJson.message = "已完成订单不允许支付！";
-                return reJson;
+                //reJson.code = 40000;
+                //reJson.message = "已完成订单不允许支付！";
+                //return reJson;
+                return new ReJson(40000, "已完成订单不允许支付！");
             }
             if (entity.PaymentStatus != Utils.PaymentState[0])
             {
-                reJson.code = 40000;
-                reJson.message = "当前订单支付状态不允许支付！";
-                return reJson;
+                //reJson.code = 40000;
+                //reJson.message = "当前订单支付状态不允许支付！";
+                //return reJson;
+                return new ReJson(40000, "当前订单支付状态不允许支付！");
             }
             //获取用户并判断是否是已经注册用户
             Member my = Member.FindById(entity.UId);
             if (my == null || string.IsNullOrEmpty(my.WeixinAppOpenId))
             {
-                reJson.code = 40000;
-                reJson.message = "用户状态错误，无法使用本功能！";
-                return reJson;
+                //reJson.code = 40000;
+                //reJson.message = "用户状态错误，无法使用本功能！";
+                //return reJson;
+                return new ReJson(40000, "用户状态错误，无法使用本功能！");
             }
             //开始生成支付订单
             OnlinePayOrder model = new OnlinePayOrder();
@@ -112,9 +114,10 @@ namespace COMCMS.Web.Controllers.api
 
                 if (result.return_code == "FAIL")
                 {
-                    reJson.code = 40005;
-                    reJson.message = result.return_msg;
-                    return reJson;
+                    //reJson.code = 40005;
+                    //reJson.message = result.return_msg;
+                    //return reJson;
+                    return new ReJson(40005, result.return_msg);
                 }
                 string nativeReqSign = res.CreateMd5Sign("key", TenPayV3Info.Key);
                 //https://pay.weixin.qq.com/wiki/doc/api/wxa/wxa_api.php?chapter=7_7&index=3
@@ -125,10 +128,11 @@ namespace COMCMS.Web.Controllers.api
 
                 dynamic detail = new { timeStamp = rtimeStamp, nonceStr = nonceStr, package = package, signType = "MD5", paySign = paySign };
 
-                reJson.code = 0;
-                reJson.message = "下单成功！";
-                reJson.detail = detail;
-                return reJson;
+                //reJson.code = 0;
+                //reJson.message = "下单成功！";
+                //reJson.detail = detail;
+                //return reJson;
+                return new ReJson(40000, "下单成功！", detail);
             }
             catch (Exception ex)
             {
@@ -136,9 +140,9 @@ namespace COMCMS.Web.Controllers.api
                 res.SetParameter("return_msg", "统一下单失败");
                 XTrace.WriteLine($"统一下单失败：{ex.Message}");
 
-                reJson.code = 40005;
-                reJson.message = "统一下单失败，请联系管理员！";
-                return reJson;
+                //reJson.code = 40005;
+                //reJson.message = "统一下单失败，请联系管理员！";
+                return new ReJson(40005, "统一下单失败，请联系管理员！");
             }
         }
         #endregion

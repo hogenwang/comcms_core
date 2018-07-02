@@ -16,9 +16,7 @@ namespace COMCMS.Web.Common
         {
             context.HttpContext.Request.ContentType = "application/json";
             context.HttpContext.Request.Headers["Accept"] = "application/json";
-            ReJSON model = new ReJSON();
-            model.code = 5001;
-            model.message = "执行错误："+ context.Exception.Message;
+            ReJSON model = new ReJSON(5001, "执行错误：" + context.Exception.Message);
             context.Result = new JsonResult(model);
             base.OnException(context);
         }
