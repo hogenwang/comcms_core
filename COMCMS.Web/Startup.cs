@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 using COMCMS.Common;
 using COMCMS.Web.Models;
 using COMCMS.Web.Common;
+using COMCMS.Web.ExceptionHandler;
+using Lib.Core.MiddlewareExtension.Extension;
 
 namespace COMCMS.Web
 {
@@ -117,6 +119,8 @@ namespace COMCMS.Web
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
+
+            app.UseMiddlewareExtension(new ResultExceptionHandler());
 
             //加入HttpContext
             //MyHttpContext.ServiceProvider = svp;

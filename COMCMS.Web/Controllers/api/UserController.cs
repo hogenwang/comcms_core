@@ -9,6 +9,7 @@ using COMCMS.Core;
 using COMCMS.Core.Models;
 using XCode;
 using System.Web;
+using COMCMS.Web.Filter;
 using NewLife.Log;
 using static COMCMS.Web.Models.APIModels;
 using Newtonsoft.Json;
@@ -16,7 +17,7 @@ using Newtonsoft.Json.Linq;
 
 namespace COMCMS.Web.Controllers.api
 {
-    public class UserController : APIBaseController
+    public class UserController : Controller
     {
         #region 用户登录
         /// <summary>
@@ -28,16 +29,12 @@ namespace COMCMS.Web.Controllers.api
         /// <param name="signature"></param>
         /// <returns></returns>
         [HttpGet]
-        public object UserLogin(string code, string random = "", string timeStamp = "", string signature = "")
+        [CheckFilter]
+        public ReJson UserLogin(string code, string random = "", string timeStamp = "", string signature = "")
         {
-            if (!AutoCheckQueryStringSignature())
-            {
-                return reJson;
-            }
             if (string.IsNullOrEmpty(code))
             {
-                reJson.message = "请允许用户授权信息！";
-                return reJson;
+                return new ReJson("请允许用户授权信息！");
             }
             Config cfg = Config.GetSystemConfig();
             string appid = cfg.WXAppId;// ConfigurationManager.AppSettings["wxappAppId"];
@@ -51,8 +48,7 @@ namespace COMCMS.Web.Controllers.api
             if (!string.IsNullOrEmpty(json.errcode))
             {
                 XTrace.WriteLine("微信服务器回调失败：" + json.errcode);
-                reJson.message = "注册失败，请联系管理员。" + json.errcode;
-                return reJson;
+                return new ReJson("注册失败，请联系管理员。" + json.errcode);
             }
             if (Member.FindCount(Member._.WeixinAppOpenId == json.openid, null, null, 0, 0) > 0)
             {
@@ -60,9 +56,9 @@ namespace COMCMS.Web.Controllers.api
                 if (my == null)
                 {
                     XTrace.WriteLine("登录成功，但是系统找不到用户：");
-                    reJson.code = 5003;
-                    reJson.message = "系统找不到本用户！";
-                    return reJson;
+                    //reJson.code = 5003;
+                    //reJson.message = "系统找不到本用户！";
+                    return new ReJson(5003, "系统找不到本用户！");
                 }
 
                 //如果存在，则返回个人信息
@@ -90,10 +86,10 @@ namespace COMCMS.Web.Controllers.api
                 }
                 string nickName = my.Nickname;
                 if (!string.IsNullOrEmpty(nickName)) nickName = HttpUtility.UrlDecode(nickName);
-                reJson.code = 0;
-                reJson.message = "登录成功！";
-                reJson.detail = new { sessionkey = mysessionkey, username = nickName, userimg = my.UserImg };
-                return reJson;
+                //reJson.code = 0;
+                //reJson.message = "登录成功！";
+                var detail = new { sessionkey = mysessionkey, username = nickName, userimg = my.UserImg };
+                return new ReJson(0, "登录成功！", detail);
                 //return new { code = 0, message = "登录成功", sessionkey = mysessionkey, username = nickName, userimg = my.UserImg };
             }
             else
@@ -129,10 +125,10 @@ namespace COMCMS.Web.Controllers.api
                 entity.AddTime = DateTime.Now;
                 entity.UId = m.Id;
                 entity.Insert();
-                reJson.code = 0;
-                reJson.message = "注册成功！";
-                reJson.detail = new { sessionkey = entity.Key, username = "", userimg = m.UserImg };
-                return reJson;
+                //reJson.code = 0;
+                //reJson.message = "注册成功！";
+                var detail = new { sessionkey = entity.Key, username = "", userimg = m.UserImg };
+                return new ReJson(0, "注册成功！", detail);
                 //return new { code = 0, message = "注册成功！", sessionkey = entity.Key, username = "", userimg = m.UserImg };
             }
         }
@@ -144,42 +140,31 @@ namespace COMCMS.Web.Controllers.api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public object SyncWeixinInfo(string sessionkey, string userInfo, int inviteid = 0, string random = "", string timeStamp = "", string signature = "")
+        public ReJson SyncWeixinInfo(string sessionkey, string userInfo, int inviteid = 0, string random = "", string timeStamp = "", string signature = "")
         {
-            if (!AutoCheckQueryStringSignature())
-            {
-                return reJson;
-            }
             if (string.IsNullOrEmpty(sessionkey))
             {
-                reJson.code = 5003;
-                reJson.message = "登录状态失败";
-                return reJson;
+                return new ReJson(5003,"登录状态失败");
             }
             WXAppSession entity = WXAppSession.Find(WXAppSession._.Key == sessionkey);
             if (entity == null)
             {
-                reJson.message = "未找到登录状态！";
-                return reJson;
+                return new ReJson("未找到登录状态！");
             }
             if (string.IsNullOrEmpty(userInfo))
             {
-                reJson.message = "用户信息错误！";
-                return reJson;
+                return new ReJson("用户信息错误！");
             }
             WXAppUserInfo info = JsonConvert.DeserializeObject<WXAppUserInfo>(userInfo);
             if (string.IsNullOrEmpty(info.avatarUrl))
             {
-                reJson.message = "微信用户信息错误！";
-                return reJson;
+                return new ReJson("微信用户信息错误！");
             }
             //获取用户
             Member my = Member.FindById(entity.UId);
             if (my == null)
             {
-                reJson.code = 40000;
-                reJson.message = "系统找不到本用户！";
-                return reJson;
+                return new ReJson(40000, "系统找不到本用户！");
             }
             //同步用户信息
             my.Country = info.country;
@@ -200,22 +185,20 @@ namespace COMCMS.Web.Controllers.api
             }
             my.Update();
 
-            reJson.code = 0;
-            reJson.message = "同步信息成功！";
-            reJson.detail = new { sessionkey = entity.Key, username = info.nickName, userimg = info.avatarUrl };
-            return reJson;
+            var detail = new { sessionkey = entity.Key, username = info.nickName, userimg = info.avatarUrl };
+            return new ReJson(0, "同步信息成功！", detail);
         }
         #endregion
 
-        #region 测试
-        [HttpGet]
-        public object Test()
-        {
+        //#region 测试
+        //[HttpGet]
+        //public object Test()
+        //{
             
-            reJson.code = 0;
-            reJson.message = "测试信息，成功！";
-            return reJson;
-        }
-        #endregion
+        //    reJson.code = 0;
+        //    reJson.message = "测试信息，成功！";
+        //    return reJson;
+        //}
+        //#endregion
     }
 }
