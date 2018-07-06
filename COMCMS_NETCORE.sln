@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMCMS.Common", "COMCMS.Com
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XCoder(代码生成器)", "XCoder\XCoder(代码生成器).csproj", "{71539325-194B-4D56-8D88-562B33004406}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "COMCMS.API", "COMCMS.API\COMCMS.API.csproj", "{ED1581D0-7E94-4ADC-B2B4-0A523EA3B512}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMCMS.API", "COMCMS.API\COMCMS.API.csproj", "{ED1581D0-7E94-4ADC-B2B4-0A523EA3B512}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Core", "Lib.Core\Lib.Core.csproj", "{D95FC3C1-B035-4A19-A706-71C31DD1E52D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{ED1581D0-7E94-4ADC-B2B4-0A523EA3B512}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED1581D0-7E94-4ADC-B2B4-0A523EA3B512}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED1581D0-7E94-4ADC-B2B4-0A523EA3B512}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D95FC3C1-B035-4A19-A706-71C31DD1E52D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D95FC3C1-B035-4A19-A706-71C31DD1E52D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D95FC3C1-B035-4A19-A706-71C31DD1E52D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D95FC3C1-B035-4A19-A706-71C31DD1E52D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

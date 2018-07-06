@@ -17,11 +17,9 @@
   </ItemGroup>
 
   <ItemGroup>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\COMCMS.Common\COMCMS.Common.csproj" />
     <ProjectReference Include="..\COMCMS.Core\COMCMS.Core.csproj" />
+    <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

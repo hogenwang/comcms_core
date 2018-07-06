@@ -15,8 +15,8 @@ namespace COMCMS.Web.ExceptionHandler
         {
             string message = exception.Message;
 
-            ReJSON error = new ReJSON(message);
-
+            ReJson error = new ReJson(message);
+            context.Response.ContentType = "text/json";
             await context.Response.WriteAsync(error.ToJson());
         }
     }
