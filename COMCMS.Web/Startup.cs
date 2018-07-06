@@ -17,6 +17,13 @@ using COMCMS.Web.Models;
 using COMCMS.Web.Common;
 using COMCMS.Web.ExceptionHandler;
 using Lib.Core.MiddlewareExtension.Extension;
+using Senparc.Weixin.Entities;
+using Senparc.CO2NET;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.Weixin;
+using Senparc.CO2NET.Cache;
+using System.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace COMCMS.Web
 {
@@ -70,7 +77,7 @@ namespace COMCMS.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp, IOptions<SenparcSetting> senparcSetting, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
         {
             app.Use(async (context, next) =>
             {
@@ -121,9 +128,41 @@ namespace COMCMS.Web
             });
 
             app.UseMiddlewareExtension(new ResultExceptionHandler());
-
+            RegisterService.Start(env, senparcSetting.Value)
+                   .UseSenparcWeixin(senparcWeixinSetting.Value, false/*此处为单独用于微信的调试状态*/, () => GetExContainerCacheStrategies());
             //加入HttpContext
             //MyHttpContext.ServiceProvider = svp;
         }
+
+        #region Senparc 缓存扩展策略
+        /// <summary>
+        /// 获取Container扩展缓存策略
+        /// </summary>
+        /// <returns></returns>
+        private IList<IDomainExtensionCacheStrategy> GetExContainerCacheStrategies()
+        {
+            var exContainerCacheStrategies = new List<IDomainExtensionCacheStrategy>();
+
+            //如果有配置，可以去掉下面注释
+
+            ////判断Redis是否可用
+            //var redisConfiguration = ConfigurationManager.AppSettings["Cache_Redis_Configuration"];
+            //if ((!string.IsNullOrEmpty(redisConfiguration) && redisConfiguration != "Redis配置"))
+            //{
+            //    exContainerCacheStrategies.Add(RedisContainerCacheStrategy.Instance);
+            //}
+
+            ////判断Memcached是否可用
+            //var memcachedConfiguration = ConfigurationManager.AppSettings["Cache_Memcached_Configuration"];
+            //if ((!string.IsNullOrEmpty(memcachedConfiguration) && memcachedConfiguration != "Memcached配置"))
+            //{
+            //    exContainerCacheStrategies.Add(MemcachedContainerCacheStrategy.Instance);
+            //}
+
+            //也可扩展自定义的缓存策略
+
+            return exContainerCacheStrategies;
+        }
+        #endregion
     }
 }

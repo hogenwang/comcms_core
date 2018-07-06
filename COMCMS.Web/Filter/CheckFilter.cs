@@ -8,6 +8,8 @@ using COMCMS.Web.Controllers.api;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
+
+
 namespace COMCMS.Web.Filter
 {
     public class CheckFilterAttribute : ActionFilterAttribute
@@ -41,7 +43,7 @@ namespace COMCMS.Web.Filter
             }
         }
 
-        private ReJSON ValiSignature(HttpContext context)
+        private ReJson ValiSignature(HttpContext context)
         {
             var Request = context.Request;
 
@@ -77,7 +79,7 @@ namespace COMCMS.Web.Filter
             if (!MySign.CheckSign(pars, signature))
             {
 
-                return new ReJSON(40004, "signature 错误！");
+                return new ReJson(40004, "signature 错误！");
             }
             //判断是否超时
             string timeStamp = pars["timeStamp"];
@@ -85,7 +87,7 @@ namespace COMCMS.Web.Filter
             DateTime postTime = Utils.StampToDateTime(timeStamp);
             if (postTime < DateTime.Now.AddSeconds(-120))//30秒有效期
             {
-                return new ReJSON(40004, "signature 错误！", 1);
+                return new ReJson(40004, "signature 错误！", 1);
             }
 
             return null;
