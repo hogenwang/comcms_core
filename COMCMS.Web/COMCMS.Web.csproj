@@ -7,21 +7,19 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
-    <PackageReference Include="MySqlConnector" Version="0.42.1" />
-    <PackageReference Include="NewLife.XCode" Version="9.7.6722.39741" />
+    <PackageReference Include="MySql.Data" Version="8.0.11" />
+    <PackageReference Include="NewLife.XCode" Version="9.8.6755.22252" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="14.14.0" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="1.10.5" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="15.0.6.1" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="2.0.6.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
     <PackageReference Include="ZKWeb.System.Drawing" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\COMCMS.Common\COMCMS.Common.csproj" />
     <ProjectReference Include="..\COMCMS.Core\COMCMS.Core.csproj" />
+    <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
