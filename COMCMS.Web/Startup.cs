@@ -24,6 +24,7 @@ using Senparc.Weixin;
 using Senparc.CO2NET.Cache;
 using System.Configuration;
 using Microsoft.Extensions.Options;
+using Senparc.Weixin.RegisterServices;
 
 namespace COMCMS.Web
 {
@@ -74,6 +75,8 @@ namespace COMCMS.Web
             {
                 options.Filters.Add<HttpGlobalExceptionFilter>();
             });
+            services.AddSenparcGlobalServices(Configuration)//Senparc.CO2NET 全局注册
+            .AddSenparcWeixinServices(Configuration);//Senparc.Weixin 注册（如果使用Senparc.Weixin SDK则添加）
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -128,8 +131,7 @@ namespace COMCMS.Web
             });
 
             app.UseMiddlewareExtension(new ResultExceptionHandler());
-            RegisterService.Start(env, senparcSetting.Value)
-                   .UseSenparcWeixin(senparcWeixinSetting.Value, false/*此处为单独用于微信的调试状态*/, () => GetExContainerCacheStrategies());
+            IRegisterService register = RegisterService.Start(env, senparcSetting.Value).UseSenparcGlobal();
             //加入HttpContext
             //MyHttpContext.ServiceProvider = svp;
         }
