@@ -23,6 +23,7 @@ using Senparc.CO2NET.RegisterServices;
 using Senparc.Weixin;
 using Senparc.CO2NET.Cache;
 using System.Configuration;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Options;
 using Senparc.Weixin.RegisterServices;
 
@@ -77,6 +78,9 @@ namespace COMCMS.Web
             });
             services.AddSenparcGlobalServices(Configuration)//Senparc.CO2NET 全局注册
             .AddSenparcWeixinServices(Configuration);//Senparc.Weixin 注册（如果使用Senparc.Weixin SDK则添加）
+
+            //注册Cookie认证服务
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,6 +112,7 @@ namespace COMCMS.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
             app.UseStaticHttpContext();
 
             app.UseMvc(routes =>
