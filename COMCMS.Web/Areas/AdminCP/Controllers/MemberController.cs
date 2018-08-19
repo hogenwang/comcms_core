@@ -32,7 +32,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         }
         [HttpPost]
         [MyAuthorize("view", "editme", "JSON")]
-        public IActionResult EditMe(FormCollection fc)
+        public IActionResult EditMe(IFormCollection fc)
         {
             Core.Admin my = Core.Admin.GetMyInfo();
 
