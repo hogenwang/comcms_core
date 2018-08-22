@@ -41,7 +41,7 @@ namespace COMCMS.Web.Controllers
                 string wxmchId = cfg.MCHId;// ConfigurationManager.AppSettings["WeixinMCHId"];
                 string wxmchKey = cfg.MCHKey;// ConfigurationManager.AppSettings["WeixinMCHKey"];
 
-                TenPayV3Info TenPayV3Info = new TenPayV3Info(appId, appSecrect, wxmchId, wxmchKey, Utils.GetServerUrl() + "/wxpayment/notify");
+                TenPayV3Info TenPayV3Info = new TenPayV3Info(appId, appSecrect, wxmchId, wxmchKey, Utils.GetServerUrl() + "/wxpayment/notify", Utils.GetServerUrl() + "/wxpayment/notify");
 
                 string res = null;
 

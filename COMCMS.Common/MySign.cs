@@ -43,5 +43,34 @@ namespace COMCMS.Common
             return prestr.ToString();
         }
         #endregion
+
+        #region 生成签名后的地址
+        /// <summary>
+        /// 根据规则生成请求地址
+        /// </summary>
+        /// <param name="dicArray"></param>
+        /// <param name="host"></param>
+        /// <returns></returns>
+        public static string CreateSignURL(SortedDictionary<string, string> dicArray, string host)
+        {
+            StringBuilder prestr = new StringBuilder();
+            StringBuilder urlstr = new StringBuilder();
+            foreach (KeyValuePair<string, string> temp in dicArray)
+            {
+                if (temp.Key != "signature")
+                {
+                    prestr.Append(temp.Value);
+                    urlstr.Append(temp.Key + "=" + temp.Value + "&");
+                }
+            }
+            NewLife.Log.XTrace.WriteLine("加密前数据：" + prestr);
+            string mysign = Utils.MD5(prestr.ToString() + Utils.SIGNSALT);
+
+            urlstr.Append("signature=" + mysign);
+
+            string reUrl = host + "?" + urlstr.ToString();
+            return reUrl;
+        }
+        #endregion
     }
 }

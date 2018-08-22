@@ -703,6 +703,31 @@ namespace COMCMS.Common
             TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return Convert.ToInt64(ts.TotalSeconds).ToString();
         }
+
+        /// <summary>  
+        /// 获取JS时间戳  
+        /// </summary>  
+        /// <returns></returns>  
+        public static string GetJSTimeStamp()
+        {
+            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return Convert.ToInt64(ts.TotalMilliseconds).ToString();
+        }
+
+        /// <summary>
+        /// 获取当前URL绝对地址
+        /// </summary>
+        /// <returns></returns>
+        public static string GetNowURL()
+        {
+            string url = GetServerUrl() + MyHttpContext.Current.Request.Path;
+            string querystring = MyHttpContext.Current.Request.QueryString.ToString();
+            if (!string.IsNullOrWhiteSpace(querystring))
+                url = url + querystring;
+
+            return url;
+        }
+
         #endregion
 
         #region 处理部分

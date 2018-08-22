@@ -66,10 +66,10 @@
                             <td>
                                 <div class="rt-editpanel">
                                     <a href="javascript:;" class="btn btn-xs btn-primary" title="编辑" onclick="showEdit(@m.Id)"><i class="fa fa-edit"></i> 编辑</a>
-                                    <a href="javascript:;" class="btn btn-xs btn-danger" title="删除" onclick="doDel('/AdminCP/Guestbook/DelGuestbookKind',@m.Id);"><i class="fa fa-close"></i> 删除</a>
+                                    <a href="javascript:;" class="btn btn-xs btn-danger" title="删除" onclick="doDel('/AdminCP/Guestbook/DelGuestbookCategory',@m.Id);"><i class="fa fa-close"></i> 删除</a>
                                 </div>
                                 <div class="rt-savepanel hidden">
-                                    <a href="javascript:;" class="btn btn-xs btn-success" title="保存" onclick="doEdit('listGuestbookKindForm', '/AdminCP/Guestbook/EditGuestbookKind',@m.Id)"><i class="fa fa-save"></i> 保存</a>
+                                    <a href="javascript:;" class="btn btn-xs btn-success" title="保存" onclick="doEdit('listGuestbookKindForm', '/AdminCP/Guestbook/EditGuestbookCategory',@m.Id)"><i class="fa fa-save"></i> 保存</a>
                                     <a href="javascript:;" class="btn btn-xs btn-default" title="取消" onclick="cancelEdit(@m.Id);"><i class="fa fa-mail-reply"></i> 取消</a>
                                 </div>
                             </td>
@@ -83,7 +83,7 @@
                         <td class="text-center"><input type="number" name="Rank" id="Rank" class="form-control addnew" value="0" maxlength="3" placeholder="请输入类别排序，只能填写数字" /></td>
                         <td><input type="text" name="KindInfo" id="KindInfo" class="form-control addnew" placeholder="类别简介，非必填" maxlength="200" /></td>
                         <td>
-                            <button type="button" class="btn btn-xs btn-success" title="保存" onclick="doAdd('listGuestbookKindForm', '/AdminCP/Guestbook/AddGuestbookKind');"><i class="fa fa-save"></i> 保存</button>
+                            <button type="button" class="btn btn-xs btn-success" title="保存" onclick="doAdd('listGuestbookKindForm', '/AdminCP/Guestbook/AddGuestbookCategory');"><i class="fa fa-save"></i> 保存</button>
                         </td>
                     </tr>
                 </table>

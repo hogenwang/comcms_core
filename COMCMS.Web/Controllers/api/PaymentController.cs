@@ -92,7 +92,7 @@ namespace COMCMS.Web.Controllers.api
 
 
 
-            TenPayV3Info TenPayV3Info = new TenPayV3Info(appId, appSecrect, wxmchId, wxmchKey, Utils.GetServerUrl() + "/wxpayment/notify");
+            TenPayV3Info TenPayV3Info = new TenPayV3Info(appId, appSecrect, wxmchId, wxmchKey, Utils.GetServerUrl() + "/wxpayment/notify", Utils.GetServerUrl() + "/wxpayment/notify");
             TenPayV3Info.TenPayV3Notify = Utils.GetServerUrl() + "/wxpayment/notify";
             XTrace.WriteLine("微信支付异步通知地址：" + TenPayV3Info.TenPayV3Notify);
             //创建支付应答对象
