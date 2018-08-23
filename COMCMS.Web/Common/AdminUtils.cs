@@ -34,7 +34,7 @@ namespace COMCMS.Web.Common
                 if (string.IsNullOrEmpty(my.Roles.Powers))
                     return false;
                 IList<AdminMenuEvent> listevents = JsonConvert.DeserializeObject<IList<AdminMenuEvent>>(my.Roles.Powers);
-                if (listevents == null || listevents.Count > 0)
+                if (listevents == null || listevents.Count <= 0)
                 {
                     return false;
                 }
