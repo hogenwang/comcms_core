@@ -408,7 +408,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         //执行添加管理员
         [HttpPost]
         [MyAuthorize("add", "admins", "JSON")]
-        public IActionResult AddAdmin(FormCollection fc)
+        public IActionResult AddAdmin(IFormCollection fc)
         {
             string userName = fc["UserName"];
             string newPwd = fc["PassWord"];
@@ -487,7 +487,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         //执行编辑管理员
         [HttpPost]
         [MyAuthorize("edit", "admins", "JSON")]
-        public IActionResult EditAdmin(FormCollection fc)
+        public IActionResult EditAdmin(IFormCollection fc)
         {
             string userName = fc["UserName"];
             string newPwd = fc["PassWord"];
