@@ -30,6 +30,9 @@
 
   <ItemGroup>
     <None Include="wwwroot\editor\ckeditor\adapters\jquery.js" />
+    <None Include="wwwroot\editor\ckeditor\lang\en.js" />
+    <None Include="wwwroot\editor\ckeditor\lang\zh-cn.js" />
+    <None Include="wwwroot\editor\ckeditor\lang\zh.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\a11yhelp.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\af.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\ar.js" />
@@ -42,6 +45,7 @@
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\de-ch.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\de.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\el.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\en-au.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\en-gb.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\en.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\eo.js" />
@@ -189,6 +193,7 @@
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\pl.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\pt-br.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\pt.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\ro.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\ru.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\si.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\sk.js" />

@@ -34,8 +34,8 @@
                                     <label class="col-sm-3 control-label">是否超级管理员：</label>
                                     <div class="col-sm-8">
                                         <select class="form-control" asp-for="IsSuperAdmin">
-                                            <option value="1" >超级管理员</option>
-                                            <option value="0" >普通管理员</option>
+                                            <option value="1">超级管理员</option>
+                                            <option value="0">普通管理员</option>
                                         </select>
                                     </div>
                                 </div>
@@ -99,9 +99,9 @@
                                     }
                                 </table>
                                 <script type="text/javascript">
-                                        $(document).ready(function() {
-                                            $('.tree').treegrid();
-                                        });
+                                    $(document).ready(function () {
+                                        $('.tree').treegrid();
+                                    });
                                 </script>
                             </div>
                         </div>
@@ -122,8 +122,26 @@
         </div>
     </div>
 </div>
+@if (Model.IsSuperAdmin == 0)
+{
+    <script>
+            var menus = @Html.Raw(Model.Menus);
+            var powers = @Html.Raw(Model.Powers);
+            $(function () {
+                menus.map(function(item){
+                    $("#menuid_"+item.Id).prop("checked","checked");
+
+                });
+                powers.map(function(item){
+                    $("#"+item.MenuKey+"_"+item.Id).prop("checked","checked");
+                    console.log("#"+item.MenuKey+"_"+item.Id);
+                });
+
+            });
+    </script>
+}
 <script>
     $(function () {
         DoPost("editadminroleForm");
-    })
+    });
 </script>

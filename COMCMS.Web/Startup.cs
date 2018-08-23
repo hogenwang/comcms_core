@@ -108,7 +108,7 @@ namespace COMCMS.Web
             app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
             //启用Session
             app.UseSession();
-
+            app.UseMyMVCDI();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();

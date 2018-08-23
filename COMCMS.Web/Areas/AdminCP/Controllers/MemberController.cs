@@ -134,7 +134,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         //执行添加管理组
         [HttpPost]
         [MyAuthorize("add", "adminrole", "JSON")]
-        public IActionResult AddAdminRole(FormCollection fc)
+        public IActionResult AddAdminRole(IFormCollection fc)
         {
             string RoleName = fc["RoleName"];
             string RoleDescription = fc["RoleDescription"];
@@ -236,7 +236,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         //执行编辑管理组
         [HttpPost]
         [MyAuthorize("edit", "adminrole", "JSON")]
-        public IActionResult EditAdminRole(FormCollection fc)
+        public IActionResult EditAdminRole(IFormCollection fc)
         {
             string Id = fc["Id"];
             string RoleName = fc["RoleName"];
