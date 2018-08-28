@@ -10,7 +10,7 @@ using NewLife.Log;
 using Senparc.Weixin.Exceptions;
 using Senparc.Weixin;
 using Senparc.Weixin.MP;
-using Senparc.Weixin.MP.TenPayLibV3;
+using Senparc.Weixin.TenPay.V3;
 using System.Collections;
 using Newtonsoft.Json;
 
@@ -28,9 +28,8 @@ namespace COMCMS.Web.Controllers
             XTrace.WriteLine("微信支付异步通知开始：");
             try
             {
-
+                
                 ResponseHandler resHandler = new ResponseHandler(null);
-
                 string return_code = resHandler.GetParameter("return_code");
                 string return_msg = resHandler.GetParameter("return_msg");
 
@@ -42,7 +41,6 @@ namespace COMCMS.Web.Controllers
                 string wxmchKey = cfg.MCHKey;// ConfigurationManager.AppSettings["WeixinMCHKey"];
 
                 TenPayV3Info TenPayV3Info = new TenPayV3Info(appId, appSecrect, wxmchId, wxmchKey, Utils.GetServerUrl() + "/wxpayment/notify", Utils.GetServerUrl() + "/wxpayment/notify");
-
                 string res = null;
 
                 resHandler.SetKey(TenPayV3Info.Key);

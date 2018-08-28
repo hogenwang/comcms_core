@@ -9,7 +9,7 @@ using COMCMS.Web.Filter;
 using XCode;
 using NewLife.Log;
 using Senparc.Weixin.MP;
-using Senparc.Weixin.MP.TenPayLibV3;
+using Senparc.Weixin.TenPay.V3;
 using Newtonsoft.Json;
 
 namespace COMCMS.Web.Controllers.api
@@ -102,7 +102,7 @@ namespace COMCMS.Web.Controllers.api
             string rtimeStamp = Utils.GetTimeStamp();
 
             //创建请求统一订单接口参数
-            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(TenPayV3Info.AppId, TenPayV3Info.MchId, entity.Title, model.PayOrderNum, (int)(entity.TotalPay * 100), Utils.GetIP(), TenPayV3Info.TenPayV3Notify, TenPayV3Type.JSAPI, my.WeixinAppOpenId, TenPayV3Info.Key, nonceStr);
+            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(TenPayV3Info.AppId, TenPayV3Info.MchId, entity.Title, model.PayOrderNum, (int)(entity.TotalPay * 100), Utils.GetIP(), TenPayV3Info.TenPayV3Notify,  Senparc.Weixin.TenPay.TenPayV3Type.JSAPI, my.WeixinAppOpenId, TenPayV3Info.Key, nonceStr);
 
             //返回给微信的请求
             RequestHandler res = new RequestHandler(null);

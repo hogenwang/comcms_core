@@ -11,6 +11,8 @@ using COMCMS.Web.Common;
 using COMCMS.Core.Models;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using MimeKit;
+using MailKit.Net.Smtp;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -116,7 +118,49 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             return Json(tip);
         }
+        /// <summary>
+        /// 发送测试
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [MyAuthorize("edit", "smptconfig", "JSON")]
+        public IActionResult SendTestMail()
+        {
+            string mail = Request.Form["txtEmail"];
+            Config cfg = Config.GetSystemConfig();
+            if (string.IsNullOrWhiteSpace(mail) || !Utils.IsValidEmail(mail))
+            {
+                tip.Message = "请输入正确的邮箱格式！";
+                return Json(tip);
+            }
 
+            var smtp = cfg.SMTPConfigEntity;
+            if (string.IsNullOrEmpty(smtp.SmtpHost) || string.IsNullOrEmpty(smtp.SmtpEmail) || string.IsNullOrEmpty(smtp.SmtpEmailPwd))
+            {
+                tip.Message = "系统SMTP配置错误，请先配置后再执行此操作！";
+                return Json(tip);
+            }
+
+            var emailMessage = new MimeMessage();
+            emailMessage.From.Add(new MailboxAddress(smtp.PostUserName, smtp.SmtpEmail));
+            emailMessage.To.Add(new MailboxAddress("", mail));
+            emailMessage.Subject = "发送测试邮件";
+            emailMessage.Body = new TextPart("html") { Text = $"<p>发送测试邮件，发送时间：{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}</p>" };
+            //同步发送
+            using (var client = new SmtpClient())
+            {
+                client.Connect(smtp.SmtpHost, int.Parse(smtp.SmtpProt), smtp.IsSSL == 1 ? true : false);
+
+                client.Authenticate(smtp.SmtpEmail, smtp.SmtpEmailPwd);
+
+                client.Send(emailMessage);
+                client.Disconnect(true);
+            }
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "发送成功，请查收！";
+            Admin.WriteLogActions($"发送测试Email（to:${mail}）;");
+            return Json(tip);
+        }
         #endregion
 
         #region 附件配置
