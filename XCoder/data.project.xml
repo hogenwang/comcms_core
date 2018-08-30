@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Tables Version="9.8.6763.36552" NameSpace="COMCMS.Core" ConnName="dbconn" Output="" BaseClass="Entity">
+<Tables Version="9.9.6806.38809" NameSpace="COMCMS.Core" ConnName="dbconn" Output="" BaseClass="Entity">
   <Table Name="Admin" Description="管理员" DbType="SqlServer">
     <Columns>
       <Column Name="Id" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />

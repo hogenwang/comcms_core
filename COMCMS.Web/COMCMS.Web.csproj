@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.3" />
     <PackageReference Include="MimeKit" Version="2.0.6" />
     <PackageReference Include="MySql.Data" Version="8.0.12" />
-    <PackageReference Include="NewLife.XCode" Version="9.9.6806.38809" />
+    <PackageReference Include="NewLife.XCode" Version="9.9.6815.39385" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Senparc.Weixin" Version="5.1.8" />
     <PackageReference Include="Senparc.Weixin.MP" Version="15.3.0" />

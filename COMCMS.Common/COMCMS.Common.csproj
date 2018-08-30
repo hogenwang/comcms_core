@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.1.3" />
-    <PackageReference Include="NewLife.Core" Version="7.3.6805.17853" />
+    <PackageReference Include="NewLife.Core" Version="7.3.6815.39384" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
     <PackageReference Include="ZKWeb.System.Drawing" Version="4.0.1" />
   </ItemGroup>
