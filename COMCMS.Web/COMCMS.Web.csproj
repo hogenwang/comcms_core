@@ -12,10 +12,10 @@
     <PackageReference Include="MySql.Data" Version="8.0.12" />
     <PackageReference Include="NewLife.XCode" Version="9.9.6815.39385" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="Senparc.Weixin" Version="5.1.8" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="15.3.0" />
-    <PackageReference Include="Senparc.Weixin.TenPay" Version="0.1.0" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="2.4.1" />
+    <PackageReference Include="Senparc.Weixin" Version="6.0.1" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.0.1" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="0.2.0" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.0.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
     <PackageReference Include="ZKWeb.System.Drawing" Version="4.0.1" />
   </ItemGroup>
