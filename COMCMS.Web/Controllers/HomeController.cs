@@ -58,6 +58,8 @@ namespace COMCMS.Web.Controllers
         public IActionResult Contact()
         {
             Link l = Link.Find(Link._.Id == 1);
+            l.Title = "😂😂😂😂";
+            l.Save();
             return View(l);
         }
 
