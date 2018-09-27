@@ -79,19 +79,20 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 return Json(errorJson);
                 //return Content(string.Format(tpl, "", callback, "请上传一张图片！"), "text/html");
             }
+            
             var data = Request.Form.Files["upload"];
-            string filepath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\images\\";
-            string thumbsFilePath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\_thumbs\\images\\";
+            string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
+            string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
 
             //根据附件配置，设置上传图片目录
             string imgPath = DateTime.Now.Year.ToString();//默认按年
             switch (attach.SaveType)
             {
                 case 1://按月份
-                    imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";
+                    imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
                     break;
                 case 2:
-                    imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}\\{DateTime.Now.ToString("dd")}";
+                    imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
                     break;
             }
             filepath += imgPath;//存放路径
@@ -145,7 +146,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     //添加水印
                     if (attach.IsWaterMark == 1 && !string.IsNullOrEmpty(attach.WaterMarkImg))
                     {
-                        string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", "\\");
+                        string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", Path.DirectorySeparatorChar.ToString());
                         if (System.IO.File.Exists(watermarkimg))
                         {
                             //先复制一张图片出来
@@ -247,17 +248,17 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 isImage = true;
             }
             var data = Request.Form.Files["upload"];
-            string filepath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\files\\";
-            string thumbsFilePath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\_thumbs\\files\\";
+            string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
+            string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
             //根据附件配置，设置上传图片目录
             string imgPath = DateTime.Now.Year.ToString();//默认按年
             switch (attach.SaveType)
             {
                 case 1://按月份
-                    imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";
+                    imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
                     break;
                 case 2:
-                    imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}\\{DateTime.Now.ToString("dd")}";
+                    imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
                     break;
             }
             //文件名字
@@ -306,7 +307,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     //添加水印
                     if (isImage && attach.IsWaterMark == 1 && !string.IsNullOrEmpty(attach.WaterMarkImg))
                     {
-                        string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", "\\");
+                        string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", Path.DirectorySeparatorChar.ToString());
                         if (System.IO.File.Exists(watermarkimg))
                         {
                             //先复制一张图片出来
@@ -427,17 +428,17 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     size = bytes.Length.ToString();
                 }
 
-                string filepath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\images\\";
-                string thumbsFilePath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\_thumbs\\images\\";
+                string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
+                string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
                 //根据附件配置，设置上传图片目录
                 string imgPath = DateTime.Now.Year.ToString();//默认按年
                 switch (attach.SaveType)
                 {
                     case 1://按月份
-                        imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";
+                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
                         break;
                     case 2:
-                        imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}\\{DateTime.Now.ToString("dd")}";
+                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
                         break;
                 }
                 filepath += imgPath;//存放路径
@@ -481,7 +482,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 //添加水印
                 if (attach.IsWaterMark == 1 && !string.IsNullOrEmpty(attach.WaterMarkImg))
                 {
-                    string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", "\\");
+                    string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", Path.DirectorySeparatorChar.ToString());
                     if (System.IO.File.Exists(watermarkimg))
                     {
                         //先复制一张图片出来
@@ -557,17 +558,17 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     msg = "只能上传一张图片格式文件！";
                     return Content(JsonConvert.SerializeObject(new { status = status, msg = msg, name = name, path = path, thumb = thumb, size = size, ext = ext }), "text/plain");
                 }
-                string filepath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\images\\";
-                string thumbsFilePath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\_thumbs\\images\\";
+                string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
+                string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
                 //根据附件配置，设置上传图片目录
                 string imgPath = DateTime.Now.Year.ToString();//默认按年
                 switch (attach.SaveType)
                 {
                     case 1://按月份
-                        imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";
+                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
                         break;
                     case 2:
-                        imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}\\{DateTime.Now.ToString("dd")}";
+                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
                         break;
                 }
                 filepath += imgPath;//存放路径
@@ -623,7 +624,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                         //添加水印
                         if (notwater == "0" && attach.IsWaterMark == 1 && !string.IsNullOrEmpty(attach.WaterMarkImg))
                         {
-                            string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", "\\");
+                            string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", Path.DirectorySeparatorChar.ToString());
                             if (System.IO.File.Exists(watermarkimg))
                             {
                                 //先复制一张图片出来
@@ -699,17 +700,17 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             var data = Request.Form.Files[0];
             if (data != null)
             {
-                string filepath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\files\\";
-                string thumbsFilePath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\_thumbs\\files\\";
+                string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
+                string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
                 //根据附件配置，设置上传图片目录
                 string imgPath = DateTime.Now.Year.ToString();//默认按年
                 switch (attach.SaveType)
                 {
                     case 1://按月份
-                        imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";
+                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
                         break;
                     case 2:
-                        imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}\\{DateTime.Now.ToString("dd")}";
+                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
                         break;
                 }
                 filepath += imgPath;//存放路径

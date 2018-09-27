@@ -78,7 +78,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         public IActionResult SmtpConfig(SMTPConfigEntity model)
         {
             //验证
-            if (!Utils.IsValidEmail(model.SmtpEmail))
+            if (!Utils.IsValidEmail(model.PostUserName))
             {
                 tip.Message = "SMTP帐号格式错误！请输入正确的Email！";
                 return Json(tip);

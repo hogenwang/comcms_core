@@ -127,6 +127,14 @@ namespace COMCMS.Web.Controllers
         }
         #endregion
 
+        #region 测试
+        [HttpGet]
+        public IActionResult Article(string title)
+        {
+            return Content(title);
+        }
+        #endregion
+
 
     }
 }

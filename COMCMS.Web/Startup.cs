@@ -26,6 +26,7 @@ using System.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Options;
 using Senparc.Weixin.RegisterServices;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace COMCMS.Web
 {
@@ -125,8 +126,16 @@ namespace COMCMS.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-
-
+                routes.MapRoute(
+                name: "article",
+                template: "{title}/index.html",
+                defaults:new { controller ="Home", action= "Article" }
+                );
+                routes.MapRoute(
+                name: "article2",
+                template: "{title}/",
+                defaults: new { controller = "Home", action = "Article" }
+                );
             });
 
             //使用环境变量
