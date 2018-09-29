@@ -22,10 +22,15 @@ namespace COMCMS.Common
 
         static Utils()
         {
-            //ReloadOnChange = true 当appsettings.json被修改时重新加载            
-            Configuration = new ConfigurationBuilder()
-            .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
-            .Build();
+            ////ReloadOnChange = true 当appsettings.json被修改时重新加载            
+            //Configuration = new ConfigurationBuilder()
+            //.Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
+            //.Build();
+        }
+
+        public static void AddUtils(IConfiguration configuration)
+        {
+            Configuration = configuration;
         }
 
         #region 静态变量

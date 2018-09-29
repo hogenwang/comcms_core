@@ -12,6 +12,7 @@ using Senparc.Weixin;
 using Senparc.Weixin.MP;
 using Senparc.Weixin.TenPay.V3;
 using System.Collections;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace COMCMS.Web.Controllers
@@ -124,5 +125,7 @@ namespace COMCMS.Web.Controllers
             }
         }
         #endregion
+
+        public wxpaymentController(IConfiguration configuration) : base(configuration){}
     }
 }

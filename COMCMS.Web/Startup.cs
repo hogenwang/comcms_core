@@ -46,6 +46,9 @@ namespace COMCMS.Web
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddMvc().AddSessionStateTempDataProvider();
 
+            //添加Configuration到静态变量
+            Utils.AddUtils(Configuration);
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.

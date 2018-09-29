@@ -22,12 +22,14 @@ namespace COMCMS.Web.Controllers
     {
         public static IConfiguration Configuration { get; set; }
         public ConcurrentDictionary<string, string> AllSession = new ConcurrentDictionary<string, string>();
-        public HomeController()
-        {
-            Configuration = new ConfigurationBuilder()
-.Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
-.Build();
 
+        public HomeController(IConfiguration configuration)
+        {
+            //Configuration = new ConfigurationBuilder()
+            //    .SetBasePath(Directory.GetCurrentDirectory())
+            //    .AddJsonFile("appsettings.json", optional: true, reloadOnChange : true)
+            //    .Build();
+            Configuration = configuration;
         }
         public IActionResult Index()
         {
@@ -89,7 +91,7 @@ namespace COMCMS.Web.Controllers
 
         public IActionResult Test2()
         {
-            var settings = "appsettings.json".GetFullPath();
+            var settings = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
             var css2 = new ConfigurationBuilder().AddJsonFile(settings).Build().GetSection("connectionStrings");
 
             string s = "";

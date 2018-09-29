@@ -304,3 +304,4 @@ __pycache__/
 # OpenCover UI analysis results
 OpenCover/
 COMCMS.Web/wwwroot/userfiles/
+/COMCMS.Web/COMCMS.Web.csproj.DotSettings
