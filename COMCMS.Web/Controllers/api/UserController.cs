@@ -173,7 +173,7 @@ namespace COMCMS.Web.Controllers.api
             my.City = info.city;
             my.Province = info.province;
             my.Sex = info.gender;
-            my.Nickname = HttpUtility.UrlEncode(info.nickName);
+            my.Nickname = info.nickName;
             my.LastLoginTime = DateTime.Now;
             if (inviteid > 0 & my.Parent == 0)
             {
