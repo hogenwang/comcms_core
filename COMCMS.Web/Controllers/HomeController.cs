@@ -139,6 +139,15 @@ namespace COMCMS.Web.Controllers
         }
         #endregion
 
+        public IActionResult Uploader()
+        {
+            return View("~/Areas/AdminCP/Views/WebUploader/Uploader.cshtml");
+        }
 
+        public IActionResult FileTest()
+        {
+            return View();
+
+        }
     }
 }

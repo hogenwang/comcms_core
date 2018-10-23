@@ -24,6 +24,7 @@ using Senparc.Weixin;
 using Senparc.CO2NET.Cache;
 using System.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
 using Senparc.Weixin.RegisterServices;
 using Microsoft.AspNetCore.Routing.Constraints;
@@ -85,6 +86,13 @@ namespace COMCMS.Web
 
             //注册Cookie认证服务
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+
+            // 设置表单内容限制
+            services.Configure<FormOptions>(formOptions =>
+            {
+                formOptions.ValueLengthLimit = int.MaxValue; // 表单内容大小限制，默认4194304，单位byte
+                formOptions.MultipartBodyLengthLimit = int.MaxValue; // 如果是multipart，默认134217728
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

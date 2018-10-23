@@ -14,7 +14,10 @@ using System.IO;
 using COMCMS.Core.Models;
 using System.DrawingCore;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.Extensions.Primitives;
+using NewLife.UserGroup.WebUploader;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -46,13 +49,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         private readonly SystemSetting _attachsetting;
         private IHostingEnvironment _env;
         private AttachConfigEntity attach;
-        public UploadController( IHostingEnvironment env, IOptions<SystemSetting> attachsetting)
+        public UploadController(IHostingEnvironment env, IOptions<SystemSetting> attachsetting)
         {
             attach = Config.GetSystemConfig().AttachConfigEntity;
             _env = env;
             _attachsetting = attachsetting.Value;
         }
-        
+
         #region CKEditor 上传图片
         /// <summary>
         /// ckeditor 上传图片
@@ -67,7 +70,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             CKFileUploadError errorJson = new CKFileUploadError();
             if (upload == null)
             {
-                
+
                 errorJson.error.message = "请选择一张图片!";
                 return Json(errorJson);
             }
@@ -79,7 +82,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 return Json(errorJson);
                 //return Content(string.Format(tpl, "", callback, "请上传一张图片！"), "text/html");
             }
-            
+
             var data = Request.Form.Files["upload"];
             string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
             string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
@@ -794,6 +797,55 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             return Content(JsonConvert.SerializeObject(new { status = status, msg = msg, name = name, path = path, thumb = thumb, size = size, ext = ext }), "text/plain");
         }
+
+        #region 分片上传文件，可断点续传
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="md5">文件md5</param>
+        /// <param name="chunk">分块号</param>
+        /// <param name="chunks">分块总数</param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult SaveFile(string md5, int? chunk, int? chunks)
+        {
+            var tempDir = "UploadTemp"; // 缓存文件夹
+            var targetDir = "UploadFile"; // 目标文件夹
+
+            var file = Request.Form.Files[0];
+
+            file.SaveFileOrChunkFile(targetDir, tempDir, md5, chunks, chunk);
+
+            return Json(new
+            {
+                data = new { md5 = md5, url = Path.Combine("/", targetDir, file.FileName) },
+                message = "ok",
+                result = true
+            });
+        }
+
+        /// <summary>
+        /// 合并文件
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult Merge(string md5, string fileName, int chunks)
+        {
+            var tempDir = "UploadTemp";
+            var targetDir = "UploadFile";
+
+            tempDir.Merge(targetDir, fileName, md5, chunks);
+
+            return Json(new
+            {
+                data = new { md5 = md5, url = Path.Combine("/", targetDir, fileName) },
+                message = "ok",
+                result = true
+            });
+        }
+        #endregion
+
         #endregion
 
         #region 帮助方法
