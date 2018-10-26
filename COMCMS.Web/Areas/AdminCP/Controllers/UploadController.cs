@@ -801,7 +801,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         #region 分片上传文件，可断点续传
 
         /// <summary>
-        /// 
+        /// 保存文件或者分块
         /// </summary>
         /// <param name="md5">文件md5</param>
         /// <param name="chunk">分块号</param>
@@ -819,29 +819,74 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             return Json(new
             {
-                data = new { md5 = md5, url = Path.Combine("/", targetDir, file.FileName) },
-                message = "ok",
-                result = true
+                Data = new { md5 = md5, url = Path.Combine("/", targetDir, file.FileName) },
+                Message = "ok",
+                Result = true
             });
         }
 
         /// <summary>
         /// 合并文件
         /// </summary>
+        /// <param name="md5">文件md5</param>
+        /// <param name="fileName">文件名</param>
+        /// <param name="chunks">分块数</param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Merge(string md5, string fileName, int chunks)
+        public IActionResult MergeFile(string md5, string fileName, int chunks)
         {
             var tempDir = "UploadTemp";
             var targetDir = "UploadFile";
 
-            tempDir.Merge(targetDir, fileName, md5, chunks);
+            var (res,msg) = tempDir.Merge(targetDir, fileName, md5, chunks);
+
+            if (!res)
+            {
+                return Json(new
+                {
+                    Message = msg,
+                    Result = false
+                });
+            }
+            
+            return Json(new
+            {
+                Data = new { md5 = md5, url = Path.Combine("/", targetDir, fileName) },
+                Message = "ok",
+                Result = true
+            });
+        }
+
+        /// <summary>
+        /// 检查文件或分块是否存在
+        /// </summary>
+        /// <param name="md5">文件md5</param>
+        /// <param name="fileName">文件名</param>
+        /// <param name="chunk">分块号</param>
+        /// <returns></returns>
+        public IActionResult CheckFile(string md5, string fileName, int? chunk)
+        {
+            var tempDir = "UploadTemp";
+            var targetDir = "UploadFile";
+
+            string filePath;
+
+            //分片文件
+            if (chunk != null)
+            {
+                filePath = Path.Combine(tempDir, md5, $"{chunk}.part");
+            }
+            else
+            {
+                filePath = Path.Combine(targetDir, fileName);
+            }
+
+            var exists = System.IO.File.Exists(filePath);
 
             return Json(new
             {
-                data = new { md5 = md5, url = Path.Combine("/", targetDir, fileName) },
-                message = "ok",
-                result = true
+                Data = fileName!=null && exists ? (object)new { md5 = md5, url = Path.Combine("/", targetDir, fileName) } : null,
+                Result = exists
             });
         }
         #endregion

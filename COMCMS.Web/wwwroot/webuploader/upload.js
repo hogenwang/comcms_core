@@ -137,6 +137,87 @@
             return;
         }
 
+        WebUploader.Uploader.register({
+            "before-send-file": "beforeSendFile",
+            "before-send": "beforeSend",
+            "after-send-file": "afterSendFile"
+        }, {
+                beforeSendFile: function (file) {
+                    var task = new $.Deferred();
+
+                    $.post({
+                        url: "/AdminCP/Upload/CheckFile",
+                        type: "post",
+                        data: {
+                            md5: file.md5,
+                            fileName: file.name
+                        },
+                        dataType: "json",
+                        cache: false,
+                        async: false
+                    }).then(function (data) {
+                        if (data.result) {
+                            uploader.skipFile(file);
+                            task.resolve();
+                        }
+                        else {
+                            task.resolve();
+                        }
+                    }, function () {
+                        task.resolve();
+                    });
+                    return $.when(task);
+                },
+                beforeSend: function (block) {
+
+                    var task = new $.Deferred();
+
+                    // 有url了，就不用再上传了
+                    if (block.file.url) {
+                        task.reject();
+                    } else {
+                        $.post({
+                            url: "/AdminCP/Upload/CheckFile",
+                            type: "post",
+                            data: {
+                                md5: block.file.md5,
+                                //id: block.file.id,
+                                chunk: block.chunk
+                            },
+                            dataType: "json",
+                            cache: false,
+                            async: false
+                        }).then(function (data) {
+                            if (data.result) {
+                                task.reject();
+                            } else {
+                                task.resolve();
+                            }
+                        }, function () {
+                            task.resolve();
+                        });
+                    }
+                    return $.when(task);
+                },
+                afterSendFile: function (file) {
+                    var task = new $.Deferred();
+                    if (file.blocks.length > 1) {
+                        $.post('/AdminCP/Upload/MergeFile', { fileName: file.name, id: file.id, type: file.type, md5: file.md5, chunks: file.blocks.length }, function (data) {
+                            if (data.result) {
+                                file.url = data.data.url;
+                                task.resolve();
+                            }
+                            else {
+                                task.reject();
+                                alert(file.name + "上传失败，" + data.Message);
+                            }
+                        });
+                    }
+
+                    return $.when(task);
+                }
+            });
+
         // 实例化
         uploader = WebUploader.create({
             pick: {
@@ -150,7 +231,7 @@
             paste: '#uploader',
             swf: '/lib/webuploader/dist/Uploader.swf',
             chunked: true,
-            chunkSize: 512 * 1024,
+            chunkSize: 5 * 1024 * 1024,
             server: '/AdminCP/Upload/SaveFile/',
             // runtimeOrder: 'flash',
 
@@ -163,8 +244,8 @@
             // 禁掉全局的拖拽功能。这样不会出现图片拖进页面的时候，把图片打开。
             disableGlobalDnd: true,
             fileNumLimit: 300,
-            fileSizeLimit: 200 * 1024 * 1024,    // 200 M
-            fileSingleSizeLimit: 50 * 1024 * 1024    // 50 M
+            //fileSizeLimit: 200 * 1024 * 1024,    // 200 M
+            //fileSingleSizeLimit: 50 * 1024 * 1024    // 50 M
         });
 
         // 拖拽时不接受 js, txt 文件。
@@ -574,37 +655,57 @@
         $upload.addClass('state-' + state);
         updateTotalProgress();
 
-        uploader.on('uploadStart', function (file) {
-            console.log('uploadStart',file)
+        ////某个文件开始上传前触发，一个文件只会触发一次，秒传验证
+        //uploader.on('uploadStart', function (file) {
+        //    var task = new $.Deferred();
 
-            //if (file.md5) {
-            //    $.post('/UploadFiles/GetUpLoadFile', { infoid: infoid, md5str: file.md5 }, function (data) {
-            //        if (data.Result) {
-            //            $("#" + file.id).attr("url", data.Goto).attr("curid", data.Code);
-            //            file.url = data.Goto;
-            //            uploader.skipFile(file);
-            //        }
-            //    });
-            //}
-        });
+        //    $.post({
+        //        url: "/AdminCP/Upload/CheckFile",
+        //        type: "post",
+        //        data: {
+        //            md5: file.md5,
+        //            fileName: file.name
+        //        },
+        //        dataType: "json",
+        //        cache: false,
+        //        async: false
+        //    }).then(function (data) {
+        //        if (data.result) {//若存在，这返回失败给WebUploader，表明该文件不需要上传
+        //            uploader.skipFile(file);
+        //            task.resolve();
+        //        }
+        //        else {
+        //            task.resolve();
+        //        }
+        //    }, function () {
+        //        task.resolve();
+        //    });
+        //    return $.when(task);
+        //});
 
+        //分片验证秒传，断点续传
         uploader.on('uploadBeforeSend', function (block, data, headers) {
+            //增加参数
             data.md5 = block.file.md5;
             if (block.chunks > 1 && !block.file.chunks) {
                 block.file.chunks = block.chunks;
             }
         });
-        uploader.on('uploadSuccess', function (file, response) {
-            $.post('/AdminCP/Upload/Merge', { fileName: file.name, id: file.id, type: file.type, md5: file.md5, chunks: file.chunks }, function (data) {
-                if (data.Result) {
-                    $("#" + file.id).attr("url", data.Goto).attr("curid", data.Code);
-                    file.url = data.Goto;
-                }
-                else {
-                    alert(file.name + "上传失败，" + data.Message);
-                }
-            });
-        });
+
+        //// 上传文件成功，开启了分片的话合并文件，否则完成上传
+        //uploader.on('uploadSuccess', function (file, response) {
+        //    if (file.chunks > 1) {
+        //        $.post('/AdminCP/Upload/MergeFile', { fileName: file.name, id: file.id, type: file.type, md5: file.md5, chunks: file.chunks }, function (data) {
+        //            if (data.result) {
+        //                file.url = data.data.url;
+        //            }
+        //            else {
+        //                alert(file.name + "上传失败，" + data.Message);
+        //            }
+        //        });
+        //    }
+
+        //});
 
         uploader.on('fileQueued',
             function (file) {
