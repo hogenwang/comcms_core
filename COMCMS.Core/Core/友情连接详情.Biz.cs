@@ -90,7 +90,7 @@ namespace COMCMS.Core
         {
             get
             {
-                if (_LinkKind == null && KId > 0 && !Dirtys.ContainsKey("LinkKind_" + KId))
+                if (_LinkKind == null && KId > 0 && !Dirtys["LinkKind_" + KId])
                 {
                     _LinkKind = LinkKind.Find(LinkKind._.Id == KId);
                     Dirtys["LinkKind_" + KId] = true;

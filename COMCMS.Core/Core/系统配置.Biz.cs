@@ -96,7 +96,7 @@ namespace COMCMS.Core
         {
             get
             {
-                if (_AttachConfigEntity == null && !Dirtys.ContainsKey("AttachConfig"))
+                if (_AttachConfigEntity == null && !Dirtys["AttachConfig"])
                 {
                     OtherConfig ac = OtherConfig.Find(OtherConfig._.ConfigName == "attach");
 
@@ -105,7 +105,7 @@ namespace COMCMS.Core
                         if (!string.IsNullOrEmpty(ac.ConfigValue))
                         {
                             _AttachConfigEntity = JsonConvert.DeserializeObject<AttachConfigEntity>(ac.ConfigValue);
-                            Dirtys.Add("AttachConfig", true);
+                            Dirtys["AttachConfig"] = true;
                         }
                         else
                         {
@@ -137,14 +137,14 @@ namespace COMCMS.Core
         {
             get
             {
-                if (_SMTPConfigEntity == null && !Dirtys.ContainsKey("SMTPConfig"))
+                if (_SMTPConfigEntity == null && !Dirtys["SMTPConfig"])
                 {
                     OtherConfig ac = OtherConfig.Find(OtherConfig._.ConfigName == "smtp");
 
                     if (ac != null)
                     {
                         _SMTPConfigEntity = JsonConvert.DeserializeObject<SMTPConfigEntity>(ac.ConfigValue);
-                        Dirtys.Add("SMTPConfig", true);
+                        Dirtys["SMTPConfig"] = true;
                     }
                     else
                     {
