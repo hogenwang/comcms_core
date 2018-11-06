@@ -6,6 +6,7 @@ using COMCMS.Common;
 using COMCMS.Web.Common;
 using COMCMS.Web.Controllers.api;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 
@@ -39,7 +40,12 @@ namespace COMCMS.Web.Filter
 
             if (notVali != null)
             {
-               await context.HttpContext.Response.WriteAsync(notVali.ToJson());
+                // 过滤器不要抛出错误，也不要向响应流写东西，应该直接赋值Result进行短路
+                context.Result = new ContentResult()
+                {
+                    Content = notVali.ToJson(),
+                    ContentType = "application/json"
+                };
             }
         }
 
