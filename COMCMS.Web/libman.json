@@ -1,0 +1,11 @@
+{
+    "version": "1.0",
+    "defaultProvider": "unpkg",
+    "libraries": [
+        {
+            "library": "webuploader@0.1.8",
+            "files": [ "dist/Uploader.swf", "dist/webuploader.css", "dist/webuploader.js", "dist/webuploader.min.js" ],
+            "destination": "wwwroot/lib/webuploader/"
+        }
+    ]
+}

@@ -4,11 +4,30 @@ using System.DrawingCore.Drawing2D;
 using System.DrawingCore.Imaging;
 using System.Text;
 using System.DrawingCore;
+using System.Net;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
+using NewLife.Log;
 
 namespace COMCMS.Common
 {
     public class ThumbnailHelper
     {
+        /// <summary>
+        /// 目录分隔符
+        /// windows 下是 \ linux 下面是 \
+        /// </summary>
+        private static string DirectorySeparatorChar = Path.DirectorySeparatorChar.ToString();
+        /// <summary>
+        /// 程序绝对目录
+        /// </summary>
+        private static string _ContentRootPath = DI.ServiceProvider.GetService<IHostingEnvironment>().ContentRootPath;
+        /// <summary>
+        /// 静态文件
+        /// </summary>
+        private static string _WebRootPath = DI.ServiceProvider.GetService<IHostingEnvironment>().WebRootPath;
+
         #region 方式
         public enum CutMode
         {
@@ -126,6 +145,8 @@ namespace COMCMS.Common
         }
         #endregion
 
+
+        #region 帮助方法
         /// <summary>
         /// 保存图片
         /// </summary>
@@ -178,6 +199,63 @@ namespace COMCMS.Common
                     return ImageFormat.Jpeg;
             }
         }
+        #endregion
+
+        #region 内容远程保存图片
+        /// <summary>
+        /// 保存内容种远程图片到本地
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public static string SaveRemoteImgForContent(string content)
+        {
+            string recontent = content;
+            if (string.IsNullOrEmpty(content))
+                return "";
+            WebClient client = new WebClient();
+
+            Regex reg = new Regex("IMG[^>]*?src\\s*=\\s*(?:\"(?<1>[^\"]*)\"|'(?<1>[^\']*)')", RegexOptions.IgnoreCase);
+            MatchCollection m = reg.Matches(content);
+            foreach (Match math in m)
+            {
+                string imgUrl = math.Groups[1].Value;
+                Regex regName = new Regex(@"\w+(?:jpg|gif|bmp|png|jpeg)", RegexOptions.IgnoreCase);//不按点。这样可以兼容复制公众号文章
+                string imgName = imgUrl.Substring(imgUrl.LastIndexOf("/") + 1, imgUrl.Length - imgUrl.LastIndexOf("/") - 1);
+                //判断是否是远程图片
+                if (imgUrl.ToLower().StartsWith("http://") || imgUrl.ToLower().StartsWith("https://") || imgUrl.ToLower().StartsWith("ftp://"))
+                {
+                    string imgsrc = imgName.ToLower();
+                    string ext = "jpg";
+                    if (imgsrc.EndsWith("gif")) ext = "gif";
+                    else if (imgsrc.EndsWith("png")) ext = "png";
+                    else if (imgsrc.EndsWith("jpeg")) ext = "jpeg";
+                    else if (imgsrc.EndsWith("bmp")) ext = "bmp";
+                    string strNewImgName = Utils.GetOrderNum() + "." + ext;
+                    string savepath = $"{_WebRootPath}\\userfiles\\images\\auto\\{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";// 
+                    string imgNewSrc = $"/userfiles/images/auto/{DateTime.Now.Year.ToString()}/{DateTime.Now.ToString("MM")}/{strNewImgName}";//保存后路径
+                    //判断路径
+                    if (!Directory.Exists(savepath))
+                        Directory.CreateDirectory(savepath);
+                    string fullpath = Path.Combine(savepath, strNewImgName);//图片
+                    try
+                    {
+                        //保存图片
+                        client.DownloadFile(imgUrl, fullpath);
+                        recontent = recontent.Replace(imgUrl, imgNewSrc);
+                    }
+                    catch (Exception ex)
+                    {
+                        //throw new Exception(ex.Message);
+                        XTrace.WriteLine($"远程保存图片保存图片：{imgUrl},错误：{ex.Message}");
+                    }
+                }
+
+            }
+
+            return recontent;
+        }
+        #endregion
+
     }
 
 

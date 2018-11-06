@@ -301,6 +301,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     }
                 }
             }
+            string content = model.Content;
+            if (Request.Form["autoSaveRemoteImg"] == "1" && !string.IsNullOrEmpty(content))
+            {
+                content = ThumbnailHelper.SaveRemoteImgForContent(content);
+                model.Content = content;
+            }
             model.ItemImg = morIMG;
             model.AuthorId = Core.Admin.GetMyInfo().Id;
             model.Insert();
@@ -399,6 +405,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             model.UpdateTime = DateTime.Now;
 
             model.ItemImg = morIMG;
+            string content = model.Content;
+            if (Request.Form["autoSaveRemoteImg"] == "1" && !string.IsNullOrEmpty(content))
+            {
+                content = ThumbnailHelper.SaveRemoteImgForContent(content);
+                model.Content = content;
+            }
             //model.AuthorId = Core.Admin.GetMyInfo().Id;
             model.Save();
             //添加TAG

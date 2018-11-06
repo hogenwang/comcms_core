@@ -154,7 +154,7 @@ namespace COMCMS.Core
         {
             get
             {
-                if (_Roles == null && RoleId > 0 && !Dirtys.ContainsKey("RoleId_" + RoleId))
+                if (_Roles == null && RoleId > 0 && !Dirtys["RoleId_" + RoleId])
                 {
                     _Roles = MemberRoles.Find(MemberRoles._.Id == RoleId);
                     Dirtys["RoleId_" + RoleId] = true;

@@ -110,7 +110,7 @@ namespace COMCMS.Core
         {
             get
             {
-                if (_Roles == null && RoleId > 0 && !Dirtys.ContainsKey("AdminRoleId_" + RoleId))
+                if (_Roles == null && RoleId > 0 && !Dirtys["AdminRoleId_" + RoleId])
                 {
                     _Roles = AdminRoles.Find(AdminRoles._.Id == RoleId);
                     Dirtys["AdminRoleId_" + RoleId] = true;
@@ -424,7 +424,7 @@ namespace COMCMS.Core
                     AdminLog log = AdminLog.FindByGUID(adminLogId);
                     if (log != null)
                     {
-                        log.Actions = log.Actions + action;
+                        log.Actions = log.Actions + $"|||{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}: {action}";
                         log.LastUpdateTime = DateTime.Now;
                         log.Update();
 

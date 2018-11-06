@@ -14,7 +14,10 @@ using System.IO;
 using COMCMS.Core.Models;
 using System.DrawingCore;
 using System.Text;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.Extensions.Primitives;
+using NewLife.UserGroup.WebUploader;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -46,13 +49,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         private readonly SystemSetting _attachsetting;
         private IHostingEnvironment _env;
         private AttachConfigEntity attach;
-        public UploadController( IHostingEnvironment env, IOptions<SystemSetting> attachsetting)
+        public UploadController(IHostingEnvironment env, IOptions<SystemSetting> attachsetting)
         {
             attach = Config.GetSystemConfig().AttachConfigEntity;
             _env = env;
             _attachsetting = attachsetting.Value;
         }
-        
+
         #region CKEditor 上传图片
         /// <summary>
         /// ckeditor 上传图片
@@ -67,7 +70,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             CKFileUploadError errorJson = new CKFileUploadError();
             if (upload == null)
             {
-                
+
                 errorJson.error.message = "请选择一张图片!";
                 return Json(errorJson);
             }
@@ -79,19 +82,20 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 return Json(errorJson);
                 //return Content(string.Format(tpl, "", callback, "请上传一张图片！"), "text/html");
             }
+
             var data = Request.Form.Files["upload"];
-            string filepath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\images\\";
-            string thumbsFilePath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\_thumbs\\images\\";
+            string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
+            string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
 
             //根据附件配置，设置上传图片目录
             string imgPath = DateTime.Now.Year.ToString();//默认按年
             switch (attach.SaveType)
             {
                 case 1://按月份
-                    imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";
+                    imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
                     break;
                 case 2:
-                    imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}\\{DateTime.Now.ToString("dd")}";
+                    imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
                     break;
             }
             filepath += imgPath;//存放路径
@@ -145,7 +149,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     //添加水印
                     if (attach.IsWaterMark == 1 && !string.IsNullOrEmpty(attach.WaterMarkImg))
                     {
-                        string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", "\\");
+                        string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", Path.DirectorySeparatorChar.ToString());
                         if (System.IO.File.Exists(watermarkimg))
                         {
                             //先复制一张图片出来
@@ -247,17 +251,17 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 isImage = true;
             }
             var data = Request.Form.Files["upload"];
-            string filepath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\files\\";
-            string thumbsFilePath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\_thumbs\\files\\";
+            string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
+            string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
             //根据附件配置，设置上传图片目录
             string imgPath = DateTime.Now.Year.ToString();//默认按年
             switch (attach.SaveType)
             {
                 case 1://按月份
-                    imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";
+                    imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
                     break;
                 case 2:
-                    imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}\\{DateTime.Now.ToString("dd")}";
+                    imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
                     break;
             }
             //文件名字
@@ -306,7 +310,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     //添加水印
                     if (isImage && attach.IsWaterMark == 1 && !string.IsNullOrEmpty(attach.WaterMarkImg))
                     {
-                        string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", "\\");
+                        string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", Path.DirectorySeparatorChar.ToString());
                         if (System.IO.File.Exists(watermarkimg))
                         {
                             //先复制一张图片出来
@@ -427,17 +431,17 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     size = bytes.Length.ToString();
                 }
 
-                string filepath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\images\\";
-                string thumbsFilePath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\_thumbs\\images\\";
+                string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
+                string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
                 //根据附件配置，设置上传图片目录
                 string imgPath = DateTime.Now.Year.ToString();//默认按年
                 switch (attach.SaveType)
                 {
                     case 1://按月份
-                        imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";
+                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
                         break;
                     case 2:
-                        imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}\\{DateTime.Now.ToString("dd")}";
+                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
                         break;
                 }
                 filepath += imgPath;//存放路径
@@ -481,7 +485,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 //添加水印
                 if (attach.IsWaterMark == 1 && !string.IsNullOrEmpty(attach.WaterMarkImg))
                 {
-                    string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", "\\");
+                    string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", Path.DirectorySeparatorChar.ToString());
                     if (System.IO.File.Exists(watermarkimg))
                     {
                         //先复制一张图片出来
@@ -557,17 +561,17 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     msg = "只能上传一张图片格式文件！";
                     return Content(JsonConvert.SerializeObject(new { status = status, msg = msg, name = name, path = path, thumb = thumb, size = size, ext = ext }), "text/plain");
                 }
-                string filepath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\images\\";
-                string thumbsFilePath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\_thumbs\\images\\";
+                string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
+                string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
                 //根据附件配置，设置上传图片目录
                 string imgPath = DateTime.Now.Year.ToString();//默认按年
                 switch (attach.SaveType)
                 {
                     case 1://按月份
-                        imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";
+                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
                         break;
                     case 2:
-                        imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}\\{DateTime.Now.ToString("dd")}";
+                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
                         break;
                 }
                 filepath += imgPath;//存放路径
@@ -623,7 +627,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                         //添加水印
                         if (notwater == "0" && attach.IsWaterMark == 1 && !string.IsNullOrEmpty(attach.WaterMarkImg))
                         {
-                            string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", "\\");
+                            string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", Path.DirectorySeparatorChar.ToString());
                             if (System.IO.File.Exists(watermarkimg))
                             {
                                 //先复制一张图片出来
@@ -699,17 +703,17 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             var data = Request.Form.Files[0];
             if (data != null)
             {
-                string filepath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\files\\";
-                string thumbsFilePath = $"{_env.WebRootPath}\\{attach.AttachPatch}\\_thumbs\\files\\";
+                string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
+                string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
                 //根据附件配置，设置上传图片目录
                 string imgPath = DateTime.Now.Year.ToString();//默认按年
                 switch (attach.SaveType)
                 {
                     case 1://按月份
-                        imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";
+                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
                         break;
                     case 2:
-                        imgPath = $"{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}\\{DateTime.Now.ToString("dd")}";
+                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
                         break;
                 }
                 filepath += imgPath;//存放路径
@@ -793,6 +797,100 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             return Content(JsonConvert.SerializeObject(new { status = status, msg = msg, name = name, path = path, thumb = thumb, size = size, ext = ext }), "text/plain");
         }
+
+        #region 分片上传文件，可断点续传
+
+        /// <summary>
+        /// 保存文件或者分块
+        /// </summary>
+        /// <param name="md5">文件md5</param>
+        /// <param name="chunk">分块号</param>
+        /// <param name="chunks">分块总数</param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult SaveFile(string md5, int? chunk, int? chunks)
+        {
+            var tempDir = "UploadTemp"; // 缓存文件夹
+            var targetDir = "UploadFile"; // 目标文件夹
+
+            var file = Request.Form.Files[0];
+
+            file.SaveFileOrChunkFile(targetDir, tempDir, md5, chunks, chunk);
+
+            return Json(new
+            {
+                Data = new { md5 = md5, url = Path.Combine("/", targetDir, file.FileName) },
+                Message = "ok",
+                Result = true
+            });
+        }
+
+        /// <summary>
+        /// 合并文件
+        /// </summary>
+        /// <param name="md5">文件md5</param>
+        /// <param name="fileName">文件名</param>
+        /// <param name="chunks">分块数</param>
+        /// <returns></returns>
+        [HttpPost]
+        public IActionResult MergeFile(string md5, string fileName, int chunks)
+        {
+            var tempDir = "UploadTemp";
+            var targetDir = "UploadFile";
+
+            var (res,msg) = tempDir.Merge(targetDir, fileName, md5, chunks);
+
+            if (!res)
+            {
+                return Json(new
+                {
+                    Message = msg,
+                    Result = false
+                });
+            }
+            
+            return Json(new
+            {
+                Data = new { md5 = md5, url = Path.Combine("/", targetDir, fileName) },
+                Message = "ok",
+                Result = true
+            });
+        }
+
+        /// <summary>
+        /// 检查文件或分块是否存在
+        /// </summary>
+        /// <param name="md5">文件md5</param>
+        /// <param name="fileName">文件名</param>
+        /// <param name="chunk">分块号</param>
+        /// <returns></returns>
+        public IActionResult CheckFile(string md5, string fileName, int? chunk)
+        {
+            var tempDir = "UploadTemp";
+            var targetDir = "UploadFile";
+
+            string filePath;
+
+            //分片文件
+            if (chunk != null)
+            {
+                filePath = Path.Combine(tempDir, md5, $"{chunk}.part");
+            }
+            else
+            {
+                filePath = Path.Combine(targetDir, fileName);
+            }
+
+            var exists = System.IO.File.Exists(filePath);
+
+            return Json(new
+            {
+                Data = fileName!=null && exists ? (object)new { md5 = md5, url = Path.Combine("/", targetDir, fileName) } : null,
+                Result = exists
+            });
+        }
+        #endregion
+
         #endregion
 
         #region 帮助方法

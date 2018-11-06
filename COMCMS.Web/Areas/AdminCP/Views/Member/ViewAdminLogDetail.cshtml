@@ -53,7 +53,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">操作详细日志：</label>
             <div class="col-sm-8">
-                <label class="control-label">@Model.Actions</label>
+                <label class="control-label" style="text-align:left">@Html.Raw(Model.Actions.Replace("|||", "<br />"))</label>
             </div>
         </div>
 

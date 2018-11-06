@@ -50,7 +50,7 @@ namespace COMCMS.Web.Common
                     if (!string.IsNullOrEmpty(my.Roles.Powers))
                     {
                         IList<AdminMenuEvent> listevents = JsonConvert.DeserializeObject<IList<AdminMenuEvent>>(my.Roles.Powers);
-                        if (listevents != null && listevents.Count <= 0)
+                        if (listevents != null && listevents.Count > 0)
                         {
                             if (!string.IsNullOrEmpty(_menuKey) && !string.IsNullOrEmpty(_eventKey))
                             {

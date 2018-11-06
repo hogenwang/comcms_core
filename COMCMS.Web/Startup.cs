@@ -24,8 +24,10 @@ using Senparc.Weixin;
 using Senparc.CO2NET.Cache;
 using System.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
 using Senparc.Weixin.RegisterServices;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace COMCMS.Web
 {
@@ -44,6 +46,9 @@ namespace COMCMS.Web
             //注入自己的HttpContext
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddMvc().AddSessionStateTempDataProvider();
+
+            //添加Configuration到静态变量
+            Utils.AddUtils(Configuration);
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -81,6 +86,13 @@ namespace COMCMS.Web
 
             //注册Cookie认证服务
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+
+            // 设置表单内容限制
+            services.Configure<FormOptions>(formOptions =>
+            {
+                formOptions.ValueLengthLimit = int.MaxValue; // 表单内容大小限制，默认4194304，单位byte
+                formOptions.MultipartBodyLengthLimit = int.MaxValue; // 如果是multipart，默认134217728
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,7 +120,7 @@ namespace COMCMS.Web
             app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
             //启用Session
             app.UseSession();
-
+            app.UseMyMVCDI();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
@@ -125,8 +137,16 @@ namespace COMCMS.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-
-
+                routes.MapRoute(
+                name: "article",
+                template: "{title}/index.html",
+                defaults:new { controller ="Home", action= "Article" }
+                );
+                routes.MapRoute(
+                name: "article2",
+                template: "{title}/",
+                defaults: new { controller = "Home", action = "Article" }
+                );
             });
 
             //使用环境变量
