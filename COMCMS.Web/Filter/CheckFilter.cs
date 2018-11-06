@@ -6,7 +6,10 @@ using COMCMS.Common;
 using COMCMS.Web.Common;
 using COMCMS.Web.Controllers.api;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+
+
 
 namespace COMCMS.Web.Filter
 {
@@ -35,9 +38,14 @@ namespace COMCMS.Web.Filter
 
             var notVali = ValiSignature(context.HttpContext);
 
-            if (notVali == null)
+            if (notVali != null)
             {
-               await context.HttpContext.Response.WriteAsync(notVali.ToJson());
+                // 过滤器不要抛出错误，也不要向响应流写东西，应该直接赋值Result进行短路
+                context.Result = new ContentResult()
+                {
+                    Content = notVali.ToJson(),
+                    ContentType = "application/json"
+                };
             }
         }
 
@@ -72,7 +80,7 @@ namespace COMCMS.Web.Filter
             }
             //没有签名返回错误
             if (string.IsNullOrEmpty(signature))
-                throw new Exception("signature Is Null");
+                return new ReJson(40004, "signature 为空！");
 
             if (!MySign.CheckSign(pars, signature))
             {

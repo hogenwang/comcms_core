@@ -2,7 +2,7 @@
 @{
     ViewBag.title = "查看/编辑管理员";
 }
-<div class="wrapper wrapper-content animated fadeInRight">
+<div class="wrapper wrapper-content ">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
             <h5>@ViewBag.Title</h5>
@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="ibox-content">
-            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "eidtAdminForm", @class = "form-horizontal m-t" }))
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editAdminForm", @class = "form-horizontal m-t" }))
             {
                 <div class="form-group">
                     <label class="col-sm-3 control-label">所属管理组：</label>

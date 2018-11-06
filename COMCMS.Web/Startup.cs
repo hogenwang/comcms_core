@@ -17,6 +17,17 @@ using COMCMS.Web.Models;
 using COMCMS.Web.Common;
 using COMCMS.Web.ExceptionHandler;
 using Lib.Core.MiddlewareExtension.Extension;
+using Senparc.Weixin.Entities;
+using Senparc.CO2NET;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.Weixin;
+using Senparc.CO2NET.Cache;
+using System.Configuration;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.Options;
+using Senparc.Weixin.RegisterServices;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace COMCMS.Web
 {
@@ -35,6 +46,9 @@ namespace COMCMS.Web
             //注入自己的HttpContext
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddMvc().AddSessionStateTempDataProvider();
+
+            //添加Configuration到静态变量
+            Utils.AddUtils(Configuration);
 
             services.Configure<CookiePolicyOptions>(options =>
             {
@@ -67,10 +81,22 @@ namespace COMCMS.Web
             {
                 options.Filters.Add<HttpGlobalExceptionFilter>();
             });
+            services.AddSenparcGlobalServices(Configuration)//Senparc.CO2NET 全局注册
+            .AddSenparcWeixinServices(Configuration);//Senparc.Weixin 注册（如果使用Senparc.Weixin SDK则添加）
+
+            //注册Cookie认证服务
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+
+            // 设置表单内容限制
+            services.Configure<FormOptions>(formOptions =>
+            {
+                formOptions.ValueLengthLimit = int.MaxValue; // 表单内容大小限制，默认4194304，单位byte
+                formOptions.MultipartBodyLengthLimit = int.MaxValue; // 如果是multipart，默认134217728
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp, IOptions<SenparcSetting> senparcSetting, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
         {
             app.Use(async (context, next) =>
             {
@@ -94,10 +120,11 @@ namespace COMCMS.Web
             app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
             //启用Session
             app.UseSession();
-
+            app.UseMyMVCDI();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseAuthentication();
             app.UseStaticHttpContext();
 
             app.UseMvc(routes =>
@@ -110,8 +137,16 @@ namespace COMCMS.Web
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-
-
+                routes.MapRoute(
+                name: "article",
+                template: "{title}/index.html",
+                defaults:new { controller ="Home", action= "Article" }
+                );
+                routes.MapRoute(
+                name: "article2",
+                template: "{title}/",
+                defaults: new { controller = "Home", action = "Article" }
+                );
             });
 
             //使用环境变量
@@ -121,9 +156,40 @@ namespace COMCMS.Web
             });
 
             app.UseMiddlewareExtension(new ResultExceptionHandler());
-
+            IRegisterService register = RegisterService.Start(env, senparcSetting.Value).UseSenparcGlobal();
             //加入HttpContext
             //MyHttpContext.ServiceProvider = svp;
         }
+
+        #region Senparc 缓存扩展策略
+        /// <summary>
+        /// 获取Container扩展缓存策略
+        /// </summary>
+        /// <returns></returns>
+        private IList<IDomainExtensionCacheStrategy> GetExContainerCacheStrategies()
+        {
+            var exContainerCacheStrategies = new List<IDomainExtensionCacheStrategy>();
+
+            //如果有配置，可以去掉下面注释
+
+            ////判断Redis是否可用
+            //var redisConfiguration = ConfigurationManager.AppSettings["Cache_Redis_Configuration"];
+            //if ((!string.IsNullOrEmpty(redisConfiguration) && redisConfiguration != "Redis配置"))
+            //{
+            //    exContainerCacheStrategies.Add(RedisContainerCacheStrategy.Instance);
+            //}
+
+            ////判断Memcached是否可用
+            //var memcachedConfiguration = ConfigurationManager.AppSettings["Cache_Memcached_Configuration"];
+            //if ((!string.IsNullOrEmpty(memcachedConfiguration) && memcachedConfiguration != "Memcached配置"))
+            //{
+            //    exContainerCacheStrategies.Add(MemcachedContainerCacheStrategy.Instance);
+            //}
+
+            //也可扩展自定义的缓存策略
+
+            return exContainerCacheStrategies;
+        }
+        #endregion
     }
 }

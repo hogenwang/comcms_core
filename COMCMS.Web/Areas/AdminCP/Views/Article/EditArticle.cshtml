@@ -121,6 +121,15 @@
                         <textarea id="Content" name="Content" class="form-control" placeholder="可以输入栏目的详细介绍" required>@Model.Content</textarea>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">远程保存图片：</label>
+                    <div class="col-sm-8">
+                        <label class="checkbox-inline i-checks">
+                            <input type="checkbox" value="1" name="autoSaveRemoteImg" checked id="autoSaveRemoteImg"> 自动保存内容中远程图片
+                        </label>
+                    </div>
+                </div>
+
                 <div id="MoreImages">
                     @if (!string.IsNullOrEmpty(Model.ItemImg))
                     {
@@ -137,7 +146,7 @@
                                     <div class="col-sm-8">
                                         <div class="input-group">
                                             <input id="ImgUrlnImgRow@(i)" name="nImgUrl" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个图片" value="@s">
-                                                <span class="input-group-addon my-upload-span upload-img"></span>
+                                            <span class="input-group-addon my-upload-span upload-img"></span>
                                         </div>
                                     </div>
                                 </div>

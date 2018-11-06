@@ -4,6 +4,8 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -21,11 +23,14 @@ using XCode.Configuration;
 using XCode.DataAccessLayer;
 using XCode.Membership;
 using COMCMS.Common;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace COMCMS.Core
 {
     /// <summary>管理员</summary>
-    public partial class Admin : Entity<Admin>
+    public partial class Admin : Entity<Admin>, IIdentity
     {
         #region 对象操作
         static Admin()
@@ -95,13 +100,17 @@ namespace COMCMS.Core
         #endregion
 
         #region 扩展属性
+        string IIdentity.Name { get; }
+        string IIdentity.AuthenticationType { get; }
+        bool IIdentity.IsAuthenticated { get; }
+
         private AdminRoles _Roles;
         /// <summary>用户对应的管理组</summary>
         public AdminRoles Roles
         {
             get
             {
-                if (_Roles == null && RoleId > 0 && !Dirtys.ContainsKey("AdminRoleId_" + RoleId))
+                if (_Roles == null && RoleId > 0 && !Dirtys["AdminRoleId_" + RoleId])
                 {
                     _Roles = AdminRoles.Find(AdminRoles._.Id == RoleId);
                     Dirtys["AdminRoleId_" + RoleId] = true;
@@ -175,7 +184,9 @@ namespace COMCMS.Core
         {
             if (IsAdminLogin())
             {
-                return Find(_.UserName == SessionHelper.GetSession(sessionAdminNameKey).ToString());
+                //return Find(_.UserName == SessionHelper.GetSession(sessionAdminNameKey).ToString());
+                return Find(_.UserName == AuthenticationHelper.GetClaim(sessionAdminNameKey));
+
             }
             else
             {
@@ -230,7 +241,9 @@ namespace COMCMS.Core
                     //写入Session 和 Cookies
                     //SessionHelper.WriteSession("rtadminguid", GUID.ToString());
                     //CookiesHelper.WriteCookie("rtadminguid", GUID.ToString(), 120);
-                    SetAdminInfo(entity.UserName, entity.PassWord, entity.Id, 0, "", GUID.ToString(), entity.Salt);
+                    //SetAdminInfo(entity.UserName, entity.PassWord, entity.Id, 0, "", GUID.ToString(), entity.Salt);
+                    SetAdminInfoAsync(entity.UserName, entity.PassWord, entity.Id, 0, "", GUID.ToString(), entity.Salt).Wait();
+
                     return true;
                 }
             }
@@ -242,16 +255,22 @@ namespace COMCMS.Core
         /// <returns>是否登录</returns>
         public static bool IsAdminLogin()
         {
-            string adminName = SessionHelper.GetSession(sessionAdminNameKey).ToString();//用户名
-            string adminID = SessionHelper.GetSession(sessionAdminIDKey).ToString();//ID
+            //string adminName = SessionHelper.GetSession(sessionAdminNameKey).ToString();//用户名
+            //string adminID = SessionHelper.GetSession(sessionAdminIDKey).ToString();//ID
+            string adminName = AuthenticationHelper.GetClaim(sessionAdminNameKey);//用户名
+            string adminID = AuthenticationHelper.GetClaim(sessionAdminIDKey);//ID
 
             //如果Session失效，则用Cookies判断
             if (string.IsNullOrEmpty(adminName) || string.IsNullOrEmpty(adminID))
             {
-                string cooAdminName = CookiesHelper.GetCookie(cookiesAdminNameKey);//用户名
-                string cooAdminID = CookiesHelper.GetCookie(cookiesAdminIDKey);//ID
-                string cooLoginInfo = CookiesHelper.GetCookie(cookiesAdminInfoKey);//信息
-                string cooAdminLogID = CookiesHelper.GetCookie(cookiesAdminLogIDKey);//日志GUID
+                //string cooAdminName = CookiesHelper.GetCookie(cookiesAdminNameKey);//用户名
+                //string cooAdminID = CookiesHelper.GetCookie(cookiesAdminIDKey);//ID
+                //string cooLoginInfo = CookiesHelper.GetCookie(cookiesAdminInfoKey);//信息
+                //string cooAdminLogID = CookiesHelper.GetCookie(cookiesAdminLogIDKey);//日志GUID
+                string cooAdminName = AuthenticationHelper.GetClaim(cookiesAdminNameKey);//用户名
+                string cooAdminID = AuthenticationHelper.GetClaim(cookiesAdminIDKey);//ID
+                string cooLoginInfo = AuthenticationHelper.GetClaim(cookiesAdminInfoKey);//信息
+                string cooAdminLogID = AuthenticationHelper.GetClaim(cookiesAdminLogIDKey);//日志GUID
 
                 if (string.IsNullOrEmpty(cooAdminID) || string.IsNullOrEmpty(cooAdminName) || string.IsNullOrEmpty(cooLoginInfo) || string.IsNullOrEmpty(cooAdminLogID))
                 {
@@ -273,17 +292,22 @@ namespace COMCMS.Core
                             //获取日志ID
                             if (AdminLog.FindByGUID(cooAdminLogID) == null)
                             {
-                                ClearInfo();//清除信息
+                                //ClearInfo();//清除信息
+                                ClearInfoAsync().Wait();
                                 return false;//日志出错
                             }
 
                             //重新写入Session 和 Cookies
-                            SetAdminInfo(model.UserName, model.PassWord, model.Id, 0, "", cooAdminLogID, model.Salt);
+                            //SetAdminInfo(model.UserName, model.PassWord, model.Id, 0, "", cooAdminLogID, model.Salt);
+
+                            SetAdminInfoAsync(model.UserName, model.PassWord, model.Id, 0, "", cooAdminLogID, model.Salt).Wait();
+
                             return true;
                         }
                         else
                         {
-                            ClearInfo();//清除信息
+                            //ClearInfo();//清除信息
+                            ClearInfoAsync().Wait();
                             return false;//信息错误
                         }
                     }
@@ -323,6 +347,36 @@ namespace COMCMS.Core
         }
 
         /// <summary>
+        /// 设置管理员信息，写入Session 和Cookies
+        /// </summary>
+        /// <param name="isSupperAdmin">是否是超级管理员</param>
+        /// <param name="adminPower">管理员管理权限</param>
+        /// <param name="adminLogID">后台日志ID</param>
+        public static async Task SetAdminInfoAsync(string adminName, string adminPwd, int adminID, int isSupperAdmin, string adminPower, string adminLogID, string adminSalt)
+        {
+            var expiresUtc = DateTimeOffset.Now.AddMinutes(60 * 2);
+
+            var claimsIdentity = new ClaimsIdentity(new[]
+            {
+                new Claim(sessionAdminIDKey, adminID.ToString()),
+                new Claim(sessionAdminNameKey, adminName),
+                new Claim(sessionAdminPowerKey, adminPower),
+                new Claim(sessionIsSupperAdminKey, isSupperAdmin.ToString()),
+                new Claim(sessionAdminLogIDKey, adminLogID),
+
+                new Claim(cookiesAdminIDKey, adminID.ToString()),
+                new Claim(cookiesAdminNameKey, adminName),
+                //2016-6-01 增加IP加密信息，防止cookies被盗用
+                new Claim(cookiesAdminInfoKey, Utils.MD5(adminName + adminPwd + adminSalt + Utils.GetIP())),
+            });
+
+            var genericPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+           await AuthenticationHelper.SignInAsync(genericPrincipal, expiresUtc);
+        }
+
+
+        /// <summary>
         /// 管理员退出登录，清除信息
         /// </summary>
         public static void ClearInfo()
@@ -342,6 +396,15 @@ namespace COMCMS.Core
         }
 
         /// <summary>
+        /// 管理员退出登录，清除信息
+        /// </summary>
+        /// <returns></returns>
+        public static async Task ClearInfoAsync()
+        {
+            await AuthenticationHelper.SignOutAsync();
+        }
+
+        /// <summary>
         /// 写入日志
         /// </summary>
         /// <param name="action">动作</param>
@@ -349,17 +412,19 @@ namespace COMCMS.Core
         {
             if (IsAdminLogin())
             {
-                string adminLogId = SessionHelper.GetSession(sessionAdminLogIDKey).ToString();
+                //string adminLogId = SessionHelper.GetSession(sessionAdminLogIDKey).ToString();
+                string adminLogId = AuthenticationHelper.GetClaim(sessionAdminLogIDKey);
                 if (string.IsNullOrEmpty(adminLogId))
                 {
-                    adminLogId = CookiesHelper.GetCookie(cookiesAdminLogIDKey);//日志GUID
+                    //adminLogId = CookiesHelper.GetCookie(cookiesAdminLogIDKey);//日志GUID
+                    adminLogId = AuthenticationHelper.GetClaim(cookiesAdminLogIDKey);//日志GUID
                 }
                 if (!string.IsNullOrEmpty(adminLogId))
                 {
                     AdminLog log = AdminLog.FindByGUID(adminLogId);
                     if (log != null)
                     {
-                        log.Actions = log.Actions + action;
+                        log.Actions = log.Actions + $"|||{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}: {action}";
                         log.LastUpdateTime = DateTime.Now;
                         log.Update();
 

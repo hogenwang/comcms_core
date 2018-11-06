@@ -5,13 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
-    <PackageReference Include="MySql.Data" Version="8.0.11" />
-    <PackageReference Include="NewLife.XCode" Version="9.8.6763.36551" />
+    <PackageReference Include="MailKit" Version="2.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.1.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.5" />
+    <PackageReference Include="MimeKit" Version="2.0.7" />
+    <PackageReference Include="MySql.Data" Version="8.0.13" />
+    <PackageReference Include="NewLife.XCode" Version="9.9.6881.41312" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="15.0.11" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="2.0.11" />
+    <PackageReference Include="Senparc.Weixin" Version="6.1.11" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.4.12" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.0.1" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.1.17" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
     <PackageReference Include="ZKWeb.System.Drawing" Version="4.0.1" />
   </ItemGroup>
@@ -20,16 +24,21 @@
     <ProjectReference Include="..\COMCMS.Common\COMCMS.Common.csproj" />
     <ProjectReference Include="..\COMCMS.Core\COMCMS.Core.csproj" />
     <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
+    <ProjectReference Include="..\NewLife.UserGroup.WebUploader\NewLife.UserGroup.WebUploader.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Areas\AdminCP\Data\" />
     <Folder Include="Areas\AdminCP\Models\" />
+    <Folder Include="wwwroot\lib\webuploader\" />
     <Folder Include="wwwroot\userfiles\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="wwwroot\editor\ckeditor\adapters\jquery.js" />
+    <None Include="wwwroot\editor\ckeditor\lang\en.js" />
+    <None Include="wwwroot\editor\ckeditor\lang\zh-cn.js" />
+    <None Include="wwwroot\editor\ckeditor\lang\zh.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\a11yhelp.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\af.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\ar.js" />
@@ -42,6 +51,7 @@
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\de-ch.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\de.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\el.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\en-au.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\en-gb.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\en.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\eo.js" />
@@ -189,6 +199,7 @@
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\pl.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\pt-br.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\pt.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\ro.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\ru.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\si.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\sk.js" />
@@ -274,7 +285,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Update="appsettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

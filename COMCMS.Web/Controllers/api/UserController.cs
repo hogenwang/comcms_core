@@ -14,6 +14,7 @@ using NewLife.Log;
 using static COMCMS.Web.Models.APIModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Senparc.Weixin.WxOpen;
 
 namespace COMCMS.Web.Controllers.api
 {
@@ -172,7 +173,7 @@ namespace COMCMS.Web.Controllers.api
             my.City = info.city;
             my.Province = info.province;
             my.Sex = info.gender;
-            my.Nickname = HttpUtility.UrlEncode(info.nickName);
+            my.Nickname = info.nickName;
             my.LastLoginTime = DateTime.Now;
             if (inviteid > 0 & my.Parent == 0)
             {
@@ -190,11 +191,20 @@ namespace COMCMS.Web.Controllers.api
         }
         #endregion
 
+        #region 同步获取用户手机号码
+        [HttpGet]
+        public object SyncUserTel(string encryptedData, string iv, string random = "", string timeStamp = "", string signature = "")
+        {
+            //Senparc.Weixin.WxOpen.Helpers.EncryptHelper.DecryptPhoneNumber()
+            return new ReJson(0, "同步电话号码成功！");
+        }
+        #endregion
+
         //#region 测试
         //[HttpGet]
         //public object Test()
         //{
-            
+
         //    reJson.code = 0;
         //    reJson.message = "测试信息，成功！";
         //    return reJson;

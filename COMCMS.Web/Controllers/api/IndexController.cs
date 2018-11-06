@@ -7,12 +7,15 @@ using COMCMS.Common;
 using COMCMS.Core;
 using COMCMS.Web.Filter;
 using XCode;
+using COMCMS.Web.Common;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace COMCMS.Web.Controllers.api
 {
-    
+    [Produces("application/json")]
+    [Route("api/[controller]/[action]")]
+    [WebAPIHandleError]
     public class IndexController : Controller
     {
         // GET: api/<controller>
@@ -23,7 +26,7 @@ namespace COMCMS.Web.Controllers.api
             return cfg;
         }
 
-        //#region 测试验签
+        #region 测试验签
         /// <summary>
         /// 测试验签
         /// </summary>
@@ -32,13 +35,13 @@ namespace COMCMS.Web.Controllers.api
         /// <param name="timeStamp"></param>
         /// <param name="signature"></param>
         /// <returns></returns>
-        //[HttpGet]
-        //[CheckFilter]
-        //public ReJSON CheckSign(string id, string random = "", string timeStamp = "", string signature = "")
-        //{
-        //    return new ReJSON("验签成功！");
-        //}
-        //#endregion
+        [HttpGet]
+        [CheckFilter]
+        public ReJson CheckSign(string id, string random = "", string timeStamp = "", string signature = "")
+        {
+            return new ReJson("验签成功！");
+        }
+        #endregion
 
         //#region 测试出错
         //[HttpGet]

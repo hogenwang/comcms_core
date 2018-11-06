@@ -22,10 +22,15 @@ namespace COMCMS.Common
 
         static Utils()
         {
-            //ReloadOnChange = true 当appsettings.json被修改时重新加载            
-            Configuration = new ConfigurationBuilder()
-            .Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
-            .Build();
+            ////ReloadOnChange = true 当appsettings.json被修改时重新加载            
+            //Configuration = new ConfigurationBuilder()
+            //.Add(new JsonConfigurationSource { Path = "appsettings.json", ReloadOnChange = true })
+            //.Build();
+        }
+
+        public static void AddUtils(IConfiguration configuration)
+        {
+            Configuration = configuration;
         }
 
         #region 静态变量
@@ -703,6 +708,59 @@ namespace COMCMS.Common
             TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return Convert.ToInt64(ts.TotalSeconds).ToString();
         }
+
+        /// <summary>  
+        /// 获取JS时间戳  
+        /// </summary>  
+        /// <returns></returns>  
+        public static string GetJSTimeStamp()
+        {
+            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            return Convert.ToInt64(ts.TotalMilliseconds).ToString();
+        }
+
+        /// <summary>
+        /// 获取当前URL绝对地址
+        /// </summary>
+        /// <returns></returns>
+        public static string GetNowURL()
+        {
+            string url = GetServerUrl() + MyHttpContext.Current.Request.Path;
+            string querystring = MyHttpContext.Current.Request.QueryString.ToString();
+            if (!string.IsNullOrWhiteSpace(querystring))
+                url = url + querystring;
+
+            return url;
+        }
+
+        /// <summary>
+        /// 获取post表单金钱字段值
+        /// </summary>
+        /// <param name="inputName"></param>
+        /// <returns></returns>
+        public static decimal GetPostFormMoney(string inputName)
+        {
+            string v = MyHttpContext.Current.Request.Form[inputName];
+            decimal price = 0M;
+            if (!IsDecimal(v) && decimal.Parse(v) < 0) v = "0";
+            price = decimal.Parse(v);
+            return price;
+        }
+
+        /// <summary>
+        /// 获取get表单金钱字段值
+        /// </summary>
+        /// <param name="inputName"></param>
+        /// <returns></returns>
+        public static decimal GetQueryStringMoney(string inputName)
+        {
+            string v = MyHttpContext.Current.Request.Query[inputName];
+            decimal price = 0M;
+            if (!IsDecimal(v) && decimal.Parse(v) < 0) v = "0";
+            price = decimal.Parse(v);
+            return price;
+        }
+
         #endregion
 
         #region 处理部分
@@ -954,4 +1012,36 @@ namespace COMCMS.Common
         #endregion
 
     }
+
+    #region 常用扩展方法
+    /// <summary>
+    /// 扩展方法
+    /// </summary>
+    public static class CommExtension
+    {
+        #region 货币转换
+        /// <summary>
+        /// 数据库中金额换成元单位
+        /// </summary>
+        /// <param name="price"></param>
+        /// <returns></returns>
+        public static decimal ConvertToMoney(this int price)
+        {
+            decimal realPrice = (decimal)price / 100;
+            return realPrice;
+        }
+
+        /// <summary>
+        /// 元单位的金额换算成分
+        /// </summary>
+        /// <param name="price"></param>
+        /// <returns></returns>
+        public static int ConvertMoneyToInt(this decimal price)
+        {
+            return (int)(price * 100);
+        }
+        #endregion
+
+    }
+    #endregion
 }

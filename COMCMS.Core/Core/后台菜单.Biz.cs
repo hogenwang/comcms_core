@@ -103,7 +103,7 @@ namespace COMCMS.Core
         {
             get
             {
-                if (_ListEvent == null && Id > 0 && !Dirtys.ContainsKey("ListEvent_" + Id))
+                if (_ListEvent == null && Id > 0 && !Dirtys["ListEvent_" + Id])
                 {
                     _ListEvent = AdminMenuEvent.FindAll(AdminMenuEvent._.MenuId == Id, AdminMenuEvent._.Id.Asc(), null, 0, 0);
                     Dirtys["ListEvent_" + Id] = true;

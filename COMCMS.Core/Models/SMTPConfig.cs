@@ -69,6 +69,10 @@ namespace COMCMS.Core.Models
             set { _postusername = value; }
             get { return _postusername; }
         }
+        /// <summary>
+        /// 是否采用SSL发信
+        /// </summary>
+        public int IsSSL { get; set; } = 0;
         #endregion Model
     }
 

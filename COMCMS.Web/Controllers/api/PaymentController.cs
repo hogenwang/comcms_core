@@ -9,7 +9,7 @@ using COMCMS.Web.Filter;
 using XCode;
 using NewLife.Log;
 using Senparc.Weixin.MP;
-using Senparc.Weixin.MP.TenPayLibV3;
+using Senparc.Weixin.TenPay.V3;
 using Newtonsoft.Json;
 
 namespace COMCMS.Web.Controllers.api
@@ -92,7 +92,7 @@ namespace COMCMS.Web.Controllers.api
 
 
 
-            TenPayV3Info TenPayV3Info = new TenPayV3Info(appId, appSecrect, wxmchId, wxmchKey, Utils.GetServerUrl() + "/wxpayment/notify");
+            TenPayV3Info TenPayV3Info = new TenPayV3Info(appId, appSecrect, wxmchId, wxmchKey, Utils.GetServerUrl() + "/wxpayment/notify", Utils.GetServerUrl() + "/wxpayment/notify");
             TenPayV3Info.TenPayV3Notify = Utils.GetServerUrl() + "/wxpayment/notify";
             XTrace.WriteLine("微信支付异步通知地址：" + TenPayV3Info.TenPayV3Notify);
             //创建支付应答对象
@@ -102,7 +102,7 @@ namespace COMCMS.Web.Controllers.api
             string rtimeStamp = Utils.GetTimeStamp();
 
             //创建请求统一订单接口参数
-            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(TenPayV3Info.AppId, TenPayV3Info.MchId, entity.Title, model.PayOrderNum, (int)(entity.TotalPay * 100), Utils.GetIP(), TenPayV3Info.TenPayV3Notify, TenPayV3Type.JSAPI, my.WeixinAppOpenId, TenPayV3Info.Key, nonceStr);
+            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(TenPayV3Info.AppId, TenPayV3Info.MchId, entity.Title, model.PayOrderNum, (int)(entity.TotalPay * 100), Utils.GetIP(), TenPayV3Info.TenPayV3Notify,  Senparc.Weixin.TenPay.TenPayV3Type.JSAPI, my.WeixinAppOpenId, TenPayV3Info.Key, nonceStr);
 
             //返回给微信的请求
             RequestHandler res = new RequestHandler(null);

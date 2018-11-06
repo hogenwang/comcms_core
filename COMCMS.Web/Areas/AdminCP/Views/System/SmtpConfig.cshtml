@@ -17,7 +17,7 @@
             <div class="tab-content">
                 <div id="tab-1" class="tab-pane active">
                     <div class="panel-body">
-                        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editBaseConfigForm", @class = "form-horizontal m-t" }))
+                        @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editSMTPConfigForm", @class = "form-horizontal m-t" }))
                         {
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">SMTP服务器：</label>
@@ -44,9 +44,17 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-3 control-label">公司电话：</label>
+                                <label class="col-sm-3 control-label">SMTP身份验证密码：</label>
                                 <div class="col-sm-8">
                                     <input id="SmtpEmailPwd" name="SmtpEmailPwd" maxlength="50" type="text" class="form-control" placeholder="帐号密码" value="@Model.SmtpEmailPwd">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">SSL 连接：</label>
+                                <div class="col-sm-8">
+                                    <label class="checkbox-inline i-checks">
+                                        <input type="checkbox" value="1" name="IsSSL" id="IsSSL" @(Model.IsSSL == 1 ? "checked = \"checked\"" : "")> SSL连接（一般如果端口是465 则勾选此选项，如果是25端口，则不用勾选此选项）
+                                    </label>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -60,18 +68,20 @@
                 </div>
                 <div id="tab-2" class="tab-pane">
                     <div class="panel-body">
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">测试收件人：</label>
-                            <div class="col-sm-8">
-                                <input id="txtEmail" name="txtEmail" maxlength="200" type="text" class="form-control" placeholder="请输入一个接收邮箱地址进行测试" value="">
+                        <form asp-action="SendTestMail" asp-area="AdminCP" asp-controller="System" name="sendtestmailForm" id="sendtestmailForm" method="post" class="form-horizontal m-t">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">测试收件人：</label>
+                                <div class="col-sm-8">
+                                    <input id="txtEmail" name="txtEmail" maxlength="200" type="email" class="form-control" placeholder="请输入一个接收邮箱地址进行测试" value="">
+                                </div>
                             </div>
-                        </div>
-                        <div class="hr-line-dashed"></div>
-                        <div class="form-group">
-                            <div class="col-sm-4 col-sm-offset-2">
-                                <button class="btn btn-primary" type="button" onclick="alert('敬请期待...')"><i class="fa fa-send"></i> 测试发信 </button>
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <button class="btn btn-primary" type="submit"><i class="fa fa-send"></i> 测试发信 </button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -83,7 +93,8 @@
 </div>
 <script>
     $(function () {
-        DoPost("editBaseConfigForm");
+        DoPost("editSMTPConfigForm");
+        DoPost("sendtestmailForm");
     })
 </script>
 
