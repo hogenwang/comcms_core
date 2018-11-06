@@ -37,7 +37,7 @@ namespace COMCMS.Web.Filter
 
             var notVali = ValiSignature(context.HttpContext);
 
-            if (notVali == null)
+            if (notVali != null)
             {
                await context.HttpContext.Response.WriteAsync(notVali.ToJson());
             }
@@ -74,7 +74,7 @@ namespace COMCMS.Web.Filter
             }
             //没有签名返回错误
             if (string.IsNullOrEmpty(signature))
-                throw new Exception("signature Is Null");
+                return new ReJson(40004, "signature 为空！");
 
             if (!MySign.CheckSign(pars, signature))
             {
