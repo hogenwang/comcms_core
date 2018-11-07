@@ -4,10 +4,10 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，暂时不带前台�
 
 ### 技术简要
 
-- .net core 2.1.3 (请注意升级本地SDK 或者runtime)
+- .net core 2.1.5 (请注意升级本地SDK 或者runtime)
 - 数据库：Mysql 5.7
 - ORM:数据库操作使用XCode，目前支持mysql、sqlserver。详细见：https://github.com/NewLifeX/X
-- 据库驱动使用：MySQL官方驱动，8.0.12
+- 据库驱动使用：MySQL官方驱动，8.0.13
 - 后台模板是H+
 - 编辑器采用CKeditor 支持截图粘贴进去，上传图片采用webuploader
 
@@ -22,6 +22,12 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，暂时不带前台�
 - COMCMS.Web .net core 2.1 的MVC网站。
 
 - XCoder 代码生成器，跟上述的没任何关系，只是为了生成数据库操作业务逻辑和实体而已。
+
+- Lib.Core 部分中间件
+
+- NewLife.UserGroup.WebUploader 大文件上传
+
+- WebTest 测试站点
 
 - data 目录是初始化sql ，目前是mysql
 
@@ -38,3 +44,6 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，暂时不带前台�
 
 ### 技术交流群
  **1600800** 
+
+### 贡献者
+漫遊者(hogenwang)、笑笑(xxred)、一只萌新(HTR)
