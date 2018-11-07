@@ -325,7 +325,7 @@ namespace COMCMS.Common
         {
             using (var md5 = System.Security.Cryptography.MD5.Create())
             {
-                var result = md5.ComputeHash(Encoding.ASCII.GetBytes(str));
+                var result = md5.ComputeHash(Encoding.UTF8.GetBytes(str));
                 var strResult = BitConverter.ToString(result);
                 return strResult.Replace("-", "");
             }
@@ -339,7 +339,7 @@ namespace COMCMS.Common
         {
             using(var sha256 = System.Security.Cryptography.SHA256.Create())
             {
-                var result = sha256.ComputeHash(Encoding.ASCII.GetBytes(str));
+                var result = sha256.ComputeHash(Encoding.UTF8.GetBytes(str));
                 var strResult = BitConverter.ToString(result);
                 return strResult.Replace("-", "");
             }

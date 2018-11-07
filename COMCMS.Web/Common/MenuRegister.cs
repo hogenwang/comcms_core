@@ -14,6 +14,8 @@ namespace COMCMS.Web.Common
     {
         private static void StartRegister()
         {
+            if (AdminMenu.Meta.Count > 0)
+                return;
             // 操作项定义
             var menuEventDic = new Dictionary<string, KeyValuePair<int, string>>
             {
@@ -40,7 +42,7 @@ namespace COMCMS.Web.Common
                 foreach (var type in types)
                 {
                     // 控制器名称
-                    var ctrName = type.Name.TrimEnd("Controller");
+                    var ctrName = type.Name.TrimEnd("AdminCP.Controller");
 
                     // 控制器展示名
                     var ctrDpName = type.GetDisplayName();
