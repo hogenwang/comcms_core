@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
+    [DisplayName("文章系统")]
+    [Description("文章系统管理，包括文章、文章栏目")]
     public class ArticleController : AdminBaseController
     {
         #region 文章栏目
@@ -20,6 +23,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         /// </summary>
         /// <returns></returns>
         [MyAuthorize( "viewlist",  "articlecategory")]
+        [DisplayName("文章栏目")]
         public IActionResult ArticleCategoryList()
         {
             IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, false, true);
@@ -189,6 +193,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         /// </summary>
         /// <returns></returns>
         [MyAuthorize("viewlist", "article")]
+        [DisplayName("文章")]
         public IActionResult ArticleList()
         {
             //获取上级栏目

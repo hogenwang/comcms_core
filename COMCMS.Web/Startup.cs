@@ -43,6 +43,9 @@ namespace COMCMS.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // 注册菜单
+            MenuRegister.Register();
+
             //注入自己的HttpContext
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddMvc().AddSessionStateTempDataProvider();

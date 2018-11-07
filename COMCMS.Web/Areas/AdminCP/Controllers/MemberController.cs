@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     /// <summary>
     /// 后台用户管理控制器
     /// </summary>
+    [DisplayName("管理员")]
     public class MemberController : AdminBaseController
     {
         #region 修改密码
@@ -115,6 +117,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
         #region 管理组管理
         [MyAuthorize("viewlist", "adminrole")]
+        [DisplayName("管理组")]
         public IActionResult AdminRole()
         {
             IList<AdminRoles> list = AdminRoles.FindAll(AdminRoles._.Id > 0, AdminRoles._.Rank.Asc(), null, 0, 0);
@@ -366,6 +369,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         #region 管理员管理
         //管理员管理
         [MyAuthorize("viewlist", "admins")]
+        [DisplayName("管理员")]
         public IActionResult Admins()
         {
             //加载管理组
