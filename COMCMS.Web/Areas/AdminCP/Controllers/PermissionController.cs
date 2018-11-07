@@ -63,7 +63,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
         [MyAuthorize( "add",  "eventkey",  "JSON")]
         [HttpPost]
-        public IActionResult AddEventKey(FormCollection fc)
+        public IActionResult AddEventKey(IFormCollection fc)
         {
             TargetEvent entity = new TargetEvent();
             entity.EventKey = fc["EventKey"];

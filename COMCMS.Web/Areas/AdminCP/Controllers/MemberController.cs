@@ -608,7 +608,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         //执行添加用户组
         [HttpPost]
         [MyAuthorize("add", "memberrole", "JSON")]
-        public IActionResult AddMemberRole(FormCollection fc)
+        public IActionResult AddMemberRole(IFormCollection fc)
         {
             string RoleName = fc["RoleName"];
             string RoleDescription = fc["RoleDescription"];

@@ -156,7 +156,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         }
         [HttpPost]
         [MyAuthorize("edit", "guestbook", "JSON")]
-        public IActionResult EditGuestbook(FormCollection fc)
+        public IActionResult EditGuestbook(IFormCollection fc)
         {
             string id = fc["Id"];
             if (!Utils.IsInt(id) || int.Parse(id) <= 0)
