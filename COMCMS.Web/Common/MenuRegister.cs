@@ -41,8 +41,13 @@ namespace COMCMS.Web.Common
 
                 foreach (var type in types)
                 {
+                    if (!type.Namespace.Contains(".AdminCP.Controller"))
+                    {
+                        continue;
+                    }
+
                     // 控制器名称
-                    var ctrName = type.Name.TrimEnd("AdminCP.Controller");
+                    var ctrName = type.Name.TrimEnd("Controller");
 
                     // 控制器展示名
                     var ctrDpName = type.GetDisplayName();
@@ -69,7 +74,6 @@ namespace COMCMS.Web.Common
                         pAdminMenu.Description = nAdminMenu.Description;
                         pAdminMenu.MenuName = nAdminMenu.MenuName;
                     }
-                    pAdminMenu.Save();
 
                     // 控制器所有包含MyAuthorizeAttribute的方法
                     var acts = type.GetMethods()
@@ -77,6 +81,8 @@ namespace COMCMS.Web.Common
                         .ToList();
 
                     if (!acts.Any()) continue;
+
+                    pAdminMenu.Save();
 
                     var eventKeyDic = new Dictionary<string, int>();
                     var adminMenuEventList = new List<AdminMenuEvent>();
