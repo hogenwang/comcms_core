@@ -1,71 +1,213 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - COMCMS.Web</title>
-
-    <environment include="Development">
-        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
-    </environment>
-    <environment exclude="Development">
-        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
-              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-    </environment>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>@ViewBag.title</title>
+    <meta name="renderer" content="webkit" />
+    <meta name="keywords" content="@ViewBag.keywords">
+    <meta name="description" content="@ViewBag.description">
+    <link href="~/js/swpier/swiper.min.css" rel="stylesheet" />
+    <link href="~/images/default/style.css" rel="stylesheet" />
+    <script src="~/js/html5shiv.min.js"></script>
+    <script src="~/js/jquery2.min.js"></script>
+    <script src="~/js/swpier/swiper.min.js"></script>
+    <script src="~/js/public.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">COMCMS.Web</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
+    <div class="pc" id="main" data-change="1">
+        <!-- 头部内容 -->
+        <div class="header">
+            <div class="cont">
+                <a href="/" title="@ViewBag.cfg.SiteName" class="logo">
+                    <img src="@ViewBag.cfg.SiteLogo" alt="@ViewBag.cfg.SiteName">
+                </a>
+                <div class="menu-btn" onclick="mbNav()"><p class="pic-box"><i></i></p></div>
+
+                <div class="menu-box">
+                    <div class="menu-bg"></div>
+                    <ul class="nav-list">
+                        <li id="nav_1"><a href="/" title="首页">首页</a><i></i></li>
+                        <li id="nav_2"><a href="/Class.aspx?id=1" title="关于我们">关于我们</a><i></i></li>
+                        <li id="nav_3"><a href="/Category.aspx?id=1" title="产品展示">产品展示</a><i></i></li>
+                        <li id="nav_4"><a href="/Class.aspx?id=2" title="合作伙伴">合作伙伴</a><i></i></li>
+                        <li id="nav_5"><a href="/Class.aspx?id=3" title="新闻资讯">新闻资讯</a><i></i></li>
+                        <li id="nav_6"><a href="/Class.aspx?id=4" title="联系我们">联系我们</a><i></i></li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </nav>
-    <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; 2018 - COMCMS.Web</p>
-        </footer>
+        <!-- 底部内容 -->
+        <div class="footer">
+            <div class="foot-top">
+                <!-- 底部导航栏 移动端下显示 -->
+                <div class="foot-nav mobile">
+                    <ul class="foot-list">
+
+                        <li>
+                            <a href="javascript:;">关于我们<i></i></a>
+                            <ul class="foot-sec-nav">
+                                <li><a href="/class.aspx?id=5" title="公司简介">公司简介</a></li>
+                                <li><a href="/class.aspx?id=6" title="企业文化">企业文化</a></li>
+                                <li><a href="/class.aspx?id=7" title="发展历程">发展历程</a></li>
+                                <li><a href="/class.aspx?id=8" title="组织架构">组织架构</a></li>
+                                <li><a href="/class.aspx?id=9" title="发展战略">发展战略</a></li>
+                                <li><a href="/class.aspx?id=10" title="荣誉证书">荣誉证书</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:;">产品设备<i></i></a>
+                            <ul class="foot-sec-nav">
+                                <li><a href="/Category.aspx?id=1" title="医疗设备">医疗设备</a></li>
+                                <li><a href="/Category.aspx?id=4" title="灯具">灯具</a></li>
+                                <li><a href="/Category.aspx?id=2" title="进出口贸易">进出口贸易</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:;">新闻资讯<i></i></a>
+                            <ul class="foot-sec-nav">
+                                <li><a href="/class.aspx?id=12" title="公司新闻">公司新闻</a></li>
+                                <li><a href="/class.aspx?id=17" title="行业资讯">行业资讯</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:;">用户服务<i></i></a>
+                            <ul class="foot-sec-nav">
+                                <li><a href="/class.aspx?id=18" title="健康小知识">健康小知识</a></li>
+                                <li><a href="/class.aspx?id=19" title="政策信息">政策信息</a></li>
+                                <li><a href="/class.aspx?id=20" title="常见问题">常见问题</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="javascript:;">联系我们<i></i></a>
+                            <ul class="foot-sec-nav">
+                                <li><a href="/class.aspx?id=13" title="联系方式">联系方式</a></li>
+                                <li><a href="/class.aspx?id=14" title="在线留言">在线留言</a></li>
+                                <li><a href="/class.aspx?id=15" title="人才招聘">人才招聘</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <script type="text/javascript">
+                        $('.foot-list').on('click', 'a', function () {
+                            var num = $('.foot-list > li').length;
+                            var showed = $(this).parent('li').find('.foot-sec-nav').is(':visible');
+                            var length = $(this).parent('li').find('.foot-sec-nav').length;
+                            if (!showed) {
+                                for (var i = 0; i < num; i++) {
+                                    $('.foot-sec-nav').eq(i).slideUp('slow');
+                                    $('.foot-list > li').eq(i).find('i').stop().removeClass('round1');
+                                }
+                                if (length > 0) {
+                                    $(this).parent('li').find('.foot-sec-nav').slideDown('slow');
+                                    $(this).parent('li').find('i').addClass('round1');
+                                }
+                            } else {
+                                if (length > 0) {
+                                    $(this).parent('li').find('.foot-sec-nav').slideUp('slow');
+                                    $(this).parent('li').find('i').removeClass('round1');
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+                <div class="cont">
+                    <!-- 底部公司信息 -->
+                    <div class="foot-info">
+                        <div class="foot-title">
+                            <span>COMCMS 内容管理系统</span>
+                            <small>COMCMS Technology Co.，Ltd</small>
+                        </div>
+                        <div class="foot-info-cont">
+                            <ul>
+                                <li><span><i class="foot-ico3"></i>电话：</span><span>+86-20-88888888</span></li>
+                                <li><span><i class="foot-ico1"></i>传真：</span><span>+86-20-88888888</span></li>
+                                <li><span><i class="foot-ico2"></i>邮箱：</span><span>hogenwang@vip.qq.com</span></li>
+                                <li><span><i class="foot-ico4"></i>地址：</span><span class="foot-address">广东省广州市天河区天河城</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- 底部在线留言 -->
+                    <div class="foot-msg">
+                        <span>在线留言</span>
+                        <form class="foot-msg-box" id="msgFormFooter" onsubmit="return PostMsgFooter();">
+                            <p><input type="text" name="name" id="name" value="" placeholder="姓名"></p>
+                            <p><input type="text" name="phone" id="phone" value="" placeholder="电话"></p>
+                            <p class="f-ta"><textarea name="intro" id="intro" rows="8" cols="80" placeholder="留言内容"></textarea></p>
+                            <p><button type="submit" name="submit" id="submit">提    交</button></p>
+                        </form>
+                    </div>
+                    <!-- 底部导航栏 PC版下显示-->
+                    <div class="foot-nav normal">
+                        <dl class="foot-nav-list">
+                            <dt>关于我们</dt>
+                            <dd><a href="/class.aspx?id=5" title="公司简介">公司简介</a></dd>
+                            <dd><a href="/class.aspx?id=6" title="企业文化">企业文化</a></dd>
+                            <dd><a href="/class.aspx?id=7" title="发展历程">发展历程</a></dd>
+                            <dd><a href="/class.aspx?id=8" title="组织架构">组织架构</a></dd>
+                            <dd><a href="/class.aspx?id=9" title="发展战略">发展战略</a></dd>
+                            <dd><a href="/class.aspx?id=10" title="荣誉证书">荣誉证书</a></dd>
+
+                        </dl>
+                        <dl class="foot-nav-list">
+                            <dt>新闻资讯</dt>
+                            <dd><a href="/class.aspx?id=12" title="公司新闻">公司新闻</a></dd>
+                            <dd><a href="/class.aspx?id=17" title="行业资讯">行业资讯</a></dd>
+                        </dl>
+                        <dl class="foot-nav-list">
+                            <dt>产品设备</dt>
+                            <dd><a href="/Category.aspx?id=1" title="医疗设备">医疗设备</a></dd>
+                            <dd><a href="/Category.aspx?id=4" title="灯具">灯具</a></dd>
+                            <dd><a href="/Category.aspx?id=2" title="进出口贸易">进出口贸易</a></dd>
+                        </dl>
+                        <dl class="foot-nav-list">
+                            <dt>用户服务</dt>
+                            <dd><a href="/class.aspx?id=18" title="健康小知识">健康小知识</a></dd>
+                            <dd><a href="/class.aspx?id=19" title="政策信息">政策信息</a></dd>
+                            <dd><a href="/class.aspx?id=20" title="常见问题">常见问题</a></dd>
+                        </dl>
+                        <dl class="foot-nav-list">
+                            <dt>联系我们</dt>
+                            <dd><a href="/class.aspx?id=13" title="联系方式">联系方式</a></dd>
+                            <dd><a href="/class.aspx?id=14" title="在线留言">在线留言</a></dd>
+                            <dd><a href="/class.aspx?id=15" title="人才招聘">人才招聘</a></dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="foot-bottom">
+                <div class="cont">
+                    <span>@ViewBag.cfg.Copyright <a href="http://www.comcms.com/" target="_blank"> 技术支持：COMCMS</a>&nbsp;<a href="http://www.miitbeian.gov.cn/" target="_blank">粤ICP备8888888号-1</a></span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/js/site.js" asp-append-version="true"></script>
-    </environment>
-    <environment exclude="Development">
-        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
-        </script>
-        <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
-                asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
-                asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
-                crossorigin="anonymous"
-                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
-        </script>
-        <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
+    <script type="text/javascript">
+        $("#nav_1").addClass("nav-on");
+        init();
+        $(window).resize(function () {
+            init();
+        });
+        if (!IsPC()) {
+            cds();
+        }
+        proShow();
+        coopSwiper();
+        var mySwiper = new Swiper('.banner .swiper-container', {
+            loop: true,
 
-    @RenderSection("Scripts", required: false)
+            // 如果需要前进后退按钮
+            nextButton: '.banner-next',
+            prevButton: '.banner-prev',
+            autoplay: 3000,
+        })
+
+        var mySwiper1 = new Swiper('.banner .mobile', {
+            loop: true,
+            autoplay: 3000,
+        });
+    </script>
 </body>
 </html>
