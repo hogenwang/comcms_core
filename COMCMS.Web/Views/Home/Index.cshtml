@@ -1,9 +1,10 @@
-﻿@using COMCMS.Core
-@{
+﻿@{
     Config cfg = ViewBag.cfg;
     ViewBag.title = string.IsNullOrEmpty(cfg.IndexTitle) ? cfg.SiteName : cfg.IndexTitle;
     ViewBag.keywords = cfg.Keyword;
     ViewBag.description = cfg.Description;
+
+    Article about = ViewBag.about;
 }
 
 <!-- pc banner  -->
@@ -174,15 +175,15 @@
                 <div class="i-au-left">
                     <div class="pic-box">
                         <a href="/article.aspx?id=1" title="关于我们">
-                            <img src="/userfiles/images/20170516/images/pic-671.png" alt="关于我们">
+                            <img src="@(about.Pic)" alt="关于我们">
                         </a>
                     </div>
                 </div>
                 <div class="i-au-right">
                     <p>
-                        <span>上的放进塑料袋放进...</span>
+                        @(Utils.CutString(Utils.NoHTML(about.Content),700))
                     </p>
-                    <a href="/article.aspx?id=1" title="查看详情" class="read-d">查看详情</a>
+                    <a href="/aritcle/detail/1" title="查看详情" class="read-d">查看详情</a>
                 </div>
             </div>
         </div>
@@ -671,7 +672,8 @@
                     nextButton: '.banner-next',
                     prevButton: '.banner-prev',
                     autoplay: 3000,
-                })
+                })
+
             </script>
         </div>
     </div>

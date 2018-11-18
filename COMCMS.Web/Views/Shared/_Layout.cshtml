@@ -29,17 +29,24 @@
                     <div class="menu-bg"></div>
                     <ul class="nav-list">
                         <li id="nav_1"><a href="/" title="首页">首页</a><i></i></li>
-                        <li id="nav_2"><a href="/Class.aspx?id=1" title="关于我们">关于我们</a><i></i></li>
-                        <li id="nav_3"><a href="/Category.aspx?id=1" title="产品展示">产品展示</a><i></i></li>
-                        <li id="nav_4"><a href="/Class.aspx?id=2" title="合作伙伴">合作伙伴</a><i></i></li>
-                        <li id="nav_5"><a href="/Class.aspx?id=3" title="新闻资讯">新闻资讯</a><i></i></li>
-                        <li id="nav_6"><a href="/Class.aspx?id=4" title="联系我们">联系我们</a><i></i></li>
+                        <li id="nav_2"><a asp-controller="Article" asp-action="Index" asp-route-id="1" title="关于我们">关于我们</a><i></i></li>
+                        <li id="nav_3"><a asp-controller="Product" asp-action="Index" asp-route-id="1" title="产品中心">产品中心</a><i></i></li>
+                        <li id="nav_4"><a asp-controller="Article" asp-action="Index" asp-route-id="2" title="新闻资讯">新闻资讯</a><i></i></li>
+                        <li id="nav_5"><a asp-controller="Article" asp-action="Index" asp-route-id="3" title="项目案例">项目案例</a><i></i></li>
+                        <li id="nav_6"><a asp-controller="Article" asp-action="Index" asp-route-id="4" title="用户服务">用户服务</a><i></i></li>
+                        <li id="nav_7"><a asp-controller="Article" asp-action="Index" asp-route-id="5" title="联系我们">联系我们</a><i></i></li>
                     </ul>
                 </div>
             </div>
         </div>
         @RenderBody()
         <!-- 底部内容 -->
+        @{ 
+            IList<ArticleCategory> allArticleCategorys = ArticleCategory.GetListTree(0, -1, false, false);
+            IList<Article> aboutlist = Article.FindAll(Article._.KId == 1 & Article._.IsHide ==0, Article._.Sequence.Asc(), null, 0, 0);
+
+            IList<Category> allCategorys = Category.FindAll(Category._.PId==0 & Category._.IsHide ==0, Category._.Rank.Asc(),null,0,0);
+        }
         <div class="footer">
             <div class="foot-top">
                 <!-- 底部导航栏 移动端下显示 -->
@@ -49,43 +56,55 @@
                         <li>
                             <a href="javascript:;">关于我们<i></i></a>
                             <ul class="foot-sec-nav">
-                                <li><a href="/class.aspx?id=5" title="公司简介">公司简介</a></li>
-                                <li><a href="/class.aspx?id=6" title="企业文化">企业文化</a></li>
-                                <li><a href="/class.aspx?id=7" title="发展历程">发展历程</a></li>
-                                <li><a href="/class.aspx?id=8" title="组织架构">组织架构</a></li>
-                                <li><a href="/class.aspx?id=9" title="发展战略">发展战略</a></li>
-                                <li><a href="/class.aspx?id=10" title="荣誉证书">荣誉证书</a></li>
+                                @foreach (Article a in aboutlist)
+                                {
+                                    <li><a asp-controller="Article" asp-action="Detail" asp-route-id="@(a.Id)" title="@a.Title">@a.Title</a></li>
+                                }
                             </ul>
                         </li>
                         <li>
-                            <a href="javascript:;">产品设备<i></i></a>
+                            <a href="javascript:;">产品中心<i></i></a>
                             <ul class="foot-sec-nav">
-                                <li><a href="/Category.aspx?id=1" title="医疗设备">医疗设备</a></li>
-                                <li><a href="/Category.aspx?id=4" title="灯具">灯具</a></li>
-                                <li><a href="/Category.aspx?id=2" title="进出口贸易">进出口贸易</a></li>
+                                @foreach(Category c in allCategorys)
+                                {
+                                <li><a asp-controller="Product" asp-action="Index" asp-route-id="@(c.Id)" title="@(c.KindName)">@(c.KindName)</a></li>
+                                }
                             </ul>
                         </li>
                         <li>
                             <a href="javascript:;">新闻资讯<i></i></a>
                             <ul class="foot-sec-nav">
-                                <li><a href="/class.aspx?id=12" title="公司新闻">公司新闻</a></li>
-                                <li><a href="/class.aspx?id=17" title="行业资讯">行业资讯</a></li>
+                                @foreach (ArticleCategory ac in allArticleCategorys)
+                                {
+                                    if (ac.PId == 2)
+                                    {
+                                        <li><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></li>
+                                    }
+                                }
                             </ul>
                         </li>
                         <li>
                             <a href="javascript:;">用户服务<i></i></a>
                             <ul class="foot-sec-nav">
-                                <li><a href="/class.aspx?id=18" title="健康小知识">健康小知识</a></li>
-                                <li><a href="/class.aspx?id=19" title="政策信息">政策信息</a></li>
-                                <li><a href="/class.aspx?id=20" title="常见问题">常见问题</a></li>
+                                @foreach (ArticleCategory ac in allArticleCategorys)
+                                {
+                                    if (ac.PId == 4)
+                                    {
+                                        <li><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></li>
+                                    }
+                                }
                             </ul>
                         </li>
                         <li>
                             <a href="javascript:;">联系我们<i></i></a>
                             <ul class="foot-sec-nav">
-                                <li><a href="/class.aspx?id=13" title="联系方式">联系方式</a></li>
-                                <li><a href="/class.aspx?id=14" title="在线留言">在线留言</a></li>
-                                <li><a href="/class.aspx?id=15" title="人才招聘">人才招聘</a></li>
+                                @foreach (ArticleCategory ac in allArticleCategorys)
+                                {
+                                    if (ac.PId == 5)
+                                    {
+                                        <li><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></li>
+                                    }
+                                }
                             </ul>
                         </li>
                     </ul>
@@ -142,36 +161,47 @@
                     <div class="foot-nav normal">
                         <dl class="foot-nav-list">
                             <dt>关于我们</dt>
-                            <dd><a href="/class.aspx?id=5" title="公司简介">公司简介</a></dd>
-                            <dd><a href="/class.aspx?id=6" title="企业文化">企业文化</a></dd>
-                            <dd><a href="/class.aspx?id=7" title="发展历程">发展历程</a></dd>
-                            <dd><a href="/class.aspx?id=8" title="组织架构">组织架构</a></dd>
-                            <dd><a href="/class.aspx?id=9" title="发展战略">发展战略</a></dd>
-                            <dd><a href="/class.aspx?id=10" title="荣誉证书">荣誉证书</a></dd>
-
+                            @foreach (Article a in aboutlist)
+                            {
+                                <dd><a asp-controller="Article" asp-action="Detail" asp-route-id="@(a.Id)" title="@a.Title">@a.Title</a></dd>
+                            }
                         </dl>
                         <dl class="foot-nav-list">
                             <dt>新闻资讯</dt>
-                            <dd><a href="/class.aspx?id=12" title="公司新闻">公司新闻</a></dd>
-                            <dd><a href="/class.aspx?id=17" title="行业资讯">行业资讯</a></dd>
+                            @foreach (ArticleCategory ac in allArticleCategorys)
+                            {
+                                if (ac.PId == 2)
+                                {
+                                    <dd><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></dd>
+                                }
+                            }
                         </dl>
                         <dl class="foot-nav-list">
-                            <dt>产品设备</dt>
-                            <dd><a href="/Category.aspx?id=1" title="医疗设备">医疗设备</a></dd>
-                            <dd><a href="/Category.aspx?id=4" title="灯具">灯具</a></dd>
-                            <dd><a href="/Category.aspx?id=2" title="进出口贸易">进出口贸易</a></dd>
+                            <dt>产品中心</dt>
+                            @foreach (Category c in allCategorys)
+                            {
+                                <dd><a asp-controller="Product" asp-action="Index" asp-route-id="@(c.Id)" title="@(c.KindName)">@(c.KindName)</a></dd>
+                            }
                         </dl>
                         <dl class="foot-nav-list">
                             <dt>用户服务</dt>
-                            <dd><a href="/class.aspx?id=18" title="健康小知识">健康小知识</a></dd>
-                            <dd><a href="/class.aspx?id=19" title="政策信息">政策信息</a></dd>
-                            <dd><a href="/class.aspx?id=20" title="常见问题">常见问题</a></dd>
+                            @foreach (ArticleCategory ac in allArticleCategorys)
+                            {
+                                if (ac.PId == 4)
+                                {
+                                    <dd><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></dd>
+                                }
+                            }
                         </dl>
                         <dl class="foot-nav-list">
                             <dt>联系我们</dt>
-                            <dd><a href="/class.aspx?id=13" title="联系方式">联系方式</a></dd>
-                            <dd><a href="/class.aspx?id=14" title="在线留言">在线留言</a></dd>
-                            <dd><a href="/class.aspx?id=15" title="人才招聘">人才招聘</a></dd>
+                            @foreach (ArticleCategory ac in allArticleCategorys)
+                            {
+                                if (ac.PId == 5)
+                                {
+                                    <dd><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></dd>
+                                }
+                            }
                         </dl>
                     </div>
                 </div>

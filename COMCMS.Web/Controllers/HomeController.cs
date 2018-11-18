@@ -25,6 +25,7 @@ namespace COMCMS.Web.Controllers
         public IActionResult Index()
         {
             ViewBag.cfg = cfg;
+            ViewBag.about = Article.FindById(1);//关于我们
             return View();
         }
         #endregion
