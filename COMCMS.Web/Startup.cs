@@ -47,7 +47,7 @@ namespace COMCMS.Web
             MenuRegister.Register();
 
             //注入自己的HttpContext
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             //services.AddMvc().AddSessionStateTempDataProvider();
 
             //添加Configuration到静态变量
