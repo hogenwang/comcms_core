@@ -1,7 +1,82 @@
-﻿
+﻿@model COMCMS.Core.ArticleCategory
 @{
-    ViewData["Title"] = "Index";
+    ViewBag.title = Model.KindName;
+    ViewBag.keywords = Model.Keyword;
+    ViewBag.description = Model.Description;
+    //获取同级分类
+    IList<ArticleCategory> sameList = ArticleCategory.FindAll(ArticleCategory._.PId == Model.PId, ArticleCategory._.Rank.Asc(), null, 0, 0);
 }
+<div class="banner mobile sec-banner">
+    <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+</div>
+<div class="sec-nav">
+    <div class="cont">
+        <ul class="sec-nav-list">
+            @foreach (var k in sameList)
+            {
+                <li class="@(k.Id == Model.Id?"sec-on":"")"><a asp-controller="Article" asp-action="Index" asp-route-id="@(k.Id)" title="@k.KindName">@k.KindName</a></li>
+            }
+        </ul>
 
-<h2>Index</h2>
+        <script type="text/javascript">
+            function mbSecNav() {
+                var num = $('.sec-nav-list li').length;
+                if (num >= 3) {
+                    $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
+                } else if (num == 2) {
+                    $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
+                } else if (num == 1) {
+                    $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
+                }
+            }
+        </script>
+    </div>
+</div>
+
+<div class="content newsC">
+    <div class="news-bg">
+        <div class="cont">
+            <ul class="news-list" id="listComment">
+                <li>
+                    <a href="/article.aspx?id=36" title="精准和立体定向放射治疗新技术研讨会">
+                        <div class="news-pic">
+                            <div class="pic-box">
+                                <img src="/userfiles/images/new/150.jpg" alt="精准和立体定向放射治疗新技术研讨会">
+                            </div>
+                        </div>
+                        <div class="news-text">
+                            <span>精准和立体定向放射治疗新技术研讨会</span>
+                            <p>由广东省生物医学工程学会物理分会、中山大学附属肿瘤医院，安科锐医疗设备（上海）有限公司与广州市泰佳电子科技有限公司联合主办的&ldquo;精准和立体定向放射治疗新技术研讨会&rdquo;于2016年12月10日在广州南沙大酒店举行。...</p>
+                            <small>2017-05-18</small>
+                            <b class="normal">查看详情</b>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="/article.aspx?id=35" title="主办的“广东省粤东地区二〇一六年医科达放疗高端新技术研讨会”">
+                        <div class="news-pic">
+                            <div class="pic-box">
+                                <img src="/userfiles/images/new/14815565132135.jpg" alt="主办的“广东省粤东地区二〇一六年医科达放疗高端新技术研讨会”">
+                            </div>
+                        </div>
+                        <div class="news-text">
+                            <span>主办的“广东省粤东地区二〇一六年医科达放疗高端新技术研讨会”</span>
+                            <p>
+                                由医科达医疗器械有限公司与广州市泰佳电子科技有限公司联合主办的&ldquo;广东省粤东地区二〇一六年医科达放疗高端新技术研讨会&rdquo;已于2016年1月16日在汕头龙光喜来登酒店举行。
+                                本次研讨会邀请了广东省放射肿瘤学会及省内...
+                            </p>
+                            <small>2016-12-12</small>
+                            <b class="normal">查看详情</b>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <!-- 分页按钮 -->
+            <div class="normal">
+
+            </div>
+            <!-- 点击加载更多 -->
+        </div>
+    </div>
+</div>
 
