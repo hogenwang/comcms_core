@@ -90,10 +90,14 @@ namespace COMCMS.Web.Controllers
             ViewBag.cfg = cfg;
             string templatesname = "";//模板名称
             if (!string.IsNullOrEmpty(model.TemplateFile))
+            {
                 templatesname = model.TemplateFile.Replace(".cshtml", "").Replace(".aspx", "");
-
-            return View(model);
-
+                return View(templatesname, model);
+            }
+            else
+            {
+                return View(model);
+            }
         }
         #endregion
 
@@ -137,9 +141,14 @@ namespace COMCMS.Web.Controllers
             }
             string templatesname = "";//模板名称
             if (!string.IsNullOrEmpty(kind.TemplateFile))
+            { 
                 templatesname = kind.DetailTemplateFile.Replace(".cshtml", "").Replace(".aspx", "");
-
-            return View(entity);
+                return View(templatesname, entity);
+            }
+            else
+            {
+                return View(entity);
+            }
         }
         #endregion
     }
