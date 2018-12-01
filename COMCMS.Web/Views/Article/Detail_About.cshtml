@@ -4,8 +4,7 @@
     ViewBag.keywords = Model.Keyword;
     ViewBag.description = Model.Description;
     IList<Article> alist = Article.FindAll(Article._.KId == Model.KId, Article._.Sequence.Asc(), null, 0, 0);
-    int topkid = ViewBag.kind.PId >0? ViewBag.kind.PId : ViewBag.kind.Id;
-
+    int topkid = ViewBag.kind.PId > 0 ? ViewBag.kind.PId : ViewBag.kind.Id;
 }
 <div class="banner normal sec-banner">
     <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size:cover"></em>
