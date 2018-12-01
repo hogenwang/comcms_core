@@ -12,6 +12,8 @@
     <link href="~/images/default/style.css" rel="stylesheet" />
     <script src="~/js/html5shiv.min.js"></script>
     <script src="~/js/jquery2.min.js"></script>
+    <script src="~/js/layer/layer.js"></script>
+    <script src="~/js/jquery.form.js"></script>
     <script src="~/js/swpier/swiper.min.js"></script>
     <script src="~/js/public.js"></script>
 </head>
@@ -150,11 +152,11 @@
                     <!-- 底部在线留言 -->
                     <div class="foot-msg">
                         <span>在线留言</span>
-                        <form class="foot-msg-box" id="msgFormFooter" onsubmit="return PostMsgFooter();">
-                            <p><input type="text" name="name" id="name" value="" placeholder="姓名"></p>
-                            <p><input type="text" name="phone" id="phone" value="" placeholder="电话"></p>
-                            <p class="f-ta"><textarea name="intro" id="intro" rows="8" cols="80" placeholder="留言内容"></textarea></p>
-                            <p><button type="submit" name="submit" id="submit">提    交</button></p>
+                        <form class="foot-msg-box" id="footerMessageForm" name="footerMessageForm" onsubmit="return doPostFooterMessage();" asp-antiforgery="true">
+                            <p><input type="text" name="name" id="name" value="" placeholder="姓名" required></p>
+                            <p><input type="text" name="phone" id="phone" value="" placeholder="电话" required></p>
+                            <p class="f-ta"><textarea name="content" id="content" rows="8" cols="80" placeholder="留言内容" required></textarea></p>
+                            <p><button type="submit">提    交</button></p>
                         </form>
                     </div>
                     <!-- 底部导航栏 PC版下显示-->

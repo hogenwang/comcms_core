@@ -5,7 +5,8 @@
     ViewBag.description = Model.Description;
     IList<Article> alist = Article.FindAll(Article._.KId == Model.KId, Article._.Sequence.Asc(), null, 0, 0);
     int topkid = ViewBag.kind.PId > 0 ? ViewBag.kind.PId : ViewBag.kind.Id;
-
+    //获取同级分类
+    IList<ArticleCategory> sameList = ArticleCategory.FindAll(ArticleCategory._.PId == ViewBag.kind.PId, ArticleCategory._.Rank.Asc(), null, 0, 0);
 }
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=VR85PcmdMnsofqPUCk6bD4ay"></script>
 <div class="banner normal sec-banner">
@@ -15,9 +16,9 @@
 <div class="sec-nav">
     <div class="cont">
         <ul class="sec-nav-list">
-            @foreach (Article a in alist)
+            @foreach (var k in sameList)
             {
-                <li class="@(a.Id == Model.Id?"sec-on":"")"><a asp-controller="Article" asp-action="Detail" asp-route-id="@(a.Id)" title="@a.Title">@a.Title</a></li>
+                <li class="@(k.Id == Model.KId?"sec-on":"")"><a asp-controller="Article" asp-action="Index" asp-route-id="@(k.Id)" title="@k.KindName">@k.KindName</a></li>
             }
         </ul>
 
@@ -104,5 +105,6 @@
 <script>
     $(function () {
         $("#nav_@(topkid)").addClass("nav-on");
+        map();
     })
 </script>

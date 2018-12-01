@@ -485,25 +485,98 @@ $(function () {
     });
 })
 
+function doPostFooterMessage() {
+    var name = $("#name").val();
+    var phone = $("#phone").val();
+    var content = $("#content").val();
+    if (!name) {
+        alert('请输入您的姓名！');
+        return false;
+    }
+    if (!phone) {
+        alert('请输入您的电话号码！');
+        return false;
+    }
+    if (!content) {
+        alert('请填写您的留言内容！');
+        return false;
+    }
+    var strQueryString = $("#footerMessageForm").formSerialize();
+    var loading = layer.load(0, { shade: [0.2, '#000'] });
+    $.ajax({
+        type: "POST",
+        url: "/Server/DoPostMessage",
+        data: strQueryString,
+        dataType: "JSON",
+        success: function (data) {
+            layer.close(loading);
+            if (data.status == "success") {
+                layer.msg(data.message, {
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function () {
+                    window.location.href = window.location.href;
+                });
+            }
+            else {
+                alert(data.message);
+            }
+        },
+        error: function () {
+            console.log('执行出错！');
+            layer.close(loading);
+            alert('执行错误，请联系管理员！');
+        }
+    });
+    return false;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function doPostMessage() {
+    var name = $("#name_txt").val();
+    var phone = $("#phone_txt").val();
+    var content = $("#content_txt").val();
+    var __RequestVerificationToken = $("intput[name='__RequestVerificationToken']").val();
+    if (!name) {
+        alert('请输入您的姓名！');
+        return false;
+    }
+    if (!phone) {
+        alert('请输入您的电话号码！');
+        return false;
+    }
+    if (!content) {
+        alert('请填写您的留言内容！');
+        return false;
+    }
+    var postData = {
+        name: name,
+        phone: phone,
+        content: content,
+        __RequestVerificationToken: __RequestVerificationToken
+    };
+    var loading = layer.load(0, { shade: [0.2, '#000'] });
+    $.ajax({
+        type: "POST",
+        url: "/Server/DoPostMessage",
+        data: postData,
+        dataType: "JSON",
+        success: function (data) {
+            layer.close(loading);
+            if (data.status == "success") {
+                layer.msg(data.message, {
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function () {
+                    window.location.href = window.location.href;
+                });
+            }
+            else {
+                alert(data.message);
+            }
+        },
+        error: function () {
+            console.log('执行出错！');
+            layer.close(loading);
+            alert('执行错误，请联系管理员！');
+        }
+    });
+    return false;
+}

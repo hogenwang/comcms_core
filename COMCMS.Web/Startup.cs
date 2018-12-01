@@ -103,7 +103,7 @@ namespace COMCMS.Web
         {
             app.Use(async (context, next) =>
             {
-                context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+                //context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
                 await next();
             });
 
