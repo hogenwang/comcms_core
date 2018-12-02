@@ -1,0 +1,100 @@
+﻿@model COMCMS.Core.Category
+@{
+    ViewBag.title = Model.KindName;
+    ViewBag.keywords = Model.Keyword;
+    ViewBag.description = Model.Description;
+    //获取同级分类
+    IList<Category> sameList = Category.FindAll(Category._.PId == 0, Category._.Rank.Asc(), null, 0, 0);
+
+}
+
+<div class="banner normal sec-banner">
+    @if (string.IsNullOrEmpty(Model.BannerImg))
+    {
+        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    }
+    else
+    {
+        <em style="background: url('@Model.BannerImg') center top no-repeat; background-size: 100%;"></em>
+    }
+</div>
+<div class="banner mobile sec-banner">
+    @if (string.IsNullOrEmpty(Model.BannerImg))
+    {
+        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    }
+    else
+    {
+        <em style="background: url('@Model.BannerImg') center top no-repeat; background-size: 100%;"></em>
+    }
+</div>
+    <div class="sec-nav">
+        <div class="cont">
+            <ul class="sec-nav-list">
+                @foreach (var k in sameList)
+                {
+                    <li class="@(k.Id == Model.Id?"sec-on":"")"><a asp-controller="Product" asp-action="Index" asp-route-id="@(k.Id)" title="@k.KindName">@k.KindName</a></li>
+                }
+            </ul>
+
+            <script type="text/javascript">
+                function mbSecNav() {
+                    var num = $('.sec-nav-list li').length;
+                    if (num >= 3) {
+                        $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
+                    } else if (num == 2) {
+                        $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
+                    } else if (num == 1) {
+                        $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
+                    }
+                }
+            </script>
+        </div>
+    </div>
+<!-- 主体内容 -->
+<div class="content proC">
+    <div class="pro-bg">
+        <div class="cont">
+            <!-- 产品列表 -->
+            <div class="pro-cont">
+                <ul class="pro-list" id="listComment">
+                    @foreach (Product p in ViewBag.list)
+                    {
+                        <li>
+                            <a  asp-controller="Product" asp-action="Detail" asp-route-id="@(p.Id)" title="@p.Title">
+                                <div class="pro-pic">
+                                    <div class="pic-box">
+                                        <img src="@p.Pic" alt="@p.Title">
+                                    </div>
+                                </div>
+                                <div class="pro-text">
+                                    <div class="text-box">
+                                        <span>@p.Title</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <!-- 分页按钮 -->
+            <div class="normal">
+                @Html.Raw(Pages.GetPageStr(ViewBag.pagesize, (int)ViewBag.totalCount, ViewBag.page, $"/Product/Index/{Model.Id}" + "?page={0}", 99, 10, ""))
+            </div>
+            <!-- 点击加载更多 -->
+            <div class="click-more mobile" onclick="ShowNextPro();">
+                <i></i>
+            </div>
+            <input type="hidden" name="page" value="1" id="page" />
+            <input type="hidden" name="id" value="1" id="id" />
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $("#nav_P").addClass("nav-on");
+    })
+</script>

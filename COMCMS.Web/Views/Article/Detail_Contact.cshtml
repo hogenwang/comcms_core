@@ -1,0 +1,127 @@
+﻿@model COMCMS.Core.Article
+@{
+    ViewBag.title = Model.Title;
+    ViewBag.keywords = Model.Keyword;
+    ViewBag.description = Model.Description;
+    IList<Article> alist = Article.FindAll(Article._.KId == Model.KId, Article._.Sequence.Asc(), null, 0, 0);
+    int topkid = ViewBag.kind.PId > 0 ? ViewBag.kind.PId : ViewBag.kind.Id;
+    //获取同级分类
+    IList<ArticleCategory> sameList = ArticleCategory.FindAll(ArticleCategory._.PId == ViewBag.kind.PId, ArticleCategory._.Rank.Asc(), null, 0, 0);
+}
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=VR85PcmdMnsofqPUCk6bD4ay"></script>
+<div class="banner normal sec-banner">
+    @if (string.IsNullOrEmpty(ViewBag.kind.BannerImg))
+    {
+        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    }
+    else
+    {
+        <em style="background: url('@ViewBag.kind.BannerImg') center top no-repeat; background-size: 100%;"></em>
+    }
+</div>
+<div class="banner mobile sec-banner">
+    @if (string.IsNullOrEmpty(ViewBag.kind.BannerImg))
+    {
+        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    }
+    else
+    {
+        <em style="background: url('@ViewBag.kind.BannerImg') center top no-repeat; background-size: 100%;"></em>
+    }
+</div>
+
+<div class="sec-nav">
+    <div class="cont">
+        <ul class="sec-nav-list">
+            @foreach (var k in sameList)
+            {
+                <li class="@(k.Id == Model.KId?"sec-on":"")"><a asp-controller="Article" asp-action="Index" asp-route-id="@(k.Id)" title="@k.KindName">@k.KindName</a></li>
+            }
+        </ul>
+
+        <script type="text/javascript">
+            function mbSecNav() {
+                var num = $('.sec-nav-list li').length;
+                if (num >= 3) {
+                    $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
+                } else if (num == 2) {
+                    $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
+                } else if (num == 1) {
+                    $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
+                }
+            }
+        </script>
+    </div>
+</div>
+<!-- 主体内容 -->
+<div class="content cu au">
+    <div class="cu-bg">
+        <div class="cont">
+            <div class="cu-box">
+                <!-- 地图 -->
+                <div class="cu-left">
+                    <div class="maptxt" style="display:none">广东省广州市天河区天河城</div>
+                    <div id="map"></div>
+
+                    <script type="text/javascript">
+                        // 获取地址
+                        function map() {
+                            var index;
+                            var address = $(".maptxt").text();
+                            var title = $(".maptxt").text();
+                            showMap(address, title);
+                        }
+                        // 显示地图
+                        function showMap(address, title) {
+                            var map = new BMap.Map("map");
+                            map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
+                            map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+                            map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+                            map.addControl(new BMap.OverviewMapControl({ isOpen: false, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开, 控制地图的移动
+                            map.clearOverlays(); //清空原来的标注
+
+                            // 根据地址获取经纬度
+                            var localSearch = new BMap.LocalSearch(map);
+                            searchByStationName();
+                            function searchByStationName() {
+                                // 显示地图
+                                localSearch.setSearchCompleteCallback(function (searchResult) {
+                                    var poi = searchResult.getPoi(0);
+                                    console.log(searchResult.getPoi(0));
+                                    var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));   // 创建标注，为要查询的地方对应的经纬度
+                                    map.centerAndZoom(poi.point, 15);
+                                    map.addOverlay(marker);  //将标注添加到地图中
+                                    marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                                });
+                                localSearch.search(address);
+                            }
+                        }
+                    </script>
+                </div>
+                <!-- 公司信息 -->
+                <div class="cu-right">
+                    <div class="cu-title">
+                        <span>COMCMS 内容管理系统</span>
+                        <small>COMCMS Technology Co.，Ltd</small>
+                    </div>
+                    <div class="cu-info">
+                        <ul>
+                            <li>电话：+86-20-88888888</li>
+                            <li>传真：+86-20-88888888</li>
+                            <li>邮箱：<a href="hogenwang@vip.qq.com">hogenwang@vip.qq.com</a></li>
+                            <li>地址：广东省广州市天河区天河城</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#nav_@(topkid)").addClass("nav-on");
+        map();
+    })
+</script>

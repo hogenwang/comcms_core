@@ -1,0 +1,87 @@
+﻿@model COMCMS.Core.Product
+@{
+    ViewBag.title = Model.Title;
+    ViewBag.keywords = Model.Keyword;
+    ViewBag.description = Model.Description;
+
+    IList<Category> sameList = Category.FindAll(Category._.PId == 0, Category._.Rank.Asc(), null, 0, 0);
+
+}
+<div class="banner normal sec-banner">
+    @if (string.IsNullOrEmpty(ViewBag.category.BannerImg))
+    {
+        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    }
+    else
+    {
+        <em style="background: url('@ViewBag.category.BannerImg') center top no-repeat; background-size: 100%;"></em>
+    }
+</div>
+<div class="banner mobile sec-banner">
+    @if (string.IsNullOrEmpty(ViewBag.category.BannerImg))
+    {
+        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    }
+    else
+    {
+        <em style="background: url('@ViewBag.category.BannerImg') center top no-repeat; background-size: 100%;"></em>
+    }
+</div>
+
+<div class="sec-nav">
+    <div class="cont">
+        <ul class="sec-nav-list">
+            @foreach (var k in sameList)
+            {
+                <li class="@(k.Id == Model.KId?"sec-on":"")"><a asp-controller="Product" asp-action="Index" asp-route-id="@(k.Id)" title="@k.KindName">@k.KindName</a></li>
+            }
+        </ul>
+
+        <script type="text/javascript">
+            function mbSecNav() {
+                var num = $('.sec-nav-list li').length;
+                if (num >= 3) {
+                    $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
+                } else if (num == 2) {
+                    $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
+                } else if (num == 1) {
+                    $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
+                }
+            }
+        </script>
+    </div>
+</div>
+<!-- 主体内容 -->
+<div class="content proD proC">
+    <div class="pro-bg">
+        <div class="cont">
+            <div class="proD-title">
+                <span>@Model.Title</span>
+            </div>
+            <div class="proD-text">
+                @if (!string.IsNullOrEmpty(Model.Pic))
+                {
+                <p style="text-align: center"><img alt="" src="@Model.Pic" style="width: 500px; height: 375px" /></p>
+                }
+                
+
+                @Html.Raw(Model.Content)
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 主体内容 -->
+<div class="content au">
+    <div class="au-bg">
+        <div class="cont">
+            @Html.Raw(Model.Content)
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#nav_P").addClass("nav-on");
+    })
+</script>

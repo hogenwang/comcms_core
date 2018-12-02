@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
+    [DisplayName("文章系统")]
+    [Description("文章系统管理，包括文章、文章栏目")]
     public class ArticleController : AdminBaseController
     {
         #region 文章栏目
@@ -20,6 +23,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         /// </summary>
         /// <returns></returns>
         [MyAuthorize( "viewlist",  "articlecategory")]
+        [DisplayName("文章栏目")]
         public IActionResult ArticleCategoryList()
         {
             IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, false, true);
@@ -33,7 +37,20 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //获取上级栏目
             IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, false);
             ViewBag.ListTree = list;
-            //获取模板
+            //获取模板 模板规则，以Index_开头的，为栏目列表，以Detial_开头的为文章详情
+            List<string> listTpls = new List<string>();
+            var asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var asmItem in asms)
+            {
+                var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
+                if (types.Count == 0) continue;
+                foreach (var type in types)
+                {
+                    string viewName = type.Name.Replace("Views_Article_", "") + ".cshtml";
+                    listTpls.Add(viewName);
+                }
+            }
+            ViewBag.ListTpl = listTpls;
             Core.Admin.WriteLogActions("查看添加文章栏目页面；");
             return View();
         }
@@ -69,9 +86,21 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //获取上级栏目
             IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, false);
             ViewBag.ListTree = list;
-            //获取模板
-            //List<string> listtpl = COMCMS.Common.IOHelper.GetDirFiles(new DirectoryInfo(Server.MapPath("~/Views/article")));
-            //ViewBag.ListTpl = listtpl;
+
+            //获取模板 模板规则，以Index_开头的，为栏目列表，以Detial_开头的为文章详情
+            List<string> listTpls = new List<string>();
+            var asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var asmItem in asms)
+            {
+                var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
+                if (types.Count == 0) continue;
+                foreach (var type in types)
+                {
+                    string viewName = type.Name.Replace("Views_Article_", "") + ".cshtml";
+                    listTpls.Add(viewName);
+                }
+            }
+            ViewBag.ListTpl = listTpls;
             Core.Admin.WriteLogActions("查看/编辑文章栏目（id:" + id + "）页面；");
             return View(entity);
         }
@@ -189,6 +218,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         /// </summary>
         /// <returns></returns>
         [MyAuthorize("viewlist", "article")]
+        [DisplayName("文章")]
         public IActionResult ArticleList()
         {
             //获取上级栏目

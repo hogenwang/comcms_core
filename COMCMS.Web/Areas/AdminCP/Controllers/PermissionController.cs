@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Http;
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
     [Area("AdminCP")]
+    [DisplayName("后台权限")]
     public class PermissionController : AdminBaseController
     {
         #region 事件管理
@@ -63,7 +65,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
         [MyAuthorize( "add",  "eventkey",  "JSON")]
         [HttpPost]
-        public IActionResult AddEventKey(FormCollection fc)
+        public IActionResult AddEventKey(IFormCollection fc)
         {
             TargetEvent entity = new TargetEvent();
             entity.EventKey = fc["EventKey"];
@@ -107,6 +109,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         #region 后台栏目管理
         //后台菜单列表
         [MyAuthorize( "viewlist",  "adminmenu")]
+        [DisplayName("后台栏目")]
         public IActionResult AdminMenuList()
         {
             IList<AdminMenu> list = AdminMenu.GetListTree(0, -1, false, true);

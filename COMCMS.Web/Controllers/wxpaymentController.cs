@@ -126,6 +126,5 @@ namespace COMCMS.Web.Controllers
         }
         #endregion
 
-        public wxpaymentController(IConfiguration configuration) : base(configuration){}
     }
 }
