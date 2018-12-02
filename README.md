@@ -51,6 +51,4 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，暂时不带前台�
 ### 捐赠
 - 如果您觉得本源码对您有用，可以给我捐赠一杯咖啡
 
-![捐赠微信码](https://images.gitee.com/uploads/images/2018/1202/202616_4bcf10db_390643.jpeg "s_wx.jpg")
-
-![捐赠支付宝码](https://images.gitee.com/uploads/images/2018/1202/202707_fd6b1cb4_390643.jpeg "s_zfb.jpg")
+![捐赠微信码](https://images.gitee.com/uploads/images/2018/1202/202616_4bcf10db_390643.jpeg "s_wx.jpg")  ![捐赠支付宝码](https://images.gitee.com/uploads/images/2018/1202/202707_fd6b1cb4_390643.jpeg "s_zfb.jpg")
