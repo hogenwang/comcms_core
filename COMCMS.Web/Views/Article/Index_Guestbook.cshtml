@@ -1,0 +1,83 @@
+﻿@model COMCMS.Core.ArticleCategory
+@{
+    ViewBag.title = Model.KindName;
+    ViewBag.keywords = Model.Keyword;
+    ViewBag.description = Model.Description;
+    //获取同级分类
+    IList<ArticleCategory> sameList = ArticleCategory.FindAll(ArticleCategory._.PId == Model.PId, ArticleCategory._.Rank.Asc(), null, 0, 0);
+    int topkid = Model.PId > 0 ? Model.PId : Model.Id;
+}
+
+<div class="banner normal sec-banner">
+    @if (string.IsNullOrEmpty(Model.BannerImg))
+    {
+        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    }
+    else
+    {
+        <em style="background: url('@Model.BannerImg') center top no-repeat; background-size: 100%;"></em>
+    }
+</div>
+<div class="banner mobile sec-banner">
+    @if (string.IsNullOrEmpty(Model.BannerImg))
+    {
+        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    }
+    else
+    {
+        <em style="background: url('@Model.BannerImg') center top no-repeat; background-size: 100%;"></em>
+    }
+</div>
+@if (Model.PId > 0)
+{
+    <div class="sec-nav">
+        <div class="cont">
+            <ul class="sec-nav-list">
+                @foreach (var k in sameList)
+                {
+                    <li class="@(k.Id == Model.Id?"sec-on":"")"><a asp-controller="Article" asp-action="Index" asp-route-id="@(k.Id)" title="@k.KindName">@k.KindName</a></li>
+                }
+            </ul>
+
+            <script type="text/javascript">
+                function mbSecNav() {
+                    var num = $('.sec-nav-list li').length;
+                    if (num >= 3) {
+                        $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
+                    } else if (num == 2) {
+                        $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
+                    } else if (num == 1) {
+                        $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
+                    }
+                }
+            </script>
+        </div>
+    </div>
+}
+
+
+<!-- 主体内容 -->
+<div class="content msg au">
+    <div class="cu-bg">
+        <div class="cont">
+            <div class="msg-box">
+                <div class="msg-title">
+                    <span>在线留言</span>
+                </div>
+                <form class="msg-form" id="msgForm" onsubmit="return doPostMessage();">
+                    <p><label class="normal">姓       名：</label><input type="text" name="name_txt" id="name_txt" value="" placeholder="姓       名："></p>
+                    <p><label class="normal">联系电话：</label><input type="text" name="tel_txt" id="tel_txt" value="" placeholder="联系电话："></p>
+                    <p class="msg-ta"><label class="normal">留言内容：</label><textarea name="content_txt" id="content_txt" rows="8" cols="80" placeholder="留言内容："></textarea></p>
+                    <p><button type="submit">提交留言</button></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $("#nav_@(topkid)").addClass("nav-on");
+    })
+</script>

@@ -99,7 +99,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             ViewBag.ListKinds = list;
             return View();
         }
-        [MyAuthorize("viewlist", "guestbook")]
+        [MyAuthorize("viewlist", "guestbook","JSON")]
         public IActionResult GetGuesbookList(string keyword, int page = 1, int limit = 20)
         {
             int numPerPage, currentPage, startRowIndex;
@@ -156,7 +156,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         }
         [HttpPost]
         [MyAuthorize("edit", "guestbook", "JSON")]
-        public IActionResult EditGuestbook(FormCollection fc)
+        public IActionResult EditGuestbook(IFormCollection fc)
         {
             string id = fc["Id"];
             if (!Utils.IsInt(id) || int.Parse(id) <= 0)

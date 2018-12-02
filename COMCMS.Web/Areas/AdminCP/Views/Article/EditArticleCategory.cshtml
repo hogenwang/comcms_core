@@ -76,28 +76,34 @@
                     </div>
                 </div>
 
-                @*<div class="form-group">
-                        <label class="col-sm-3 control-label">栏目模板：</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" name="TemplateFile" id="TemplateFile">
-                                @foreach (var s in ViewBag.ListTpl)
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">栏目模板：</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" asp-for="TemplateFile">
+                            @foreach (string s in ViewBag.ListTpl)
+                            {
+                                if (s.ToLower().StartsWith("index"))
                                 {
-                                    <option value="@s" @(Model.TemplateFile == s?"selected":"")>@s</option>
+                                    <option value="@s">@s</option>
                                 }
-                            </select>
-                        </div>
+                            }
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">文章模板：</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" name="DetailTemplateFile" id="DetailTemplateFile">
-                                @foreach (var s in ViewBag.ListTpl)
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">文章模板：</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" asp-for="DetailTemplateFile">
+                            @foreach (string s in ViewBag.ListTpl)
+                            {
+                                if (s.ToLower().StartsWith("detail"))
                                 {
-                                    <option value="@s" @(Model.DetailTemplateFile == s?"selected":"")>@s</option>
+                                    <option value="@s">@s</option>
                                 }
-                            </select>
-                        </div>
-                    </div>*@
+                            }
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">隐藏栏目：</label>
                     <div class="col-sm-8">

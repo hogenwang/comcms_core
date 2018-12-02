@@ -15,7 +15,7 @@ namespace COMCMS.Web.Filter
 {
     public class CheckFilterAttribute : ActionFilterAttribute
     {
-        public override async void OnActionExecuting(ActionExecutingContext context)
+        public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (!context.ModelState.IsValid)
             {

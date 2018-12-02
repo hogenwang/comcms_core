@@ -1,17 +1,102 @@
-function Init () {
-	if (!(/msie [6|7|8|9]/i.test(navigator.userAgent))) {
-		var wow = new WOW({
-		    boxClass: 'wow',
-		    animateClass: 'animated',
-		    offset: 0,
-		    mobile: true,
-		    live: true
-		});
-		wow.init()
-	}
-
-	backTop();
+function init() {
+    if (!IsPC()) {
+        window_w = $(window).width();
+        console.log(window.innerWidth);
+        if (window_w >= 768) {
+            $('#main').addClass('pc').removeClass('mb');
+            resize(0, 1200, window_w);
+        } else {
+            $('#main').addClass('mb').removeClass('pc');
+            resize(0, 640, window_w);
+        }
+        console.log('false: ' + IsPC());
+        console.log('false: ' + window_w);
+        JPlaceHolder.init();
+    } else {
+        window_w = window.screen.width;
+        console.log('true: ' + window_w);
+        $('#main').addClass('mb').removeClass('pc');
+        resize(0, 640, window_w);
+    }
 }
+function IsPC() {
+    isPC = true;
+    if ((navigator.userAgent.match(/(iPhone|iPod|Android|ios|iPad|Touch|PlayBook|SymbianOS|Windows Phone|Nokia)/))) {
+        isPC = true;
+
+    } else {
+        isPC = false;
+    }
+
+    return isPC;
+}
+// 鑷€傚簲灞忓箷澶у皬
+function resize(min_w, max_w, window_w) {
+    // var font_size = Math.round((window_w/max_w*6.25)*10000)/100;
+    font_size = Math.round((window_w / max_w * 6.25) * 10000) / 100;
+
+    if (window_w >= min_w && window_w <= max_w) {
+        $('html').css({ 'font-size': font_size + "%" });
+    } else if (window_w > max_w) {
+        $('html').css({ 'font-size': "625%" });
+    }
+}
+var JPlaceHolder = {
+
+    _check: function () {
+        return 'placeholder' in document.createElement('input');
+    },
+
+    init: function () {
+        if (!this._check()) {
+            this.fix();
+        }
+    },
+
+    fix: function () {
+        jQuery(':input[placeholder]').each(function (index, element) {
+            var self = $(this), txt = self.attr('placeholder');
+            self.wrap($('<div></div>').css({ position: 'relative', zoom: '1', border: 'none', background: 'none', padding: 'none', margin: 'none' }));
+            var pos = self.position(), h = self.outerHeight(true), paddingleft = self.css('padding-left');
+            var holder = $('<span></span>').text(txt).css({ position: 'absolute', left: pos.left, top: pos.top, height: h, lienHeight: h, paddingLeft: paddingleft, color: '#aaa' }).appendTo(self.parent());
+            self.focusin(function (e) {
+                holder.hide();
+            }).focusout(function (e) {
+                if (!self.val()) {
+                    holder.show();
+                }
+            });
+            holder.click(function (e) {
+                holder.hide();
+                self.focus();
+            });
+        });
+    }
+};
+function cds() {
+    var deg = 0;
+    var int;
+    var hover = 0;
+    $('.cds-list li').on('mouseover', function () {
+        console.log(1);
+        if (hover === 0) {
+            var that = $(this);
+            int = setInterval(function () {
+                deg += 10;
+                that.find('b')[0].style.transform = 'rotate(' + deg + 'deg)';
+            }, 50);
+            hover = 1;
+        }
+    }).on('mouseleave', function () {
+        if (hover == 1) {
+            clearInterval(int);
+            deg = 0;
+            $(this).find('b')[0].style.transform = 'rotate(0deg)';
+            hover = 0;
+        }
+    });
+}
+
 
 // 导航栏
 function navHover () {
@@ -400,25 +485,111 @@ $(function () {
     });
 })
 
+function doPostFooterMessage() {
+    var name = $("#name").val();
+    var phone = $("#phone").val();
+    var content = $("#content").val();
+    if (!name) {
+        alert('请输入您的姓名！');
+        return false;
+    }
+    if (!phone) {
+        alert('请输入您的电话号码！');
+        return false;
+    }
+    if (!content) {
+        alert('请填写您的留言内容！');
+        return false;
+    }
+    var strQueryString = $("#footerMessageForm").formSerialize();
+    var loading = layer.load(0, { shade: [0.2, '#000'] });
+    $.ajax({
+        type: "POST",
+        url: "/Server/DoPostMessage",
+        data: strQueryString,
+        dataType: "JSON",
+        success: function (data) {
+            layer.close(loading);
+            if (data.status == "success") {
+                layer.msg(data.message, {
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function () {
+                    window.location.href = window.location.href;
+                });
+            }
+            else {
+                alert(data.message);
+            }
+        },
+        error: function () {
+            console.log('执行出错！');
+            layer.close(loading);
+            alert('执行错误，请联系管理员！');
+        }
+    });
+    return false;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+function doPostMessage() {
+    var name = $("#name_txt").val();
+    var phone = $("#phone_txt").val();
+    var content = $("#content_txt").val();
+    var __RequestVerificationToken = $("intput[name='__RequestVerificationToken']").val();
+    if (!name) {
+        alert('请输入您的姓名！');
+        return false;
+    }
+    if (!phone) {
+        alert('请输入您的电话号码！');
+        return false;
+    }
+    if (!content) {
+        alert('请填写您的留言内容！');
+        return false;
+    }
+    var postData = {
+        name: name,
+        phone: phone,
+        content: content,
+        __RequestVerificationToken: __RequestVerificationToken
+    };
+    var loading = layer.load(0, { shade: [0.2, '#000'] });
+    $.ajax({
+        type: "POST",
+        url: "/Server/DoPostMessage",
+        data: postData,
+        dataType: "JSON",
+        success: function (data) {
+            layer.close(loading);
+            if (data.status == "success") {
+                layer.msg(data.message, {
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                }, function () {
+                    window.location.href = window.location.href;
+                });
+            }
+            else {
+                alert(data.message);
+            }
+        },
+        error: function () {
+            console.log('执行出错！');
+            layer.close(loading);
+            alert('执行错误，请联系管理员！');
+        }
+    });
+    return false;
+}
+var menu_show = 0;
+function mbNav() {
+    if (menu_show === 0) {
+        $('.menu-btn').addClass('menu-on');
+        $('.menu-box').slideDown('slow');
+        menu_show = 1;
+    } else {
+        $('.menu-box').slideUp('slow', function () {
+            $('.menu-btn').removeClass('menu-on');
+        });
+        menu_show = 0;
+    }
+}
