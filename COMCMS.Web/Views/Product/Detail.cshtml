@@ -1,39 +1,39 @@
-﻿@model COMCMS.Core.Article
+﻿@model COMCMS.Core.Product
 @{
     ViewBag.title = Model.Title;
     ViewBag.keywords = Model.Keyword;
     ViewBag.description = Model.Description;
-    IList<Article> alist = Article.FindAll(Article._.KId == Model.KId, Article._.Sequence.Asc(), null, 0, 0);
-    int topkid = ViewBag.kind.PId >0? ViewBag.kind.PId : ViewBag.kind.Id;
+
+    IList<Category> sameList = Category.FindAll(Category._.PId == 0, Category._.Rank.Asc(), null, 0, 0);
 
 }
 <div class="banner normal sec-banner">
-    @if (string.IsNullOrEmpty(ViewBag.kind.BannerImg))
+    @if (string.IsNullOrEmpty(ViewBag.category.BannerImg))
     {
         <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
     }
     else
     {
-        <em style="background: url('@ViewBag.kind.BannerImg') center top no-repeat; background-size: 100%;"></em>
+        <em style="background: url('@ViewBag.category.BannerImg') center top no-repeat; background-size: 100%;"></em>
     }
 </div>
 <div class="banner mobile sec-banner">
-    @if (string.IsNullOrEmpty(ViewBag.kind.BannerImg))
+    @if (string.IsNullOrEmpty(ViewBag.category.BannerImg))
     {
         <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
     }
     else
     {
-        <em style="background: url('@ViewBag.kind.BannerImg') center top no-repeat; background-size: 100%;"></em>
+        <em style="background: url('@ViewBag.category.BannerImg') center top no-repeat; background-size: 100%;"></em>
     }
 </div>
 
 <div class="sec-nav">
     <div class="cont">
         <ul class="sec-nav-list">
-            @foreach (Article a in alist)
+            @foreach (var k in sameList)
             {
-                <li class="@(a.Id == Model.Id?"sec-on":"")"><a asp-controller="Article" asp-action="Detail" asp-route-id="@(a.Id)" title="@a.Title">@a.Title</a></li>
+                <li class="@(k.Id == Model.KId?"sec-on":"")"><a asp-controller="Product" asp-action="Index" asp-route-id="@(k.Id)" title="@k.KindName">@k.KindName</a></li>
             }
         </ul>
 
@@ -52,6 +52,27 @@
     </div>
 </div>
 <!-- 主体内容 -->
+<div class="content proD proC">
+    <div class="pro-bg">
+        <div class="cont">
+            <div class="proD-title">
+                <span>@Model.Title</span>
+            </div>
+            <div class="proD-text">
+                @if (!string.IsNullOrEmpty(Model.Pic))
+                {
+                <p style="text-align: center"><img alt="" src="@Model.Pic" style="width: 500px; height: 375px" /></p>
+                }
+                
+
+                @Html.Raw(Model.Content)
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 主体内容 -->
 <div class="content au">
     <div class="au-bg">
         <div class="cont">
@@ -61,6 +82,6 @@
 </div>
 <script>
     $(function () {
-        $("#nav_@(topkid)").addClass("nav-on");
+        $("#nav_P").addClass("nav-on");
     })
 </script>

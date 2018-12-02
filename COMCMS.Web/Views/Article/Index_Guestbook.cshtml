@@ -9,7 +9,24 @@
 }
 
 <div class="banner normal sec-banner">
-    <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    @if (string.IsNullOrEmpty(Model.BannerImg))
+    {
+        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    }
+    else
+    {
+        <em style="background: url('@Model.BannerImg') center top no-repeat; background-size: 100%;"></em>
+    }
+</div>
+<div class="banner mobile sec-banner">
+    @if (string.IsNullOrEmpty(Model.BannerImg))
+    {
+        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    }
+    else
+    {
+        <em style="background: url('@Model.BannerImg') center top no-repeat; background-size: 100%;"></em>
+    }
 </div>
 @if (Model.PId > 0)
 {

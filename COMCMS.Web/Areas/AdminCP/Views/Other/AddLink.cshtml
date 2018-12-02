@@ -81,6 +81,8 @@
 </div>
 <script>
     $(function () {
+        //初始化上传控件
+        $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
         DoPost("addLinkForm");
     })
 </script>

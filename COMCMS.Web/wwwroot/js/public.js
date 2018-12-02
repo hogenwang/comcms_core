@@ -580,3 +580,16 @@ function doPostMessage() {
     });
     return false;
 }
+var menu_show = 0;
+function mbNav() {
+    if (menu_show === 0) {
+        $('.menu-btn').addClass('menu-on');
+        $('.menu-box').slideDown('slow');
+        menu_show = 1;
+    } else {
+        $('.menu-box').slideUp('slow', function () {
+            $('.menu-btn').removeClass('menu-on');
+        });
+        menu_show = 0;
+    }
+}

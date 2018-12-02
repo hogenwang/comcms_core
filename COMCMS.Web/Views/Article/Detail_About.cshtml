@@ -7,7 +7,24 @@
     int topkid = ViewBag.kind.PId > 0 ? ViewBag.kind.PId : ViewBag.kind.Id;
 }
 <div class="banner normal sec-banner">
-    <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size:cover"></em>
+    @if (string.IsNullOrEmpty(ViewBag.kind.BannerImg))
+    {
+        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    }
+    else
+    {
+        <em style="background: url('@ViewBag.kind.BannerImg') center top no-repeat; background-size: 100%;"></em>
+    }
+</div>
+<div class="banner mobile sec-banner">
+    @if (string.IsNullOrEmpty(ViewBag.kind.BannerImg))
+    {
+        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+    }
+    else
+    {
+        <em style="background: url('@ViewBag.kind.BannerImg') center top no-repeat; background-size: 100%;"></em>
+    }
 </div>
 
 <div class="sec-nav">
