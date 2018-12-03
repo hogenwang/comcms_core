@@ -22,7 +22,7 @@ namespace COMCMS.Web.Controllers.api
         #region 微信小程序订单支付
         [HttpGet]
         [CheckFilter]
-        public ReJson DoPayOrder(string ordernum, string random = "", string timeStamp = "", string signature = "")
+        public ReJson DoPayOrder(string ordernum)
         {
             //获取订单
             Order entity = Order.Find(Order._.OrderNum == ordernum);

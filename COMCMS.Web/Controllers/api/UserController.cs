@@ -31,7 +31,7 @@ namespace COMCMS.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [CheckFilter]
-        public ReJson UserLogin(string code, string random = "", string timeStamp = "", string signature = "")
+        public ReJson UserLogin(string code)
         {
             if (string.IsNullOrEmpty(code))
             {
@@ -141,7 +141,7 @@ namespace COMCMS.Web.Controllers.api
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public ReJson SyncWeixinInfo(string sessionkey, string userInfo, int inviteid = 0, string random = "", string timeStamp = "", string signature = "")
+        public ReJson SyncWeixinInfo(string sessionkey, string userInfo, int inviteid = 0)
         {
             if (string.IsNullOrEmpty(sessionkey))
             {
