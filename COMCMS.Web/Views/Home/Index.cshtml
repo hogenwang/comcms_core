@@ -178,13 +178,13 @@
                 <div class="i-au-left">
                     <div class="pic-box">
                         <a href="/Article/detail/1" title="关于我们">
-                            <img src="@(about.Pic)" alt="关于我们">
+                            <img src="@(about?.Pic)" alt="关于我们">
                         </a>
                     </div>
                 </div>
                 <div class="i-au-right">
                     <p>
-                        @(Utils.CutString(Utils.NoHTML(about.Content), 700))
+                        @(Utils.CutString(Utils.NoHTML(about?.Content), 700))
                     </p>
                     <a href="/Article/detail/1" title="查看详情" class="read-d">查看详情</a>
                 </div>
