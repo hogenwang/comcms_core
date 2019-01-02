@@ -11,7 +11,6 @@ using XCode;
 using System.Web;
 using COMCMS.Web.Filter;
 using NewLife.Log;
-using static COMCMS.Web.Models.APIModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Senparc.Weixin.WxOpen;

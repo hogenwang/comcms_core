@@ -19,7 +19,7 @@
                         <select class="form-control m-b" name="KId" id="KId">
                             @foreach (var m in ViewBag.ListKinds)
                             {
-                                <option value="@m.Id">@m.KindName</option>
+                                <option value="@m.Id" @(ViewBag.lastkid == m.Id?"selected":"")>@m.KindName</option>
                             }
                         </select>
                     </div>

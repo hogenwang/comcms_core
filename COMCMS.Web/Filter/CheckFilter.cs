@@ -120,7 +120,7 @@ namespace COMCMS.Web.Filter
             string timeStamp = pars["timeStamp"];
             //判断时间有效性
             DateTime postTime = Utils.StampToDateTime(timeStamp);
-            if (postTime < DateTime.Now.AddSeconds(-120))//30秒有效期
+            if (postTime < DateTime.UtcNow.AddSeconds(-120))//30秒有效期
             {
                 return new ReJson(40004, "signature 错误！", 1);
             }
