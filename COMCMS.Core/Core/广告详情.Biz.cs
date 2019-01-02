@@ -305,6 +305,10 @@ namespace COMCMS.Core
         {
             Ads model = new Ads();
             model = Find(_.Id == aid);
+            if (model == null)
+            {
+                return null;
+            }
             if (model.TId == 4)
             {
                 List<ImgAds> listimg = new List<ImgAds>();

@@ -18,7 +18,7 @@
 <div class="banner normal">
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            @foreach (var img in bannerPC)
+            @foreach (var img in bannerPC??new List<ImgAds>())
             {
                 <div class="swiper-slide">
                     <a href="@img.link" title="@(img.alt)" style="background: url('@img.img') center top no-repeat; background-size:cover"></a>
@@ -35,7 +35,7 @@
 <div class="banner mobile">
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            @foreach (var img in bannerPC)
+            @foreach (var img in bannerPC ?? new List<ImgAds>())
             {
                 <div class="swiper-slide">
                     <a href="@img.link" title="@(img.alt)" style="background: url('@img.img') center top no-repeat; background-size: 100%;"></a>
