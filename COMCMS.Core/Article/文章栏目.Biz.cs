@@ -325,6 +325,35 @@ namespace COMCMS.Core
                 }
             }
         }
+
+        /// <summary>
+        /// 获取当前位置
+        /// </summary>
+        /// <param name="kid">类别ID</param>
+        /// <returns></returns>
+        public static string GetNav(int kid)
+        {
+            string tpl = "<a href=\"{0}\" title=\"{1}\">{1}</a>";
+            string re = string.Empty;
+            ArticleCategory model = Find(_.Id == kid);
+            if (model == null)
+            {
+                re = string.Format(tpl, "/", "首页") + re;//查到最后肯定是没有
+            }
+            else
+            {
+                re += " &gt; " + string.Format(tpl, "/article/index/" + model.Id, model.KindName);
+                if (model.PId != 0)
+                {
+                    re = GetNav(model.PId) + re;
+                }
+                else
+                {
+                    re = string.Format(tpl, "/", "首页") + re;//查到最后肯定是没有
+                }
+            }
+            return re;
+        }
         #endregion
     }
 }
