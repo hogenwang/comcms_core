@@ -177,7 +177,7 @@ namespace COMCMS.Common
         {
             if (str.Length != 11)
                 return false;
-            return Regex.IsMatch(str, @"^1[3|4|5|7|8][0-9]\d{4,8}$");
+            return Regex.IsMatch(str, @"^1[3|4|5|7|8|9][0-9]\d{4,8}$");
         }
         /// <summary>
         /// 是否为ip
@@ -308,6 +308,19 @@ namespace COMCMS.Common
         #endregion
 
         #region 获取部分
+
+        /// <summary>
+        /// 获取配置
+        /// </summary>
+        /// <param name="path">路径，如：SystemSetting:COMCMSPrefixKey</param>
+        /// <returns></returns>
+        public static string GetSetting(string path)
+        {
+            string value = Configuration[path];
+
+            return value;
+        }
+
         /// <summary>
         /// 返回字符串真实长度, 1个汉字长度为2
         /// </summary>
