@@ -73,7 +73,7 @@ namespace COMCMS.Web
             //部分系统配置
             services.Configure<SystemSetting>(Configuration.GetSection("SystemSetting"));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2); ;
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(JsonOptionsConfig.ConfigJsonOptions);
             //防止汉字被自动编码
             services.Configure<WebEncoderOptions>(options =>
             {
