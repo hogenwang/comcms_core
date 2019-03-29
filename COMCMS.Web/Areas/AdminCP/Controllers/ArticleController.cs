@@ -276,8 +276,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             IList<Article> list = Article.FindAll(ex, Article._.Sequence.Asc().And(Article._.Id.Desc()), null, startRowIndex, numPerPage);
             long totalCount = Article.FindCount(ex, Article._.Sequence.Asc().And(Article._.Id.Desc()), null, startRowIndex, numPerPage);
-            return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
-            //return Json(new { total = totalCount, rows = list }, JsonRequestBehavior.AllowGet);
+            //return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
+            return Json(new { total = totalCount, rows = list });
         }
 
         //添加文章

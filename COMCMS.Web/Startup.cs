@@ -69,14 +69,18 @@ namespace COMCMS.Web
             {
                 options.IdleTimeout = TimeSpan.FromSeconds(120);
                 options.Cookie.HttpOnly = true;
-                
+
             });
             //部分系统配置
             services.Configure<SystemSetting>(Configuration.GetSection("SystemSetting"));
 
             services
-                .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddMvc(options =>
+                {
+                    //记录错误
+                    options.Filters.Add<HttpGlobalExceptionFilter>();
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(JsonOptionsConfig.ConfigJsonOptions);
 
             //防止汉字被自动编码
@@ -84,11 +88,7 @@ namespace COMCMS.Web
             {
                 options.TextEncoderSettings = new TextEncoderSettings(UnicodeRanges.All);
             });
-            //记录错误
-            services.AddMvc(options =>
-            {
-                options.Filters.Add<HttpGlobalExceptionFilter>();
-            });
+
             services.AddSenparcGlobalServices(Configuration)//Senparc.CO2NET 全局注册
             .AddSenparcWeixinServices(Configuration);//Senparc.Weixin 注册（如果使用Senparc.Weixin SDK则添加）
 
@@ -122,7 +122,7 @@ namespace COMCMS.Web
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-            
+
 
             //其他错误页面处理
             app.UseStatusCodePagesWithReExecute("/StatusCode/{0}");
@@ -148,7 +148,7 @@ namespace COMCMS.Web
                 routes.MapRoute(
                 name: "article",
                 template: "{title}/index.html",
-                defaults:new { controller ="Home", action= "Article" }
+                defaults: new { controller = "Home", action = "Article" }
                 );
                 routes.MapRoute(
                 name: "article2",
