@@ -23,6 +23,7 @@ using Senparc.CO2NET.RegisterServices;
 using Senparc.Weixin;
 using Senparc.CO2NET.Cache;
 using System.Configuration;
+using COMCMS.Web.Configuration;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Options;
@@ -73,7 +74,11 @@ namespace COMCMS.Web
             //部分系统配置
             services.Configure<SystemSetting>(Configuration.GetSection("SystemSetting"));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2).AddJsonOptions(JsonOptionsConfig.ConfigJsonOptions);
+            services
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(JsonOptionsConfig.ConfigJsonOptions);
+
             //防止汉字被自动编码
             services.Configure<WebEncoderOptions>(options =>
             {

@@ -32,6 +32,7 @@
     <Folder Include="Areas\AdminCP\Models\" />
     <Folder Include="wwwroot\lib\webuploader\" />
     <Folder Include="wwwroot\userfiles\" />
+    <Folder Include="Configuration\" />
   </ItemGroup>
 
   <ItemGroup>
