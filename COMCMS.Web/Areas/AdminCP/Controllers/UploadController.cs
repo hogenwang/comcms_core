@@ -264,6 +264,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
                     break;
             }
+            filepath += imgPath;//存放路径
+            thumbsFilePath += imgPath;//缩略图路径
             //文件名字
             string imgname = Utils.GetOrderNum() + Utils.GetFileExtName(upload.FileName);
             switch (attach.IsRandomFileName)
@@ -357,7 +359,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 fileName = imgname,
                 uploaded = 1,
-                url = $"/{attach.AttachPatch}/images/{imgPath.Replace("\\", "/")}/" + imgname
+                url = $"/{attach.AttachPatch}/files/{imgPath.Replace("\\", "/")}/" + imgname
             };
             return Json(successJson);
             //return Content(string.Format(tpl, $"/{attach.AttachPatch}/fales/{imgPath.Replace("\\", "/")}/" + imgname, callback, ""), "text/html");
