@@ -687,6 +687,12 @@ namespace COMCMS.Common
         public static string GetIP()
         {
             string userHostAddress = MyHttpContext.Current.Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            //2019-05-11 增加反向代理获取真实IP
+            string xForwardedForAddress = MyHttpContext.Current.Request.Headers["X-Forwarded-For"];
+            if (!string.IsNullOrEmpty(userHostAddress) && !string.IsNullOrEmpty(xForwardedForAddress) && userHostAddress != xForwardedForAddress)
+            {
+                return xForwardedForAddress;
+            }
             if (!string.IsNullOrEmpty(userHostAddress) && Utils.IsIP(userHostAddress))
             {
                 if (userHostAddress == "::1")
