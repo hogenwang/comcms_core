@@ -41,7 +41,15 @@
                         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
                     </button>
                 }
-
+                <button id="btn_edit" type="button" class="btn btn-outline btn-default" onclick="top.showDialog('addarticle','批量迁移文章','/AdminCP/Article/MoveArticle',0,0)">
+                    <span class="glyphicon glyphicon-move" aria-hidden="true"></span> 批量迁移
+                </button>
+                <button id="btn_delete" type="button" class="btn btn-outline btn-default" onclick="doBatchHide()">
+                    <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span> 批量隐藏
+                </button>
+                <button id="btn_delete" type="button" class="btn btn-outline btn-default" onclick="doBatchShow()">
+                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span> 批量显示
+                </button>
                 @*<button id="btn_edit" type="button" class="btn btn-outline btn-default">
             <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>修改
         </button>
@@ -105,45 +113,45 @@
                                 minimumCountColumns: 2,             //最少允许的列数
                                 clickToSelect: true,                //是否启用点击选中行
                                 height: 0,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
-                                uniqueId: "Id",                     //每一行的唯一标识，一般为主键列
+                                uniqueId: "id",                     //每一行的唯一标识，一般为主键列
                                 showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
                                 cardView: false,                    //是否显示详细视图
                                 detailView: false,                   //是否显示父子表
                                 columns: [{
                                     checkbox: true
                                 }, {
-                                    field: 'Id',
+                                    field: 'id',
                                     title: 'ID'
                                 }, {
-                                    field: 'ArticleKind.KindName',
+                                    field: 'articleKind.kindName',
                                     title: '所属栏目'
                                 }, {
-                                    field: 'Title',
+                                    field: 'title',
                                     title: '文章标题'
                                 }, {
-                                    field: 'Sequence',
+                                    field: 'sequence',
                                     title: '排序'
                                 }, {
-                                    field: 'AddTime',
+                                    field: 'addTime',
                                     title: '添加时间'
                                 }, {
-                                    field: 'IsNew',
+                                    field: 'isNew',
                                     title: '最新',
                                     align: 'center',
                                     formatter: 'newFormatter'
                                 }, {
-                                    field: 'IsRecommend',
+                                    field: 'isRecommend',
                                     title: '推荐',
                                     align: 'center',
                                     formatter: 'recommendFormatter'
                                 }, {
-                                    field: 'IsHide',
+                                    field: 'isHide',
                                     title: '隐藏',
                                     align: 'center',
                                     formatter: 'hideFormatter'
                                 },
                                 {
-                                    field: 'Id',
+                                    field: 'id',
                                     title: '操作',
                                     formatter: 'actionFormatter'
                                 }
@@ -205,6 +213,92 @@
 
                         return oInit;
                     };
+    function doBatchHide() {
+                    var list = $('#tb_departments').bootstrapTable('getAllSelections');
+                    var ids = [];
+                    if (!list || list.length <1) {
+                        layer.alert("请至少选择一篇文章！", { icon: 2 });
+                        return false;
+                    }
+                    list.map(function (item, index) {
+                        if (item.Id) {
+                            ids.push(item.id);
+                        }
+                    })
+                    //alert(JSON.stringify(ids));
+                    //执行操作
+                    var loading = layer.load(0, {
+                        shade: [0.2, '#000'] //0.1透明度的背景
+                    });
+                    $.ajax({
+                        type: "POST",
+                        url: "/AdminCP/Article/DoBatchHideArticle",
+                        data: { ids: JSON.stringify(ids)},
+                        dataType: "JSON",
+                        success: function (data) {
+                            if (data.status == "success") {
+                                layer.close(loading);
+                                layer.msg(data.message, {
+                                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                        doSearch();
+                                });
+                            } else {
+                                layer.close(loading);
+                                layer.alert(data.message, { icon: 2 });
+                            }
+                        },
+                        error: function () {
+                            layer.close(loading);
+                            layer.alert('执行错误，请联系管理员！', { icon: 2 });
+                        }
+                    });
+                    return false;
+                    }
+
+    function doBatchShow() {
+                    var list = $('#tb_departments').bootstrapTable('getAllSelections');
+                    var ids = [];
+                    if (!list || list.length <1) {
+                        //alert('请至少选择一行！');
+                        layer.alert("请至少选择一篇文章！", { icon: 2 });
+                        return false;
+                    }
+                    list.map(function (item, index) {
+                        if (item.Id) {
+                            ids.push(item.id);
+                        }
+                    })
+                    //alert(JSON.stringify(ids));
+                    //执行操作
+                    var loading = layer.load(0, {
+                        shade: [0.2, '#000'] //0.1透明度的背景
+                    });
+                    $.ajax({
+                        type: "POST",
+                        url: "/AdminCP/Article/DoBatchShowArticle",
+                        data: { ids: JSON.stringify(ids)},
+                        dataType: "JSON",
+                        success: function (data) {
+                            if (data.status == "success") {
+                                layer.close(loading);
+                                layer.msg(data.message, {
+                                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                        doSearch();
+                                });
+                            } else {
+                                layer.close(loading);
+                                layer.alert(data.message, { icon: 2 });
+                            }
+                        },
+                        error: function () {
+                            layer.close(loading);
+                            layer.alert('执行错误，请联系管理员！', { icon: 2 });
+                        }
+                    });
+                    return false;
+                }
             </script>
         </div>
     </div>

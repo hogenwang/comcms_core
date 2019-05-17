@@ -466,5 +466,131 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             return Json(tip);
         }
         #endregion
+
+        #region 迁移文章
+        [HttpGet]
+        [MyAuthorize("batch", "article")]
+        public IActionResult MoveArticle()
+        {
+            //获取上级栏目
+            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, false);
+            ViewBag.ListKinds = list;
+            return View();
+        }
+        [HttpPost]
+        [MyAuthorize("batch", "article", "JSON")]
+        public IActionResult MoveArticle(int from, int to)
+        {
+            if (from <= 0 || to <= 0)
+            {
+                tip.Message = "请选择好栏目";
+                return Json(tip);
+            }
+            if (from == to)
+            {
+                tip.Message = "迁移前后栏目一致，无法迁移";
+                return Json(tip);
+            }
+            Article.Update("KId=" + to, "KId=" + from);
+            Core.Admin.WriteLogActions("迁移文章(from:" + from + ",to:" + to + ");");
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "迁移文章成功";
+            tip.ReturnUrl = "close";
+            return Json(tip);
+        }
+        #endregion
+
+        #region 批量隐藏文章
+        [HttpPost]
+        [MyAuthorize("batch", "article", "JSON")]
+        public IActionResult DoBatchHideArticle(string ids)
+        {
+            if (string.IsNullOrEmpty(ids))
+            {
+                tip.Message = "请最少选择一篇文章！";
+                return Json(tip);
+            }
+            List<int> listIds = new List<int>();
+            try
+            {
+                listIds = JsonConvert.DeserializeObject<List<int>>(ids);
+            }
+            catch (Exception ex)
+            {
+                tip.Message = "转换出错：" + ex.Message;
+                return Json(tip);
+            }
+
+            if (listIds == null || listIds.Count < 1)
+            {
+                tip.Message = "请至少选择一篇文章！";
+                return Json(tip);
+            }
+
+            IList<Article> list = Article.FindAll(Article._.Id.In(listIds), null, null, 0, 0);
+            if (list == null || list.Count < 1)
+            {
+                tip.Message = "请至少选择一篇文章！";
+                return Json(tip);
+            }
+
+            foreach (var item in list)
+            {
+                item.IsHide = 1;
+            }
+            
+            list.Update();
+            Admin.WriteLogActions($"批量隐藏文章：{ids};");
+            tip.Message = "批量隐藏文章成功！";
+            tip.Status = JsonTip.SUCCESS;
+            return Json(tip);
+        }
+        #endregion
+
+        #region 批量显示文章
+        [HttpPost]
+        [MyAuthorize("batch", "article", "JSON")]
+        public IActionResult DoBatchShowArticle(string ids)
+        {
+            if (string.IsNullOrEmpty(ids))
+            {
+                tip.Message = "请最少选择一篇文章！";
+                return Json(tip);
+            }
+            List<int> listIds = new List<int>();
+            try
+            {
+                listIds = JsonConvert.DeserializeObject<List<int>>(ids);
+            }
+            catch (Exception ex)
+            {
+                tip.Message = "转换出错：" + ex.Message;
+                return Json(tip);
+            }
+
+            if (listIds == null || listIds.Count < 1)
+            {
+                tip.Message = "请至少选择一篇文章！";
+                return Json(tip);
+            }
+
+            IList<Article> list = Article.FindAll(Article._.Id.In(listIds), null, null, 0, 0);
+            if (list == null || list.Count < 1)
+            {
+                tip.Message = "请至少选择一篇文章！";
+                return Json(tip);
+            }
+
+            foreach (var item in list)
+            {
+                item.IsHide = 0;
+            }
+            list.Update();
+            Admin.WriteLogActions($"批量显示文章：{ids};");
+            tip.Message = "批量显示文章成功！";
+            tip.Status = JsonTip.SUCCESS;
+            return Json(tip);
+        }
+        #endregion
     }
 }
