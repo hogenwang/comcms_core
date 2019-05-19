@@ -46,5 +46,14 @@ namespace COMCMS.Web.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        #region 测试
+        [Route("{path:regex([[a-zA-Z-/]])}/index.html")]
+        public IActionResult Test(string path="")
+        {
+            string tel = "13332835377";
+            return Content(tel.Substring(tel.Length - 5)+";path:"+path);
+        }
+        #endregion
+
     }
 }

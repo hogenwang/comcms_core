@@ -14,10 +14,11 @@ using Senparc.Weixin.TenPay.V3;
 using System.Collections;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using COMCMS.Web.Common;
 
 namespace COMCMS.Web.Controllers
 {
-    public class wxpaymentController : HomeController
+    public class wxpaymentController : HomeBaseController
     {
         #region 微信支付异步通知
         /// <summary>
