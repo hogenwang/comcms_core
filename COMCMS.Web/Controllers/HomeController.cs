@@ -47,12 +47,30 @@ namespace COMCMS.Web.Controllers
         }
 
         #region 测试
-        [Route("{path:regex([[a-zA-Z-/]])}/index.html")]
-        public IActionResult Test(string path="")
+        [Route("{path:regex([[a-zA-Z0-9-]])}/index.html")]
+        public IActionResult Test(string path = "")
         {
             string tel = "13332835377";
-            return Content(tel.Substring(tel.Length - 5)+";path:"+path);
+            return Content(tel.Substring(tel.Length - 5) + ";path:" + path);
         }
+        [Route("{path1:regex([[a-zA-Z0-9-]])}/{path2:regex([[a-zA-Z0-9-]])}/index.html")]
+        public IActionResult Test2(string path1 = "", string path2 = "")
+        {
+            ArticleController ac = new ArticleController();
+            return ac.Index(1);
+            //return Content(";ath1:" + path1+";path2:"+path2);
+        }
+        #endregion
+
+        #region 测试拼音
+        public IActionResult Test3()
+        {
+            return Content(PinYinHelper.GetPinyin("关于 我们about us") + "|" + PinYinHelper.GetFirstPinyin("关于 我们") + "||" + "/sd/dsd/sd/sd/sd/sd".Count(x => x == '/'));
+        }
+        #endregion
+
+        #region 系统文章、商品路由
+
         #endregion
 
     }

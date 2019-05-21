@@ -6,7 +6,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
-    <PackageReference Include="NewLife.Core" Version="8.1.2019.415" />
+    <PackageReference Include="NewLife.Core" Version="8.1.2019.510" />
+    <PackageReference Include="PinYinConverterCore" Version="1.0.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
     <PackageReference Include="ZKWeb.System.Drawing" Version="4.0.1" />
   </ItemGroup>

@@ -100,6 +100,17 @@ namespace COMCMS.Common
         }
 
         /// <summary>
+        /// 判断是否为正确的
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool IsFilePath(string str)
+        {
+            //A-Z, a-z, 0-9, -, /, =
+            return Regex.IsMatch(str, @"[A-Za-z0-9-\/]");
+        }
+
+        /// <summary>
         /// 验证对象是否为货币格式
         /// </summary>
         /// <param name="obj">验证对象</param>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Tables Version="9.9.6911.41890" NameSpace="COMCMS.Core" ConnName="dbconn" Output="" BaseClass="Entity" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:schemaLocation="http://www.newlifex.com https://raw.githubusercontent.com/NewLifeX/X/master/XCode/ModelSchema.xsd" xmlns="http://www.newlifex.com/ModelSchema.xsd">
+<Tables Version="9.11.7044.42317" NameSpace="COMCMS.Core" ConnName="dbconn" Output="" BaseClass="Entity" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:schemaLocation="http://www.newlifex.com https://raw.githubusercontent.com/NewLifeX/X/master/XCode/ModelSchema.xsd" xmlns="http://www.newlifex.com/ModelSchema.xsd">
   <Table Name="Admin" Description="管理员" DbType="SqlServer">
     <Columns>
       <Column Name="Id" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
@@ -203,6 +203,7 @@
       <Column Name="KindInfo" DataType="String" Length="-1" Description="栏目详细介绍" />
       <Column Name="Pic" DataType="String" Length="250" Description="图片" />
       <Column Name="AdsId" DataType="Int32" Description="广告ID" />
+      <Column Name="FilePath" DataType="String" Length="100" Description="目录路径" />
     </Columns>
   </Table>
   <Table Name="Article" Description="文章" DbType="SqlServer">
@@ -243,6 +244,7 @@
       <Column Name="UpdateTime" DataType="DateTime" Description="时间" />
       <Column Name="Location" DataType="String" Length="100" Description="路径" />
       <Column Name="FilePath" DataType="String" Length="100" Description="存放目录" />
+      <Column Name="FileName" DataType="String" Description="文件名称" />
     </Columns>
   </Table>
   <Table Name="Category" Description="商品栏目" DbType="SqlServer">
@@ -278,6 +280,7 @@
       <Column Name="KindInfo" DataType="String" Length="-1" Description="栏目详细介绍" />
       <Column Name="Pic" DataType="String" Length="250" Description="图片" />
       <Column Name="AdsId" DataType="Int32" Description="广告ID" />
+      <Column Name="FilePath" DataType="String" Length="100" Description="目录路径" />
     </Columns>
   </Table>
   <Table Name="Product" Description="商品" DbType="SqlServer">
@@ -347,6 +350,7 @@
       <Column Name="UpdateTime" DataType="DateTime" Description="时间" />
       <Column Name="Location" DataType="String" Length="100" Description="路径" />
       <Column Name="FilePath" DataType="String" Length="100" Description="存放目录" />
+      <Column Name="FileName" DataType="String" Description="文件名称" />
     </Columns>
   </Table>
   <Table Name="Link" Description="友情连接详情" DbType="SqlServer">
