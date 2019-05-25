@@ -19,6 +19,7 @@ namespace COMCMS.Web.Controllers
         public IActionResult Index(int id = 0, int page = 1)
         {
             ArticleCategory model = ArticleCategory.FindById(id);
+            
             if (model == null)
             {
                 return AlertAndGoBack("系统找不到本记录");
@@ -88,16 +89,13 @@ namespace COMCMS.Web.Controllers
             }
 
             ViewBag.cfg = cfg;
-            string templatesname = "";//模板名称
+            string templatesname = "Index.cshtml";//模板名称
             if (!string.IsNullOrEmpty(model.TemplateFile))
             {
-                templatesname = model.TemplateFile.Replace(".cshtml", "").Replace(".aspx", "");
-                return View(templatesname, model);
+                templatesname = model.TemplateFile;
+                //return Content(templatesname);
             }
-            else
-            {
-                return View(model);
-            }
+            return View("~/Views/Article/" + templatesname, model); //固定死就是这个
         }
         #endregion
 

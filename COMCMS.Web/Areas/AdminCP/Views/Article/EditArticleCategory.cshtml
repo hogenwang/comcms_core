@@ -28,7 +28,13 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">栏目名称：</label>
                     <div class="col-sm-8">
-                        <input id="KindName" name="KindName" maxlength="200" type="text" class="form-control" value="@Model.KindName" required aria-required="true" placeholder="填写栏目名称">
+                        <input id="KindName" name="KindName" maxlength="200" type="text" class="form-control" value="@Model.KindName" required aria-required="true" placeholder="填写栏目名称" onblur="aoutoTransform()">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">栏目路径：</label>
+                    <div class="col-sm-8">
+                        <input id="FilePath" name="FilePath" maxlength="100" type="text" class="form-control" required aria-required="true" value="@Model.FilePath" placeholder="填写栏目路径，SEO优化使用，最多支持4级目录，可以输入字母、数字和-">
                     </div>
                 </div>
                 <div class="form-group">
@@ -37,12 +43,7 @@
                         <input id="SubTitle" type="text" class="form-control" name="SubTitle" placeholder="栏目副标题，非必填" value="@Model.SubTitle" maxlength="200">
                     </div>
                 </div>
-                <div class="form-group" style="display:none">
-                    <label class="col-sm-3 control-label">栏目优化名称：</label>
-                    <div class="col-sm-8">
-                        <input id="KindDomain" name="KindDomain" maxlength="200" type="text" class="form-control" value="@Model.KindDomain" aria-required="true" placeholder="栏目优化名称,请填写英文或数字或-">
-                    </div>
-                </div>
+
                 <div class="form-group">
                     <label class="col-sm-3 control-label">Banner图片：</label>
                     <div class="col-sm-8">
@@ -163,5 +164,29 @@
         $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp", notwater: true });
         DoPost("editArticleKindForm");
         CKEDITOR.replace('KindInfo');
-    })
+    });
+    function aoutoTransform() {
+        var title = $("#KindName").val();
+        var filePath = $("#FilePath").val();
+        if (!filePath) {
+            $.ajax({
+            type: "POST",
+            url: "/AdminCP/Server/Hanzi2Pinyin",
+            data: { name: title},
+            dataType: "JSON",
+            success: function (data) {
+                if (data.status == "success") {
+                    if (data.message) {
+                        $("#FilePath").val(data.message);
+                    }
+                } else {
+                    layer.alert(data.message, { icon: 2 });
+                }
+            },
+            error: function () {
+                layer.alert('执行错误，请联系管理员！', { icon: 2 });
+            }
+        });
+        }
+    }
 </script>

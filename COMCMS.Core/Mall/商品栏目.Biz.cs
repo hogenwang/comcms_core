@@ -132,6 +132,22 @@ namespace COMCMS.Core
 
             return Find(_.Id == id);
         }
+
+        /// <summary>根据目录查找</summary>
+        /// <param name="path">目录</param>
+        /// <returns>实体对象</returns>
+        public static Category FindByFilePath(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return null;
+
+            // 实体缓存
+            if (Meta.Count < 1000) return Meta.Cache.Find(e => e.FilePath == path);
+
+            // 单对象缓存
+            //return Meta.SingleCache[id];
+
+            return Find(_.FilePath == path);
+        }
         /// <summary>
         /// 根据父ID查询所有子项
         /// </summary>

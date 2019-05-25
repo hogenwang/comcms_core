@@ -71,7 +71,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 return Json(tip);
             }
 
-            if (!model.FilePath.StartsWith("/"))
+            if (model.FilePath.StartsWith("/"))
             {
                 tip.Message = "栏目路径请以/开头！";
                 return Json(tip);
@@ -165,7 +165,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "栏目路径请以/开头！";
                 return Json(tip);
             }
-            if (!model.FilePath.EndsWith("/"))
+            if (model.FilePath.EndsWith("/"))
             {
                 tip.Message = "栏目路径结尾不用加上/";
                 return Json(tip);
@@ -203,6 +203,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     alist.Save();
                 }
             }
+            bool idNeedUpdateAllArticleFilePath = entity.FilePath == model.FilePath;
             //赋值
             entity.PId = model.PId;
             entity.KindName = model.KindName;
@@ -225,10 +226,23 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.KindDomain = model.KindDomain;
             entity.Rank = model.Rank;
             entity.Pic = model.Pic;
-            model.FilePath = model.FilePath;
+            entity.FilePath = model.FilePath;
 
 
             entity.Save();
+            //修改所有文章的路径
+            if (idNeedUpdateAllArticleFilePath)
+            {
+                IList<Article> listArticles = Article.FindAll(Article._.KId == entity.Id, null, null, 0, 0);
+                if(listArticles !=null && listArticles.Count > 0)
+                {
+                    foreach (var item in listArticles)
+                    {
+                        item.FilePath = entity.FilePath;
+                    }
+                    listArticles.BatchUpdate();
+                }
+            }
             Core.Admin.WriteLogActions("修改文章栏目(id:" + entity.Id + ");");
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "修改文章栏目成功";
