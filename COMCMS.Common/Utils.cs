@@ -75,6 +75,32 @@ namespace COMCMS.Common
         /// 配送状态 "未配送", "配货中", "已配送", "已收到", "退货中", "已退货"
         /// </summary>
         public static string[] DeliverState = { "未配送", "配货中", "已配送", "已收到", "退货中", "已退货" };
+        /// <summary>
+        /// cms类型
+        /// </summary>
+        public enum CMSType
+        {
+            /// <summary>
+            /// 文章分类
+            /// </summary>
+            ArticleCategory=0,
+            /// <summary>
+            /// 文章
+            /// </summary>
+            Article=1,
+            /// <summary>
+            /// 商品分类
+            /// </summary>
+            ProductCategory=2,
+            /// <summary>
+            /// 商品详情
+            /// </summary>
+            Product=3,
+            /// <summary>
+            /// 首页
+            /// </summary>
+            Home=99
+        }
         #endregion
 
         #region 验证部分

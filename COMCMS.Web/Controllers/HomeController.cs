@@ -47,7 +47,7 @@ namespace COMCMS.Web.Controllers
         }
 
         #region 测试
-        //[Route("{path:regex([[a-zA-Z0-9-]])}/index.html")]
+        //[Route("c/{*path}/index2.html")]
         //public IActionResult Test(string path = "")
         //{
         //    string tel = "13332835377";
