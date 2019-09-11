@@ -65,7 +65,16 @@ namespace COMCMS.Web.Controllers
         #region 测试拼音
         public IActionResult Test3()
         {
-            return Content(PinYinHelper.GetPinyin("关于 我们about us") + "|" + PinYinHelper.GetFirstPinyin("关于 我们") + "||" + "/sd/dsd/sd/sd/sd/sd".Count(x => x == '/'));
+            var mac = Utils.GetMacs().ToList();
+            string re = "";
+            foreach (var item in mac)
+            {
+                if (string.IsNullOrEmpty(re))
+                    re = item.ToHex();
+                else
+                    re += "-" + item.ToHex();
+            }
+            return Content(re);
         }
         #endregion
 

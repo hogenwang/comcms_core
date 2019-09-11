@@ -9,6 +9,9 @@ using System.Net;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
+using System.Net.NetworkInformation;
+using System.Linq;
+using System.Net.Sockets;
 
 namespace COMCMS.Common
 {
@@ -1066,6 +1069,24 @@ namespace COMCMS.Common
             分销商认证 = 999
         }
         #endregion
+
+        private static String[] _Excludes = new[] { "Loopback", "VMware", "VBox", "Virtual", "Teredo", "Microsoft", "VPN", "VNIC", "IEEE" };
+        /// <summary>获取所有网卡MAC地址</summary>
+        /// <returns></returns>
+        public static IEnumerable<Byte[]> GetMacs()
+        {
+            foreach (var item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (_Excludes.Any(e => item.Description.Contains(e))) continue;
+                if (item.Speed < 1_000_000) continue;
+
+                var addrs = item.GetIPProperties().UnicastAddresses.Where(e => e.Address.AddressFamily == AddressFamily.InterNetwork).ToArray();
+                if (addrs.All(e => IPAddress.IsLoopback(e.Address))) continue;
+
+                var mac = item.GetPhysicalAddress()?.GetAddressBytes();
+                if (mac != null && mac.Length == 6) yield return mac;
+            }
+        }
 
     }
 

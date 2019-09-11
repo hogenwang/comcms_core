@@ -71,12 +71,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 return Json(tip);
             }
 
-            if (model.FilePath.StartsWith("/"))
+            if (!model.FilePath.StartsWith("/"))
             {
                 tip.Message = "栏目路径请以/开头！";
                 return Json(tip);
             }
-            if (!model.FilePath.EndsWith("/"))
+            if (model.FilePath.EndsWith("/"))
             {
                 tip.Message = "栏目路径结尾不用加上/";
                 return Json(tip);

@@ -5,17 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MailKit" Version="2.1.5.1" />
-    <PackageReference Include="Microsoft.AspNetCore.App" Version="2.2.0" />
+    <PackageReference Include="MailKit" Version="2.3.1.6" />
+    <PackageReference Include="Microsoft.AspNetCore.App"/>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
-    <PackageReference Include="MimeKit" Version="2.1.5.1" />
-    <PackageReference Include="MySql.Data" Version="8.0.16" />
-    <PackageReference Include="NewLife.XCode" Version="9.11.2019.510" />
+    <PackageReference Include="MimeKit" Version="2.3.1" />
+    <PackageReference Include="MySql.Data" Version="8.0.17" />
+    <PackageReference Include="NewLife.XCode" Version="9.14.2019.822" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
-    <PackageReference Include="Senparc.Weixin" Version="6.4.3" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.7.4.2" />
-    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.3.0.1" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.4.2.3" />
+    <PackageReference Include="Senparc.Weixin" Version="6.4.13" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.7.17" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.4.5" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.5.4" />
     <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
     <PackageReference Include="ZKWeb.System.Drawing" Version="4.0.1" />
   </ItemGroup>
