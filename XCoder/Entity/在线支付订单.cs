@@ -182,6 +182,14 @@ namespace COMCMS.Core
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Title", "订单标题", "")]
         public String Title { get { return _Title; } set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
+
+        private String _OutTradeNo;
+        /// <summary>支付成功流水号</summary>
+        [DisplayName("支付成功流水号")]
+        [Description("支付成功流水号")]
+        [DataObjectField(false, false, true, 100)]
+        [BindColumn("OutTradeNo", "支付成功流水号", "")]
+        public String OutTradeNo { get { return _OutTradeNo; } set { if (OnPropertyChanging(__.OutTradeNo, value)) { _OutTradeNo = value; OnPropertyChanged(__.OutTradeNo); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -215,6 +223,7 @@ namespace COMCMS.Core
                     case __.TypeId : return _TypeId;
                     case __.MyType : return _MyType;
                     case __.Title : return _Title;
+                    case __.OutTradeNo : return _OutTradeNo;
                     default: return base[name];
                 }
             }
@@ -243,6 +252,7 @@ namespace COMCMS.Core
                     case __.TypeId : _TypeId = value.ToInt(); break;
                     case __.MyType : _MyType = value.ToInt(); break;
                     case __.Title : _Title = Convert.ToString(value); break;
+                    case __.OutTradeNo : _OutTradeNo = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -316,6 +326,9 @@ namespace COMCMS.Core
             /// <summary>订单标题</summary>
             public static readonly Field Title = FindByName(__.Title);
 
+            /// <summary>支付成功流水号</summary>
+            public static readonly Field OutTradeNo = FindByName(__.OutTradeNo);
+
             static Field FindByName(String name) { return Meta.Table.FindByName(name); }
         }
 
@@ -384,6 +397,9 @@ namespace COMCMS.Core
 
             /// <summary>订单标题</summary>
             public const String Title = "Title";
+
+            /// <summary>支付成功流水号</summary>
+            public const String OutTradeNo = "OutTradeNo";
         }
         #endregion
     }
@@ -454,6 +470,9 @@ namespace COMCMS.Core
 
         /// <summary>订单标题</summary>
         String Title { get; set; }
+
+        /// <summary>支付成功流水号</summary>
+        String OutTradeNo { get; set; }
         #endregion
 
         #region 获取/设置 字段值

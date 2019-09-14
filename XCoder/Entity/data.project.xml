@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Tables Version="9.11.7044.42317" NameSpace="COMCMS.Core" ConnName="dbconn" Output="" BaseClass="Entity" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:schemaLocation="http://www.newlifex.com https://raw.githubusercontent.com/NewLifeX/X/master/XCode/ModelSchema.xsd" xmlns="http://www.newlifex.com/ModelSchema.xsd">
+<Tables Version="9.14.7173.39578" NameSpace="COMCMS.Core" ConnName="dbconn" Output="" BaseClass="Entity" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:schemaLocation="http://www.newlifex.com https://raw.githubusercontent.com/NewLifeX/X/master/XCode/ModelSchema.xsd" xmlns="http://www.newlifex.com/ModelSchema.xsd">
   <Table Name="Admin" Description="管理员" DbType="SqlServer">
     <Columns>
       <Column Name="Id" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
@@ -446,6 +446,7 @@
       <Column Name="LastModTime" DataType="DateTime" Description="最后操作时间" />
       <Column Name="OrderType" DataType="Int32" Description="订单类型，0为商品订单" />
       <Column Name="MyType" DataType="Int32" Description="系统类型" />
+      <Column Name="OutTradeNo" DataType="String" Length="100" Description="支付成功流水号" />
     </Columns>
   </Table>
   <Table Name="OrderDetail" Description="订单详情" DbType="SqlServer">
@@ -513,6 +514,7 @@
       <Column Name="TypeId" DataType="Int32" Description="支付的类型" />
       <Column Name="MyType" DataType="Int32" Description="系统类型" />
       <Column Name="Title" DataType="String" Description="订单标题" />
+      <Column Name="OutTradeNo" DataType="String" Length="100" Description="支付成功流水号" />
     </Columns>
   </Table>
   <Table Name="GuestbookCategory" Description="留言分类" DbType="SqlServer">

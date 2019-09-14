@@ -454,6 +454,14 @@ namespace COMCMS.Core
         [DataObjectField(false, false, false, 0)]
         [BindColumn("MyType", "系统类型", "")]
         public Int32 MyType { get { return _MyType; } set { if (OnPropertyChanging(__.MyType, value)) { _MyType = value; OnPropertyChanged(__.MyType); } } }
+
+        private String _OutTradeNo;
+        /// <summary>支付成功流水号</summary>
+        [DisplayName("支付成功流水号")]
+        [Description("支付成功流水号")]
+        [DataObjectField(false, false, true, 100)]
+        [BindColumn("OutTradeNo", "支付成功流水号", "")]
+        public String OutTradeNo { get { return _OutTradeNo; } set { if (OnPropertyChanging(__.OutTradeNo, value)) { _OutTradeNo = value; OnPropertyChanged(__.OutTradeNo); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -521,6 +529,7 @@ namespace COMCMS.Core
                     case __.LastModTime : return _LastModTime;
                     case __.OrderType : return _OrderType;
                     case __.MyType : return _MyType;
+                    case __.OutTradeNo : return _OutTradeNo;
                     default: return base[name];
                 }
             }
@@ -583,6 +592,7 @@ namespace COMCMS.Core
                     case __.LastModTime : _LastModTime = value.ToDateTime(); break;
                     case __.OrderType : _OrderType = value.ToInt(); break;
                     case __.MyType : _MyType = value.ToInt(); break;
+                    case __.OutTradeNo : _OutTradeNo = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -758,6 +768,9 @@ namespace COMCMS.Core
             /// <summary>系统类型</summary>
             public static readonly Field MyType = FindByName(__.MyType);
 
+            /// <summary>支付成功流水号</summary>
+            public static readonly Field OutTradeNo = FindByName(__.OutTradeNo);
+
             static Field FindByName(String name) { return Meta.Table.FindByName(name); }
         }
 
@@ -928,6 +941,9 @@ namespace COMCMS.Core
 
             /// <summary>系统类型</summary>
             public const String MyType = "MyType";
+
+            /// <summary>支付成功流水号</summary>
+            public const String OutTradeNo = "OutTradeNo";
         }
         #endregion
     }
@@ -1100,6 +1116,9 @@ namespace COMCMS.Core
 
         /// <summary>系统类型</summary>
         Int32 MyType { get; set; }
+
+        /// <summary>支付成功流水号</summary>
+        String OutTradeNo { get; set; }
         #endregion
 
         #region 获取/设置 字段值
