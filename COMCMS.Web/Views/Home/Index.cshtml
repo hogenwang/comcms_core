@@ -440,6 +440,7 @@
                             </div>
                             }
                         </div>
+                        <div class="swiper-pagination"></div>
                     </div>
                     <div class="swiper-container mobile">
                         <div class="swiper-wrapper">
@@ -455,13 +456,11 @@
                                 </ul>
                             </div>
                             }
-
                         </div>
+                        <div class="swiper-pagination"></div>
                     </div>
                 </div>
 
-                <i class="coop-prev"></i>
-                <i class="coop-next"></i>
             </div>
 
             <script type="text/javascript">
@@ -494,8 +493,21 @@
                     nextButton: '.banner-next',
                     prevButton: '.banner-prev',
                     autoplay: 3000,
-                })
+                });
+
                 $("#nav_0").addClass("nav-on");
+
+                var swiper = new Swiper('.i-coop-cont .swiper-container', {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                    loop: true,
+                    autoplay: 3000,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                });
+
             </script>
         </div>
     </div>
