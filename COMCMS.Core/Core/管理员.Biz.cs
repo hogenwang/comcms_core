@@ -184,8 +184,8 @@ namespace COMCMS.Core
         {
             if (IsAdminLogin())
             {
-                //return Find(_.UserName == SessionHelper.GetSession(sessionAdminNameKey).ToString());
-                return Find(_.UserName == AuthenticationHelper.GetClaim(sessionAdminNameKey));
+                return Find(_.UserName == SessionHelper.GetSession(sessionAdminNameKey).ToString());
+                //return Find(_.UserName == AuthenticationHelper.GetClaim(sessionAdminNameKey));
 
             }
             else
@@ -241,8 +241,8 @@ namespace COMCMS.Core
                     //写入Session 和 Cookies
                     //SessionHelper.WriteSession("rtadminguid", GUID.ToString());
                     //CookiesHelper.WriteCookie("rtadminguid", GUID.ToString(), 120);
-                    //SetAdminInfo(entity.UserName, entity.PassWord, entity.Id, 0, "", GUID.ToString(), entity.Salt);
-                    SetAdminInfoAsync(entity.UserName, entity.PassWord, entity.Id, 0, "", GUID.ToString(), entity.Salt).Wait();
+                    SetAdminInfo(entity.UserName, entity.PassWord, entity.Id, 0, "", GUID.ToString(), entity.Salt);
+                    //SetAdminInfoAsync(entity.UserName, entity.PassWord, entity.Id, 0, "", GUID.ToString(), entity.Salt).Wait();
 
                     return true;
                 }
@@ -255,22 +255,22 @@ namespace COMCMS.Core
         /// <returns>是否登录</returns>
         public static bool IsAdminLogin()
         {
-            //string adminName = SessionHelper.GetSession(sessionAdminNameKey).ToString();//用户名
-            //string adminID = SessionHelper.GetSession(sessionAdminIDKey).ToString();//ID
-            string adminName = AuthenticationHelper.GetClaim(sessionAdminNameKey);//用户名
-            string adminID = AuthenticationHelper.GetClaim(sessionAdminIDKey);//ID
+            string adminName = SessionHelper.GetSession(sessionAdminNameKey).ToString();//用户名
+            string adminID = SessionHelper.GetSession(sessionAdminIDKey).ToString();//ID
+            //string adminName = AuthenticationHelper.GetClaim(sessionAdminNameKey);//用户名
+            //string adminID = AuthenticationHelper.GetClaim(sessionAdminIDKey);//ID
 
             //如果Session失效，则用Cookies判断
             if (string.IsNullOrEmpty(adminName) || string.IsNullOrEmpty(adminID))
             {
-                //string cooAdminName = CookiesHelper.GetCookie(cookiesAdminNameKey);//用户名
-                //string cooAdminID = CookiesHelper.GetCookie(cookiesAdminIDKey);//ID
-                //string cooLoginInfo = CookiesHelper.GetCookie(cookiesAdminInfoKey);//信息
-                //string cooAdminLogID = CookiesHelper.GetCookie(cookiesAdminLogIDKey);//日志GUID
-                string cooAdminName = AuthenticationHelper.GetClaim(cookiesAdminNameKey);//用户名
-                string cooAdminID = AuthenticationHelper.GetClaim(cookiesAdminIDKey);//ID
-                string cooLoginInfo = AuthenticationHelper.GetClaim(cookiesAdminInfoKey);//信息
-                string cooAdminLogID = AuthenticationHelper.GetClaim(cookiesAdminLogIDKey);//日志GUID
+                string cooAdminName = CookiesHelper.GetCookie(cookiesAdminNameKey);//用户名
+                string cooAdminID = CookiesHelper.GetCookie(cookiesAdminIDKey);//ID
+                string cooLoginInfo = CookiesHelper.GetCookie(cookiesAdminInfoKey);//信息
+                string cooAdminLogID = CookiesHelper.GetCookie(cookiesAdminLogIDKey);//日志GUID
+                //string cooAdminName = AuthenticationHelper.GetClaim(cookiesAdminNameKey);//用户名
+                //string cooAdminID = AuthenticationHelper.GetClaim(cookiesAdminIDKey);//ID
+                //string cooLoginInfo = AuthenticationHelper.GetClaim(cookiesAdminInfoKey);//信息
+                //string cooAdminLogID = AuthenticationHelper.GetClaim(cookiesAdminLogIDKey);//日志GUID
 
                 if (string.IsNullOrEmpty(cooAdminID) || string.IsNullOrEmpty(cooAdminName) || string.IsNullOrEmpty(cooLoginInfo) || string.IsNullOrEmpty(cooAdminLogID))
                 {
@@ -298,16 +298,16 @@ namespace COMCMS.Core
                             }
 
                             //重新写入Session 和 Cookies
-                            //SetAdminInfo(model.UserName, model.PassWord, model.Id, 0, "", cooAdminLogID, model.Salt);
+                            SetAdminInfo(model.UserName, model.PassWord, model.Id, 0, "", cooAdminLogID, model.Salt);
 
-                            SetAdminInfoAsync(model.UserName, model.PassWord, model.Id, 0, "", cooAdminLogID, model.Salt).Wait();
+                            //SetAdminInfoAsync(model.UserName, model.PassWord, model.Id, 0, "", cooAdminLogID, model.Salt).Wait();
 
                             return true;
                         }
                         else
                         {
-                            //ClearInfo();//清除信息
-                            ClearInfoAsync().Wait();
+                            ClearInfo();//清除信息
+                            //ClearInfoAsync().Wait();
                             return false;//信息错误
                         }
                     }

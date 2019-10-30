@@ -10,7 +10,7 @@ namespace COMCMS.Web.Configuration
 {
     public class JsonOptionsConfig
     {
-        public static void ConfigJsonOptions(MvcJsonOptions options)
+        public static void ConfigJsonOptions(MvcNewtonsoftJsonOptions options)
         {
             var settings = options.SerializerSettings;
             //日期类型默认格式化处理

@@ -4,31 +4,28 @@ using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
 using System.Threading.Tasks;
+using COMCMS.Common;
+using COMCMS.Web.Common;
+using COMCMS.Web.ExceptionHandler;
+using COMCMS.Web.Models;
+using Lib.Core.MiddlewareExtension.Extension;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.WebEncoders;
-using Microsoft.AspNetCore.Mvc;
-using COMCMS.Common;
-using COMCMS.Web.Models;
-using COMCMS.Web.Common;
-using COMCMS.Web.ExceptionHandler;
-using Lib.Core.MiddlewareExtension.Extension;
-using Senparc.Weixin.Entities;
-using Senparc.CO2NET;
-using Senparc.CO2NET.RegisterServices;
-using Senparc.Weixin;
-using Senparc.CO2NET.Cache;
-using System.Configuration;
-using COMCMS.Web.Configuration;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.WebEncoders;
+using Newtonsoft.Json.Serialization;
+using Senparc.CO2NET;
+using Senparc.CO2NET.Cache;
+using Senparc.CO2NET.RegisterServices;
+using Senparc.Weixin.Entities;
 using Senparc.Weixin.RegisterServices;
-using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace COMCMS.Web
 {
@@ -75,13 +72,12 @@ namespace COMCMS.Web
             services.Configure<SystemSetting>(Configuration.GetSection("SystemSetting"));
 
             services
-                .AddMvc(options =>
+                .AddControllersWithViews(options =>
                 {
                     //记录错误
                     options.Filters.Add<HttpGlobalExceptionFilter>();
                 })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddJsonOptions(JsonOptionsConfig.ConfigJsonOptions);
+                .AddNewtonsoftJson(options =>options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
 
             //防止汉字被自动编码
             services.Configure<WebEncoderOptions>(options =>
@@ -96,22 +92,27 @@ namespace COMCMS.Web
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
             // 设置表单内容限制
-            services.Configure<FormOptions>(formOptions =>
-            {
-                formOptions.ValueLengthLimit = int.MaxValue; // 表单内容大小限制，默认4194304，单位byte
-                formOptions.MultipartBodyLengthLimit = int.MaxValue; // 如果是multipart，默认134217728
-            });
+            //services.Configure<FormOptions>(options =>
+            //{
+            //    //formOptions.ValueLengthLimit = int.MaxValue; // 表单内容大小限制，默认4194304，单位byte
+            //    //formOptions.MultipartBodyLengthLimit = int.MaxValue; // 如果是multipart，默认134217728
+            //    options.ValueCountLimit = int.MaxValue;
+            //    options.ValueLengthLimit = int.MaxValue;
+            //    options.KeyLengthLimit = int.MaxValue;
+            //    options.MultipartBodyLengthLimit = int.MaxValue;
+            //    options.MultipartBoundaryLengthLimit = int.MaxValue;
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider svp, IOptions<SenparcSetting> senparcSetting, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp, IOptions<SenparcSetting> senparcSetting, IOptions<SenparcWeixinSetting> senparcWeixinSetting)
         {
             app.Use(async (context, next) =>
             {
                 context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
                 await next();
             });
-
+            
             if (env.IsDevelopment())
             {
 
@@ -134,25 +135,26 @@ namespace COMCMS.Web
             app.UseCookiePolicy();
             app.UseAuthentication();
             app.UseStaticHttpContext();
+            app.UseRouting();
 
-            app.UseMvc(routes =>
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                   name: "areas",
-                  template: "{area:exists}/{controller=Index}/{action=Index}/{id?}"
+                  pattern: "{area:exists}/{controller=Index}/{action=Index}/{id?}"
                 );
 
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute(
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
                 name: "article",
-                template: "{title}/index.html",
+                pattern: "{title}/index.html",
                 defaults: new { controller = "Home", action = "Article" }
                 );
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                 name: "article2",
-                template: "{title}/",
+                pattern: "{title}/",
                 defaults: new { controller = "Home", action = "Article" }
                 );
             });

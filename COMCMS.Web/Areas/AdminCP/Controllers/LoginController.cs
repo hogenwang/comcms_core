@@ -122,8 +122,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         /// <returns></returns>
         public IActionResult Logout()
         {
-            //Admin.ClearInfo();
-            Admin.ClearInfoAsync().Wait();
+            Admin.ClearInfo();
+            //Admin.ClearInfoAsync().Wait();
             return Redirect("~/AdminCP/Login");
         }
         #endregion
