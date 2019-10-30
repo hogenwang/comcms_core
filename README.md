@@ -4,10 +4,10 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，暂时不带前台�
 
 ### 技术简要
 
-- .net core 2.1.6 (请注意升级本地SDK 或者runtime)
+- .net core 3.0 (请注意升级本地SDK 或者runtime)
 - 数据库：Mysql 5.7 /Mysql 8.0
 - ORM:数据库操作使用XCode，目前支持mysql、sqlserver。详细见：https://github.com/NewLifeX/X
-- 据库驱动使用：MySQL官方驱动，8.0.13
+- 据库驱动使用：MySQL官方驱动，8.0.19
 - 后台模板是H+
 - 编辑器采用CKeditor 支持截图粘贴进去，上传图片采用webuploader
 
@@ -27,7 +27,7 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，暂时不带前台�
 
 - NewLife.UserGroup.WebUploader 大文件上传
 
-- WebTest 测试站点
+- WebTest 测试站点；暂时屏蔽
 
 - data 目录是初始化sql ，目前是mysql
 

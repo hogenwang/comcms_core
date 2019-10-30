@@ -15,7 +15,6 @@ using COMCMS.Core.Models;
 using System.DrawingCore;
 using System.Text;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Primitives;
 using NewLife.UserGroup.WebUploader;
 
@@ -47,9 +46,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     public class UploadController : AdminBaseController
     {
         private readonly SystemSetting _attachsetting;
-        private IHostingEnvironment _env;
+        private IWebHostEnvironment _env;
         private AttachConfigEntity attach;
-        public UploadController(IHostingEnvironment env, IOptions<SystemSetting> attachsetting)
+        public UploadController(IWebHostEnvironment env, IOptions<SystemSetting> attachsetting)
         {
             attach = Config.GetSystemConfig().AttachConfigEntity;
             _env = env;
@@ -424,7 +423,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 var req = HttpContext.Request;
                 var f = Request.Form.Files[0];
 
-                Request.EnableRewind();
+                //Request.EnableRewind();
                 Image image = null;
                 using (StreamReader reader = new StreamReader(req.Body, Encoding.UTF8, true, 1024, true))
                 {

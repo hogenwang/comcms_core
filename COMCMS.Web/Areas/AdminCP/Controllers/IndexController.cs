@@ -16,8 +16,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     [Area("AdminCP")]
     public class IndexController : AdminBaseController
     {
-        private readonly IHostingEnvironment _env;
-        public IndexController(IHostingEnvironment env)
+        private readonly IWebHostEnvironment _env;
+        public IndexController(IWebHostEnvironment env)
         {
             _env = env;
         }
