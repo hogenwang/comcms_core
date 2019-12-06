@@ -483,8 +483,6 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     }
                 }
             }
-
-            //处理三个勾选属性的
             string isnew = Request.Form["IsNew"];
             model.IsNew = isnew == "1" ? 1 : 0;
 
@@ -493,6 +491,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             string IsHide = Request.Form["IsHide"];
             model.IsHide = IsHide == "1" ? 1 : 0;
+            //处理三个勾选属性的
+
             model.Hits = entity.Hits;
             model.UpdateTime = DateTime.Now;
 
@@ -503,8 +503,43 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 content = ThumbnailHelper.SaveRemoteImgForContent(content);
                 model.Content = content;
             }
+
+
+            entity.AddTime = model.AddTime;
+            entity.AdsId = model.AdsId;
+            entity.BannerImg = model.BannerImg;
+            entity.Content = model.Content;
+            entity.Description = model.Description;
+            entity.FilePath = model.FilePath;
+            entity.Hits = model.Hits;
+            entity.Icon = model.Icon;
+            entity.IsBest = model.IsBest;
+            entity.IsComment = model.IsComment;
+            entity.IsDel = model.IsDel;
+            entity.IsHide = model.IsHide;
+            entity.IsLock = model.IsLock;
+            entity.IsMember = model.IsMember;
+            entity.IsNew = model.IsNew;
+            entity.IsRecommend = model.IsRecommend;
+            entity.IsTop = model.IsTop;
+            entity.ItemImg = morIMG;
+            entity.Keyword = model.Keyword;
+            entity.KId = model.KId;
+            entity.LinkURL = model.LinkURL;
+            entity.Location = model.Location;
+            entity.Origin = model.Origin;
+            entity.OriginURL = model.OriginURL;
+            entity.Pic = model.Pic;
+            entity.Sequence = model.Sequence;
+            entity.SubTitle = model.SubTitle;
+            entity.Tags = model.Tags;
+            entity.TemplateFile = model.TemplateFile;
+            entity.Title = model.Title;
+            entity.TitleColor = model.TitleColor;
+            entity.UpdateTime = DateTime.Now;
+
             //model.AuthorId = Core.Admin.GetMyInfo().Id;
-            model.Save();
+            entity.Update();
             //Tag.ModifyTags(model.Tags, RTType.RatuoModule.Article, model.Id, model.Title);
             Core.Admin.WriteLogActions("编辑文章(id:" + model.Id + ");");
             tip.Status = JsonTip.SUCCESS;

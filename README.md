@@ -4,10 +4,10 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，暂时不带前台�
 
 ### 技术简要
 
-- .net core 3.0 (请注意升级本地SDK 或者runtime)
+- .net core 3.1 (请注意升级本地SDK 或者runtime)
 - 数据库：Mysql 5.7 /Mysql 8.0
 - ORM:数据库操作使用XCode，目前支持mysql、sqlserver。详细见：https://github.com/NewLifeX/X
-- 据库驱动使用：MySQL官方驱动，8.0.19
+- 据库驱动使用：MySQL官方驱动，8.0.18
 - 后台模板是H+
 - 编辑器采用CKeditor 支持截图粘贴进去，上传图片采用webuploader
 
@@ -19,7 +19,7 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，暂时不带前台�
 
 - COMCMS.Core 数据库操作核心业务逻辑和实体 采用XCode
 
-- COMCMS.Web .net core 2.1 的MVC网站。
+- COMCMS.Web .net core 3.1 的MVC网站。
 
 - XCoder 代码生成器，跟上述的没任何关系，只是为了生成数据库操作业务逻辑和实体而已。
 
@@ -35,7 +35,7 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，暂时不带前台�
 
 ```
 演示地址（windows server 2019 + IIS）：前台：[前台演示地址](http://123.207.59.192) 后台：[后台演示地址](http://123.207.59.192/AdminCP)
-演示地址2（Centos + Nginx）：后台[http://47.106.32.133/AdminCP]
+
 
 账号密码都是admin
 

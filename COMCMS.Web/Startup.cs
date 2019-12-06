@@ -77,7 +77,10 @@ namespace COMCMS.Web
                     //记录错误
                     options.Filters.Add<HttpGlobalExceptionFilter>();
                 })
-                .AddNewtonsoftJson(options =>options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver());
+                .AddNewtonsoftJson(options => {
+                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                });
 
             //防止汉字被自动编码
             services.Configure<WebEncoderOptions>(options =>
@@ -92,16 +95,16 @@ namespace COMCMS.Web
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
             // 设置表单内容限制
-            //services.Configure<FormOptions>(options =>
-            //{
-            //    //formOptions.ValueLengthLimit = int.MaxValue; // 表单内容大小限制，默认4194304，单位byte
-            //    //formOptions.MultipartBodyLengthLimit = int.MaxValue; // 如果是multipart，默认134217728
-            //    options.ValueCountLimit = int.MaxValue;
-            //    options.ValueLengthLimit = int.MaxValue;
-            //    options.KeyLengthLimit = int.MaxValue;
-            //    options.MultipartBodyLengthLimit = int.MaxValue;
-            //    options.MultipartBoundaryLengthLimit = int.MaxValue;
-            //});
+            services.Configure<FormOptions>(options =>
+            {
+                //formOptions.ValueLengthLimit = int.MaxValue; // 表单内容大小限制，默认4194304，单位byte
+                //formOptions.MultipartBodyLengthLimit = int.MaxValue; // 如果是multipart，默认134217728
+                options.ValueCountLimit = int.MaxValue;
+                options.ValueLengthLimit = int.MaxValue;
+                options.KeyLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = int.MaxValue;
+                options.MultipartBoundaryLengthLimit = int.MaxValue;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
