@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="MailKit" Version="2.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="MimeKit" Version="2.4.1" />
     <PackageReference Include="MySql.Data" Version="8.0.18" />
     <PackageReference Include="NewLife.XCode" Version="9.14.2019.1212" />
