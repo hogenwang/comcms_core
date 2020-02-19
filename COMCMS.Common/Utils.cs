@@ -1053,6 +1053,37 @@ namespace COMCMS.Common
                 return "";
             }
         }
+
+        /// <summary>
+        /// 将对象转换为Int32类型
+        /// </summary>
+        /// <param name="str">要转换的字符串</param>
+        /// <param name="defValue">缺省值</param>
+        /// <returns>转换后的int类型结果</returns>
+        public static int StrToInt(string str, int defValue)
+        {
+            if (string.IsNullOrEmpty(str) || str.Trim().Length >= 11 || !Regex.IsMatch(str.Trim(), @"^([-]|[0-9])[0-9]*(\.\w*)?$"))
+                return defValue;
+
+            int rv;
+            if (Int32.TryParse(str, out rv))
+                return rv;
+
+            return Convert.ToInt32(StrToFloat(str, defValue));
+        }
+        /// <summary>
+        /// string型转换为float型
+        /// </summary>
+        /// <param name="strValue">要转换的字符串</param>
+        /// <param name="defValue">缺省值</param>
+        /// <returns>转换后的int类型结果</returns>
+        public static float StrToFloat(object strValue, float defValue)
+        {
+            if ((strValue == null))
+                return defValue;
+
+            return StrToFloat(strValue.ToString(), defValue);
+        }
         #endregion
 
         #region COMCMS类型
