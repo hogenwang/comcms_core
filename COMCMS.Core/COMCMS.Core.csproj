@@ -13,7 +13,4 @@
     <ProjectReference Include="..\COMCMS.Common\COMCMS.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-  </ItemGroup>
-
 </Project>

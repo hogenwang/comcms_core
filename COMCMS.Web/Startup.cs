@@ -24,6 +24,7 @@ using Newtonsoft.Json.Serialization;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Cache;
 using Senparc.CO2NET.RegisterServices;
+using Senparc.Weixin;
 using Senparc.Weixin.Entities;
 using Senparc.Weixin.RegisterServices;
 
@@ -170,6 +171,7 @@ namespace COMCMS.Web
 
             app.UseMiddlewareExtension(new ResultExceptionHandler());
             IRegisterService register = RegisterService.Start(env, senparcSetting.Value).UseSenparcGlobal();
+            register.UseSenparcWeixin(senparcWeixinSetting.Value, senparcSetting.Value);//微信全局注册，必须！
             //加入HttpContext
             //MyHttpContext.ServiceProvider = svp;
         }

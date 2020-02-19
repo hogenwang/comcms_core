@@ -1,0 +1,194 @@
+﻿@model Senparc.Weixin.MP.Entities.GetMenuResult
+@{
+    ViewBag.Title = "自定义菜单管理";
+}
+    <script src="~/js/vue/vue.min.js"></script>
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins" id="app">
+            <div class="ibox-title">
+                <h5>@ViewBag.Title</h5>
+                <div class="ibox-tools">
+                    <button type="button" class="btn btn-success btn-sm" v-on:click="doPostToWeixin">发送到微信服务器</button>
+                </div>
+            </div>
+            <div class="ibox-content">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width:120px">#</th>
+                            <th>第一列</th>
+                            <th>第二列</th>
+                            <th>第三列</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>一级菜单</td>
+                            <td v-for="item in topitem">
+                                <select class="form-control m-b-sm" v-model="menudata.button[item].type">
+                                    <option value="view" v-for="p in typelist" v-bind:value="p.val">
+                                        {{p.name}}
+                                    </option>
+                                </select>
+                                <input type="text" placeholder="菜单名称" class="form-control m-b-sm" title="菜单名称" v-model="menudata.button[item].name">
+                                <input type="text" placeholder="KEY" class="form-control m-b-sm" title="KEY" v-model="menudata.button[item].key">
+                                <input type="text" placeholder="URL地址" class="form-control m-b-sm" title="URL地址" v-model="menudata.button[item].url">
+                                <input type="text" placeholder="小程序appid" class="form-control m-b-sm" title="小程序appid" v-model="menudata.button[item].appid" v-if="menudata.button[item].type =='miniprogram'">
+                                <input type="text" placeholder="小程序的页面路径" class="form-control m-b-sm" title="小程序的页面路径" v-model="menudata.button[item].pagepath" v-if="menudata.button[item].type =='miniprogram'">
+                            </td>
+                        </tr>
+
+                        <tr v-for="(item,index) in subitem">
+                            <td>二级菜单NO.{{item + 1}}</td>
+                            <td v-for="titem in topitem">
+                                <select class="form-control m-b-sm" v-model="menudata.button[titem].sub_button[item].type">
+                                    <option value="view" v-for="p in typelist" v-bind:value="p.val">
+                                        {{p.name}}
+                                    </option>
+                                </select>
+                                <input type="text" placeholder="菜单名称" class="form-control m-b-sm" title="菜单名称" v-model="menudata.button[titem].sub_button[item].name">
+                                <input type="text" placeholder="KEY" class="form-control m-b-sm" title="KEY" v-model="menudata.button[titem].sub_button[item].key">
+                                <input type="text" placeholder="URL地址" class="form-control m-b-sm" title="URL地址" v-model="menudata.button[titem].sub_button[item].url">
+                                <input type="text" placeholder="小程序appid" class="form-control m-b-sm" title="小程序appid" v-model="menudata.button[titem].sub_button[item].appid" v-if="menudata.button[titem].sub_button[item].type == 'miniprogram'">
+                                <input type="text" placeholder="小程序的页面路径" class="form-control m-b-sm" title="小程序的页面路径" v-model="menudata.button[titem].sub_button[item].pagepath" v-if="menudata.button[titem].sub_button[item].type == 'miniprogram'">
+
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+    <script>
+        var sysmenudata = { button: [] };
+        for (var i = 0; i < 3; i++) {
+            sysmenudata.button.push({
+                type: 'view',
+                name: '',
+                key: '',
+                url: '',
+                appid: '',
+                pagepath: '',
+                media_id: '',
+                sub_button: []
+            });
+            for (j = 0; j < 5; j++) {
+                sysmenudata.button[i].sub_button.push({
+                    type: 'view',
+                    name: '',
+                    key: '',
+                    url: '',
+                    appid: '',
+                    pagepath: '',
+                    media_id: ''
+                })
+            }
+        }
+        //初始化的时候，再修改一下
+        var sysoldmenu = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        if (sysoldmenu.menu) {
+            for (var i = 0; i < 3; i++) {
+                if (sysoldmenu.menu.button[i]) {
+
+                }
+            }
+            sysoldmenu.menu.button.map(function (item, index) {
+                sysmenudata.button[index].name = item.name || '';
+                sysmenudata.button[index].type = item.type || 'view';
+                sysmenudata.button[index].key = item.key || '';
+                sysmenudata.button[index].url = item.url || '';
+                sysmenudata.button[index].appid = item.appid || '';
+                sysmenudata.button[index].pagepath = item.pagepath || '';
+                sysmenudata.button[index].media_id = item.media_id || '';
+
+                if (item.sub_button) {//如果有子菜单
+                    item.sub_button.map(function (sub, i) {
+                        sysmenudata.button[index].sub_button[i].name = sub.name || '';
+                        sysmenudata.button[index].sub_button[i].type = sub.type || '';
+                        sysmenudata.button[index].sub_button[i].key = sub.key || '';
+                        sysmenudata.button[index].sub_button[i].url = sub.url || '';
+                        sysmenudata.button[index].sub_button[i].appid = sub.appid || '';
+                        sysmenudata.button[index].sub_button[i].pagepath = sub.pagepath || '';
+                        sysmenudata.button[index].sub_button[i].media_id = sub.media_id || '';
+                    })
+                }
+            })
+        }
+        var app = new Vue({
+            el: '#app',
+            data:{
+                menuList:@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)),
+                topitem:[0,1,2],
+                subitem: [0, 1, 2, 3, 4],
+                typelist: [
+                    { name: '跳转地址(view)', val: 'view' },
+                    { name: '对接动作处理(click)', val: 'click' },
+                    { name: '扫码(scancode_push)', val: 'scancode_push' },
+                    { name: '小程序(miniprogram)', val:'miniprogram'}
+                ],
+                postdata: {},
+                menudata: sysmenudata
+            },
+            methods: {
+                doPostToWeixin: function () {
+                    var that = this;
+                    //alert(JSON.stringify(that.menudata));
+                    //处理这个数据表
+                    var postdata = { button: [] };
+                    for (var i = 0; i < 3; i++) {
+                        if (that.menudata.button[i] && that.menudata.button[i].name != '') {
+                            var tempbutton = JSON.stringify(that.menudata.button[i])
+                            postdata.button.push(JSON.parse(tempbutton));
+                            postdata.button[i].sub_button = [];
+
+                            for (j = 0; j < 5; j++) {
+                                if (that.menudata.button[i].sub_button[j] && that.menudata.button[i].sub_button[j].name != '') {
+                                    var tmepsubbutton = JSON.stringify(that.menudata.button[i].sub_button[j]);
+                                    //console.log(that.menudata.button[i].sub_button[j].name);
+                                    postdata.button[i].sub_button.push(JSON.parse(tmepsubbutton));
+                                }
+                            }
+                        }
+                    }
+                    //alert(JSON.stringify(postdata));
+                    //return;
+                    var loading = layer.load(0, {
+                        shade: [0.2, '#000'] //0.1透明度的背景
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: '/AdminCP/Weixin/DoPostMenuData',
+                        data: {
+                            allmenu: JSON.stringify(postdata)
+                        },
+                        dataType: "JSON",
+                        success: function (data) {
+                            layer.close(loading);
+                            if (data.Status == "success") {
+                                layer.msg(data.Message, {
+                                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    window.location.href = window.location.href;
+                                });
+                            }
+                            else {
+                                layer.alert(data.Message, { icon: 2 });
+                            }
+                        },
+                        error: function () {
+                            layer.alert("执行出错，请联系管理员！", { icon: 2 });
+                        }
+
+                    })
+                }
+            },
+            mounted: function () {
+                //console.log(this.menudata);
+            }
+        });
+    </script>

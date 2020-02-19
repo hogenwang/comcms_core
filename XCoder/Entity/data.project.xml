@@ -1082,4 +1082,48 @@
       <Column Name="FormId" ColumnName="FormId" DataType="String" Description="小程序FormId" />
     </Columns>
   </Table>
+  <Table Name="WeixinRequestRule" Description="微信公众号回复规则" DbType="SqlServer">
+    <Columns>
+      <Column Name="Id" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
+      <Column Name="RuleName" DataType="String" Description="规则名称" />
+      <Column Name="Keywords" DataType="String" Length="200" Description="请求关键词,逗号分隔" />
+      <Column Name="RequestType" DataType="Int32" Description="请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）" />
+      <Column Name="ResponseType" DataType="Int32" Description="回复类型(1文本2图文3语音4视频5第三方接口)" />
+      <Column Name="IsLikeQuery" DataType="Int32" Description="是否模糊查询 0 是完全匹配；1是模糊匹配" />
+      <Column Name="IsDefault" DataType="Int32" Description="是否是默认回复" />
+      <Column Name="Rank" DataType="Int32" Description="排序" />
+      <Column Name="AddTime" DataType="DateTime" Description="添加时间" />
+      <Column Name="UpdateTime" DataType="DateTime" Description="修改时间" />
+    </Columns>
+  </Table>
+  <Table Name="WeixinRequestContent" Description="请求回复的内容" DbType="SqlServer">
+    <Columns>
+      <Column Name="Id" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
+      <Column Name="RuleId" DataType="Int32" Description="规则名称" />
+      <Column Name="Title" DataType="String" Master="True" Length="250" Description="回复标题" />
+      <Column Name="Content" DataType="String" Length="-1" Description="回复内容" />
+      <Column Name="LinkUrl" DataType="String" Length="250" Description="详情链接地址" />
+      <Column Name="ImgURL" DataType="String" Length="250" Description="图片地址" />
+      <Column Name="MediaURL" DataType="String" Length="250" Description="语音或视频地址" />
+      <Column Name="MeidaHdURL" DataType="String" Length="250" Description="高清语音或者视频地址" />
+      <Column Name="MediaID" DataType="String" Length="100" Description="返回的素材ID" />
+      <Column Name="WXAppAppId" DataType="String" Length="100" Description="小程序APPId" />
+      <Column Name="WXAppPage" DataType="String" Length="100" Description="小程序页面" />
+      <Column Name="Rank" DataType="Int32" Description="排序" />
+      <Column Name="AddTime" DataType="DateTime" Description="添加时间" />
+      <Column Name="UpdateTime" DataType="DateTime" Description="修改时间" />
+    </Columns>
+  </Table>
+  <Table Name="WeixinResponseContent" Description="公众平台回复信息" DbType="SqlServer">
+    <Columns>
+      <Column Name="Id" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
+      <Column Name="OpenId" DataType="String" Description="用户OpenId" />
+      <Column Name="RequestType" DataType="String" Description="请求类型" />
+      <Column Name="RequestContent" DataType="String" Length="-1" Description="内容" />
+      <Column Name="ResponseType" DataType="String" Description="回复的类型 文本消息：text 图片消息:image 地理位置消息:location 链接消息:link" />
+      <Column Name="ReponseContent" DataType="String" Length="-1" Description="系统回复的内容" />
+      <Column Name="XmlContent" DataType="String" Length="-1" Description="xml原始内容" />
+      <Column Name="UpdateTime" DataType="DateTime" Description="修改时间" />
+    </Columns>
+  </Table>
 </Tables>

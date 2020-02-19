@@ -32,7 +32,6 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             Admin admin = Admin.GetMyInfo();
             ViewBag.admin = admin;
-
             //获取菜单
             List<AdminMenu> list = new List<AdminMenu>();
             //这里需要获取权限，暂时先所有

@@ -391,7 +391,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 return Content("系统找不到本日志文件！");
             }
-            XTrace.WriteLine("查看日志：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            //XTrace.WriteLine("查看日志：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
 
             IFileProvider fileProvider = new PhysicalFileProvider(logPath);
             StringBuilder detail = new StringBuilder();
