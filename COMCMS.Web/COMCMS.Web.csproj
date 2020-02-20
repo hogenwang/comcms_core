@@ -6,21 +6,24 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="2.4.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
     <PackageReference Include="MimeKit" Version="2.4.1" />
-    <PackageReference Include="MySql.Data" Version="8.0.18" />
-    <PackageReference Include="NewLife.XCode" Version="9.14.2019.1212" />
+    <PackageReference Include="MySql.Data" Version="8.0.19" />
+    <PackageReference Include="NewLife.XCode" Version="9.15.2020.204" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="Senparc.NeuChar" Version="1.0.104" />
     <PackageReference Include="Senparc.Weixin" Version="6.6.104.1" />
     <PackageReference Include="Senparc.Weixin.MP" Version="16.9.104.1" />
+    <PackageReference Include="Senparc.Weixin.MP.MvcExtension" Version="4.1.1" />
     <PackageReference Include="Senparc.Weixin.TenPay" Version="1.5.104" />
     <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.7.104" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
     <PackageReference Include="ZKWeb.System.Drawing" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\COMCMS.API\COMCMS.API.csproj" />
     <ProjectReference Include="..\COMCMS.Common\COMCMS.Common.csproj" />
     <ProjectReference Include="..\COMCMS.Core\COMCMS.Core.csproj" />
     <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
