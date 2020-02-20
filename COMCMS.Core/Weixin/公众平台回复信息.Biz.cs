@@ -110,5 +110,41 @@ namespace COMCMS.Core
 
         #region 业务操作
         #endregion
+
+        #region 业务
+        public static string GetResponseType(int typeid)
+        {
+            //Text = 0,
+            //Location = 1,
+            //Image = 2,
+            //Voice = 3,
+            //Video = 4,
+            //Link = 5,
+            //ShortVideo = 6,
+            //Event = 7,
+
+            switch (typeid)
+            {
+                case 0:
+                    return "text";
+                case 1:
+                    return "location";
+                case 2:
+                    return "image";
+                case 3:
+                    return "voice";
+                case 4:
+                    return "video";
+                case 5:
+                    return "link";
+                case 6:
+                    return "shortvideo";
+                case 7:
+                    return "event";
+                default:
+                    return "none";
+            }
+        }
+        #endregion
     }
 }
