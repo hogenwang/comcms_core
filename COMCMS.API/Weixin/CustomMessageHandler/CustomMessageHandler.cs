@@ -189,17 +189,25 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
         /// <returns></returns>
         public override async Task<IResponseMessageBase> OnLocationRequestAsync(RequestMessageLocation requestMessage)
         {
-            var locationService = new LocationService();
-            var responseMessage = locationService.GetResponseMessage(requestMessage as RequestMessageLocation);
-            return responseMessage;
+            return await Task.Run(() =>
+            {
+                var locationService = new LocationService();
+                var responseMessage = locationService.GetResponseMessage(requestMessage as RequestMessageLocation);
+                return responseMessage;
+            });
+
         }
 
 
         public override async Task<IResponseMessageBase> OnShortVideoRequestAsync(RequestMessageShortVideo requestMessage)
         {
-            var responseMessage = this.CreateResponseMessage<ResponseMessageText>();
-            responseMessage.Content = "您刚才发送的是小视频";
-            return responseMessage;
+            return await Task.Run(() =>
+            {
+                var responseMessage = this.CreateResponseMessage<ResponseMessageText>();
+                responseMessage.Content = "您刚才发送的是小视频";
+                return responseMessage;
+            });
+
         }
 
         /// <summary>
@@ -228,14 +236,21 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
                     PicUrl = requestMessage.PicUrl,
                     Url = "https://sdk.weixin.senparc.com"
                 });
-
-                return responseMessage;
+                return await Task.Run(() =>
+                {
+                    return responseMessage;
+                });
+                //return responseMessage;
             }
             else
             {
                 var responseMessage = CreateResponseMessage<ResponseMessageImage>();
                 responseMessage.Image.MediaId = requestMessage.MediaId;
-                return responseMessage;
+                return await Task.Run(() =>
+                {
+                    return responseMessage;
+                });
+                //return responseMessage;
             }
         }
 
@@ -268,8 +283,11 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
             catch
             {
             }
+            return await Task.Run(() =>
+            {
+                return responseMessage;
+            });
 
-            return responseMessage;
         }
         /// <summary>
         /// 处理视频请求
@@ -295,7 +313,7 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
             //    if (task.Exception != null)
             //    {
             //        WeixinTrace.Log("OnVideoRequest()储存Video过程发生错误：", task.Exception.Message);
-                    
+
 
             //        var msg = string.Format("上传素材出错：{0}\r\n{1}",
             //                   task.Exception.Message,
@@ -307,8 +325,10 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
             //});
 
             #endregion
-
-            return responseMessage;
+            return await Task.Run(() =>
+            {
+                return responseMessage;
+            });
         }
 
         /// <summary>
@@ -323,7 +343,10 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
 Title：{0}
 Description:{1}
 Url:{2}", requestMessage.Title, requestMessage.Description, requestMessage.Url);
-            return responseMessage;
+            return await Task.Run(() =>
+            {
+                return responseMessage;
+            });
         }
 
         public override async Task<IResponseMessageBase> OnFileRequestAsync(RequestMessageFile requestMessage)
@@ -334,7 +357,10 @@ Url:{2}", requestMessage.Title, requestMessage.Description, requestMessage.Url);
 说明:{1}
 大小：{2}
 MD5:{3}", requestMessage.Title, requestMessage.Description, requestMessage.FileTotalLen, requestMessage.FileMd5);
-            return responseMessage;
+            return await Task.Run(() =>
+            {
+                return responseMessage;
+            });
         }
 
         /// <summary>
@@ -362,7 +388,10 @@ MD5:{3}", requestMessage.Title, requestMessage.Description, requestMessage.FileT
             XTrace.WriteLine("未知请求消息类型", requestMessage.RequestDocument.ToString());
             //WeixinTrace.SendCustomLog("未知请求消息类型", requestMessage.RequestDocument.ToString());//记录到日志中
 
-            return responseMessage;
+            return await Task.Run(() =>
+            {
+                return responseMessage;
+            });
         }
 
     }
