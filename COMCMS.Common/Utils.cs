@@ -9,6 +9,9 @@ using System.Net;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
+using System.Net.NetworkInformation;
+using System.Linq;
+using System.Net.Sockets;
 
 namespace COMCMS.Common
 {
@@ -75,6 +78,32 @@ namespace COMCMS.Common
         /// 配送状态 "未配送", "配货中", "已配送", "已收到", "退货中", "已退货"
         /// </summary>
         public static string[] DeliverState = { "未配送", "配货中", "已配送", "已收到", "退货中", "已退货" };
+        /// <summary>
+        /// cms类型
+        /// </summary>
+        public enum CMSType
+        {
+            /// <summary>
+            /// 文章分类
+            /// </summary>
+            ArticleCategory=0,
+            /// <summary>
+            /// 文章
+            /// </summary>
+            Article=1,
+            /// <summary>
+            /// 商品分类
+            /// </summary>
+            ProductCategory=2,
+            /// <summary>
+            /// 商品详情
+            /// </summary>
+            Product=3,
+            /// <summary>
+            /// 首页
+            /// </summary>
+            Home=99
+        }
         #endregion
 
         #region 验证部分
@@ -97,6 +126,17 @@ namespace COMCMS.Common
         public static bool IsWords(string str)
         {
             return Regex.IsMatch(str, @"^[A-Za-z0-9]+$");
+        }
+
+        /// <summary>
+        /// 判断是否为正确的
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static bool IsFilePath(string str)
+        {
+            //A-Z, a-z, 0-9, -, /, =
+            return Regex.IsMatch(str, @"[A-Za-z0-9-\/]");
         }
 
         /// <summary>
@@ -177,7 +217,7 @@ namespace COMCMS.Common
         {
             if (str.Length != 11)
                 return false;
-            return Regex.IsMatch(str, @"^1[3|4|5|7|8][0-9]\d{4,8}$");
+            return Regex.IsMatch(str, @"^1[3|4|5|7|8|9][0-9]\d{4,8}$");
         }
         /// <summary>
         /// 是否为ip
@@ -308,6 +348,19 @@ namespace COMCMS.Common
         #endregion
 
         #region 获取部分
+
+        /// <summary>
+        /// 获取配置
+        /// </summary>
+        /// <param name="path">路径，如：SystemSetting:COMCMSPrefixKey</param>
+        /// <returns></returns>
+        public static string GetSetting(string path)
+        {
+            string value = Configuration[path];
+
+            return value;
+        }
+
         /// <summary>
         /// 返回字符串真实长度, 1个汉字长度为2
         /// </summary>
@@ -674,6 +727,12 @@ namespace COMCMS.Common
         public static string GetIP()
         {
             string userHostAddress = MyHttpContext.Current.Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            //2019-05-11 增加反向代理获取真实IP
+            string xForwardedForAddress = MyHttpContext.Current.Request.Headers["X-Forwarded-For"];
+            if (!string.IsNullOrEmpty(userHostAddress) && !string.IsNullOrEmpty(xForwardedForAddress) && userHostAddress != xForwardedForAddress)
+            {
+                return xForwardedForAddress;
+            }
             if (!string.IsNullOrEmpty(userHostAddress) && Utils.IsIP(userHostAddress))
             {
                 if (userHostAddress == "::1")
@@ -994,6 +1053,37 @@ namespace COMCMS.Common
                 return "";
             }
         }
+
+        /// <summary>
+        /// 将对象转换为Int32类型
+        /// </summary>
+        /// <param name="str">要转换的字符串</param>
+        /// <param name="defValue">缺省值</param>
+        /// <returns>转换后的int类型结果</returns>
+        public static int StrToInt(string str, int defValue)
+        {
+            if (string.IsNullOrEmpty(str) || str.Trim().Length >= 11 || !Regex.IsMatch(str.Trim(), @"^([-]|[0-9])[0-9]*(\.\w*)?$"))
+                return defValue;
+
+            int rv;
+            if (Int32.TryParse(str, out rv))
+                return rv;
+
+            return Convert.ToInt32(StrToFloat(str, defValue));
+        }
+        /// <summary>
+        /// string型转换为float型
+        /// </summary>
+        /// <param name="strValue">要转换的字符串</param>
+        /// <param name="defValue">缺省值</param>
+        /// <returns>转换后的int类型结果</returns>
+        public static float StrToFloat(object strValue, float defValue)
+        {
+            if ((strValue == null))
+                return defValue;
+
+            return StrToFloat(strValue.ToString(), defValue);
+        }
         #endregion
 
         #region COMCMS类型
@@ -1010,6 +1100,24 @@ namespace COMCMS.Common
             分销商认证 = 999
         }
         #endregion
+
+        private static String[] _Excludes = new[] { "Loopback", "VMware", "VBox", "Virtual", "Teredo", "Microsoft", "VPN", "VNIC", "IEEE" };
+        /// <summary>获取所有网卡MAC地址</summary>
+        /// <returns></returns>
+        public static IEnumerable<Byte[]> GetMacs()
+        {
+            foreach (var item in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if (_Excludes.Any(e => item.Description.Contains(e))) continue;
+                if (item.Speed < 1_000_000) continue;
+
+                var addrs = item.GetIPProperties().UnicastAddresses.Where(e => e.Address.AddressFamily == AddressFamily.InterNetwork).ToArray();
+                if (addrs.All(e => IPAddress.IsLoopback(e.Address))) continue;
+
+                var mac = item.GetPhysicalAddress()?.GetAddressBytes();
+                if (mac != null && mac.Length == 6) yield return mac;
+            }
+        }
 
     }
 

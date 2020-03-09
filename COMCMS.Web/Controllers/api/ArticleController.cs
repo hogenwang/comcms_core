@@ -11,7 +11,6 @@ using XCode;
 using System.Web;
 using COMCMS.Web.Filter;
 using NewLife.Log;
-using static COMCMS.Web.Models.APIModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Senparc.Weixin.WxOpen;
@@ -30,7 +29,7 @@ namespace COMCMS.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [CheckFilter]
-        public object GetArticleList(int kid, int pagesize = 10, int page = 1, string random = "", string timeStamp = "", string signature = "")
+        public object GetArticleList(int kid, int pagesize = 10, int page = 1)
         {
             var where = Article._.IsHide != 1;
             if (kid > 0)
@@ -83,7 +82,7 @@ namespace COMCMS.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [CheckFilter]
-        public object GetArticleListWidthSub(int kid, int pagesize = 10, int page = 1, string key = "", string random = "", string timeStamp = "", string signature = "")
+        public object GetArticleListWidthSub(int kid, int pagesize = 10, int page = 1, string key = "")
         {
 
             var where = Article._.IsHide != 1;
@@ -154,7 +153,7 @@ namespace COMCMS.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [CheckFilter]
-        public object GetArticleDetail(int id, string random = "", string timeStamp = "", string signature = "")
+        public object GetArticleDetail(int id)
         {
             //获取商品
             Article entity = Article.FindById(id);
@@ -173,7 +172,7 @@ namespace COMCMS.Web.Controllers.api
         #region 获取文章栏目详情，并带下一级栏目
         [HttpGet]
         [CheckFilter]
-        public object GetArticleCategory(int id, string random = "", string timeStamp = "", string signature = "")
+        public object GetArticleCategory(int id)
         {
             ArticleCategory entity = ArticleCategory.FindById(id);
             if (entity == null)

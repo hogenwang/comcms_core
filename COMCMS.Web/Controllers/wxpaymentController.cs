@@ -14,10 +14,11 @@ using Senparc.Weixin.TenPay.V3;
 using System.Collections;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using COMCMS.Web.Common;
 
 namespace COMCMS.Web.Controllers
 {
-    public class wxpaymentController : HomeController
+    public class wxpaymentController : HomeBaseController
     {
         #region 微信支付异步通知
         /// <summary>
@@ -41,7 +42,7 @@ namespace COMCMS.Web.Controllers
                 string wxmchId = cfg.MCHId;// ConfigurationManager.AppSettings["WeixinMCHId"];
                 string wxmchKey = cfg.MCHKey;// ConfigurationManager.AppSettings["WeixinMCHKey"];
 
-                TenPayV3Info TenPayV3Info = new TenPayV3Info(appId, appSecrect, wxmchId, wxmchKey, Utils.GetServerUrl() + "/wxpayment/notify", Utils.GetServerUrl() + "/wxpayment/notify");
+                TenPayV3Info TenPayV3Info = new TenPayV3Info(appId, appSecrect, wxmchId, wxmchKey,"","", Utils.GetServerUrl() + "/wxpayment/notify", Utils.GetServerUrl() + "/wxpayment/notify");
                 string res = null;
 
                 resHandler.SetKey(TenPayV3Info.Key);
@@ -53,7 +54,7 @@ namespace COMCMS.Web.Controllers
                     string out_trade_no = resHandler.GetParameter("out_trade_no");//商户订单号
                     XTrace.WriteLine("微信异步通知订单号：" + out_trade_no + "；" + JsonConvert.SerializeObject(resHandler));
 
-                    OnlinePayOrder payOrder = OnlinePayOrder.Find(OnlinePayOrder._.PayOrderNum == out_trade_no);
+                    OnlinePayOrder payOrder = OnlinePayOrder.Find(OnlinePayOrder._.OrderNum == out_trade_no);
                     if (payOrder == null)
                     {
                         XTrace.WriteLine($"支付成功，但是支付订单不存在：{out_trade_no}");
@@ -66,6 +67,7 @@ namespace COMCMS.Web.Controllers
                             //更新支付订单
                             payOrder.PaymentStatus = Utils.PaymentState[1];
                             payOrder.ReceiveTime = DateTime.Now;
+                            payOrder.OutTradeNo = out_trade_no;
                             payOrder.IsOK = 1;
                             payOrder.Update();
 
@@ -75,6 +77,8 @@ namespace COMCMS.Web.Controllers
                             {
                                 order.PaymentStatus = Utils.PaymentState[1];
                                 order.PayType = "微信支付";
+                                order.OutTradeNo = out_trade_no;
+
                                 if (order.MyType == (int)Utils.MyType.分销商认证)
                                 {
                                     order.OrderStatus = Utils.OrdersState[2];

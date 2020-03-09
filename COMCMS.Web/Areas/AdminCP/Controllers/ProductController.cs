@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
+    [DisplayName("商品")]
     public class ProductController : AdminBaseController
     {
         #region 商品栏目
@@ -20,6 +22,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         /// </summary>
         /// <returns></returns>
         [MyAuthorize("viewlist", "category")]
+        [DisplayName("商品栏目")]
         public IActionResult CategoryList()
         {
             IList<Category> list = Category.GetListTree(0, -1, false, true);
@@ -187,6 +190,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
         #region 商品列表
         [MyAuthorize("viewlist", "product")]
+        [DisplayName("商品列表")]
         public IActionResult ProductList()
         {
             //获取上级栏目

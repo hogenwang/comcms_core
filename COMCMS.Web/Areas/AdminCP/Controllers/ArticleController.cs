@@ -65,6 +65,34 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "文章栏目标题不能为空！";
                 return Json(tip);
             }
+            if (string.IsNullOrEmpty(model.FilePath))
+            {
+                tip.Message = "文章栏目路径不能为空！";
+                return Json(tip);
+            }
+
+            if (!model.FilePath.StartsWith("/"))
+            {
+                tip.Message = "栏目路径请以/开头！";
+                return Json(tip);
+            }
+            if (model.FilePath.EndsWith("/"))
+            {
+                tip.Message = "栏目路径结尾不用加上/";
+                return Json(tip);
+            }
+            if (model.FilePath.Count(x => x == '/') > 4)
+            {
+                tip.Message = "最多只能四级路径！";
+                return Json(tip);
+            }
+
+            if (!AdminUtils.CheckFilePathIsOK(model.FilePath, 0, 0))
+            {
+                tip.Message = "栏目路径不可用，请重新填写！";
+                return Json(tip);
+            }
+
             model.Insert();
             Core.Admin.WriteLogActions("添加文章栏目(id:" + model.Id + ");");
             tip.Status = JsonTip.SUCCESS;
@@ -127,6 +155,32 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 Json(tip);
             }
 
+            if (string.IsNullOrEmpty(model.FilePath))
+            {
+                tip.Message = "文章栏目路径不能为空！";
+                return Json(tip);
+            }
+            if (!model.FilePath.StartsWith("/"))
+            {
+                tip.Message = "栏目路径请以/开头！";
+                return Json(tip);
+            }
+            if (model.FilePath.EndsWith("/"))
+            {
+                tip.Message = "栏目路径结尾不用加上/";
+                return Json(tip);
+            }
+            if (model.FilePath.Count(x => x == '/') > 4)
+            {
+                tip.Message = "最多只能四级路径！";
+                return Json(tip);
+            }
+            if (!AdminUtils.CheckFilePathIsOK(model.FilePath, entity.Id, 0))
+            {
+                tip.Message = "栏目路径不可用，请重新填写！";
+                return Json(tip);
+            }
+
             if (entity.PId != model.PId)
             {
                 if (entity.Id == model.PId)
@@ -149,6 +203,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     alist.Save();
                 }
             }
+            bool idNeedUpdateAllArticleFilePath = entity.FilePath == model.FilePath;
             //赋值
             entity.PId = model.PId;
             entity.KindName = model.KindName;
@@ -171,9 +226,23 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.KindDomain = model.KindDomain;
             entity.Rank = model.Rank;
             entity.Pic = model.Pic;
+            entity.FilePath = model.FilePath;
 
 
             entity.Save();
+            //修改所有文章的路径
+            if (idNeedUpdateAllArticleFilePath)
+            {
+                IList<Article> listArticles = Article.FindAll(Article._.KId == entity.Id, null, null, 0, 0);
+                if(listArticles !=null && listArticles.Count > 0)
+                {
+                    foreach (var item in listArticles)
+                    {
+                        item.FilePath = entity.FilePath;
+                    }
+                    listArticles.BatchUpdate();
+                }
+            }
             Core.Admin.WriteLogActions("修改文章栏目(id:" + entity.Id + ");");
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "修改文章栏目成功";
@@ -276,8 +345,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             IList<Article> list = Article.FindAll(ex, Article._.Sequence.Asc().And(Article._.Id.Desc()), null, startRowIndex, numPerPage);
             long totalCount = Article.FindCount(ex, Article._.Sequence.Asc().And(Article._.Id.Desc()), null, startRowIndex, numPerPage);
-            return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
-            //return Json(new { total = totalCount, rows = list }, JsonRequestBehavior.AllowGet);
+            //return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
+            return Json(new { total = totalCount, rows = list });
         }
 
         //添加文章
@@ -414,8 +483,6 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     }
                 }
             }
-
-            //处理三个勾选属性的
             string isnew = Request.Form["IsNew"];
             model.IsNew = isnew == "1" ? 1 : 0;
 
@@ -424,6 +491,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             string IsHide = Request.Form["IsHide"];
             model.IsHide = IsHide == "1" ? 1 : 0;
+            //处理三个勾选属性的
+
             model.Hits = entity.Hits;
             model.UpdateTime = DateTime.Now;
 
@@ -434,8 +503,43 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 content = ThumbnailHelper.SaveRemoteImgForContent(content);
                 model.Content = content;
             }
+
+
+            entity.AddTime = model.AddTime;
+            entity.AdsId = model.AdsId;
+            entity.BannerImg = model.BannerImg;
+            entity.Content = model.Content;
+            entity.Description = model.Description;
+            entity.FilePath = model.FilePath;
+            entity.Hits = model.Hits;
+            entity.Icon = model.Icon;
+            entity.IsBest = model.IsBest;
+            entity.IsComment = model.IsComment;
+            entity.IsDel = model.IsDel;
+            entity.IsHide = model.IsHide;
+            entity.IsLock = model.IsLock;
+            entity.IsMember = model.IsMember;
+            entity.IsNew = model.IsNew;
+            entity.IsRecommend = model.IsRecommend;
+            entity.IsTop = model.IsTop;
+            entity.ItemImg = morIMG;
+            entity.Keyword = model.Keyword;
+            entity.KId = model.KId;
+            entity.LinkURL = model.LinkURL;
+            entity.Location = model.Location;
+            entity.Origin = model.Origin;
+            entity.OriginURL = model.OriginURL;
+            entity.Pic = model.Pic;
+            entity.Sequence = model.Sequence;
+            entity.SubTitle = model.SubTitle;
+            entity.Tags = model.Tags;
+            entity.TemplateFile = model.TemplateFile;
+            entity.Title = model.Title;
+            entity.TitleColor = model.TitleColor;
+            entity.UpdateTime = DateTime.Now;
+
             //model.AuthorId = Core.Admin.GetMyInfo().Id;
-            model.Save();
+            entity.Update();
             //Tag.ModifyTags(model.Tags, RTType.RatuoModule.Article, model.Id, model.Title);
             Core.Admin.WriteLogActions("编辑文章(id:" + model.Id + ");");
             tip.Status = JsonTip.SUCCESS;
@@ -463,6 +567,132 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             ArticleCategory.UpdateDetailCount(kid);
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "删除文章成功";
+            return Json(tip);
+        }
+        #endregion
+
+        #region 迁移文章
+        [HttpGet]
+        [MyAuthorize("batch", "article")]
+        public IActionResult MoveArticle()
+        {
+            //获取上级栏目
+            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, false);
+            ViewBag.ListKinds = list;
+            return View();
+        }
+        [HttpPost]
+        [MyAuthorize("batch", "article", "JSON")]
+        public IActionResult MoveArticle(int from, int to)
+        {
+            if (from <= 0 || to <= 0)
+            {
+                tip.Message = "请选择好栏目";
+                return Json(tip);
+            }
+            if (from == to)
+            {
+                tip.Message = "迁移前后栏目一致，无法迁移";
+                return Json(tip);
+            }
+            Article.Update("KId=" + to, "KId=" + from);
+            Core.Admin.WriteLogActions("迁移文章(from:" + from + ",to:" + to + ");");
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "迁移文章成功";
+            tip.ReturnUrl = "close";
+            return Json(tip);
+        }
+        #endregion
+
+        #region 批量隐藏文章
+        [HttpPost]
+        [MyAuthorize("batch", "article", "JSON")]
+        public IActionResult DoBatchHideArticle(string ids)
+        {
+            if (string.IsNullOrEmpty(ids))
+            {
+                tip.Message = "请最少选择一篇文章！";
+                return Json(tip);
+            }
+            List<int> listIds = new List<int>();
+            try
+            {
+                listIds = JsonConvert.DeserializeObject<List<int>>(ids);
+            }
+            catch (Exception ex)
+            {
+                tip.Message = "转换出错：" + ex.Message;
+                return Json(tip);
+            }
+
+            if (listIds == null || listIds.Count < 1)
+            {
+                tip.Message = "请至少选择一篇文章！";
+                return Json(tip);
+            }
+
+            IList<Article> list = Article.FindAll(Article._.Id.In(listIds), null, null, 0, 0);
+            if (list == null || list.Count < 1)
+            {
+                tip.Message = "请至少选择一篇文章！";
+                return Json(tip);
+            }
+
+            foreach (var item in list)
+            {
+                item.IsHide = 1;
+            }
+            
+            list.Update();
+            Admin.WriteLogActions($"批量隐藏文章：{ids};");
+            tip.Message = "批量隐藏文章成功！";
+            tip.Status = JsonTip.SUCCESS;
+            return Json(tip);
+        }
+        #endregion
+
+        #region 批量显示文章
+        [HttpPost]
+        [MyAuthorize("batch", "article", "JSON")]
+        public IActionResult DoBatchShowArticle(string ids)
+        {
+            if (string.IsNullOrEmpty(ids))
+            {
+                tip.Message = "请最少选择一篇文章！";
+                return Json(tip);
+            }
+            List<int> listIds = new List<int>();
+            try
+            {
+                listIds = JsonConvert.DeserializeObject<List<int>>(ids);
+            }
+            catch (Exception ex)
+            {
+                tip.Message = "转换出错：" + ex.Message;
+                return Json(tip);
+            }
+
+            if (listIds == null || listIds.Count < 1)
+            {
+                tip.Message = "请至少选择一篇文章！";
+                return Json(tip);
+            }
+
+            IList<Article> list = Article.FindAll(Article._.Id.In(listIds), null, null, 0, 0);
+            if (list == null || list.Count < 1)
+            {
+                tip.Message = "请至少选择一篇文章！";
+                return Json(tip);
+            }
+
+            foreach (var item in list)
+            {
+                item.IsHide = 0;
+            }
+            list.Update();
+            Admin.WriteLogActions($"批量显示文章：{ids};");
+            tip.Message = "批量显示文章成功！";
+            tip.Status = JsonTip.SUCCESS;
             return Json(tip);
         }
         #endregion

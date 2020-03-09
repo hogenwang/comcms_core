@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +14,13 @@ using COMCMS.Core.Models;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
+    [DisplayName("其它")]
     public class OtherController : AdminBaseController
     {
         #region 广告分类管理
         //查看&编辑广告分类（同一个页面执行）
         [MyAuthorize("viewlist", "adskinds")]
+        [DisplayName("广告分类")]
         public IActionResult AdsCategoryList()
         {
             IList<AdsKind> list = AdsKind.FindAll(null, AdsKind._.Rank.Asc(), null, 0, 0);
@@ -96,6 +99,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
         #region 广告管理
         [MyAuthorize("viewlist", "ads")]
+        [DisplayName("广告列表")]
         public IActionResult AdsList()
         {
             IList<AdsKind> list = AdsKind.FindAll(null, AdsKind._.Rank.Asc(), null, 0, 0);
@@ -528,6 +532,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         #region 友情链接分类管理
         //查看&编辑友情链接分类（同一个页面执行）
         [MyAuthorize("viewlist", "adskinds")]
+        [DisplayName("友情链接分类")]
         public IActionResult LinkCategoryList()
         {
             IList<LinkKind> list = LinkKind.FindAll(null, LinkKind._.Rank.Asc(), null, 0, 0);
@@ -608,6 +613,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         #region 友情链接管理
         //查看友情链接列表
         [MyAuthorize("viewlist", "link")]
+        [DisplayName("友情链接列表")]
+        
         public IActionResult LinkList()
         {
             IList<LinkKind> list = LinkKind.FindAll(null, LinkKind._.Rank.Asc(), null, 0, 0);

@@ -22,11 +22,11 @@ namespace COMCMS.Common
         /// <summary>
         /// 程序绝对目录
         /// </summary>
-        private static string _ContentRootPath = DI.ServiceProvider.GetService<IHostingEnvironment>().ContentRootPath;
+        private static string _ContentRootPath = DI.ServiceProvider.GetService<IWebHostEnvironment>().ContentRootPath;
         /// <summary>
         /// 静态文件
         /// </summary>
-        private static string _WebRootPath = DI.ServiceProvider.GetService<IHostingEnvironment>().WebRootPath;
+        private static string _WebRootPath = DI.ServiceProvider.GetService<IWebHostEnvironment>().WebRootPath;
 
         #region 方式
         public enum CutMode

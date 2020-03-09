@@ -29,7 +29,7 @@ namespace COMCMS.Web.Common
         public IActionResult AlertAndGoBack(string str)
         {
             if (!string.IsNullOrWhiteSpace(str)) str = str.Replace("'", "\\'");
-            return Content($"<script type=\"text/javascript\">alert('{str}');window.history.go(-1)</script>");
+            return Content($"<script type=\"text/javascript\">alert('{str}');window.history.go(-1)</script>", "text/html", System.Text.Encoding.UTF8);
         }
         /// <summary>
         /// Alert提示并跳转到指定URL
@@ -39,7 +39,7 @@ namespace COMCMS.Web.Common
         public IActionResult AlertAndRedirect(string str, string url)
         {
             if (!string.IsNullOrWhiteSpace(str)) str = str.Replace("'", "\\'");
-            return Content($"<script type=\"text/javascript\">alert('{str}');window.location='{url}'</script>");
+            return Content($"<script type=\"text/javascript\">alert('{str}');window.location='{url}'</script>", "text/html", System.Text.Encoding.UTF8);
         }
 
         #region MyRegion

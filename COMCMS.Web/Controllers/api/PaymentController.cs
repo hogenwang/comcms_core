@@ -22,7 +22,7 @@ namespace COMCMS.Web.Controllers.api
         #region 微信小程序订单支付
         [HttpGet]
         [CheckFilter]
-        public ReJson DoPayOrder(string ordernum, string random = "", string timeStamp = "", string signature = "")
+        public ReJson DoPayOrder(string ordernum)
         {
             //获取订单
             Order entity = Order.Find(Order._.OrderNum == ordernum);
@@ -59,21 +59,26 @@ namespace COMCMS.Web.Controllers.api
                 return new ReJson(40000, "用户状态错误，无法使用本功能！");
             }
             //开始生成支付订单
-            OnlinePayOrder model = new OnlinePayOrder();
-            model.OrderId = entity.Id;
-            model.OrderNum = entity.OrderNum;
-            model.PayId = 1;
-            model.PaymentNotes = "微信支付";
-            model.PaymentStatus = Utils.PaymentState[0];
-            model.PayOrderNum = Utils.GetOrderNum();//在线支付订单的订单号
-            model.PayType = "微信支付";
-            model.TotalPrice = entity.TotalPay;
-            model.TotalQty = entity.TotalQty;
-            model.UId = entity.UId;
-            model.IP = Utils.GetIP();
-            model.IsOK = 0;
-            model.AddTime = DateTime.Now;
-            model.Insert();
+            OnlinePayOrder model = OnlinePayOrder.Find(OnlinePayOrder._.OrderNum == entity.OrderNum);
+            if(model == null)
+            {
+                model = new OnlinePayOrder();
+                model.OrderId = entity.Id;
+                model.OrderNum = entity.OrderNum;
+                model.PayId = 1;
+                model.PaymentNotes = "微信支付";
+                model.PaymentStatus = Utils.PaymentState[0];
+                model.PayOrderNum = Utils.GetOrderNum();//在线支付订单的订单号
+                model.PayType = "微信支付";
+                model.TotalPrice = entity.TotalPay;
+                model.TotalQty = entity.TotalQty;
+                model.UId = entity.UId;
+                model.Ip = Utils.GetIP();
+                model.IsOK = 0;
+                model.AddTime = DateTime.Now;
+                model.Insert();
+            }
+
 
             //写入日志
             OrderLog log = new OrderLog();
@@ -92,7 +97,7 @@ namespace COMCMS.Web.Controllers.api
 
 
 
-            TenPayV3Info TenPayV3Info = new TenPayV3Info(appId, appSecrect, wxmchId, wxmchKey, Utils.GetServerUrl() + "/wxpayment/notify", Utils.GetServerUrl() + "/wxpayment/notify");
+            TenPayV3Info TenPayV3Info = new TenPayV3Info(appId, appSecrect, wxmchId, wxmchKey,"","", Utils.GetServerUrl() + "/wxpayment/notify", Utils.GetServerUrl() + "/wxpayment/notify");
             TenPayV3Info.TenPayV3Notify = Utils.GetServerUrl() + "/wxpayment/notify";
             XTrace.WriteLine("微信支付异步通知地址：" + TenPayV3Info.TenPayV3Notify);
             //创建支付应答对象
@@ -102,7 +107,7 @@ namespace COMCMS.Web.Controllers.api
             string rtimeStamp = Utils.GetTimeStamp();
 
             //创建请求统一订单接口参数
-            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(TenPayV3Info.AppId, TenPayV3Info.MchId, entity.Title, model.PayOrderNum, (int)(entity.TotalPay * 100), Utils.GetIP(), TenPayV3Info.TenPayV3Notify,  Senparc.Weixin.TenPay.TenPayV3Type.JSAPI, my.WeixinAppOpenId, TenPayV3Info.Key, nonceStr);
+            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(TenPayV3Info.AppId, TenPayV3Info.MchId, entity.Title, model.OrderNum, (int)(entity.TotalPay * 100), Utils.GetIP(), TenPayV3Info.TenPayV3Notify,  Senparc.Weixin.TenPay.TenPayV3Type.JSAPI, my.WeixinAppOpenId, TenPayV3Info.Key, nonceStr);
 
             //返回给微信的请求
             RequestHandler res = new RequestHandler(null);

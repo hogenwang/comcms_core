@@ -20,6 +20,7 @@ namespace COMCMS.Web.Controllers.api
     {
         // GET: api/<controller>
         [HttpGet]
+        [CheckFilter]
         public object Get()
         {
             Config cfg = Config.GetSystemConfig();
@@ -37,10 +38,19 @@ namespace COMCMS.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [CheckFilter]
-        public ReJson CheckSign(string id, string random = "", string timeStamp = "", string signature = "")
+        public ReJson CheckSign(string id)
         {
             return new ReJson("验签成功！");
         }
+
+        //POST验证
+        [HttpPost]
+        [CheckFilter]
+        public ReJson ChekSignWidhPost(int id)
+        {
+            return new ReJson("验证通过！");
+        }
+
         #endregion
 
         //#region 测试出错

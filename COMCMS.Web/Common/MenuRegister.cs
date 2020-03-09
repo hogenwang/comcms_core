@@ -139,7 +139,7 @@ namespace COMCMS.Web.Common
 
         public static void Register()
         {
-            Task.Run(() => { StartRegister(); }).LogException();
+            Task.Run(() => { StartRegister(); });
         }
     }
 }

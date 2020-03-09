@@ -6,7 +6,6 @@
     ViewBag.description = cfg.Description;
 
     Article about = ViewBag.about;
-
     IList<Link> listLinks = Link.FindAll(Link._.KId == 1, Link._.Sequence.Asc(), null, 0, 0);
 
     //处理bannr广告
@@ -18,11 +17,16 @@
 <div class="banner normal">
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            @foreach (var img in bannerPC)
-            {
-                <div class="swiper-slide">
-                    <a href="@img.link" title="@(img.alt)" style="background: url('@img.img') center top no-repeat; background-size:cover"></a>
-                </div>
+            @{
+                if(bannerPC != null && bannerPC.Any())
+                {
+                    foreach (var img in bannerPC)
+                    {
+                        <div class="swiper-slide">
+                            <a href="@img.link" title="@(img.alt)" style="background: url('@img.img') center top no-repeat; background-size:cover"></a>
+                        </div>
+                    }
+                }
             }
         </div>
         <div class="cont">
@@ -35,12 +39,17 @@
 <div class="banner mobile">
     <div class="swiper-container">
         <div class="swiper-wrapper">
-            @foreach (var img in bannerPC)
-            {
-                <div class="swiper-slide">
-                    <a href="@img.link" title="@(img.alt)" style="background: url('@img.img') center top no-repeat; background-size: 100%;"></a>
-                </div>
-            }
+             @{
+                if(bannerPC != null && bannerPC.Any())
+                {
+                    foreach (var img in bannerPC)
+                    {
+                    <div class="swiper-slide">
+                        <a href="@img.link" title="@(img.alt)" style="background: url('@img.img') center top no-repeat; background-size: 100%;"></a>
+                    </div>
+                    }
+                }
+             }
         </div>
     </div>
 </div>
@@ -169,13 +178,13 @@
                 <div class="i-au-left">
                     <div class="pic-box">
                         <a href="/Article/detail/1" title="关于我们">
-                            <img src="@(about.Pic)" alt="关于我们">
+                            <img src="@(about?.Pic)" alt="关于我们">
                         </a>
                     </div>
                 </div>
                 <div class="i-au-right">
                     <p>
-                        @(Utils.CutString(Utils.NoHTML(about.Content), 700))
+                        @(Utils.CutString(Utils.NoHTML(about?.Content), 700))
                     </p>
                     <a href="/Article/detail/1" title="查看详情" class="read-d">查看详情</a>
                 </div>
@@ -192,60 +201,65 @@
                     <small>product display</small>
                 </p>
             </div>
-            @{ 
-                //获取前5个商品
-                IList<Product> listPorducts = Product.FindAll(null, null, null, 0, 5);
-            }
-            <div class="i-pro-cont" id="div1">
-                <ul class="i-pro-list">
-                    @foreach(var p in listPorducts)
-                    {
-                    <li>
-                        <a asp-controller="Product" asp-action="Detail" asp-route-id="@(p.Id)" title="@(p.Title)">
-                            <div class="i-pro-top">
-                                <div class="i-pro-pic">
-                                    <div class="pic-box">
-                                        <img src="@p.Pic" alt="@(p.Title)">
+            @{
+            //获取前5个商品
+            IList<Product> listPorducts = Product.FindAll(null, null, null, 0, 5);
+                }
+                <div class="i-pro-cont" id="div1">
+                    <ul class="i-pro-list">
+                        @foreach(var p in listPorducts)
+                        {
+                        <li>
+                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@(p.Id)" title="@(p.Title)">
+                                <div class="i-pro-top">
+                                    <div class="i-pro-pic">
+                                        <div class="pic-box">
+                                            <img src="@p.Pic" alt="@(p.Title)">
+                                        </div>
+                                    </div>
+                                    <div class="i-pro-hover">
+                                        <i></i>
+                                        <span>@(p.Title)</span>
+
                                     </div>
                                 </div>
-                                <div class="i-pro-hover">
-                                    <i></i>
+                                <div class="i-pro-text mobile">
                                     <span>@(p.Title)</span>
-
                                 </div>
-                            </div>
-                            <div class="i-pro-text mobile">
-                                <span>@(p.Title)</span>
-                            </div>
-                        </a>
-                    </li>
-                    }
-
-                </ul>
-            </div>
-            <script type="text/javascript">
-                        function proShow() {
-                            mr = parseFloat($('.i-pro-list li').css('margin-right'));
-                            var odiv = document.getElementById('div1');
-                            var oul = odiv.getElementsByTagName('ul')[0];
-                            var ali = oul.getElementsByTagName('li');
-                            var spa = -2;
-                            oul.innerHTML = oul.innerHTML + oul.innerHTML;
-                            oul.style.width = (ali[0].offsetWidth + mr) * ali.length + 3 + 'px';
-                            function move() {
-                                if (oul.offsetLeft < -oul.offsetWidth / 2) {
-                                    oul.style.left = 0;
-                                }
-                                oul.style.left = oul.offsetLeft + spa + 'px';
-                            }
-                            var timer = setInterval(move, 30);
-
-                            odiv.onmousemove = function () { clearInterval(timer); }
-                            odiv.onmouseout = function () { timer = setInterval(move, 30) };
+                            </a>
+                        </li>
                         }
-            </script>
 
-            <a asp-controller="Product" asp-action="Index" asp-route-id="1" title="查看更多" class="read-d">查看更多<i></i></a>
+                    </ul>
+                </div>
+                <script type="text/javascript">
+                    function proShow() {
+                        mr = parseFloat($('.i-pro-list li').css('margin-right'));
+                        var odiv = document.getElementById('div1');
+                        var oul = odiv.getElementsByTagName('ul')[0];
+                        var ali = oul.getElementsByTagName('li');
+                        var spa = -2;
+                        oul.innerHTML = oul.innerHTML + oul.innerHTML;
+                        oul.style.width = (ali[0].offsetWidth + mr) * ali.length + 3 + 'px';
+
+                        function move() {
+                            if (oul.offsetLeft < -oul.offsetWidth / 2) {
+                                oul.style.left = 0;
+                            }
+                            oul.style.left = oul.offsetLeft + spa + 'px';
+                        }
+                        var timer = setInterval(move, 30);
+
+                        odiv.onmousemove = function () {
+                            clearInterval(timer);
+                        }
+                        odiv.onmouseout = function () {
+                            timer = setInterval(move, 30)
+                        };
+                    }
+                </script>
+
+                <a asp-controller="Product" asp-action="Index" asp-route-id="1" title="查看更多" class="read-d">查看更多<i></i></a>
         </div>
     </div>
 
@@ -266,13 +280,14 @@
                     </ul>
                 </div>
                 <div class="i-news-main">
-                    @{ 
-                        IList<Article> listNews1 = Article.FindAll(Article._.KId == 6, Article._.Sequence.Asc(), null, 0, 4);
-                    }
-                    <div class="i-news-box">
-                        <!-- 左边 -->
-                        @if (listNews1.Count > 0)
-                        {
+                    @{
+                    IList<Article> listNews1 = Article.FindAll(Article._.KId == 6, Article._.Sequence.Asc(), null, 0,
+                        4);
+                        }
+                        <div class="i-news-box">
+                            <!-- 左边 -->
+                            @if (listNews1.Count > 0)
+                            {
                             <div class="i-news-left">
                                 <a href="/article/detail/@listNews1[0].Id" title="@listNews1[0].Title">
                                     <div class="i-news-pic">
@@ -290,111 +305,110 @@
                                     </div>
                                 </a>
                             </div>
-                        }
-                        <!-- 右边 -->
+                            }
+                            <!-- 右边 -->
                             <div class="i-news-right">
                                 @if (listNews1.Count > 1)
                                 {
+                                <ul class="i-news-list">
+                                    @for(int i=1; i < listNews1.Count; i++) { <li>
+                                        <a href="/article/detail/@listNews1[i].Id" title="@listNews1[i].Title">
+                                            <div class="i-news-time">
+                                                <div class="pic-box">
+                                                    <p>
+                                                        <span>@listNews1[i].AddTime.ToString("dd")</span>
+                                                        <small>@listNews1[i].AddTime.ToString("yyyy-MM")</small>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div class="i-news-text2">
+                                                <span>@listNews1[i].Title</span>
+                                                <p>@Utils.CutString(Utils.NoHTML(listNews1[i].Content), 100)</p>
+                                            </div>
+                                        </a>
+                                        </li>
+                                        }
+
+                                </ul>
+                                }
+
+                            </div>
+                        </div>
+                        <div class="i-news-box">
+                            <!-- 左边 -->
+                            @{
+                            IList<Article> listNews2 = Article.FindAll(Article._.KId == 7, Article._.Sequence.Asc(),
+                                null, 0, 4);
+                                }
+                                @if (listNews2.Count > 0)
+                                {
+                                <div class="i-news-left">
+                                    <a href="/article/detail/@listNews2[0].Id" title="@listNews2[0].Title">
+                                        <div class="i-news-pic">
+                                            <div class="pic-box">
+                                                <img src="@listNews2[0].Pic" alt="@listNews2[0].Title">
+                                            </div>
+                                        </div>
+                                        <div class="i-news-text">
+                                            <p class="i-news-title">
+                                                <span>@listNews2[0].Title</span>
+                                                <small>@listNews2[0].AddTime.ToString("yyyy-MM-dd")</small>
+                                            </p>
+                                            <p class="i-news-t"><span>@Utils.CutString(Utils.NoHTML(listNews2[0].Content),
+                                                    200)</span></p>
+                                            <b class="normal read-d">查看详情</b>
+                                        </div>
+                                    </a>
+                                </div>
+                                }
+                                <!-- 右边 -->
+                                <div class="i-news-right">
+                                    @if (listNews2.Count > 1)
+                                    {
                                     <ul class="i-news-list">
-                                        @for(int i=1; i < listNews1.Count; i++)
-                                        {
-                                        <li>
-                                            <a href="/article/detail/@listNews1[i].Id" title="@listNews1[i].Title">
+                                        @for (int i = 1; i < listNews2.Count; i++) { <li>
+                                            <a href="/article/detail/@listNews2[i].Id" title="@listNews2[i].Title">
                                                 <div class="i-news-time">
                                                     <div class="pic-box">
                                                         <p>
-                                                            <span>@listNews1[i].AddTime.ToString("dd")</span>
-                                                            <small>@listNews1[i].AddTime.ToString("yyyy-MM")</small>
+                                                            <span>@listNews2[i].AddTime.ToString("dd")</span>
+                                                            <small>@listNews2[i].AddTime.ToString("yyyy-MM")</small>
                                                         </p>
                                                     </div>
                                                 </div>
                                                 <div class="i-news-text2">
-                                                    <span>@listNews1[i].Title</span>
-                                                    <p>@Utils.CutString(Utils.NoHTML(listNews1[i].Content), 100)</p>
+                                                    <span>@listNews2[i].Title</span>
+                                                    <p>@Utils.CutString(Utils.NoHTML(listNews2[i].Content), 100)</p>
                                                 </div>
                                             </a>
-                                        </li>
-                                        }
-                                        
-                                    </ul>
-                                }
-
-                            </div>
-                    </div>
-                    <div class="i-news-box">
-                        <!-- 左边 -->
-                        @{
-                            IList<Article> listNews2 = Article.FindAll(Article._.KId == 7, Article._.Sequence.Asc(), null, 0, 4);
-                        }
-                        @if (listNews2.Count > 0)
-                        {
-                            <div class="i-news-left">
-                                <a href="/article/detail/@listNews2[0].Id" title="@listNews2[0].Title">
-                                    <div class="i-news-pic">
-                                        <div class="pic-box">
-                                            <img src="@listNews2[0].Pic" alt="@listNews2[0].Title">
-                                        </div>
-                                    </div>
-                                    <div class="i-news-text">
-                                        <p class="i-news-title">
-                                            <span>@listNews2[0].Title</span>
-                                            <small>@listNews2[0].AddTime.ToString("yyyy-MM-dd")</small>
-                                        </p>
-                                        <p class="i-news-t"><span>@Utils.CutString(Utils.NoHTML(listNews2[0].Content), 200)</span></p>
-                                        <b class="normal read-d">查看详情</b>
-                                    </div>
-                                </a>
-                            </div>
-                        }
-                        <!-- 右边 -->
-                            <div class="i-news-right">
-                                @if (listNews2.Count > 1)
-                                {
-                                    <ul class="i-news-list">
-                                        @for (int i = 1; i < listNews2.Count; i++)
-                                        {
-                                            <li>
-                                                <a href="/article/detail/@listNews2[i].Id" title="@listNews2[i].Title">
-                                                    <div class="i-news-time">
-                                                        <div class="pic-box">
-                                                            <p>
-                                                                <span>@listNews2[i].AddTime.ToString("dd")</span>
-                                                                <small>@listNews2[i].AddTime.ToString("yyyy-MM")</small>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="i-news-text2">
-                                                        <span>@listNews2[i].Title</span>
-                                                        <p>@Utils.CutString(Utils.NoHTML(listNews2[i].Content), 100)</p>
-                                                    </div>
-                                                </a>
                                             </li>
-                                        }
+                                            }
                                     </ul>
-                                }
-                            </div>
-                    </div>
+                                    }
+                                </div>
+                        </div>
                 </div>
             </div>
         </div>
 
         <script type="text/javascript">
-                    iNews();
-                    function iNews() {
-                        var index = $('.i-news-on').index();
-                        $('.i-news-box').eq(index).show();
-                        var num = $('.i-btn-list li').length;
+            iNews();
 
-                        $('.i-btn-list').on('click', 'li', function () {
-                            index = $(this).index();
-                            for (var i = 0; i < num; i++) {
-                                $('.i-btn-list li').eq(i).removeClass('i-news-on');
-                                $('.i-news-box').eq(i).hide();
-                            }
-                            $(this).addClass('i-news-on');
-                            $('.i-news-box').eq(index).show();
-                        });
+            function iNews() {
+                var index = $('.i-news-on').index();
+                $('.i-news-box').eq(index).show();
+                var num = $('.i-btn-list li').length;
+
+                $('.i-btn-list').on('click', 'li', function () {
+                    index = $(this).index();
+                    for (var i = 0; i < num; i++) {
+                        $('.i-btn-list li').eq(i).removeClass('i-news-on');
+                        $('.i-news-box').eq(i).hide();
                     }
+                    $(this).addClass('i-news-on');
+                    $('.i-news-box').eq(index).show();
+                });
+            }
         </script>
     </div>
 
@@ -426,51 +440,51 @@
                             </div>
                             }
                         </div>
+                        <div class="swiper-pagination"></div>
                     </div>
                     <div class="swiper-container mobile">
                         <div class="swiper-wrapper">
                             @foreach (var l in listLinks)
                             {
-                                <div class="swiper-slide">
-                                    <ul>
-                                        <li>
-                                            <a href="@l.LinkURL" class="pic-box" title="@l.Title" target="_blank">
-                                                <img src="@l.Logo" alt="@l.Title">
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                            <div class="swiper-slide">
+                                <ul>
+                                    <li>
+                                        <a href="@l.LinkURL" class="pic-box" title="@l.Title" target="_blank">
+                                            <img src="@l.Logo" alt="@l.Title">
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
                             }
-                           
                         </div>
+                        <div class="swiper-pagination"></div>
                     </div>
                 </div>
 
-                <i class="coop-prev"></i>
-                <i class="coop-next"></i>
             </div>
 
             <script type="text/javascript">
-                        var mySwiper2;
-                        var mySwiper3;
-                        function coopSwiper() {
-                            if ($('#main').attr('class') === 'pc') {
-                                mySwiper3 = new Swiper('.i-coop-cont .normal', {
-                                    loop: true,
-                                    autoplay: 3000,
-                                    slidesPerView: 5,
-                                    nextButton: '.coop-next',
-                                    prevButton: '.coop-prev',
-                                });
-                            } else if ($('#main').attr('class') === 'mb') {
-                                mySwiper4 = new Swiper('.i-coop-cont .mobile', {
-                                    loop: true,
-                                    autoplay: 3000,
-                                    slidesPerView: 2,
-                                    nextButton: '.coop-next',
-                                    prevButton: '.coop-prev',
-                                });
-                            }
+                var mySwiper2;
+                var mySwiper3;
+
+                function coopSwiper() {
+                    if ($('#main').attr('class') === 'pc') {
+                        mySwiper3 = new Swiper('.i-coop-cont .normal', {
+                            loop: true,
+                            autoplay: 3000,
+                            slidesPerView: 5,
+                            nextButton: '.coop-next',
+                            prevButton: '.coop-prev',
+                        });
+                    } else if ($('#main').attr('class') === 'mb') {
+                        mySwiper4 = new Swiper('.i-coop-cont .mobile', {
+                            loop: true,
+                            autoplay: 3000,
+                            slidesPerView: 2,
+                            nextButton: '.coop-next',
+                            prevButton: '.coop-prev',
+                        });
+                    }
                 }
                 var mySwiper = new Swiper('.banner .swiper-container', {
                     loop: true,
@@ -479,8 +493,21 @@
                     nextButton: '.banner-next',
                     prevButton: '.banner-prev',
                     autoplay: 3000,
-                })
+                });
+
                 $("#nav_0").addClass("nav-on");
+
+                var swiper = new Swiper('.i-coop-cont .swiper-container', {
+                    slidesPerView: 3,
+                    spaceBetween: 30,
+                    loop: true,
+                    autoplay: 3000,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        clickable: true,
+                    },
+                });
+
             </script>
         </div>
     </div>

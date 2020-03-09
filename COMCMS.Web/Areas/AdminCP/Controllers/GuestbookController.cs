@@ -9,13 +9,16 @@ using XCode;
 using Newtonsoft.Json;
 using COMCMS.Web.Common;
 using Microsoft.AspNetCore.Http;
+using System.ComponentModel;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
+    [DisplayName("留言板")]
     public class GuestbookController : AdminBaseController
     {
         #region 留言板分类
         [MyAuthorize("viewlist", "guestbookkinds")]
+        [DisplayName("留言分类")]
         public IActionResult GuestbookCategorys()
         {
             IList<GuestbookCategory> list = GuestbookCategory.FindAll(null, GuestbookCategory._.Rank.Asc(), null, 0, 0);
@@ -93,12 +96,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
         #region 留言列表
         [MyAuthorize("viewlist", "guestbook")]
+        [DisplayName("留言列表")]
         public IActionResult GuestbookList()
         {
             IList<GuestbookCategory> list = GuestbookCategory.FindAll(null, GuestbookCategory._.Rank.Asc(), null, 0, 0);
             ViewBag.ListKinds = list;
             return View();
         }
+
         [MyAuthorize("viewlist", "guestbook","JSON")]
         public IActionResult GetGuesbookList(string keyword, int page = 1, int limit = 20)
         {

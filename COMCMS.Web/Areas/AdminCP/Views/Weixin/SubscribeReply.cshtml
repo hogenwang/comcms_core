@@ -1,0 +1,220 @@
+﻿@model WeixinRequestRule
+@{
+    ViewBag.Title = "编辑/查看公众号关注自动回复详情";
+}
+    <script src="~/js/vue/vue.min.js"></script>
+    <div class="wrapper wrapper-content">
+        <div class="ibox float-e-margins" id="app">
+            <div class="ibox-title">
+                <h5>@ViewBag.Title</h5>
+                <div class="ibox-tools">
+                </div>
+            </div>
+            <div class="ibox-content">
+                @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editSubscribeReplyForm", @class = "form-horizontal m-t" }))
+                {
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">回复类型：</label>
+                        <div class="col-sm-8">
+                            <select class="form-control m-b" name="ResponseType" id="ResponseType" v-model="responseType">
+                                <option v-for="(item,index) in trs" v-bind:value="item.id">{{item.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="detail_0" v-show="responseType == 0">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">文字回复：</label>
+                            <div class="col-sm-8">
+                                <textarea id="txtContent" name="txtContent" class="form-control" placeholder="可以输入文字回复介绍">@ViewBag.txtContent</textarea>
+                            </div>
+                            @if (Model.ListContent != null && Model.ListContent.Count > 0)
+                            {
+                                <input type="hidden" name="hdfTID" id="hdfTID" value="@Model.ListContent[0].Id" />
+                            }
+                            else
+                            {
+                                <input type="hidden" name="hdfTID" id="hdfTID" value="0" />
+                            }
+                        </div>
+                    </div>
+
+                    <div id="detail_2" v-show="responseType == 3">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">语音标题：</label>
+                            <div class="col-sm-8">
+                                <input id="txtSoundTitle" type="text" class="form-control" name="txtSoundTitle" value="@(ViewBag.txtSoundTitle)" maxlength="250" placeholder="您可以输入语音标题">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">语音描述：</label>
+                            <div class="col-sm-8">
+                                <input id="txtSoundUrl" type="text" class="form-control" name="txtSoundContent" value="@(ViewBag.txtSoundContent)" maxlength="250" placeholder="您可以输入语音描述">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">语音：</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="txtSoundUrl" name="txtSoundUrl" maxlength="250" type="text" class="form-control" placeholder="选择一个语音" value="@(ViewBag.txtSoundUrl)">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" onclick="BrowseServer('txtSoundUrl')">
+                                            选择一个语音
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="detail_1" v-show="responseType == 2">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="width:30%">图片（必填）</th>
+                                            <th>链接地址（必填）</th>
+                                            <th>图片标题</th>
+                                            <th>图片说明</th>
+                                            <th style="width:80px">操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="SildeImgs">
+                                        @if (Model.ResponseType == (int)WeixinRequestRule.XResponseType.Image)
+                                        {
+                                            if (Model.ListContent.Count > 0)
+                                            {
+                                                for (int i = 0; i < Model.ListContent.Count; i++)
+                                                {
+                                                    <tr id="slideTR_old@(@Model.ListContent[i].Id)">
+                                                        <td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_old@(@Model.ListContent[i].Id)" name="item_imgurl" value="@Model.ListContent[i].ImgURL" placeholder="请输入图片地址"><span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="BrowseServer('slide_Img_old@(@Model.ListContent[i].Id)')"><i class="fa fa-search"></i></button></span></div></td>
+                                                        <td><input type="text" class="form-control" id="" name="item_linkurl" value="@Model.ListContent[i].LinkUrl" placeholder="请输入链接地址"></td>
+                                                        <td><input type="text" class="form-control" id="" name="item_title" value="@Model.ListContent[i].Title" placeholder="请输入图片标题"></td>
+                                                        <td><textarea class="form-control" name="item_imginfo" placeholder="请输入图片说明" rows="2">@Model.ListContent[i].Content</textarea></td>
+                                                        <td>
+                                                            @if (i == 0)
+                                                            {
+                                                                <button type="button" class="btn btn-sm btn-success" onClick="addSlideRow();"><i class="fa fa-plus-square"></i> 添加</button>
+                                                            }
+                                                            else
+                                                            {
+                                                                <button type="button" class="btn btn-sm btn-danger" onclick="delmySlideRow('old@(@Model.ListContent[i].Id)')"><i class="fa fa-minus-square"></i> 删除</button>
+                                                            }
+                                                            <input type="hidden" name="item_id" value="@(@Model.ListContent[i].Id)" />
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <tr>
+                                                    <td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_0" name="item_imgurl" value="" placeholder="请输入图片地址"><span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="BrowseServer('slide_Img_0')"><i class="fa fa-search"></i></button></span></div></td>
+                                                    <td><input type="text" class="form-control" id="" name="item_linkurl" value="" placeholder="请输入链接地址"></td>
+                                                    <td><input type="text" class="form-control" id="" name="item_title" value="" placeholder="请输入图片标题"></td>
+                                                    <td><textarea class="form-control" name="item_imginfo" placeholder="请输入图片说明" rows="2"></textarea></td>
+                                                    <td>
+                                                        <button type="button" class="btn btn-sm btn-success" onClick="addSlideRow();"><i class="fa fa-plus-square"></i> 添加</button>
+                                                        <input type="hidden" name="item_id" value="0" />
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr>
+                                                <td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_0" name="item_imgurl" value="" placeholder="请输入图片地址"><span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="BrowseServer('slide_Img_0')"><i class="fa fa-search"></i></button></span></div></td>
+                                                <td><input type="text" class="form-control" id="" name="item_linkurl" value="" placeholder="请输入链接地址"></td>
+                                                <td><input type="text" class="form-control" id="" name="item_title" value="" placeholder="请输入图片标题"></td>
+                                                <td>
+                                                    <textarea class="form-control" name="item_imginfo" placeholder="请输入图片说明" rows="2"></textarea>
+                                                </td>
+                                                <td>
+                                                    <button type="button" class="btn btn-sm btn-success" onClick="addSlideRow();"><i class="fa fa-plus-square"></i> 添加</button>
+                                                    <input type="hidden" name="item_id" value="0" />
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="detail_8" v-show="responseType == 8">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">图片详情：</label>
+                            <div class="col-sm-8">
+                                <div class="input-group">
+                                    <input id="txtSingleImage" name="txtSingleImage" maxlength="250" type="text" class="form-control" placeholder="选择一张图片（图片不能大于1M，否则微信显示不了！）" value="@(ViewBag.txtSingleImage)">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" onclick="BrowseServer('txtSingleImage')">
+                                            选择一张图片
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-3">
+                            <input type="hidden" id="Id" name="Id" value="@Model.Id" />
+                            <input type="hidden" id="RuleName" name="RuleName" value="关注自动回复" />
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                            <button class="btn btn-default" type="button" onclick="closethisdialog();"><i class="fa fa-close"></i> 取消 </button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+
+    </div>
+    <script>
+        var index = parent.layer.getFrameIndex(window.name);
+        function closethisdialog() {
+            parent.layer.close(index);
+        }
+        var htmlText = '<tr id="slideTR_{0}">';
+        htmlText += '<td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_{0}" name="item_imgurl" value="" placeholder="请输入图片地址"><span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="BrowseServer(\'slide_Img_{0}\')"><i class="fa fa-search"></i></button></span></div></td>';
+        htmlText += '<td><input type="text" class="form-control" id="slide_Link_{0}" name="item_linkurl" value="" placeholder="请输入链接地址"></td>';
+        htmlText += '<td><input type="text" class="form-control" id="slide_Alt_{0}" name="item_title" value="" placeholder="请输入图片标题"></td>';
+        htmlText += '<td><textarea class="form-control" name="item_imginfo" placeholder="请输入图片说明" rows="2"></textarea></td>';
+        htmlText += '<td><button type="button" class="btn btn-sm btn-danger" onclick="delmySlideRow({0})"><i class="fa fa-minus-square"></i> 删除</button><input type="hidden" name="item_id" value="0" /></td></tr>';
+        var items = 1;
+
+        function addSlideRow() {
+            var lastitem = items - 1;
+            var newHtmlTr = htmlText.replace(/\{0\}/g, items);
+            $('#SildeImgs').append(newHtmlTr);
+            items += 1;
+        }
+        function delmySlideRow(id) {
+            $("#slideTR_" + id).remove();
+        }
+        $(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+            DoPost("editSubscribeReplyForm");
+        })
+        var app = new Vue({
+            el: '#app',
+            data: {
+                trs: [{ id: 0, name: '纯文本回复' }, { id: 2, name: '多图文回复' }, { id: 3, name: '语音回复' }, { id: 8, name: '单图片回复' }],
+                responseType:@Model.ResponseType,
+                my:'abc'
+            },
+            methods: {
+
+            }
+
+
+
+        })
+    </script>

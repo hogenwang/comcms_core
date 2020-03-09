@@ -153,6 +153,65 @@ namespace COMCMS.Core
         #endregion
 
         #region 业务操作
+        /// <summary>
+        /// 获取上一条记录/前一条记录
+        /// </summary>
+        /// <param name="id">ID</param>
+        /// <returns></returns>
+        public static Article GetPrev(int id)
+        {
+            Article entity = Article.FindById(id);
+            if (entity != null)
+            {
+                //获取上一条记录
+                IList<Article> list = Article.FindAll(_.Id > entity.Id & _.KId == entity.KId & _.Sequence <= entity.Sequence, string.Format("{0} Desc,{1} Asc", _.Sequence, _.Id), null, 0, 1);
+                if (list != null && list.Count > 0)
+                    return list[0];
+                else
+                {
+                    list = Article.FindAll(_.Id != entity.Id & _.KId == entity.KId & _.Sequence < entity.Sequence, string.Format("{0} Desc,{1} Asc", _.Sequence, _.Id), null, 0, 1);
+                    if (list != null && list.Count > 0)
+                    {
+                        return list[0];
+                    }
+                    else
+                        return null;
+                }
+
+            }
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// 获取下一条记录/后一条记录
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Article GetNext(int id)
+        {
+            Article entity = Article.FindById(id);
+            if (entity != null)
+            {
+                //获取上一条记录
+                IList<Article> list = Article.FindAll(_.Id != entity.Id & _.KId == entity.KId & _.Sequence > entity.Sequence, string.Format("{0} Asc,{1} Desc", _.Sequence, _.Id), null, 0, 1);
+                if (list != null && list.Count > 0)
+                    return list[0];
+                else
+                {
+                    list = Article.FindAll(_.Id < entity.Id & _.KId == entity.KId & _.Sequence >= entity.Sequence, string.Format("{0} Asc,{1} Desc", _.Sequence, _.Id), null, 0, 1);
+                    if (list != null && list.Count > 0)
+                    {
+                        return list[0];
+                    }
+                    else
+                        return null;
+                }
+
+            }
+            else
+                return null;
+        }
         #endregion
     }
 }

@@ -142,6 +142,23 @@ namespace COMCMS.Core
 
             return Find(_.Id == id);
         }
+
+        /// <summary>根据目录查找</summary>
+        /// <param name="path">目录</param>
+        /// <returns>实体对象</returns>
+        public static ArticleCategory FindByFilePath(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return null;
+
+            // 实体缓存
+            if (Meta.Count < 1000) return Meta.Cache.Find(e => e.FilePath == path);
+
+            // 单对象缓存
+            //return Meta.SingleCache[id];
+
+            return Find(_.FilePath == path);
+        }
+
         /// <summary>
         /// 根据父ID查询所有子项
         /// </summary>
@@ -324,6 +341,35 @@ namespace COMCMS.Core
                     entity.Update();
                 }
             }
+        }
+
+        /// <summary>
+        /// 获取当前位置
+        /// </summary>
+        /// <param name="kid">类别ID</param>
+        /// <returns></returns>
+        public static string GetNav(int kid)
+        {
+            string tpl = "<a href=\"{0}\" title=\"{1}\">{1}</a>";
+            string re = string.Empty;
+            ArticleCategory model = Find(_.Id == kid);
+            if (model == null)
+            {
+                re = string.Format(tpl, "/", "首页") + re;//查到最后肯定是没有
+            }
+            else
+            {
+                re += " &gt; " + string.Format(tpl, "/article/index/" + model.Id, model.KindName);
+                if (model.PId != 0)
+                {
+                    re = GetNav(model.PId) + re;
+                }
+                else
+                {
+                    re = string.Format(tpl, "/", "首页") + re;//查到最后肯定是没有
+                }
+            }
+            return re;
         }
         #endregion
     }

@@ -1,0 +1,46 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "信息提示";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/hplus/css/style.css" rel="stylesheet" />
+    <link href="~/hplus/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/hplus/css/animate.min.css" rel="stylesheet" />
+    <link href="~/hplus/css/login.css" rel="stylesheet" />
+
+</head>
+
+<body class="gray-bg">
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>@ViewBag.Title</h5>
+                <div class="ibox-tools">
+                </div>
+            </div>
+            <div class="ibox-content">
+                <h2>
+                    <i class="fa fa-info-circle"></i> 信息提示<br />
+                </h2>
+                <h3>
+                    @ViewBag.Message
+                </h3>
+                <p class="text-center">
+                    <a class="btn btn-primary" href="/">返回首页</a>
+                </p>
+            </div>
+        </div>
+
+
+    </div>
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+</body>
+
+</html>

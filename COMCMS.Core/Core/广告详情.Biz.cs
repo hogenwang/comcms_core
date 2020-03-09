@@ -305,7 +305,7 @@ namespace COMCMS.Core
         {
             Ads model = new Ads();
             model = Find(_.Id == aid);
-            if (model.TId == 4)
+            if (model!=null && model.TId == 4)
             {
                 List<ImgAds> listimg = new List<ImgAds>();
                 listimg = JsonConvert.DeserializeObject<List<ImgAds>>(model.Content);

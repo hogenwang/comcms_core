@@ -11,7 +11,6 @@ using XCode;
 using System.Web;
 using COMCMS.Web.Filter;
 using NewLife.Log;
-using static COMCMS.Web.Models.APIModels;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Senparc.Weixin.WxOpen;
@@ -34,7 +33,7 @@ namespace COMCMS.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [CheckFilter]
-        public object GetCategories(int level, int pid = 0, string random = "", string timeStamp = "", string signature = "")
+        public object GetCategories(int level, int pid = 0)
         {
             var list = Category.GetListTree(pid, level, false, false);
 
@@ -74,7 +73,7 @@ namespace COMCMS.Web.Controllers.api
         /// <returns></returns>
         [HttpGet]
         [CheckFilter]
-        public object GetProductList(int kid, int page, int pageSize = 10, string random = "", string timeStamp = "", string signature = "")
+        public object GetProductList(int kid, int page, int pageSize = 10)
         {
             var where = Product._.IsHide == 0;
             if (kid > 0)

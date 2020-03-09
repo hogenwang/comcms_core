@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +13,12 @@ using Microsoft.AspNetCore.Http;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
+    [DisplayName("订单")]
     public class OrderController : AdminBaseController
     {
         #region 订单列表
         [MyAuthorize("viewlist", "order")]
+        [DisplayName("订单列表")]
         public IActionResult OrderList()
         {
             Core.Admin.WriteLogActions("查看订单列表;");
@@ -298,6 +301,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
         #region 在线支付成功记录
         [MyAuthorize("viewlist", "payonline")]
+        [DisplayName("支付订单")]
         public IActionResult PayOnlineList()
         {
             Core.Admin.WriteLogActions("查看在线支付订单列表;");

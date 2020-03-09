@@ -280,6 +280,11 @@ function showDialog(id, title, url, width, height) {
     var w='80%', h='80%';
     if (width > 0) w = width + 'px';
     if (height > 0) h = height + 'px';
+    var windowWidth = $(window).width();
+    if (windowWidth <= 750) {
+        w = "100%";
+        h = "100%";
+    }
     toplayerindex = layer.open({
         type: 2,
         title: title,
