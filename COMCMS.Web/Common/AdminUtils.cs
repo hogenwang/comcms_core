@@ -54,5 +54,48 @@ namespace COMCMS.Web.Common
         }
         #endregion
 
+        #region 判断文章栏目或者商品栏目，栏目路径是否已经存在
+        /// <summary>
+        /// 判断路径名称是否合法
+        /// </summary>
+        /// <param name="pathname"></param>
+        /// <param name="kid">id，大于0是修改</param>
+        /// <param name="typeid">类型，0文章，1商品</param>
+        /// <returns></returns>
+        public static bool CheckFilePathIsOK(string pathname, int kid, int typeid)
+        {
+            bool flag = true;
+
+            if (string.IsNullOrEmpty(pathname))
+            {
+                return false;
+            }
+            if(typeid ==0)//文章
+            {
+                if (ArticleCategory.FindCount(ArticleCategory._.FilePath == pathname & ArticleCategory._.Id != kid, null, null, 0, 0) > 0)
+                {
+                    return false;
+                }
+                if (Category.FindCount(Category._.FilePath == pathname, null, null, 0, 0) > 0)
+                {
+                    return false;
+                }
+            }
+            else if(typeid == 1)
+            {
+                if (ArticleCategory.FindCount(ArticleCategory._.FilePath == pathname , null, null, 0, 0) > 0)
+                {
+                    return false;
+                }
+                if (Category.FindCount(Category._.FilePath == pathname & Category._.Id != kid, null, null, 0, 0) > 0)
+                {
+                    return false;
+                }
+            }
+
+            return flag;
+        }
+        #endregion
+
     }
 }

@@ -325,7 +325,17 @@ function DoAdminLogin(formId, rules, messages) {
                         });
                     } else {
                         layer.close(loading);
-                        layer.alert(data.message, { icon: 2 });
+                        if (data.other == "reload") {
+                            layer.msg('页面访问超时，正在刷新页面，请重新登录！', function () {
+                                //关闭后的操作
+                                setTimeout(function () {
+                                    window.location.href = window.location.href;
+                                },1500)
+                            });
+                        } else {
+                            layer.alert(data.message, { icon: 2 });
+                        }
+                        
                         btn.removeAttr("disabled");
                     }
                 },

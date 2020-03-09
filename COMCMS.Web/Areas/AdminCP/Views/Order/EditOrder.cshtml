@@ -150,7 +150,7 @@
                         <div class="form-group">
                             <label class="col-sm-3 control-label">下单IP：</label>
                             <div class="col-sm-8">
-                                <label class="control-label">@Model.IP</label>
+                                <label class="control-label">@Model.Ip</label>
 
                             </div>
                         </div>
@@ -251,16 +251,16 @@
             data: { id: Id, fare: Fare },
             dataType: "JSON",
             success: function (data) {
-                if (data.Status == "success") {
+                if (data.status == "success") {
                     layer.close(loading);
-                    layer.msg(data.Message, {
+                    layer.msg(data.message, {
                         time: 1000 //2秒关闭（如果不配置，默认是3秒）
                     }, function () {
                         window.location.href = window.location.href;
                     });
                 } else {
                     layer.close(loading);
-                    layer.alert(data.Message, { icon: 2 });
+                    layer.alert(data.message, { icon: 2 });
                 }
             },
             error: function () {
@@ -287,16 +287,16 @@
             data: { id: Id, DeliverType: DeliverType, DeliverNO: DeliverNO },
             dataType: "JSON",
             success: function (data) {
-                if (data.Status == "success") {
+                if (data.status == "success") {
                     layer.close(loading);
-                    layer.msg(data.Message, {
+                    layer.msg(data.message, {
                         time: 1000 //2秒关闭（如果不配置，默认是3秒）
                     }, function () {
                         window.location.href = window.location.href;
                     });
                 } else {
                     layer.close(loading);
-                    layer.alert(data.Message, { icon: 2 });
+                    layer.alert(data.message, { icon: 2 });
                 }
             },
             error: function () {
@@ -328,16 +328,16 @@
             data: { id: Id, Flag1: Flag1, Flag2: Flag2 },
             dataType: "JSON",
             success: function (data) {
-                if (data.Status == "success") {
+                if (data.status == "success") {
                     layer.close(loading);
-                    layer.msg(data.Message, {
+                    layer.msg(data.message, {
                         time: 1000 //2秒关闭（如果不配置，默认是3秒）
                     }, function () {
                         window.location.href = window.location.href;
                     });
                 } else {
                     layer.close(loading);
-                    layer.alert(data.Message, { icon: 2 });
+                    layer.alert(data.message, { icon: 2 });
                 }
             },
             error: function () {

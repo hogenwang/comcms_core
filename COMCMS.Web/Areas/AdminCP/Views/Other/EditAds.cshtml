@@ -6,6 +6,7 @@
         Model.Content = "[]";
     }
 }
+    <script src="~/js/jquery.tablednd.min.js"></script>
 <div class="wrapper wrapper-content ">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -161,7 +162,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">幻灯片详情：</label>
                         <div class="col-sm-8">
-                            <table class="table table-hover">
+                            <table class="table table-hover" id="sildeTable">
                                 <thead>
                                     <tr>
                                         <th style="width:30%">图片（必填）</th>
@@ -264,6 +265,7 @@
             $('#SildeImgs').append(newHtmlTr);
             $("#basic-addon_" + items).InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
             items += 1;
+            $("#sildeTable").tableDnD();
         }
         function delmySlideRow(id) {
             $("#slideTR_" + id).remove();

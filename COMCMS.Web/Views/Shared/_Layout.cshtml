@@ -31,12 +31,13 @@
                     <div class="menu-bg"></div>
                     <ul class="nav-list">
                         <li id="nav_0"><a href="/" title="首页">首页</a><i></i></li>
-                        <li id="nav_1"><a asp-controller="Article" asp-action="Index" asp-route-id="1" title="关于我们">关于我们</a><i></i></li>
-                        <li id="nav_P"><a asp-controller="Product" asp-action="Index" asp-route-id="1" title="产品中心">产品中心</a><i></i></li>
-                        <li id="nav_2"><a asp-controller="Article" asp-action="Index" asp-route-id="2" title="新闻资讯">新闻资讯</a><i></i></li>
-                        <li id="nav_3"><a asp-controller="Article" asp-action="Index" asp-route-id="3" title="项目案例">项目案例</a><i></i></li>
-                        <li id="nav_4"><a asp-controller="Article" asp-action="Index" asp-route-id="4" title="用户服务">用户服务</a><i></i></li>
-                        <li id="nav_5"><a asp-controller="Article" asp-action="Index" asp-route-id="5" title="联系我们">联系我们</a><i></i></li>
+
+                        <li id="nav_1"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory,1)" title="关于我们">关于我们</a><i></i></li>
+                        <li id="nav_P"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ProductCategory,1)" title="产品中心">产品中心</a><i></i></li>
+                        <li id="nav_2"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory,2)" title="新闻资讯">新闻资讯</a><i></i></li>
+                        <li id="nav_3"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory,3)" title="项目案例">项目案例</a><i></i></li>
+                        <li id="nav_4"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory,4)" title="用户服务">用户服务</a><i></i></li>
+                        <li id="nav_5"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory,5)" title="联系我们">联系我们</a><i></i></li>
                     </ul>
                 </div>
             </div>
@@ -210,7 +211,7 @@
             </div>
             <div class="foot-bottom">
                 <div class="cont">
-                    <span>@ViewBag.cfg.Copyright <a href="http://www.comcms.com/" target="_blank"> 技术支持：COMCMS</a>&nbsp;<a href="http://www.miitbeian.gov.cn/" target="_blank">粤ICP备8888888号-1</a></span>
+                    <span>@ViewBag.cfg.Copyright <a href="http://www.comcms.com/" target="_blank"> 技术支持：COMCMS</a>&nbsp;<a href="http://www.miitbeian.gov.cn/" target="_blank">粤ICP备8888888号-1</a> Powered by .NET Core 3.1.0 on Windows Server</span>
                 </div>
             </div>
         </div>

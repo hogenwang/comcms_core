@@ -43,7 +43,10 @@ $(function () {
                     //'DelFilePath': '' //定义参数
                 },
                 fileVal: 'Filedata', //上传域的名称
-                fileSingleSizeLimit: p.filesize * 1024 //文件大小
+                fileSingleSizeLimit: p.filesize * 1024, //文件大小
+                compress: false,
+                noCompressIfLarger: false,
+                compressSize: 0
             });
 
             //当validate不通过时，会以派送错误事件的形式通知

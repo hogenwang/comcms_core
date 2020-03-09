@@ -592,6 +592,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
         #region 用户组管理
         [MyAuthorize( "viewlist",  "memberrole")]
+        [DisplayName("用户组列表")]
         public IActionResult MemberRole()
         {
             IList<MemberRoles> list = MemberRoles.FindAll(MemberRoles._.Id > 0, MemberRoles._.Rank.Asc(), null, 0, 0);
@@ -786,6 +787,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
         #region 用户管理
         [MyAuthorize("viewlist", "members")]
+        [DisplayName("用户列表")]
         public IActionResult Members()
         {
             //加载用户组
@@ -1026,11 +1028,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
         #region 后台管理日志列表
         [MyAuthorize("viewlist", "admincplog")]
+        [DisplayName("后台管理日志")]
         public IActionResult AdminCPLogList()
         {
             return View();
         }
-        [MyAuthorize("viewlist", "admincplog")]
+        [MyAuthorize("viewlist", "admincplog","JSON")]
         public IActionResult GetAdminCPLogList(string keyword, int page = 1, int limit = 20)
         {
             int numPerPage, currentPage, startRowIndex;

@@ -81,6 +81,30 @@
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',
             });
+            $(".my-preview").click(function () {
+                var url = $(this).siblings(".upload-path").val();
+                if (url) {
+                    var data = {
+                        "status": 1,
+                        "msg": "",
+                        "title": "预览图片",
+                        "id": 1,
+                        "start": 0,
+                        "data": [
+                            {
+                                "alt": "",
+                                "pid": 1,
+                                "src": url,
+                                "thumb": ""
+                            }
+                        ]
+                    };
+                    layer.photos({
+                        photos: data,
+                        anim: 0
+                    });
+                }
+            })
         })
         $("input").each(function (index, item) {
             if ($(this).attr("placeholder") && $(this).attr("placeholder") != "") {

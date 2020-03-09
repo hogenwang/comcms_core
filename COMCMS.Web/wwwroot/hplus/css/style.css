@@ -7567,7 +7567,7 @@ body.skin-3 {
         display: none;
     }
     #content-main {
-        height: calc(100% - 100px);
+        height: calc(100% - 88px);
     }
     .fixed-nav #content-main {
         height: calc(100% - 38px);

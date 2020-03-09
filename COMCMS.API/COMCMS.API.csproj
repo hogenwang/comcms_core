@@ -1,11 +1,18 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Weixin\" />
+    <PackageReference Include="NewLife.Core" Version="8.6.2020.204" />
+    <PackageReference Include="Senparc.Weixin" Version="6.6.104.1" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.9.104.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\COMCMS.Common\COMCMS.Common.csproj" />
+    <ProjectReference Include="..\COMCMS.Core\COMCMS.Core.csproj" />
   </ItemGroup>
 
 </Project>

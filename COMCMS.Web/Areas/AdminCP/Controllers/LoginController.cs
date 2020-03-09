@@ -56,6 +56,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             //判断并解密
             string key = SessionHelper.GetSession("des_key").ToString();
+            if (string.IsNullOrEmpty(key))
+            {
+                tip.Message = "页面访问超时，请刷新页面重新登录！";
+                tip.Other = "reload";
+                return Json(tip);
+            }
             //解密
             string username = "";
             string password = "";
@@ -67,14 +73,15 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             catch (Exception exp)
             {
                 NewLife.Log.XTrace.WriteException(exp);
-                tip.Message = "用户名或者密码错误！";
+                tip.Message = "页面访问超时，请刷新页面重新登录！";
+                tip.Other = "reload";
                 return Json(tip);
             }
 
             //验证用户
             if (string.IsNullOrEmpty(username))
             {
-                tip.Message = "请输入用户名！"+ key;
+                tip.Message = "请输入用户名！";
                 return Json(tip);
             }
             if (string.IsNullOrEmpty(password) || Utils.GetStringLength(password) < 5)
@@ -115,8 +122,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         /// <returns></returns>
         public IActionResult Logout()
         {
-            //Admin.ClearInfo();
-            Admin.ClearInfoAsync().Wait();
+            Admin.ClearInfo();
+            //Admin.ClearInfoAsync().Wait();
             return Redirect("~/AdminCP/Login");
         }
         #endregion

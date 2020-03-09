@@ -12,8 +12,8 @@ namespace COMCMS.Web.Common
 {
     public class HttpGlobalExceptionFilter : IExceptionFilter
     {
-        readonly IHostingEnvironment _env;
-        public HttpGlobalExceptionFilter(IHostingEnvironment env)
+        readonly IWebHostEnvironment _env;
+        public HttpGlobalExceptionFilter(IWebHostEnvironment env)
         {
             _env = env;
         }

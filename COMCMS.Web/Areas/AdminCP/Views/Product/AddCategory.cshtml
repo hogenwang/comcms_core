@@ -40,12 +40,11 @@
                     <label class="col-sm-3 control-label">Banner图片：</label>
                     <div class="col-sm-8">
                         <div class="input-group">
-                            <input id="BannerImg" name="BannerImg" maxlength="250" type="text" class="form-control" placeholder="请选择或上传一个Banner图片" value="">
-                            <span class="input-group-btn">
-                                <button type="button" class="btn btn-primary" onclick="BrowseServer('BannerImg')">
-                                    选择图片
-                                </button>
+                            <span class="input-group-btn my-preview">
+                                <button type="button" class="btn btn-primary"><i class="fa fa-search-plus"></i></button>
                             </span>
+                            <input id="BannerImg" name="BannerImg" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个图片" value="">
+                            <span class="input-group-addon my-upload-span upload-img"></span>
                         </div>
                     </div>
                 </div>
@@ -141,6 +140,8 @@
 </div>
 <script>
     $(function () {
+            //初始化上传控件
+        $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
         DoPost("addArticleKindForm");
         CKEDITOR.replace('KindInfo');
     })

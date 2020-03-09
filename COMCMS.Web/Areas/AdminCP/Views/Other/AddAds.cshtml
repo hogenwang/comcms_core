@@ -2,6 +2,7 @@
 @{
     ViewBag.title = "添加广告";
 }
+    <script src="~/js/jquery.tablednd.min.js"></script>
 <div class="wrapper wrapper-content ">
     <div class="ibox float-e-margins">
         <div class="ibox-title">
@@ -157,7 +158,7 @@
                     <div class="form-group">
                         <label class="col-sm-3 control-label">幻灯片详情：</label>
                         <div class="col-sm-8">
-                            <table class="table table-hover">
+                            <table class="table table-hover" id="sildeTable">
                                 <thead>
                                     <tr>
                                         <th style="width:30%">图片（必填）</th>
@@ -247,7 +248,7 @@
         }
     }
     var htmlText = '<tr id="slideTR_{0}">';
-    htmlText += '<td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_{0}" name="slide_Img" value="" placeholder="请输入图片地址"><span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="BrowseServer(\'slide_Img_{0}\')"><i class="fa fa-search"></i></button></span></div></td>';
+    htmlText += '<td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_{0}" name="slide_Img" value="" placeholder="请输入图片地址"><span class="input-group-addon my-upload-span upload-img" id="basic-addon_{0}"></span></div></td>';
     htmlText += '<td><input type="text" class="form-control" id="slide_Link_{0}" name="slide_Link" value="" placeholder="请输入链接地址"></td>';
     htmlText += '<td><input type="text" class="form-control" id="slide_Alt_{0}" name="slide_Alt" value="" placeholder="请输入图片标题"></td>';
     htmlText += '<td><button type="button" class="btn btn-sm btn-danger" onclick="delmySlideRow({0})"><i class="fa fa-minus-square"></i> 删除</button></td></tr>';
@@ -259,6 +260,7 @@
         $('#SildeImgs').append(newHtmlTr);
         $("#basic-addon_" + items).InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
         items += 1;
+        $("#sildeTable").tableDnD();
     }
     function delmySlideRow(id) {
         $("#slideTR_" + id).remove();
@@ -270,5 +272,6 @@
         $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
         $(".upload-swf").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderFile", swf: "/js/webuploader/uploader.swf", filetypes: "swf", notwater: true });
         DoPost("addAdsForm");
+        $("#sildeTable").tableDnD();
     })
 </script>

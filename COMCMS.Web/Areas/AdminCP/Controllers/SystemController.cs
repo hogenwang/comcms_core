@@ -19,8 +19,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     [Area("AdminCP")]
     public class SystemController : AdminBaseController
     {
-        private IHostingEnvironment _env;
-        public SystemController(IHostingEnvironment env)
+        private IWebHostEnvironment _env;
+        public SystemController(IWebHostEnvironment env)
         {
             _env = env;
         }
