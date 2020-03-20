@@ -33,13 +33,13 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 - WebTest 测试站点；暂时屏蔽
 
-- data 目录是初始化sql ，目前是mysql
+- data 目录是初始化sql ，目前是mysql，注意linux版本要还原comcms_for_linux.sql
 
 ### 演示地址
 
 ```
-演示地址（windows server 2016 + IIS）：前台：[前台演示地址](http://demo.comcms.com) 后台：[后台演示地址](http://demo.comcms.com/AdminCP)
-
+演示地址1（windows server 2016 + IIS）：前台：[前台演示地址](http://demo.comcms.com) 后台：[后台演示地址](http://demo.comcms.com/AdminCP)
+演示地址2（CentOS + Nginx）：前台：[前台演示地址](http://demo.comcms.cn) 后台：[后台演示地址](http://demo.comcms.cn/AdminCP)
 
 账号密码都是admin
 ```

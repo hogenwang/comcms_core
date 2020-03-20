@@ -43,7 +43,8 @@ namespace COMCMS.Common
             {
                 Expires = DateTime.Now.AddMinutes(expires),
                 Path = "/",
-                HttpOnly = true
+                HttpOnly = true,
+                SameSite = SameSiteMode.Lax
             };
             MyHttpContext.Current.Response.Cookies.Append(strName, strValue, op);//用户名
         }
