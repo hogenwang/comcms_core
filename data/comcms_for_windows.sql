@@ -11,7 +11,7 @@
  Target Server Version : 50718
  File Encoding         : 65001
 
- Date: 02/12/2018 18:29:57
+ Date: 20/03/2020 12:00:29
 */
 
 SET NAMES utf8mb4;
@@ -179,7 +179,7 @@ CREATE TABLE `admin`  (
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', '8788C77C8FA36CF9D3718026355AB571', 'fOtOFYYpLO90', 'admin', '', '', 100, 1, 0, '2018-12-02 16:32:51', '127.0.0.1', '2018-04-16 00:17:43', '127.0.0.1', 0);
+INSERT INTO `admin` VALUES (1, 'admin', '8788C77C8FA36CF9D3718026355AB571', 'fOtOFYYpLO90', 'admin', '', '', 100, 1, 0, '2020-03-06 15:40:43', '127.0.0.1', '2018-04-16 00:17:43', '127.0.0.1', 0);
 
 -- ----------------------------
 -- Table structure for adminlog
@@ -197,7 +197,7 @@ CREATE TABLE `adminlog`  (
   `Actions` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '记录',
   `LastUpdateTime` datetime(0) NULL DEFAULT NULL COMMENT '登录时间',
   PRIMARY KEY (`Id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 34 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '管理日志表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 50 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '管理日志表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of adminlog
@@ -234,7 +234,23 @@ INSERT INTO `adminlog` VALUES (29, 0, '6b4d37d3-eb88-4c32-acdf-894632b031b6', 'a
 INSERT INTO `adminlog` VALUES (30, 0, '109e74c6-76cb-4d01-8012-40f17d19c49e', 'admin', '******', '2018-11-18 23:30:44', '127.0.0.1', 1, '|||2018-11-18 23:30: 查看基本配置；|||2018-11-18 23:30: 查看文章栏目列表页面；|||2018-11-18 23:31: 查看/编辑文章栏目（id:2）页面；|||2018-11-18 23:31: 修改文章栏目(id:2);|||2018-11-18 23:31: 查看文章栏目列表页面；|||2018-11-18 23:31: 查看添加文章栏目页面；|||2018-11-18 23:31: 添加文章栏目(id:6);|||2018-11-18 23:31: 查看文章栏目列表页面；|||2018-11-18 23:31: 查看添加文章栏目页面；|||2018-11-18 23:31: 添加文章栏目(id:7);|||2018-11-18 23:31: 查看文章栏目列表页面；|||2018-11-18 23:32: 查看/编辑文章栏目（id:4）页面；|||2018-11-18 23:32: 修改文章栏目(id:4);|||2018-11-18 23:32: 查看文章栏目列表页面；|||2018-11-18 23:33: 查看添加文章栏目页面；|||2018-11-18 23:33: 添加文章栏目(id:8);|||2018-11-18 23:33: 查看文章栏目列表页面；|||2018-11-18 23:33: 查看添加文章栏目页面；|||2018-11-18 23:33: 添加文章栏目(id:9);|||2018-11-18 23:33: 查看文章栏目列表页面；|||2018-11-18 23:33: 查看添加文章栏目页面；|||2018-11-18 23:33: 添加文章栏目(id:10);|||2018-11-18 23:33: 查看文章栏目列表页面；|||2018-11-18 23:33: 查看添加文章栏目页面；|||2018-11-18 23:33: 添加文章栏目(id:11);|||2018-11-18 23:33: 查看文章栏目列表页面；|||2018-11-18 23:33: 查看文章列表;|||2018-11-18 23:34: 查看文章(1);|||2018-11-18 23:35: 编辑文章(id:1);|||2018-11-18 23:50: 查看商品栏目列表页面；|||2018-11-19 00:08: 查看添加文章页面;|||2018-11-19 00:08: 添加文章(id:3);|||2018-11-19 00:08: 查看添加文章页面;|||2018-11-19 00:08: 添加文章(id:4);|||2018-11-19 00:08: 查看添加文章页面;|||2018-11-19 00:08: 添加文章(id:5);|||2018-11-19 00:08: 查看添加文章页面;|||2018-11-19 00:08: 添加文章(id:6);|||2018-11-19 00:16: 查看添加文章栏目页面；|||2018-11-19 00:16: 添加文章栏目(id:12);|||2018-11-19 00:16: 查看文章栏目列表页面；', '2018-11-19 00:16:58');
 INSERT INTO `adminlog` VALUES (31, 0, '4bb5af57-640c-43a7-b228-d48041e56775', 'admin', '******', '2018-12-01 21:36:28', '127.0.0.1', 1, '|||2018-12-01 21:36: 查看文章栏目列表页面；|||2018-12-01 21:36: 查看/编辑文章栏目（id:1）页面；|||2018-12-01 21:37: 查看文章栏目列表页面；|||2018-12-01 21:37: 查看/编辑文章栏目（id:1）页面；|||2018-12-01 21:37: 修改文章栏目(id:1);|||2018-12-01 21:37: 查看文章栏目列表页面；|||2018-12-01 21:37: 查看/编辑文章栏目（id:1）页面；|||2018-12-01 21:38: 查看/编辑文章栏目（id:1）页面；|||2018-12-01 21:44: 查看/编辑文章栏目（id:2）页面；|||2018-12-01 21:44: 修改文章栏目(id:2);|||2018-12-01 21:44: 查看文章栏目列表页面；|||2018-12-01 22:25: 查看/编辑文章栏目（id:6）页面；|||2018-12-01 22:25: 修改文章栏目(id:6);|||2018-12-01 22:25: 查看文章栏目列表页面；|||2018-12-01 22:27: 查看/编辑文章栏目（id:2）页面；|||2018-12-01 22:27: 查看/编辑文章栏目（id:4）页面；|||2018-12-01 22:27: 查看/编辑文章栏目（id:6）页面；|||2018-12-01 22:27: 修改文章栏目(id:6);|||2018-12-01 22:27: 查看文章栏目列表页面；|||2018-12-01 22:27: 查看/编辑文章栏目（id:2）页面；|||2018-12-01 22:27: 修改文章栏目(id:2);|||2018-12-01 22:27: 查看文章栏目列表页面；|||2018-12-01 22:27: 查看/编辑文章栏目（id:4）页面；|||2018-12-01 22:27: 修改文章栏目(id:4);|||2018-12-01 22:27: 查看文章栏目列表页面；|||2018-12-01 22:27: 查看/编辑文章栏目（id:5）页面；|||2018-12-01 22:27: 查看/编辑文章栏目（id:5）页面；|||2018-12-01 22:28: 修改文章栏目(id:5);|||2018-12-01 22:28: 查看文章栏目列表页面；|||2018-12-01 22:44: 查看文章列表;|||2018-12-01 22:44: 查看文章(2);|||2018-12-01 22:44: 编辑文章(id:2);|||2018-12-01 23:05: 查看/编辑文章栏目（id:10）页面；|||2018-12-01 23:05: 查看文章栏目列表页面；|||2018-12-01 23:05: 查看/编辑文章栏目（id:10）页面；|||2018-12-01 23:06: 查看/编辑文章栏目（id:1）页面；|||2018-12-01 23:06: 查看文章栏目列表页面；|||2018-12-01 23:06: 查看/编辑文章栏目（id:2）页面；|||2018-12-01 23:06: 查看添加文章栏目页面；|||2018-12-01 23:07: 查看文章栏目列表页面；|||2018-12-01 23:07: 查看/编辑文章栏目（id:10）页面；|||2018-12-01 23:07: 修改文章栏目(id:10);|||2018-12-01 23:07: 查看文章栏目列表页面；|||2018-12-01 23:07: 查看/编辑文章栏目（id:10）页面；|||2018-12-01 23:08: 查看文章栏目列表页面；|||2018-12-01 23:08: 查看/编辑文章栏目（id:10）页面；|||2018-12-01 23:08: 修改文章栏目(id:10);|||2018-12-01 23:08: 查看文章栏目列表页面；', '2018-12-01 23:08:28');
 INSERT INTO `adminlog` VALUES (32, 0, '229bbc0f-65f1-413f-99e3-aaeda53ddd34', 'admin', '******', '2018-12-02 00:31:23', '127.0.0.1', 1, '|||2018-12-02 00:31: 查看文章栏目列表页面；|||2018-12-02 00:31: 查看/编辑文章栏目（id:11）页面；|||2018-12-02 00:31: 查看/编辑文章栏目（id:11）页面；|||2018-12-02 00:32: 修改文章栏目(id:11);|||2018-12-02 00:32: 查看文章栏目列表页面；|||2018-12-02 01:00: 查看留言分类列表页面；|||2018-12-02 01:00: 添加留言分类(1)；|||2018-12-02 01:00: 查看留言分类列表页面；', '2018-12-02 01:00:59');
-INSERT INTO `adminlog` VALUES (33, 0, '1fde3cde-8f37-4a1f-b2fb-44dbb9215ca3', 'admin', '******', '2018-12-02 16:32:51', '127.0.0.1', 1, '|||2018-12-02 16:40: 查看友情链接列表;|||2018-12-02 16:40: 查看友情链接分类列表页面；|||2018-12-02 16:40: 添加友情链接分类(1)；|||2018-12-02 16:40: 查看友情链接分类列表页面；|||2018-12-02 16:43: 查看添加友情链接页面;|||2018-12-02 16:45: 查看添加友情链接页面;|||2018-12-02 16:45: 添加友情链接(1);|||2018-12-02 16:45: 查看友情链接列表;|||2018-12-02 16:46: 查看友情链接列表;|||2018-12-02 16:46: 查看/编辑友情链接(1);|||2018-12-02 16:46: 查看添加友情链接页面;|||2018-12-02 16:46: 添加友情链接(2);|||2018-12-02 16:46: 查看友情链接列表;|||2018-12-02 16:52: 查看文章列表;|||2018-12-02 16:52: 查看添加文章页面;|||2018-12-02 16:53: 添加文章(id:7);|||2018-12-02 16:54: 查看添加文章页面;|||2018-12-02 16:55: 添加文章(id:8);|||2018-12-02 16:55: 查看添加文章页面;|||2018-12-02 16:55: 添加文章(id:9);|||2018-12-02 16:56: 查看添加文章页面;|||2018-12-02 16:56: 添加文章(id:10);|||2018-12-02 16:56: 查看添加文章页面;|||2018-12-02 16:56: 添加文章(id:11);|||2018-12-02 16:58: 查看文章栏目列表页面；|||2018-12-02 17:05: 查看/编辑文章栏目（id:7）页面；|||2018-12-02 17:05: 查看/编辑文章栏目（id:6）页面；|||2018-12-02 17:09: 查看文章栏目列表页面；|||2018-12-02 17:10: 查看/编辑文章栏目（id:6）页面；|||2018-12-02 17:10: 修改文章栏目(id:6);|||2018-12-02 17:10: 查看文章栏目列表页面；|||2018-12-02 17:11: 查看/编辑文章栏目（id:7）页面；|||2018-12-02 17:11: 修改文章栏目(id:7);|||2018-12-02 17:11: 查看文章栏目列表页面；|||2018-12-02 17:11: 查看/编辑文章栏目（id:8）页面；|||2018-12-02 17:11: 修改文章栏目(id:8);|||2018-12-02 17:11: 查看文章栏目列表页面；|||2018-12-02 17:12: 查看/编辑文章栏目（id:9）页面；|||2018-12-02 17:12: 修改文章栏目(id:9);|||2018-12-02 17:12: 查看文章栏目列表页面；|||2018-12-02 17:12: 查看/编辑文章栏目（id:12）页面；|||2018-12-02 17:12: 修改文章栏目(id:12);|||2018-12-02 17:12: 查看文章栏目列表页面；|||2018-12-02 17:14: 查看文章(7);|||2018-12-02 17:14: 查看文章(1);|||2018-12-02 17:14: 编辑文章(id:1);|||2018-12-02 17:14: 查看商品栏目列表页面；|||2018-12-02 17:14: 查看商品列表;|||2018-12-02 17:14: 查看添加商品页面;|||2018-12-02 17:17: 查看添加商品页面;|||2018-12-02 17:20: 添加商品(id:1);|||2018-12-02 17:21: 查看添加商品页面;|||2018-12-02 17:22: 添加商品(id:2);|||2018-12-02 17:22: 查看添加商品页面;|||2018-12-02 17:23: 添加商品(id:3);|||2018-12-02 17:23: 查看添加商品页面;|||2018-12-02 17:23: 添加商品(id:4);|||2018-12-02 17:49: 查看添加商品页面;|||2018-12-02 17:50: 添加商品(id:5);|||2018-12-02 17:56: 查看广告分类列表页面；|||2018-12-02 17:56: 添加广告栏目(1)；|||2018-12-02 17:56: 查看广告分类列表页面；|||2018-12-02 17:56: 查看广告列表;|||2018-12-02 17:56: 查看添加广告页面;|||2018-12-02 18:02: 添加广告(1);|||2018-12-02 18:02: 查看添加广告页面;|||2018-12-02 18:06: 添加广告(2);|||2018-12-02 18:06: 查看/编辑广告(1);', '2018-12-02 18:06:31');
+INSERT INTO `adminlog` VALUES (33, 0, '1fde3cde-8f37-4a1f-b2fb-44dbb9215ca3', 'admin', '******', '2018-12-02 16:32:51', '127.0.0.1', 1, '|||2018-12-02 16:40: 查看友情链接列表;|||2018-12-02 16:40: 查看友情链接分类列表页面；|||2018-12-02 16:40: 添加友情链接分类(1)；|||2018-12-02 16:40: 查看友情链接分类列表页面；|||2018-12-02 16:43: 查看添加友情链接页面;|||2018-12-02 16:45: 查看添加友情链接页面;|||2018-12-02 16:45: 添加友情链接(1);|||2018-12-02 16:45: 查看友情链接列表;|||2018-12-02 16:46: 查看友情链接列表;|||2018-12-02 16:46: 查看/编辑友情链接(1);|||2018-12-02 16:46: 查看添加友情链接页面;|||2018-12-02 16:46: 添加友情链接(2);|||2018-12-02 16:46: 查看友情链接列表;|||2018-12-02 16:52: 查看文章列表;|||2018-12-02 16:52: 查看添加文章页面;|||2018-12-02 16:53: 添加文章(id:7);|||2018-12-02 16:54: 查看添加文章页面;|||2018-12-02 16:55: 添加文章(id:8);|||2018-12-02 16:55: 查看添加文章页面;|||2018-12-02 16:55: 添加文章(id:9);|||2018-12-02 16:56: 查看添加文章页面;|||2018-12-02 16:56: 添加文章(id:10);|||2018-12-02 16:56: 查看添加文章页面;|||2018-12-02 16:56: 添加文章(id:11);|||2018-12-02 16:58: 查看文章栏目列表页面；|||2018-12-02 17:05: 查看/编辑文章栏目（id:7）页面；|||2018-12-02 17:05: 查看/编辑文章栏目（id:6）页面；|||2018-12-02 17:09: 查看文章栏目列表页面；|||2018-12-02 17:10: 查看/编辑文章栏目（id:6）页面；|||2018-12-02 17:10: 修改文章栏目(id:6);|||2018-12-02 17:10: 查看文章栏目列表页面；|||2018-12-02 17:11: 查看/编辑文章栏目（id:7）页面；|||2018-12-02 17:11: 修改文章栏目(id:7);|||2018-12-02 17:11: 查看文章栏目列表页面；|||2018-12-02 17:11: 查看/编辑文章栏目（id:8）页面；|||2018-12-02 17:11: 修改文章栏目(id:8);|||2018-12-02 17:11: 查看文章栏目列表页面；|||2018-12-02 17:12: 查看/编辑文章栏目（id:9）页面；|||2018-12-02 17:12: 修改文章栏目(id:9);|||2018-12-02 17:12: 查看文章栏目列表页面；|||2018-12-02 17:12: 查看/编辑文章栏目（id:12）页面；|||2018-12-02 17:12: 修改文章栏目(id:12);|||2018-12-02 17:12: 查看文章栏目列表页面；|||2018-12-02 17:14: 查看文章(7);|||2018-12-02 17:14: 查看文章(1);|||2018-12-02 17:14: 编辑文章(id:1);|||2018-12-02 17:14: 查看商品栏目列表页面；|||2018-12-02 17:14: 查看商品列表;|||2018-12-02 17:14: 查看添加商品页面;|||2018-12-02 17:17: 查看添加商品页面;|||2018-12-02 17:20: 添加商品(id:1);|||2018-12-02 17:21: 查看添加商品页面;|||2018-12-02 17:22: 添加商品(id:2);|||2018-12-02 17:22: 查看添加商品页面;|||2018-12-02 17:23: 添加商品(id:3);|||2018-12-02 17:23: 查看添加商品页面;|||2018-12-02 17:23: 添加商品(id:4);|||2018-12-02 17:49: 查看添加商品页面;|||2018-12-02 17:50: 添加商品(id:5);|||2018-12-02 17:56: 查看广告分类列表页面；|||2018-12-02 17:56: 添加广告栏目(1)；|||2018-12-02 17:56: 查看广告分类列表页面；|||2018-12-02 17:56: 查看广告列表;|||2018-12-02 17:56: 查看添加广告页面;|||2018-12-02 18:02: 添加广告(1);|||2018-12-02 18:02: 查看添加广告页面;|||2018-12-02 18:06: 添加广告(2);|||2018-12-02 18:06: 查看/编辑广告(1);|||2018-12-02 18:42: 查看文章栏目列表页面；|||2018-12-02 18:42: 查看/编辑文章栏目（id:6）页面；|||2018-12-02 18:42: 修改文章栏目(id:6);|||2018-12-02 18:42: 查看文章栏目列表页面；', '2018-12-02 18:42:45');
+INSERT INTO `adminlog` VALUES (34, 0, 'b2daaeb3-b094-48bd-978d-8e777713f048', 'admin', '******', '2018-12-05 11:49:54', '127.0.0.1', 1, '|||2018-12-05 11:49: 查看基本配置；|||2018-12-05 11:49: 修改站点基本配置；|||2018-12-05 11:50: 查看基本配置；', '2018-12-05 11:50:00');
+INSERT INTO `adminlog` VALUES (35, 0, '0d7c88f0-873e-4fbc-a3bd-04ad6cecaace', 'admin', '******', '2019-03-19 18:58:02', '127.0.0.1', 1, '|||2019-03-19 18:58: 查看文章列表;|||2019-03-19 18:58: 查看添加文章页面;|||2019-03-19 19:17: 查看文章列表;|||2019-03-19 19:17: 查看文章(9);|||2019-03-19 19:18: 查看文章(1);|||2019-03-19 19:18: 查看文章(1);|||2019-03-19 19:18: 查看文章(1);|||2019-03-19 19:19: 查看文章(1);|||2019-03-19 19:19: 查看文章(1);|||2019-03-19 19:19: 查看文章(1);', '2019-03-19 19:19:51');
+INSERT INTO `adminlog` VALUES (36, 0, 'fd00cebc-39f6-4513-a5bf-91b8e65dfc7a', 'admin', '******', '2019-03-29 15:33:54', '127.0.0.1', 1, '|||2019-03-29 15:33: 查看文章列表;|||2019-03-29 15:35: 查看文章列表;', '2019-03-29 15:35:52');
+INSERT INTO `adminlog` VALUES (37, 0, 'bae22480-fb8c-4e37-9772-8196ce2fe971', 'admin', '******', '2019-09-11 14:42:08', '127.0.0.1', 1, NULL, '2019-09-11 14:42:08');
+INSERT INTO `adminlog` VALUES (38, 0, '8040a28e-a44e-4f76-a499-e0a3891c4262', 'admin', '******', '2019-09-11 14:43:44', '127.0.0.1', 1, NULL, '2019-09-11 14:43:44');
+INSERT INTO `adminlog` VALUES (39, 0, '3ea95a69-3d79-4a2b-ac61-10c91c30c67f', 'admin', '******', '2019-09-11 14:44:20', '127.0.0.1', 1, '|||2019-09-11 14:44: 查看管理组列表;|||2019-09-11 14:44: 查看后台事件列表（keyword:;page:0;limit:20）;|||2019-09-11 14:45: 查看管理员列表|||2019-09-11 14:45: 查看/编辑管理员(admin);|||2019-09-11 14:45: 查看管理组（1）详情;', '2019-09-11 14:45:13');
+INSERT INTO `adminlog` VALUES (40, 0, '25df79b6-5b57-4570-982d-365bd0697d65', 'admin', '******', '2019-09-27 17:16:10', '127.0.0.1', 1, '|||2019-09-27 17:16: 查看文章列表;|||2019-09-27 17:16: 查看文章(11);', '2019-09-27 17:16:16');
+INSERT INTO `adminlog` VALUES (41, 0, 'ba65e78c-1b54-4998-93a4-1b6a84fa0651', 'admin', '******', '2019-10-30 17:02:16', '127.0.0.1', 1, NULL, '2019-10-30 17:02:16');
+INSERT INTO `adminlog` VALUES (42, 0, '9756c023-6019-4516-9f15-dc139d870c18', 'admin', '******', '2019-10-30 17:10:16', '127.0.0.1', 1, NULL, '2019-10-30 17:10:16');
+INSERT INTO `adminlog` VALUES (43, 0, '34570af3-d95f-48ae-b1fb-9f1b33bcd5bd', 'admin', '******', '2019-10-30 17:46:24', '127.0.0.1', 1, NULL, '2019-10-30 17:46:24');
+INSERT INTO `adminlog` VALUES (44, 0, '3dd4eb9e-60a6-47e3-a7d0-b7ed4d87c0a2', 'admin', '******', '2019-11-05 10:20:02', '127.0.0.1', 1, NULL, '2019-11-05 10:20:02');
+INSERT INTO `adminlog` VALUES (45, 0, '1aa1b824-d522-4294-aae8-00a4826cfd3c', 'admin', '******', '2019-12-06 16:10:01', '127.0.0.1', 1, NULL, '2019-12-06 16:10:01');
+INSERT INTO `adminlog` VALUES (46, 0, '05efd4b7-0455-4a18-b2ad-19864033f5ff', 'admin', '******', '2020-02-13 11:31:01', '127.0.0.1', 1, NULL, '2020-02-13 11:31:01');
+INSERT INTO `adminlog` VALUES (47, 0, '135246f9-891c-407c-ba04-6b27c29ae3d9', 'admin', '******', '2020-02-19 13:48:53', '127.0.0.1', 1, NULL, '2020-02-19 13:48:53');
+INSERT INTO `adminlog` VALUES (48, 0, 'bd411eb9-8ae0-40eb-8447-dd5b1d5ba25d', 'admin', '******', '2020-02-19 14:41:21', '127.0.0.1', 1, NULL, '2020-02-19 14:41:21');
+INSERT INTO `adminlog` VALUES (49, 0, '0755c829-aa1e-4919-b608-93c92599d30b', 'admin', '******', '2020-03-06 15:40:43', '127.0.0.1', 1, NULL, '2020-03-06 15:40:43');
 
 -- ----------------------------
 -- Table structure for adminmenu
@@ -619,17 +635,17 @@ CREATE TABLE `article`  (
 -- ----------------------------
 -- Records of article
 -- ----------------------------
-INSERT INTO `article` VALUES (1, 1, '关于我们', 'About Us', '<p>内容管理系统（英语：content management system，缩写为 CMS）是指在一个合作模式下，用于管理工作流程的一套制度。该系统可应用于手工操作中，也可以应用到计算机或网络里。作为一种中央储存器（central repository），内容管理系统可将相关内容集中储存并具有群组管理、版本控制等功能。版本控制是内容管理系统的一个主要优势。</p>\n\n<p>内容是任何类型的数字信息的结合体，可以是文本、图形图像、Web页面、业务文档、数据库表单、视频、声音、XML文件等。应该说，内容是一个比数据、文档和信息更广的概念，是对各种结构化数据、非结构化文档、信息的聚合。管理就是施加在&ldquo;内容&rdquo;对象上的一系列处理过程，包括收集、存储、审批、整理、定位、转换、分发、搜索、分析等，目的是为了使&ldquo;内容&rdquo;能够在正确的时间、以正确的形式传递到正确的地点和人。</p>\n\n<p>内容管理可以定义为：协助组织和个人，借助信息技术，实现内容的创建、储存、分享、应用、检索，并在企业个人、组织、业务、战略等诸方面产生价值的过程。而内容管理系统就是能够支撑内容管理的一种工具或一套工具的软件系统。</p>\n\n<p>内容管理系统的定义可以很狭窄，通常是指门户或商业网站的发布和管理系统；定义也可以很宽泛，个人网站系统也可归入其中。Wiki也是一种内容管理系统，Blog也算是一种内容管理系统。</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 999, 0, NULL, NULL, NULL, '/images/default/slide-3.jpg', 0, NULL, NULL, NULL, '/userfiles/images/2018/20180413145904(1).png|||', 1, '2018-04-18 20:35:54', '2018-12-02 17:14:13', NULL, NULL);
-INSERT INTO `article` VALUES (2, 10, '联系我们', NULL, '<p>联系我们</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 19, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-15 23:58:24', '2018-12-01 22:44:45', NULL, NULL);
-INSERT INTO `article` VALUES (3, 1, '企业文化', NULL, '<p>企业文化</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:19', NULL, NULL, NULL);
-INSERT INTO `article` VALUES (4, 1, '发展历程', NULL, '<p>发展历程</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:28', NULL, NULL, NULL);
-INSERT INTO `article` VALUES (5, 1, '组织架构', NULL, '<p>组织架构</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:38', NULL, NULL, NULL);
-INSERT INTO `article` VALUES (6, 1, '荣誉证书', NULL, '<p>荣誉证书</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:49', NULL, NULL, NULL);
-INSERT INTO `article` VALUES (7, 6, 'COMCMS v0.9 正式发布，PC版前端演示', 'COMCMS v0.9 正式发布，PC版前端演示', '<p>COMCMS v0.9 正式发布，PC版前端演示</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 999, 0, NULL, NULL, NULL, '/images/default/slide-2.jpg', 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:52:15', NULL, NULL, NULL);
+INSERT INTO `article` VALUES (1, 1, '关于我们', 'About Us', '<p>内容管理系统（英语：content management system，缩写为 CMS）是指在一个合作模式下，用于管理工作流程的一套制度。该系统可应用于手工操作中，也可以应用到计算机或网络里。作为一种中央储存器（central repository），内容管理系统可将相关内容集中储存并具有群组管理、版本控制等功能。版本控制是内容管理系统的一个主要优势。</p>\n\n<p>内容是任何类型的数字信息的结合体，可以是文本、图形图像、Web页面、业务文档、数据库表单、视频、声音、XML文件等。应该说，内容是一个比数据、文档和信息更广的概念，是对各种结构化数据、非结构化文档、信息的聚合。管理就是施加在&ldquo;内容&rdquo;对象上的一系列处理过程，包括收集、存储、审批、整理、定位、转换、分发、搜索、分析等，目的是为了使&ldquo;内容&rdquo;能够在正确的时间、以正确的形式传递到正确的地点和人。</p>\n\n<p>内容管理可以定义为：协助组织和个人，借助信息技术，实现内容的创建、储存、分享、应用、检索，并在企业个人、组织、业务、战略等诸方面产生价值的过程。而内容管理系统就是能够支撑内容管理的一种工具或一套工具的软件系统。</p>\n\n<p>内容管理系统的定义可以很狭窄，通常是指门户或商业网站的发布和管理系统；定义也可以很宽泛，个人网站系统也可归入其中。Wiki也是一种内容管理系统，Blog也算是一种内容管理系统。</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 53, 999, 0, NULL, NULL, NULL, '/images/default/slide-3.jpg', 0, NULL, NULL, NULL, '/userfiles/images/2018/20180413145904(1).png|||', 1, '2018-04-18 20:35:54', '2018-12-02 17:14:13', NULL, NULL);
+INSERT INTO `article` VALUES (2, 10, '联系我们', NULL, '<p>联系我们</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-15 23:58:24', '2018-12-01 22:44:45', NULL, NULL);
+INSERT INTO `article` VALUES (3, 1, '企业文化', NULL, '<p>企业文化</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:19', NULL, NULL, NULL);
+INSERT INTO `article` VALUES (4, 1, '发展历程', NULL, '<p>发展历程</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:28', NULL, NULL, NULL);
+INSERT INTO `article` VALUES (5, 1, '组织架构', NULL, '<p>组织架构</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:38', NULL, NULL, NULL);
+INSERT INTO `article` VALUES (6, 1, '荣誉证书', NULL, '<p>荣誉证书</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:49', NULL, NULL, NULL);
+INSERT INTO `article` VALUES (7, 6, 'COMCMS v0.9 正式发布，PC版前端演示', 'COMCMS v0.9 正式发布，PC版前端演示', '<p>COMCMS v0.9 正式发布，PC版前端演示</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 999, 0, NULL, NULL, NULL, '/images/default/slide-2.jpg', 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:52:15', NULL, NULL, NULL);
 INSERT INTO `article` VALUES (8, 7, '行业资讯行业资讯行业资讯行业资讯', NULL, '<p>行业资讯行业资讯行业资讯行业资讯</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-2.jpg', 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:54:48', NULL, NULL, NULL);
-INSERT INTO `article` VALUES (9, 6, 'COMCMS v0.9 正式发布，PC版前端演示2', NULL, '<p>COMCMS v0.9 正式发布，PC版前端演示2</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:55:39', NULL, NULL, NULL);
-INSERT INTO `article` VALUES (10, 6, 'COMCMS v0.9 正式发布，PC版前端演示3', NULL, '<p>COMCMS v0.9 正式发布，PC版前端演示3</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:56:18', NULL, NULL, NULL);
-INSERT INTO `article` VALUES (11, 6, 'COMCMS v0.9 正式发布，PC版前端演示4', NULL, '<p>COMCMS v0.9 正式发布，PC版前端演示4</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:56:27', NULL, NULL, NULL);
+INSERT INTO `article` VALUES (9, 6, 'COMCMS v0.9 正式发布，PC版前端演示2', NULL, '<p>COMCMS v0.9 正式发布，PC版前端演示2</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:55:39', NULL, NULL, NULL);
+INSERT INTO `article` VALUES (10, 6, 'COMCMS v0.9 正式发布，PC版前端演示3', NULL, '<p>COMCMS v0.9 正式发布，PC版前端演示3</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:56:18', NULL, NULL, NULL);
+INSERT INTO `article` VALUES (11, 6, 'COMCMS v0.9 正式发布，PC版前端演示4', NULL, '<p>COMCMS v0.9 正式发布，PC版前端演示4</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:56:27', '2019-10-30 17:10:39', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for articlecategory
@@ -667,24 +683,25 @@ CREATE TABLE `articlecategory`  (
   `KindInfo` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '栏目详细介绍',
   `Pic` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片',
   `AdsId` int(11) NOT NULL COMMENT '广告ID',
+  `FilePath` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '目录路径',
   PRIMARY KEY (`Id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 13 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '文章栏目' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of articlecategory
 -- ----------------------------
-INSERT INTO `articlecategory` VALUES (1, '关于我们', NULL, NULL, NULL, NULL, '1', NULL, 'Index.cshtml', 'Detail_About.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 5, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `articlecategory` VALUES (2, '新闻资讯', NULL, NULL, NULL, NULL, '/Article/Index/6', NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `articlecategory` VALUES (3, '项目案例', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `articlecategory` VALUES (4, '用户服务', NULL, NULL, NULL, NULL, '/Article/Index/8', NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `articlecategory` VALUES (5, '联系我们', NULL, NULL, NULL, NULL, '/Article/Index/10', NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `articlecategory` VALUES (6, '公司新闻', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 2, 1, '0,2,', 0, 0, 0, 0, 0, 1, 0, 4, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `articlecategory` VALUES (7, '行业资讯', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 2, 1, '0,2,', 0, 0, 0, 0, 0, 1, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `articlecategory` VALUES (8, '产品使用', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 4, 1, '0,4,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `articlecategory` VALUES (9, '产品下载', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 4, 1, '0,4,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `articlecategory` VALUES (10, '联系方式', NULL, NULL, NULL, NULL, '2', NULL, 'Index.cshtml', 'Detail_Contact.cshtml', NULL, 1, 15, 5, 1, '0,5,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `articlecategory` VALUES (11, '在线留言', NULL, NULL, NULL, NULL, NULL, NULL, 'Index_Guestbook.cshtml', 'Detail.cshtml', NULL, 0, 15, 5, 1, '0,5,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `articlecategory` VALUES (12, '常见问题', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 4, 1, '0,4,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0);
+INSERT INTO `articlecategory` VALUES (1, '关于我们', NULL, NULL, NULL, NULL, '1', NULL, 'Index.cshtml', 'Detail_About.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 5, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `articlecategory` VALUES (2, '新闻资讯', NULL, NULL, NULL, NULL, '/Article/Index/6', NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `articlecategory` VALUES (3, '项目案例', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `articlecategory` VALUES (4, '用户服务', NULL, NULL, NULL, NULL, '/Article/Index/8', NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `articlecategory` VALUES (5, '联系我们', NULL, NULL, NULL, NULL, '/Article/Index/10', NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `articlecategory` VALUES (6, '公司新闻', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 2, 2, 1, '0,2,', 0, 0, 0, 0, 0, 1, 0, 4, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `articlecategory` VALUES (7, '行业资讯', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 2, 1, '0,2,', 0, 0, 0, 0, 0, 1, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `articlecategory` VALUES (8, '产品使用', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 4, 1, '0,4,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `articlecategory` VALUES (9, '产品下载', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 4, 1, '0,4,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `articlecategory` VALUES (10, '联系方式', NULL, NULL, NULL, NULL, '2', NULL, 'Index.cshtml', 'Detail_Contact.cshtml', NULL, 1, 15, 5, 1, '0,5,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `articlecategory` VALUES (11, '在线留言', NULL, NULL, NULL, NULL, NULL, NULL, 'Index_Guestbook.cshtml', 'Detail.cshtml', NULL, 0, 15, 5, 1, '0,5,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `articlecategory` VALUES (12, '常见问题', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 4, 1, '0,4,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
 
 -- ----------------------------
 -- Table structure for balancechangelog
@@ -744,15 +761,16 @@ CREATE TABLE `category`  (
   `KindInfo` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '栏目详细介绍',
   `Pic` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片',
   `AdsId` int(11) NOT NULL COMMENT '广告ID',
+  `FilePath` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '目录路径',
   PRIMARY KEY (`Id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '商品栏目' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of category
 -- ----------------------------
-INSERT INTO `category` VALUES (1, '网站系统', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 2, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `category` VALUES (2, '微商城系统', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 2, 0, NULL, NULL, NULL, NULL, NULL, 0);
-INSERT INTO `category` VALUES (3, '小程序系统', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, 0);
+INSERT INTO `category` VALUES (1, '网站系统', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 2, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `category` VALUES (2, '微商城系统', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 2, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `category` VALUES (3, '小程序系统', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
 
 -- ----------------------------
 -- Table structure for challenge
@@ -881,7 +899,7 @@ CREATE TABLE `config`  (
 -- ----------------------------
 -- Records of config
 -- ----------------------------
-INSERT INTO `config` VALUES (1, 'COMCMS', 'http://www.comcms.com', '/images/logo.png', '', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 0, NULL, NULL, '2018-11-16 00:42:22', '2018-11-16 00:42:22', NULL, NULL, 0, 0, NULL, NULL, 0);
+INSERT INTO `config` VALUES (1, 'COMCMS', 'http://www.comcms.com', '/images/logo.png', '', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 0, NULL, NULL, '2018-12-05 11:49:59', '2018-12-05 11:49:59', NULL, NULL, 0, 0, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for coupon
@@ -1367,6 +1385,7 @@ CREATE TABLE `onlinepayorder`  (
   `TypeId` int(11) NOT NULL COMMENT '支付的类型',
   `MyType` int(11) NOT NULL COMMENT '系统类型',
   `Title` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单标题',
+  `OutTradeNo` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '支付成功流水号',
   PRIMARY KEY (`Id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '在线支付订单' ROW_FORMAT = Dynamic;
 
@@ -1430,6 +1449,7 @@ CREATE TABLE `order`  (
   `LastModTime` datetime(0) NULL DEFAULT NULL COMMENT '最后操作时间',
   `OrderType` int(11) NOT NULL COMMENT '订单类型，0为商品订单',
   `MyType` int(11) NOT NULL COMMENT '系统类型',
+  `OutTradeNo` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '支付成功流水号',
   PRIMARY KEY (`Id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '订单' ROW_FORMAT = Dynamic;
 
@@ -1577,11 +1597,11 @@ CREATE TABLE `product`  (
 -- ----------------------------
 -- Records of product
 -- ----------------------------
-INSERT INTO `product` VALUES (1, 1, 0, 0, 0, 0, 'CMS系统', NULL, NULL, NULL, NULL, NULL, NULL, 5000, 6000, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>CMS系统</p>\n\n<p>CMS系统</p>\n\n<p>CMS系统</p>\n\n<p>CMS系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-4.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:17:53', NULL, NULL, NULL);
+INSERT INTO `product` VALUES (1, 1, 0, 0, 0, 0, 'CMS系统', NULL, NULL, NULL, NULL, NULL, NULL, 5000, 6000, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>CMS系统</p>\n\n<p>CMS系统</p>\n\n<p>CMS系统</p>\n\n<p>CMS系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-4.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:17:53', NULL, NULL, NULL);
 INSERT INTO `product` VALUES (2, 2, 0, 0, 0, 0, 'PC+手机商城系统', NULL, NULL, NULL, NULL, NULL, NULL, 18000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>PC+手机商城系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-5.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:21:43', NULL, NULL, NULL);
-INSERT INTO `product` VALUES (3, 2, 0, 0, 0, 0, '微商城Shop系统', NULL, NULL, NULL, NULL, NULL, NULL, 25000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>微商城Shop系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-3.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:22:19', NULL, NULL, NULL);
-INSERT INTO `product` VALUES (4, 3, 0, 0, 0, 0, '小程序商城系统', NULL, NULL, NULL, NULL, NULL, NULL, 18000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>小程序商城系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-2.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:23:02', NULL, NULL, NULL);
-INSERT INTO `product` VALUES (5, 1, 0, 0, 0, 0, '博客系统', NULL, NULL, NULL, NULL, NULL, NULL, 10000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>博客系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-1.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:49:43', NULL, NULL, NULL);
+INSERT INTO `product` VALUES (3, 2, 0, 0, 0, 0, '微商城Shop系统', NULL, NULL, NULL, NULL, NULL, NULL, 25000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>微商城Shop系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-3.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:22:19', NULL, NULL, NULL);
+INSERT INTO `product` VALUES (4, 3, 0, 0, 0, 0, '小程序商城系统', NULL, NULL, NULL, NULL, NULL, NULL, 18000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>小程序商城系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-2.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:23:02', NULL, NULL, NULL);
+INSERT INTO `product` VALUES (5, 1, 0, 0, 0, 0, '博客系统', NULL, NULL, NULL, NULL, NULL, NULL, 10000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>博客系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-1.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:49:43', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for rebatechangelog
@@ -1773,6 +1793,72 @@ INSERT INTO `targetevent` VALUES (8, 'filter', '搜索', 0, 0);
 INSERT INTO `targetevent` VALUES (9, 'batch', '批量操作', 0, 0);
 INSERT INTO `targetevent` VALUES (10, 'recycle', '回收站', 0, 0);
 INSERT INTO `targetevent` VALUES (11, 'confirm', '确认', 0, 0);
+
+-- ----------------------------
+-- Table structure for weixinrequestcontent
+-- ----------------------------
+DROP TABLE IF EXISTS `weixinrequestcontent`;
+CREATE TABLE `weixinrequestcontent`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `RuleId` int(11) NOT NULL COMMENT '规则名称',
+  `Title` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回复标题',
+  `Content` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '回复内容',
+  `LinkUrl` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '详情链接地址',
+  `ImgURL` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '图片地址',
+  `MediaURL` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '语音或视频地址',
+  `MeidaHdURL` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '高清语音或者视频地址',
+  `MediaID` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '返回的素材ID',
+  `WXAppAppId` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '小程序APPId',
+  `WXAppPage` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '小程序页面',
+  `Rank` int(11) NOT NULL COMMENT '排序',
+  `AddTime` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `UpdateTime` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`Id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '请求回复的内容' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of weixinrequestcontent
+-- ----------------------------
+INSERT INTO `weixinrequestcontent` VALUES (1, 1, NULL, '关注公众号自动回复文本', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2020-02-19 14:41:24');
+
+-- ----------------------------
+-- Table structure for weixinrequestrule
+-- ----------------------------
+DROP TABLE IF EXISTS `weixinrequestrule`;
+CREATE TABLE `weixinrequestrule`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `RuleName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '规则名称',
+  `Keywords` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '请求关键词,逗号分隔',
+  `RequestType` int(11) NOT NULL COMMENT '请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）',
+  `ResponseType` int(11) NOT NULL COMMENT '回复类型(1文本2图文3语音4视频5第三方接口)',
+  `IsLikeQuery` int(11) NOT NULL COMMENT '是否模糊查询 0 是完全匹配；1是模糊匹配',
+  `IsDefault` int(11) NOT NULL COMMENT '是否是默认回复',
+  `Rank` int(11) NOT NULL COMMENT '排序',
+  `AddTime` datetime(0) NULL DEFAULT NULL COMMENT '添加时间',
+  `UpdateTime` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`Id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '微信公众号回复规则' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of weixinrequestrule
+-- ----------------------------
+INSERT INTO `weixinrequestrule` VALUES (1, '关注自动回复', NULL, 6, 0, 0, 1, 0, NULL, '2020-02-19 14:41:24');
+
+-- ----------------------------
+-- Table structure for weixinresponsecontent
+-- ----------------------------
+DROP TABLE IF EXISTS `weixinresponsecontent`;
+CREATE TABLE `weixinresponsecontent`  (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
+  `OpenId` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户OpenId',
+  `RequestType` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '请求类型',
+  `RequestContent` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
+  `ResponseType` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回复的类型 文本消息：text 图片消息:image 地理位置消息:location 链接消息:link',
+  `ReponseContent` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '系统回复的内容',
+  `XmlContent` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'xml原始内容',
+  `UpdateTime` datetime(0) NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`Id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '公众平台回复信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for withdraworder

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration.Json;
 using System.Net.NetworkInformation;
 using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 
 namespace COMCMS.Common
 {
@@ -818,6 +819,33 @@ namespace COMCMS.Common
             if (!IsDecimal(v) && decimal.Parse(v) < 0) v = "0";
             price = decimal.Parse(v);
             return price;
+        }
+
+        /// <summary>
+        /// 获取当前系统运行平台
+        /// </summary>
+        /// <returns></returns>
+        public static string GetOSPlatform()
+        {
+            string osPlatform = "Unknown";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                osPlatform = "Windows";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                osPlatform = "Linux";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                osPlatform = "OSX";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
+            {
+                osPlatform = "FreeBSD";
+            }
+
+            return osPlatform;
         }
 
         #endregion
