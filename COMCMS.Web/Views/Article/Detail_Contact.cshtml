@@ -8,7 +8,7 @@
     //获取同级分类
     IList<ArticleCategory> sameList = ArticleCategory.FindAll(ArticleCategory._.PId == ViewBag.kind.PId, ArticleCategory._.Rank.Asc(), null, 0, 0);
 }
-<script type="text/javascript" src="http://api.map.baidu.com/api?v=1.5&ak=VR85PcmdMnsofqPUCk6bD4ay"></script>
+<script type="text/javascript" src="//api.map.baidu.com/api?v=1.5&ak=VR85PcmdMnsofqPUCk6bD4ay"></script>
 <div class="banner normal sec-banner">
     @if (string.IsNullOrEmpty(ViewBag.kind.BannerImg))
     {

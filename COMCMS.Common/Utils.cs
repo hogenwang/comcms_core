@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration.Json;
 using System.Net.NetworkInformation;
 using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 
 namespace COMCMS.Common
 {
@@ -344,6 +345,16 @@ namespace COMCMS.Common
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// 是否为日期型字符串
+        /// </summary>
+        /// <param name="StrSource">日期字符串(2008-05-08)</param>
+        /// <returns></returns>
+        public static bool IsDate(string StrSource)
+        {
+            return Regex.IsMatch(StrSource, @"^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-9]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))$");
         }
         #endregion
 
@@ -818,6 +829,33 @@ namespace COMCMS.Common
             if (!IsDecimal(v) && decimal.Parse(v) < 0) v = "0";
             price = decimal.Parse(v);
             return price;
+        }
+
+        /// <summary>
+        /// 获取当前系统运行平台
+        /// </summary>
+        /// <returns></returns>
+        public static string GetOSPlatform()
+        {
+            string osPlatform = "Unknown";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                osPlatform = "Windows";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                osPlatform = "Linux";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                osPlatform = "OSX";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
+            {
+                osPlatform = "FreeBSD";
+            }
+
+            return osPlatform;
         }
 
         #endregion
