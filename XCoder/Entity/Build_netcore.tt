@@ -1,4 +1,5 @@
 ﻿<#@ template language="C#" hostSpecific="true" debug="true" #>
+<#@ assembly name="netstandard" #>
 <#@ assembly name="$(ProjectDir)\$(OutputPath)\NewLife.Core.dll" #>
 <#@ assembly name="$(ProjectDir)\$(OutputPath)\XCode.dll" #>
 <#@ import namespace="System.Diagnostics" #>
