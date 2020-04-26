@@ -16,11 +16,18 @@ using Microsoft.AspNetCore.Http;
 using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using COMCMS.Web.Common;
+using Microsoft.AspNetCore.Hosting;
 
 namespace COMCMS.Web.Controllers
 {
     public class HomeController : HomeBaseController
     {
+        private IWebHostEnvironment _env;
+
+        public HomeController(IWebHostEnvironment env)
+        {
+            _env = env;
+        }
         #region 首页
         public IActionResult Index()
         {
@@ -31,20 +38,27 @@ namespace COMCMS.Web.Controllers
         #endregion
 
 
-        public IActionResult About()
-        {
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            return View();
-        }
-
+        #region 显示默认错误页面
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        #endregion
+
+        #region 初始化安装
+        [HttpGet]
+        public IActionResult Install()
+        {
+            string lockPath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}install.lock";
+            if (System.IO.File.Exists(lockPath))
+            {
+                return EchoTip("COMCMS系统已经安装过，如果需要重新安装，请删除程序wwwroot目录下的install.lock文件！", false, "/");
+            }
+            bool hasData = AdminMenu.FindCount(null, null, null, 0, 0) > 0;
+            ViewBag.hasData = hasData;
+            return View();
+        }
+        #endregion
 
         #region 测试
         //[Route("c/{*path}/index2.html")]
@@ -62,21 +76,6 @@ namespace COMCMS.Web.Controllers
         //}
         #endregion
 
-        #region 测试拼音
-        public IActionResult Test3()
-        {
-            var mac = Utils.GetMacs().ToList();
-            string re = "";
-            foreach (var item in mac)
-            {
-                if (string.IsNullOrEmpty(re))
-                    re = item.ToHex();
-                else
-                    re += "-" + item.ToHex();
-            }
-            return Content(re);
-        }
-        #endregion
 
         #region 系统文章栏目、商品栏目路由
         /// <summary>
