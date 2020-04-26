@@ -46,29 +46,29 @@ namespace COMCMS.Core
         }
 
         /// <summary>首次连接数据库时初始化数据，仅用于实体类重载，用户不应该调用该方法</summary>
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        protected override void InitData()
-        {
-            // InitData一般用于当数据表没有数据时添加一些默认数据，该实体类的任何第一次数据库操作都会触发该方法，默认异步调用
-            if (Meta.Count > 0) return;
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //protected override void InitData()
+        //{
+        //    // InitData一般用于当数据表没有数据时添加一些默认数据，该实体类的任何第一次数据库操作都会触发该方法，默认异步调用
+        //    if (Meta.Count > 0) return;
 
-            if (XTrace.Debug) XTrace.WriteLine("开始初始化TargetEvent[目标事件]数据……");
-            IList<TargetEvent> list = new List<TargetEvent>();
-            list.Add(new TargetEvent() { EventKey = "add", EventName = "添加", IsDisable = 0, Rank = 0 });
-            list.Add(new TargetEvent() { EventKey = "edit", EventName = "修改", IsDisable = 0, Rank = 0 });
-            list.Add(new TargetEvent() { EventKey = "del", EventName = "删除", IsDisable = 0, Rank = 0 });
-            list.Add(new TargetEvent() { EventKey = "view", EventName = "查看", IsDisable = 0, Rank = 0 });
-            list.Add(new TargetEvent() { EventKey = "viewlist", EventName = "查看列表", IsDisable = 0, Rank = 0 });
-            list.Add(new TargetEvent() { EventKey = "import", EventName = "导入", IsDisable = 0, Rank = 0 });
-            list.Add(new TargetEvent() { EventKey = "export", EventName = "导出", IsDisable = 0, Rank = 0 });
-            list.Add(new TargetEvent() { EventKey = "filter", EventName = "搜索", IsDisable = 0, Rank = 0 });
-            list.Add(new TargetEvent() { EventKey = "batch", EventName = "批量操作", IsDisable = 0, Rank = 0 });
-            list.Add(new TargetEvent() { EventKey = "recycle", EventName = "回收站", IsDisable = 0, Rank = 0 });
-            list.Add(new TargetEvent() { EventKey = "confirm", EventName = "确认", IsDisable = 0, Rank = 0 });
-            list.Insert(true);
+        //    if (XTrace.Debug) XTrace.WriteLine("开始初始化TargetEvent[目标事件]数据……");
+        //    IList<TargetEvent> list = new List<TargetEvent>();
+        //    list.Add(new TargetEvent() { EventKey = "add", EventName = "添加", IsDisable = 0, Rank = 0 });
+        //    list.Add(new TargetEvent() { EventKey = "edit", EventName = "修改", IsDisable = 0, Rank = 0 });
+        //    list.Add(new TargetEvent() { EventKey = "del", EventName = "删除", IsDisable = 0, Rank = 0 });
+        //    list.Add(new TargetEvent() { EventKey = "view", EventName = "查看", IsDisable = 0, Rank = 0 });
+        //    list.Add(new TargetEvent() { EventKey = "viewlist", EventName = "查看列表", IsDisable = 0, Rank = 0 });
+        //    list.Add(new TargetEvent() { EventKey = "import", EventName = "导入", IsDisable = 0, Rank = 0 });
+        //    list.Add(new TargetEvent() { EventKey = "export", EventName = "导出", IsDisable = 0, Rank = 0 });
+        //    list.Add(new TargetEvent() { EventKey = "filter", EventName = "搜索", IsDisable = 0, Rank = 0 });
+        //    list.Add(new TargetEvent() { EventKey = "batch", EventName = "批量操作", IsDisable = 0, Rank = 0 });
+        //    list.Add(new TargetEvent() { EventKey = "recycle", EventName = "回收站", IsDisable = 0, Rank = 0 });
+        //    list.Add(new TargetEvent() { EventKey = "confirm", EventName = "确认", IsDisable = 0, Rank = 0 });
+        //    list.Insert(true);
 
-            if (XTrace.Debug) XTrace.WriteLine("完成初始化TargetEvent[目标事件]数据！");
-        }
+        //    if (XTrace.Debug) XTrace.WriteLine("完成初始化TargetEvent[目标事件]数据！");
+        //}
 
         ///// <summary>已重载。基类先调用Valid(true)验证数据，然后在事务保护内调用OnInsert</summary>
         ///// <returns></returns>
