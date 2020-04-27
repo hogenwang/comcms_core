@@ -64,7 +64,18 @@ namespace COMCMS.Common
         /// <summary>
         /// 与小程序验签的盐值
         /// </summary>
-        public static readonly string SIGNSALT = "comcms";// ConfigurationManager.AppSettings["SignSalt"];
+        public static string SIGNSALT
+        {
+            get
+            {
+                string strPrefixKey = Configuration["SystemSetting:SignSalt"];
+                if (string.IsNullOrEmpty(strPrefixKey))
+                {
+                    strPrefixKey = "comcms";
+                }
+                return strPrefixKey;
+            }
+        }
 
 
         /// <summary>
