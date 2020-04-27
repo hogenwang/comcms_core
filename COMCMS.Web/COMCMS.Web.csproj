@@ -13,11 +13,11 @@
     <PackageReference Include="NewLife.XCode" Version="9.16.2020.403" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
     <PackageReference Include="Senparc.NeuChar" Version="1.2.106" />
-    <PackageReference Include="Senparc.Weixin" Version="6.7.401" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.10.402" />
+    <PackageReference Include="Senparc.Weixin" Version="6.7.500" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.10.500" />
     <PackageReference Include="Senparc.Weixin.MP.MvcExtension" Version="4.1.1" />
-    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.5.401" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.8.401" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.5.500" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.8.501" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
     <PackageReference Include="ZKWeb.System.Drawing" Version="4.0.1" />
   </ItemGroup>
@@ -282,6 +282,9 @@
     <None Include="wwwroot\editor\ckeditor\plugins\wsc\LICENSE.md" />
     <None Include="wwwroot\editor\ckeditor\plugins\wsc\README.md" />
     <None Include="wwwroot\editor\ckeditor\skins\moono-lisa\readme.md" />
+    <None Include="wwwroot\install\comcms_for_linux.sql" />
+    <None Include="wwwroot\install\comcms_for_windows.sql" />
+    <None Include="wwwroot\install\comcms_sqlserver.sql" />
   </ItemGroup>
 
   <ItemGroup>

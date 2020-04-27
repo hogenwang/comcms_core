@@ -21,6 +21,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 return Redirect("/AdminCP");
             }
+
+            bool hasData = AdminMenu.FindCount(null, null, null, 0, 0) > 0;
+            if (!hasData)
+            {
+                return Redirect("/Home/Install");
+            }
+
             string key = Utils.GetRandomChar(12);
             SessionHelper.WriteSession("des_key", key);
             ViewBag.key = key;

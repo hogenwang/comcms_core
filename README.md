@@ -4,12 +4,13 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 
 ### 更新日志
+- 2020-04-27 增加程序初始化数据，支持Mysql（windows和linux）、Sqlserver 数据库
 - 2020-03-06 更新新的demo地址
 
 ### 技术简要
 
 - .net core 3.1 (请注意升级本地SDK 或者runtime)
-- 数据库：Mysql 5.7 /Mysql 8.0
+- 数据库：Mysql 5.7 /Mysql 8.0 / SqlServer 2008+
 - ORM:数据库操作使用XCode，目前支持mysql、sqlserver。详细见：https://github.com/NewLifeX/X
 - 据库驱动使用：MySQL官方驱动，8.0.19
 - 后台模板是H+
