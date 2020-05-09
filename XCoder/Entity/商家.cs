@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private String _ShopName;
         /// <summary>店铺名称</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("店铺名称")]
         [DataObjectField(false, false, true, 200)]
         [BindColumn("ShopName", "店铺名称", "")]
-        public String ShopName { get { return _ShopName; } set { if (OnPropertyChanging(__.ShopName, value)) { _ShopName = value; OnPropertyChanged(__.ShopName); } } }
+        public String ShopName { get => _ShopName; set { if (OnPropertyChanging(__.ShopName, value)) { _ShopName = value; OnPropertyChanged(__.ShopName); } } }
 
         private Int32 _KId;
         /// <summary>商家分类ID</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("商家分类ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("KId", "商家分类ID", "")]
-        public Int32 KId { get { return _KId; } set { if (OnPropertyChanging(__.KId, value)) { _KId = value; OnPropertyChanged(__.KId); } } }
+        public Int32 KId { get => _KId; set { if (OnPropertyChanging(__.KId, value)) { _KId = value; OnPropertyChanged(__.KId); } } }
 
         private Int32 _AId;
         /// <summary>地区ID</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("地区ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("AId", "地区ID", "")]
-        public Int32 AId { get { return _AId; } set { if (OnPropertyChanging(__.AId, value)) { _AId = value; OnPropertyChanged(__.AId); } } }
+        public Int32 AId { get => _AId; set { if (OnPropertyChanging(__.AId, value)) { _AId = value; OnPropertyChanged(__.AId); } } }
 
         private Int32 _Sequence;
         /// <summary>排序</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("排序")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Sequence", "排序", "")]
-        public Int32 Sequence { get { return _Sequence; } set { if (OnPropertyChanging(__.Sequence, value)) { _Sequence = value; OnPropertyChanged(__.Sequence); } } }
+        public Int32 Sequence { get => _Sequence; set { if (OnPropertyChanging(__.Sequence, value)) { _Sequence = value; OnPropertyChanged(__.Sequence); } } }
 
         private Decimal _Latitude;
         /// <summary>纬度</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("纬度")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Latitude", "纬度", "")]
-        public Decimal Latitude { get { return _Latitude; } set { if (OnPropertyChanging(__.Latitude, value)) { _Latitude = value; OnPropertyChanged(__.Latitude); } } }
+        public Decimal Latitude { get => _Latitude; set { if (OnPropertyChanging(__.Latitude, value)) { _Latitude = value; OnPropertyChanged(__.Latitude); } } }
 
         private Decimal _Longitude;
         /// <summary>经度</summary>
@@ -69,7 +69,7 @@ namespace COMCMS.Core
         [Description("经度")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Longitude", "经度", "")]
-        public Decimal Longitude { get { return _Longitude; } set { if (OnPropertyChanging(__.Longitude, value)) { _Longitude = value; OnPropertyChanged(__.Longitude); } } }
+        public Decimal Longitude { get => _Longitude; set { if (OnPropertyChanging(__.Longitude, value)) { _Longitude = value; OnPropertyChanged(__.Longitude); } } }
 
         private String _Country;
         /// <summary>国家</summary>
@@ -77,7 +77,7 @@ namespace COMCMS.Core
         [Description("国家")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Country", "国家", "")]
-        public String Country { get { return _Country; } set { if (OnPropertyChanging(__.Country, value)) { _Country = value; OnPropertyChanged(__.Country); } } }
+        public String Country { get => _Country; set { if (OnPropertyChanging(__.Country, value)) { _Country = value; OnPropertyChanged(__.Country); } } }
 
         private String _Province;
         /// <summary>省</summary>
@@ -85,7 +85,7 @@ namespace COMCMS.Core
         [Description("省")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Province", "省", "")]
-        public String Province { get { return _Province; } set { if (OnPropertyChanging(__.Province, value)) { _Province = value; OnPropertyChanged(__.Province); } } }
+        public String Province { get => _Province; set { if (OnPropertyChanging(__.Province, value)) { _Province = value; OnPropertyChanged(__.Province); } } }
 
         private String _City;
         /// <summary>市</summary>
@@ -93,7 +93,7 @@ namespace COMCMS.Core
         [Description("市")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("City", "市", "")]
-        public String City { get { return _City; } set { if (OnPropertyChanging(__.City, value)) { _City = value; OnPropertyChanged(__.City); } } }
+        public String City { get => _City; set { if (OnPropertyChanging(__.City, value)) { _City = value; OnPropertyChanged(__.City); } } }
 
         private String _District;
         /// <summary>区</summary>
@@ -101,7 +101,7 @@ namespace COMCMS.Core
         [Description("区")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("District", "区", "")]
-        public String District { get { return _District; } set { if (OnPropertyChanging(__.District, value)) { _District = value; OnPropertyChanged(__.District); } } }
+        public String District { get => _District; set { if (OnPropertyChanging(__.District, value)) { _District = value; OnPropertyChanged(__.District); } } }
 
         private String _Address;
         /// <summary>详细地址</summary>
@@ -109,7 +109,7 @@ namespace COMCMS.Core
         [Description("详细地址")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Address", "详细地址", "")]
-        public String Address { get { return _Address; } set { if (OnPropertyChanging(__.Address, value)) { _Address = value; OnPropertyChanged(__.Address); } } }
+        public String Address { get => _Address; set { if (OnPropertyChanging(__.Address, value)) { _Address = value; OnPropertyChanged(__.Address); } } }
 
         private String _Postcode;
         /// <summary>邮政编码</summary>
@@ -117,7 +117,7 @@ namespace COMCMS.Core
         [Description("邮政编码")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Postcode", "邮政编码", "")]
-        public String Postcode { get { return _Postcode; } set { if (OnPropertyChanging(__.Postcode, value)) { _Postcode = value; OnPropertyChanged(__.Postcode); } } }
+        public String Postcode { get => _Postcode; set { if (OnPropertyChanging(__.Postcode, value)) { _Postcode = value; OnPropertyChanged(__.Postcode); } } }
 
         private Int32 _IsDel;
         /// <summary>是否删除</summary>
@@ -125,7 +125,7 @@ namespace COMCMS.Core
         [Description("是否删除")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsDel", "是否删除", "")]
-        public Int32 IsDel { get { return _IsDel; } set { if (OnPropertyChanging(__.IsDel, value)) { _IsDel = value; OnPropertyChanged(__.IsDel); } } }
+        public Int32 IsDel { get => _IsDel; set { if (OnPropertyChanging(__.IsDel, value)) { _IsDel = value; OnPropertyChanged(__.IsDel); } } }
 
         private Int32 _IsHide;
         /// <summary>是否隐藏</summary>
@@ -133,7 +133,7 @@ namespace COMCMS.Core
         [Description("是否隐藏")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsHide", "是否隐藏", "")]
-        public Int32 IsHide { get { return _IsHide; } set { if (OnPropertyChanging(__.IsHide, value)) { _IsHide = value; OnPropertyChanged(__.IsHide); } } }
+        public Int32 IsHide { get => _IsHide; set { if (OnPropertyChanging(__.IsHide, value)) { _IsHide = value; OnPropertyChanged(__.IsHide); } } }
 
         private Int32 _IsDisabled;
         /// <summary>是否禁用</summary>
@@ -141,7 +141,7 @@ namespace COMCMS.Core
         [Description("是否禁用")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsDisabled", "是否禁用", "")]
-        public Int32 IsDisabled { get { return _IsDisabled; } set { if (OnPropertyChanging(__.IsDisabled, value)) { _IsDisabled = value; OnPropertyChanged(__.IsDisabled); } } }
+        public Int32 IsDisabled { get => _IsDisabled; set { if (OnPropertyChanging(__.IsDisabled, value)) { _IsDisabled = value; OnPropertyChanged(__.IsDisabled); } } }
 
         private String _Content;
         /// <summary>店铺介绍</summary>
@@ -149,7 +149,7 @@ namespace COMCMS.Core
         [Description("店铺介绍")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("Content", "店铺介绍", "")]
-        public String Content { get { return _Content; } set { if (OnPropertyChanging(__.Content, value)) { _Content = value; OnPropertyChanged(__.Content); } } }
+        public String Content { get => _Content; set { if (OnPropertyChanging(__.Content, value)) { _Content = value; OnPropertyChanged(__.Content); } } }
 
         private String _Keyword;
         /// <summary>关键字</summary>
@@ -157,7 +157,7 @@ namespace COMCMS.Core
         [Description("关键字")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Keyword", "关键字", "")]
-        public String Keyword { get { return _Keyword; } set { if (OnPropertyChanging(__.Keyword, value)) { _Keyword = value; OnPropertyChanged(__.Keyword); } } }
+        public String Keyword { get => _Keyword; set { if (OnPropertyChanging(__.Keyword, value)) { _Keyword = value; OnPropertyChanged(__.Keyword); } } }
 
         private String _Description;
         /// <summary>描述</summary>
@@ -165,7 +165,7 @@ namespace COMCMS.Core
         [Description("描述")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Description", "描述", "")]
-        public String Description { get { return _Description; } set { if (OnPropertyChanging(__.Description, value)) { _Description = value; OnPropertyChanged(__.Description); } } }
+        public String Description { get => _Description; set { if (OnPropertyChanging(__.Description, value)) { _Description = value; OnPropertyChanged(__.Description); } } }
 
         private String _BannerImg;
         /// <summary>banner图片</summary>
@@ -173,7 +173,7 @@ namespace COMCMS.Core
         [Description("banner图片")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("BannerImg", "banner图片", "")]
-        public String BannerImg { get { return _BannerImg; } set { if (OnPropertyChanging(__.BannerImg, value)) { _BannerImg = value; OnPropertyChanged(__.BannerImg); } } }
+        public String BannerImg { get => _BannerImg; set { if (OnPropertyChanging(__.BannerImg, value)) { _BannerImg = value; OnPropertyChanged(__.BannerImg); } } }
 
         private Decimal _Balance;
         /// <summary>余额</summary>
@@ -181,7 +181,7 @@ namespace COMCMS.Core
         [Description("余额")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Balance", "余额", "")]
-        public Decimal Balance { get { return _Balance; } set { if (OnPropertyChanging(__.Balance, value)) { _Balance = value; OnPropertyChanged(__.Balance); } } }
+        public Decimal Balance { get => _Balance; set { if (OnPropertyChanging(__.Balance, value)) { _Balance = value; OnPropertyChanged(__.Balance); } } }
 
         private Int32 _IsTop;
         /// <summary>是否置顶</summary>
@@ -189,7 +189,7 @@ namespace COMCMS.Core
         [Description("是否置顶")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsTop", "是否置顶", "")]
-        public Int32 IsTop { get { return _IsTop; } set { if (OnPropertyChanging(__.IsTop, value)) { _IsTop = value; OnPropertyChanged(__.IsTop); } } }
+        public Int32 IsTop { get => _IsTop; set { if (OnPropertyChanging(__.IsTop, value)) { _IsTop = value; OnPropertyChanged(__.IsTop); } } }
 
         private Int32 _IsVip;
         /// <summary>是否vip</summary>
@@ -197,7 +197,7 @@ namespace COMCMS.Core
         [Description("是否vip")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsVip", "是否vip", "")]
-        public Int32 IsVip { get { return _IsVip; } set { if (OnPropertyChanging(__.IsVip, value)) { _IsVip = value; OnPropertyChanged(__.IsVip); } } }
+        public Int32 IsVip { get => _IsVip; set { if (OnPropertyChanging(__.IsVip, value)) { _IsVip = value; OnPropertyChanged(__.IsVip); } } }
 
         private Int32 _IsRecommend;
         /// <summary>是否推荐</summary>
@@ -205,7 +205,7 @@ namespace COMCMS.Core
         [Description("是否推荐")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsRecommend", "是否推荐", "")]
-        public Int32 IsRecommend { get { return _IsRecommend; } set { if (OnPropertyChanging(__.IsRecommend, value)) { _IsRecommend = value; OnPropertyChanged(__.IsRecommend); } } }
+        public Int32 IsRecommend { get => _IsRecommend; set { if (OnPropertyChanging(__.IsRecommend, value)) { _IsRecommend = value; OnPropertyChanged(__.IsRecommend); } } }
 
         private Int32 _Likes;
         /// <summary>点赞数</summary>
@@ -213,7 +213,7 @@ namespace COMCMS.Core
         [Description("点赞数")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Likes", "点赞数", "")]
-        public Int32 Likes { get { return _Likes; } set { if (OnPropertyChanging(__.Likes, value)) { _Likes = value; OnPropertyChanged(__.Likes); } } }
+        public Int32 Likes { get => _Likes; set { if (OnPropertyChanging(__.Likes, value)) { _Likes = value; OnPropertyChanged(__.Likes); } } }
 
         private Decimal _AvgScore;
         /// <summary>平均分数</summary>
@@ -221,7 +221,7 @@ namespace COMCMS.Core
         [Description("平均分数")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("AvgScore", "平均分数", "")]
-        public Decimal AvgScore { get { return _AvgScore; } set { if (OnPropertyChanging(__.AvgScore, value)) { _AvgScore = value; OnPropertyChanged(__.AvgScore); } } }
+        public Decimal AvgScore { get => _AvgScore; set { if (OnPropertyChanging(__.AvgScore, value)) { _AvgScore = value; OnPropertyChanged(__.AvgScore); } } }
 
         private Decimal _ServiceScore;
         /// <summary>服务分数</summary>
@@ -229,7 +229,7 @@ namespace COMCMS.Core
         [Description("服务分数")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("ServiceScore", "服务分数", "")]
-        public Decimal ServiceScore { get { return _ServiceScore; } set { if (OnPropertyChanging(__.ServiceScore, value)) { _ServiceScore = value; OnPropertyChanged(__.ServiceScore); } } }
+        public Decimal ServiceScore { get => _ServiceScore; set { if (OnPropertyChanging(__.ServiceScore, value)) { _ServiceScore = value; OnPropertyChanged(__.ServiceScore); } } }
 
         private Decimal _SpeedScore;
         /// <summary>速度分数</summary>
@@ -237,7 +237,7 @@ namespace COMCMS.Core
         [Description("速度分数")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("SpeedScore", "速度分数", "")]
-        public Decimal SpeedScore { get { return _SpeedScore; } set { if (OnPropertyChanging(__.SpeedScore, value)) { _SpeedScore = value; OnPropertyChanged(__.SpeedScore); } } }
+        public Decimal SpeedScore { get => _SpeedScore; set { if (OnPropertyChanging(__.SpeedScore, value)) { _SpeedScore = value; OnPropertyChanged(__.SpeedScore); } } }
 
         private Decimal _EnvironmentScore;
         /// <summary>环境分数</summary>
@@ -245,7 +245,7 @@ namespace COMCMS.Core
         [Description("环境分数")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("EnvironmentScore", "环境分数", "")]
-        public Decimal EnvironmentScore { get { return _EnvironmentScore; } set { if (OnPropertyChanging(__.EnvironmentScore, value)) { _EnvironmentScore = value; OnPropertyChanged(__.EnvironmentScore); } } }
+        public Decimal EnvironmentScore { get => _EnvironmentScore; set { if (OnPropertyChanging(__.EnvironmentScore, value)) { _EnvironmentScore = value; OnPropertyChanged(__.EnvironmentScore); } } }
 
         private String _Pic;
         /// <summary>图片</summary>
@@ -253,7 +253,7 @@ namespace COMCMS.Core
         [Description("图片")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Pic", "图片", "")]
-        public String Pic { get { return _Pic; } set { if (OnPropertyChanging(__.Pic, value)) { _Pic = value; OnPropertyChanged(__.Pic); } } }
+        public String Pic { get => _Pic; set { if (OnPropertyChanging(__.Pic, value)) { _Pic = value; OnPropertyChanged(__.Pic); } } }
 
         private String _MorePics;
         /// <summary>店铺所有图片</summary>
@@ -261,7 +261,7 @@ namespace COMCMS.Core
         [Description("店铺所有图片")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("MorePics", "店铺所有图片", "")]
-        public String MorePics { get { return _MorePics; } set { if (OnPropertyChanging(__.MorePics, value)) { _MorePics = value; OnPropertyChanged(__.MorePics); } } }
+        public String MorePics { get => _MorePics; set { if (OnPropertyChanging(__.MorePics, value)) { _MorePics = value; OnPropertyChanged(__.MorePics); } } }
 
         private String _Email;
         /// <summary>邮箱</summary>
@@ -269,7 +269,7 @@ namespace COMCMS.Core
         [Description("邮箱")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Email", "邮箱", "")]
-        public String Email { get { return _Email; } set { if (OnPropertyChanging(__.Email, value)) { _Email = value; OnPropertyChanged(__.Email); } } }
+        public String Email { get => _Email; set { if (OnPropertyChanging(__.Email, value)) { _Email = value; OnPropertyChanged(__.Email); } } }
 
         private String _Tel;
         /// <summary>电话</summary>
@@ -277,7 +277,7 @@ namespace COMCMS.Core
         [Description("电话")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Tel", "电话", "")]
-        public String Tel { get { return _Tel; } set { if (OnPropertyChanging(__.Tel, value)) { _Tel = value; OnPropertyChanged(__.Tel); } } }
+        public String Tel { get => _Tel; set { if (OnPropertyChanging(__.Tel, value)) { _Tel = value; OnPropertyChanged(__.Tel); } } }
 
         private String _Phone;
         /// <summary>固定电话</summary>
@@ -285,7 +285,7 @@ namespace COMCMS.Core
         [Description("固定电话")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Phone", "固定电话", "")]
-        public String Phone { get { return _Phone; } set { if (OnPropertyChanging(__.Phone, value)) { _Phone = value; OnPropertyChanged(__.Phone); } } }
+        public String Phone { get => _Phone; set { if (OnPropertyChanging(__.Phone, value)) { _Phone = value; OnPropertyChanged(__.Phone); } } }
 
         private String _Qq;
         /// <summary>QQ</summary>
@@ -293,7 +293,7 @@ namespace COMCMS.Core
         [Description("QQ")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Qq", "QQ", "")]
-        public String Qq { get { return _Qq; } set { if (OnPropertyChanging(__.Qq, value)) { _Qq = value; OnPropertyChanged(__.Qq); } } }
+        public String Qq { get => _Qq; set { if (OnPropertyChanging(__.Qq, value)) { _Qq = value; OnPropertyChanged(__.Qq); } } }
 
         private String _Skype;
         /// <summary>Skype</summary>
@@ -301,7 +301,7 @@ namespace COMCMS.Core
         [Description("Skype")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Skype", "Skype", "")]
-        public String Skype { get { return _Skype; } set { if (OnPropertyChanging(__.Skype, value)) { _Skype = value; OnPropertyChanged(__.Skype); } } }
+        public String Skype { get => _Skype; set { if (OnPropertyChanging(__.Skype, value)) { _Skype = value; OnPropertyChanged(__.Skype); } } }
 
         private String _HomePage;
         /// <summary>主页</summary>
@@ -309,7 +309,7 @@ namespace COMCMS.Core
         [Description("主页")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("HomePage", "主页", "")]
-        public String HomePage { get { return _HomePage; } set { if (OnPropertyChanging(__.HomePage, value)) { _HomePage = value; OnPropertyChanged(__.HomePage); } } }
+        public String HomePage { get => _HomePage; set { if (OnPropertyChanging(__.HomePage, value)) { _HomePage = value; OnPropertyChanged(__.HomePage); } } }
 
         private String _Weixin;
         /// <summary>微信</summary>
@@ -317,7 +317,7 @@ namespace COMCMS.Core
         [Description("微信")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Weixin", "微信", "")]
-        public String Weixin { get { return _Weixin; } set { if (OnPropertyChanging(__.Weixin, value)) { _Weixin = value; OnPropertyChanged(__.Weixin); } } }
+        public String Weixin { get => _Weixin; set { if (OnPropertyChanging(__.Weixin, value)) { _Weixin = value; OnPropertyChanged(__.Weixin); } } }
 
         private Int32 _IsShip;
         /// <summary>是否配送</summary>
@@ -325,7 +325,7 @@ namespace COMCMS.Core
         [Description("是否配送")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsShip", "是否配送", "")]
-        public Int32 IsShip { get { return _IsShip; } set { if (OnPropertyChanging(__.IsShip, value)) { _IsShip = value; OnPropertyChanged(__.IsShip); } } }
+        public Int32 IsShip { get => _IsShip; set { if (OnPropertyChanging(__.IsShip, value)) { _IsShip = value; OnPropertyChanged(__.IsShip); } } }
 
         private DateTime _OpenTime;
         /// <summary>开店时间</summary>
@@ -333,7 +333,7 @@ namespace COMCMS.Core
         [Description("开店时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("OpenTime", "开店时间", "")]
-        public DateTime OpenTime { get { return _OpenTime; } set { if (OnPropertyChanging(__.OpenTime, value)) { _OpenTime = value; OnPropertyChanged(__.OpenTime); } } }
+        public DateTime OpenTime { get => _OpenTime; set { if (OnPropertyChanging(__.OpenTime, value)) { _OpenTime = value; OnPropertyChanged(__.OpenTime); } } }
 
         private DateTime _CloseTime;
         /// <summary>关店时间</summary>
@@ -341,7 +341,7 @@ namespace COMCMS.Core
         [Description("关店时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("CloseTime", "关店时间", "")]
-        public DateTime CloseTime { get { return _CloseTime; } set { if (OnPropertyChanging(__.CloseTime, value)) { _CloseTime = value; OnPropertyChanged(__.CloseTime); } } }
+        public DateTime CloseTime { get => _CloseTime; set { if (OnPropertyChanging(__.CloseTime, value)) { _CloseTime = value; OnPropertyChanged(__.CloseTime); } } }
 
         private DateTime _ShippingStartTime;
         /// <summary>配送开始时间</summary>
@@ -349,7 +349,7 @@ namespace COMCMS.Core
         [Description("配送开始时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("ShippingStartTime", "配送开始时间", "")]
-        public DateTime ShippingStartTime { get { return _ShippingStartTime; } set { if (OnPropertyChanging(__.ShippingStartTime, value)) { _ShippingStartTime = value; OnPropertyChanged(__.ShippingStartTime); } } }
+        public DateTime ShippingStartTime { get => _ShippingStartTime; set { if (OnPropertyChanging(__.ShippingStartTime, value)) { _ShippingStartTime = value; OnPropertyChanged(__.ShippingStartTime); } } }
 
         private DateTime _ShippingEndTime;
         /// <summary>配送结束时间</summary>
@@ -357,7 +357,7 @@ namespace COMCMS.Core
         [Description("配送结束时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("ShippingEndTime", "配送结束时间", "")]
-        public DateTime ShippingEndTime { get { return _ShippingEndTime; } set { if (OnPropertyChanging(__.ShippingEndTime, value)) { _ShippingEndTime = value; OnPropertyChanged(__.ShippingEndTime); } } }
+        public DateTime ShippingEndTime { get => _ShippingEndTime; set { if (OnPropertyChanging(__.ShippingEndTime, value)) { _ShippingEndTime = value; OnPropertyChanged(__.ShippingEndTime); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -365,7 +365,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get { return _AddTime; } set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
 
         private Int32 _Hits;
         /// <summary>点击量</summary>
@@ -373,7 +373,7 @@ namespace COMCMS.Core
         [Description("点击量")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Hits", "点击量", "")]
-        public Int32 Hits { get { return _Hits; } set { if (OnPropertyChanging(__.Hits, value)) { _Hits = value; OnPropertyChanged(__.Hits); } } }
+        public Int32 Hits { get => _Hits; set { if (OnPropertyChanging(__.Hits, value)) { _Hits = value; OnPropertyChanged(__.Hits); } } }
 
         private Int32 _MyType;
         /// <summary>店铺类型</summary>
@@ -381,7 +381,7 @@ namespace COMCMS.Core
         [Description("店铺类型")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("MyType", "店铺类型", "")]
-        public Int32 MyType { get { return _MyType; } set { if (OnPropertyChanging(__.MyType, value)) { _MyType = value; OnPropertyChanged(__.MyType); } } }
+        public Int32 MyType { get => _MyType; set { if (OnPropertyChanging(__.MyType, value)) { _MyType = value; OnPropertyChanged(__.MyType); } } }
 
         private Decimal _DefaultFare;
         /// <summary>默认运费</summary>
@@ -389,7 +389,7 @@ namespace COMCMS.Core
         [Description("默认运费")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("DefaultFare", "默认运费", "")]
-        public Decimal DefaultFare { get { return _DefaultFare; } set { if (OnPropertyChanging(__.DefaultFare, value)) { _DefaultFare = value; OnPropertyChanged(__.DefaultFare); } } }
+        public Decimal DefaultFare { get => _DefaultFare; set { if (OnPropertyChanging(__.DefaultFare, value)) { _DefaultFare = value; OnPropertyChanged(__.DefaultFare); } } }
 
         private Decimal _MaxFreeFare;
         /// <summary>最大免运费金额</summary>
@@ -397,7 +397,7 @@ namespace COMCMS.Core
         [Description("最大免运费金额")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("MaxFreeFare", "最大免运费金额", "")]
-        public Decimal MaxFreeFare { get { return _MaxFreeFare; } set { if (OnPropertyChanging(__.MaxFreeFare, value)) { _MaxFreeFare = value; OnPropertyChanged(__.MaxFreeFare); } } }
+        public Decimal MaxFreeFare { get => _MaxFreeFare; set { if (OnPropertyChanging(__.MaxFreeFare, value)) { _MaxFreeFare = value; OnPropertyChanged(__.MaxFreeFare); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -410,54 +410,54 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.ShopName : return _ShopName;
-                    case __.KId : return _KId;
-                    case __.AId : return _AId;
-                    case __.Sequence : return _Sequence;
-                    case __.Latitude : return _Latitude;
-                    case __.Longitude : return _Longitude;
-                    case __.Country : return _Country;
-                    case __.Province : return _Province;
-                    case __.City : return _City;
-                    case __.District : return _District;
-                    case __.Address : return _Address;
-                    case __.Postcode : return _Postcode;
-                    case __.IsDel : return _IsDel;
-                    case __.IsHide : return _IsHide;
-                    case __.IsDisabled : return _IsDisabled;
-                    case __.Content : return _Content;
-                    case __.Keyword : return _Keyword;
-                    case __.Description : return _Description;
-                    case __.BannerImg : return _BannerImg;
-                    case __.Balance : return _Balance;
-                    case __.IsTop : return _IsTop;
-                    case __.IsVip : return _IsVip;
-                    case __.IsRecommend : return _IsRecommend;
-                    case __.Likes : return _Likes;
-                    case __.AvgScore : return _AvgScore;
-                    case __.ServiceScore : return _ServiceScore;
-                    case __.SpeedScore : return _SpeedScore;
-                    case __.EnvironmentScore : return _EnvironmentScore;
-                    case __.Pic : return _Pic;
-                    case __.MorePics : return _MorePics;
-                    case __.Email : return _Email;
-                    case __.Tel : return _Tel;
-                    case __.Phone : return _Phone;
-                    case __.Qq : return _Qq;
-                    case __.Skype : return _Skype;
-                    case __.HomePage : return _HomePage;
-                    case __.Weixin : return _Weixin;
-                    case __.IsShip : return _IsShip;
-                    case __.OpenTime : return _OpenTime;
-                    case __.CloseTime : return _CloseTime;
-                    case __.ShippingStartTime : return _ShippingStartTime;
-                    case __.ShippingEndTime : return _ShippingEndTime;
-                    case __.AddTime : return _AddTime;
-                    case __.Hits : return _Hits;
-                    case __.MyType : return _MyType;
-                    case __.DefaultFare : return _DefaultFare;
-                    case __.MaxFreeFare : return _MaxFreeFare;
+                    case __.Id: return _Id;
+                    case __.ShopName: return _ShopName;
+                    case __.KId: return _KId;
+                    case __.AId: return _AId;
+                    case __.Sequence: return _Sequence;
+                    case __.Latitude: return _Latitude;
+                    case __.Longitude: return _Longitude;
+                    case __.Country: return _Country;
+                    case __.Province: return _Province;
+                    case __.City: return _City;
+                    case __.District: return _District;
+                    case __.Address: return _Address;
+                    case __.Postcode: return _Postcode;
+                    case __.IsDel: return _IsDel;
+                    case __.IsHide: return _IsHide;
+                    case __.IsDisabled: return _IsDisabled;
+                    case __.Content: return _Content;
+                    case __.Keyword: return _Keyword;
+                    case __.Description: return _Description;
+                    case __.BannerImg: return _BannerImg;
+                    case __.Balance: return _Balance;
+                    case __.IsTop: return _IsTop;
+                    case __.IsVip: return _IsVip;
+                    case __.IsRecommend: return _IsRecommend;
+                    case __.Likes: return _Likes;
+                    case __.AvgScore: return _AvgScore;
+                    case __.ServiceScore: return _ServiceScore;
+                    case __.SpeedScore: return _SpeedScore;
+                    case __.EnvironmentScore: return _EnvironmentScore;
+                    case __.Pic: return _Pic;
+                    case __.MorePics: return _MorePics;
+                    case __.Email: return _Email;
+                    case __.Tel: return _Tel;
+                    case __.Phone: return _Phone;
+                    case __.Qq: return _Qq;
+                    case __.Skype: return _Skype;
+                    case __.HomePage: return _HomePage;
+                    case __.Weixin: return _Weixin;
+                    case __.IsShip: return _IsShip;
+                    case __.OpenTime: return _OpenTime;
+                    case __.CloseTime: return _CloseTime;
+                    case __.ShippingStartTime: return _ShippingStartTime;
+                    case __.ShippingEndTime: return _ShippingEndTime;
+                    case __.AddTime: return _AddTime;
+                    case __.Hits: return _Hits;
+                    case __.MyType: return _MyType;
+                    case __.DefaultFare: return _DefaultFare;
+                    case __.MaxFreeFare: return _MaxFreeFare;
                     default: return base[name];
                 }
             }
@@ -465,54 +465,54 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.ShopName : _ShopName = Convert.ToString(value); break;
-                    case __.KId : _KId = value.ToInt(); break;
-                    case __.AId : _AId = value.ToInt(); break;
-                    case __.Sequence : _Sequence = value.ToInt(); break;
-                    case __.Latitude : _Latitude = Convert.ToDecimal(value); break;
-                    case __.Longitude : _Longitude = Convert.ToDecimal(value); break;
-                    case __.Country : _Country = Convert.ToString(value); break;
-                    case __.Province : _Province = Convert.ToString(value); break;
-                    case __.City : _City = Convert.ToString(value); break;
-                    case __.District : _District = Convert.ToString(value); break;
-                    case __.Address : _Address = Convert.ToString(value); break;
-                    case __.Postcode : _Postcode = Convert.ToString(value); break;
-                    case __.IsDel : _IsDel = value.ToInt(); break;
-                    case __.IsHide : _IsHide = value.ToInt(); break;
-                    case __.IsDisabled : _IsDisabled = value.ToInt(); break;
-                    case __.Content : _Content = Convert.ToString(value); break;
-                    case __.Keyword : _Keyword = Convert.ToString(value); break;
-                    case __.Description : _Description = Convert.ToString(value); break;
-                    case __.BannerImg : _BannerImg = Convert.ToString(value); break;
-                    case __.Balance : _Balance = Convert.ToDecimal(value); break;
-                    case __.IsTop : _IsTop = value.ToInt(); break;
-                    case __.IsVip : _IsVip = value.ToInt(); break;
-                    case __.IsRecommend : _IsRecommend = value.ToInt(); break;
-                    case __.Likes : _Likes = value.ToInt(); break;
-                    case __.AvgScore : _AvgScore = Convert.ToDecimal(value); break;
-                    case __.ServiceScore : _ServiceScore = Convert.ToDecimal(value); break;
-                    case __.SpeedScore : _SpeedScore = Convert.ToDecimal(value); break;
-                    case __.EnvironmentScore : _EnvironmentScore = Convert.ToDecimal(value); break;
-                    case __.Pic : _Pic = Convert.ToString(value); break;
-                    case __.MorePics : _MorePics = Convert.ToString(value); break;
-                    case __.Email : _Email = Convert.ToString(value); break;
-                    case __.Tel : _Tel = Convert.ToString(value); break;
-                    case __.Phone : _Phone = Convert.ToString(value); break;
-                    case __.Qq : _Qq = Convert.ToString(value); break;
-                    case __.Skype : _Skype = Convert.ToString(value); break;
-                    case __.HomePage : _HomePage = Convert.ToString(value); break;
-                    case __.Weixin : _Weixin = Convert.ToString(value); break;
-                    case __.IsShip : _IsShip = value.ToInt(); break;
-                    case __.OpenTime : _OpenTime = value.ToDateTime(); break;
-                    case __.CloseTime : _CloseTime = value.ToDateTime(); break;
-                    case __.ShippingStartTime : _ShippingStartTime = value.ToDateTime(); break;
-                    case __.ShippingEndTime : _ShippingEndTime = value.ToDateTime(); break;
-                    case __.AddTime : _AddTime = value.ToDateTime(); break;
-                    case __.Hits : _Hits = value.ToInt(); break;
-                    case __.MyType : _MyType = value.ToInt(); break;
-                    case __.DefaultFare : _DefaultFare = Convert.ToDecimal(value); break;
-                    case __.MaxFreeFare : _MaxFreeFare = Convert.ToDecimal(value); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.ShopName: _ShopName = Convert.ToString(value); break;
+                    case __.KId: _KId = value.ToInt(); break;
+                    case __.AId: _AId = value.ToInt(); break;
+                    case __.Sequence: _Sequence = value.ToInt(); break;
+                    case __.Latitude: _Latitude = Convert.ToDecimal(value); break;
+                    case __.Longitude: _Longitude = Convert.ToDecimal(value); break;
+                    case __.Country: _Country = Convert.ToString(value); break;
+                    case __.Province: _Province = Convert.ToString(value); break;
+                    case __.City: _City = Convert.ToString(value); break;
+                    case __.District: _District = Convert.ToString(value); break;
+                    case __.Address: _Address = Convert.ToString(value); break;
+                    case __.Postcode: _Postcode = Convert.ToString(value); break;
+                    case __.IsDel: _IsDel = value.ToInt(); break;
+                    case __.IsHide: _IsHide = value.ToInt(); break;
+                    case __.IsDisabled: _IsDisabled = value.ToInt(); break;
+                    case __.Content: _Content = Convert.ToString(value); break;
+                    case __.Keyword: _Keyword = Convert.ToString(value); break;
+                    case __.Description: _Description = Convert.ToString(value); break;
+                    case __.BannerImg: _BannerImg = Convert.ToString(value); break;
+                    case __.Balance: _Balance = Convert.ToDecimal(value); break;
+                    case __.IsTop: _IsTop = value.ToInt(); break;
+                    case __.IsVip: _IsVip = value.ToInt(); break;
+                    case __.IsRecommend: _IsRecommend = value.ToInt(); break;
+                    case __.Likes: _Likes = value.ToInt(); break;
+                    case __.AvgScore: _AvgScore = Convert.ToDecimal(value); break;
+                    case __.ServiceScore: _ServiceScore = Convert.ToDecimal(value); break;
+                    case __.SpeedScore: _SpeedScore = Convert.ToDecimal(value); break;
+                    case __.EnvironmentScore: _EnvironmentScore = Convert.ToDecimal(value); break;
+                    case __.Pic: _Pic = Convert.ToString(value); break;
+                    case __.MorePics: _MorePics = Convert.ToString(value); break;
+                    case __.Email: _Email = Convert.ToString(value); break;
+                    case __.Tel: _Tel = Convert.ToString(value); break;
+                    case __.Phone: _Phone = Convert.ToString(value); break;
+                    case __.Qq: _Qq = Convert.ToString(value); break;
+                    case __.Skype: _Skype = Convert.ToString(value); break;
+                    case __.HomePage: _HomePage = Convert.ToString(value); break;
+                    case __.Weixin: _Weixin = Convert.ToString(value); break;
+                    case __.IsShip: _IsShip = value.ToInt(); break;
+                    case __.OpenTime: _OpenTime = value.ToDateTime(); break;
+                    case __.CloseTime: _CloseTime = value.ToDateTime(); break;
+                    case __.ShippingStartTime: _ShippingStartTime = value.ToDateTime(); break;
+                    case __.ShippingEndTime: _ShippingEndTime = value.ToDateTime(); break;
+                    case __.AddTime: _AddTime = value.ToDateTime(); break;
+                    case __.Hits: _Hits = value.ToInt(); break;
+                    case __.MyType: _MyType = value.ToInt(); break;
+                    case __.DefaultFare: _DefaultFare = Convert.ToDecimal(value); break;
+                    case __.MaxFreeFare: _MaxFreeFare = Convert.ToDecimal(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -667,7 +667,7 @@ namespace COMCMS.Core
             /// <summary>最大免运费金额</summary>
             public static readonly Field MaxFreeFare = FindByName(__.MaxFreeFare);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得商家字段名称的快捷方式</summary>

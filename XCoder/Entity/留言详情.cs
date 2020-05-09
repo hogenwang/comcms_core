@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private Int32 _KId;
         /// <summary>分类ID</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("分类ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("KId", "分类ID", "")]
-        public Int32 KId { get { return _KId; } set { if (OnPropertyChanging(__.KId, value)) { _KId = value; OnPropertyChanged(__.KId); } } }
+        public Int32 KId { get => _KId; set { if (OnPropertyChanging(__.KId, value)) { _KId = value; OnPropertyChanged(__.KId); } } }
 
         private Int32 _UId;
         /// <summary>用户ID</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("UId", "用户ID", "")]
-        public Int32 UId { get { return _UId; } set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
+        public Int32 UId { get => _UId; set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
 
         private String _Title;
         /// <summary>留言标题</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("留言标题")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Title", "留言标题", "", Master = true)]
-        public String Title { get { return _Title; } set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
+        public String Title { get => _Title; set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
 
         private String _Content;
         /// <summary>详细介绍</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("详细介绍")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("Content", "详细介绍", "")]
-        public String Content { get { return _Content; } set { if (OnPropertyChanging(__.Content, value)) { _Content = value; OnPropertyChanged(__.Content); } } }
+        public String Content { get => _Content; set { if (OnPropertyChanging(__.Content, value)) { _Content = value; OnPropertyChanged(__.Content); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get { return _AddTime; } set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
 
         private Int32 _IsVerify;
         /// <summary>是否审核通过</summary>
@@ -69,7 +69,7 @@ namespace COMCMS.Core
         [Description("是否审核通过")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsVerify", "是否审核通过", "")]
-        public Int32 IsVerify { get { return _IsVerify; } set { if (OnPropertyChanging(__.IsVerify, value)) { _IsVerify = value; OnPropertyChanged(__.IsVerify); } } }
+        public Int32 IsVerify { get => _IsVerify; set { if (OnPropertyChanging(__.IsVerify, value)) { _IsVerify = value; OnPropertyChanged(__.IsVerify); } } }
 
         private Int32 _IsRead;
         /// <summary>是否阅读</summary>
@@ -77,7 +77,7 @@ namespace COMCMS.Core
         [Description("是否阅读")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsRead", "是否阅读", "")]
-        public Int32 IsRead { get { return _IsRead; } set { if (OnPropertyChanging(__.IsRead, value)) { _IsRead = value; OnPropertyChanged(__.IsRead); } } }
+        public Int32 IsRead { get => _IsRead; set { if (OnPropertyChanging(__.IsRead, value)) { _IsRead = value; OnPropertyChanged(__.IsRead); } } }
 
         private Int32 _IsDel;
         /// <summary>是否删除,已经删除到回收站</summary>
@@ -85,7 +85,7 @@ namespace COMCMS.Core
         [Description("是否删除,已经删除到回收站")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsDel", "是否删除,已经删除到回收站", "")]
-        public Int32 IsDel { get { return _IsDel; } set { if (OnPropertyChanging(__.IsDel, value)) { _IsDel = value; OnPropertyChanged(__.IsDel); } } }
+        public Int32 IsDel { get => _IsDel; set { if (OnPropertyChanging(__.IsDel, value)) { _IsDel = value; OnPropertyChanged(__.IsDel); } } }
 
         private String _Ip;
         /// <summary>用户IP</summary>
@@ -93,7 +93,7 @@ namespace COMCMS.Core
         [Description("用户IP")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Ip", "用户IP", "")]
-        public String Ip { get { return _Ip; } set { if (OnPropertyChanging(__.Ip, value)) { _Ip = value; OnPropertyChanged(__.Ip); } } }
+        public String Ip { get => _Ip; set { if (OnPropertyChanging(__.Ip, value)) { _Ip = value; OnPropertyChanged(__.Ip); } } }
 
         private String _Nickname;
         /// <summary>昵称</summary>
@@ -101,7 +101,7 @@ namespace COMCMS.Core
         [Description("昵称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Nickname", "昵称", "")]
-        public String Nickname { get { return _Nickname; } set { if (OnPropertyChanging(__.Nickname, value)) { _Nickname = value; OnPropertyChanged(__.Nickname); } } }
+        public String Nickname { get => _Nickname; set { if (OnPropertyChanging(__.Nickname, value)) { _Nickname = value; OnPropertyChanged(__.Nickname); } } }
 
         private String _Email;
         /// <summary>邮箱</summary>
@@ -109,7 +109,7 @@ namespace COMCMS.Core
         [Description("邮箱")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Email", "邮箱", "")]
-        public String Email { get { return _Email; } set { if (OnPropertyChanging(__.Email, value)) { _Email = value; OnPropertyChanged(__.Email); } } }
+        public String Email { get => _Email; set { if (OnPropertyChanging(__.Email, value)) { _Email = value; OnPropertyChanged(__.Email); } } }
 
         private String _Tel;
         /// <summary>电话</summary>
@@ -117,7 +117,7 @@ namespace COMCMS.Core
         [Description("电话")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Tel", "电话", "")]
-        public String Tel { get { return _Tel; } set { if (OnPropertyChanging(__.Tel, value)) { _Tel = value; OnPropertyChanged(__.Tel); } } }
+        public String Tel { get => _Tel; set { if (OnPropertyChanging(__.Tel, value)) { _Tel = value; OnPropertyChanged(__.Tel); } } }
 
         private String _Qq;
         /// <summary>QQ</summary>
@@ -125,7 +125,7 @@ namespace COMCMS.Core
         [Description("QQ")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Qq", "QQ", "")]
-        public String Qq { get { return _Qq; } set { if (OnPropertyChanging(__.Qq, value)) { _Qq = value; OnPropertyChanged(__.Qq); } } }
+        public String Qq { get => _Qq; set { if (OnPropertyChanging(__.Qq, value)) { _Qq = value; OnPropertyChanged(__.Qq); } } }
 
         private String _Skype;
         /// <summary>Skype</summary>
@@ -133,7 +133,7 @@ namespace COMCMS.Core
         [Description("Skype")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Skype", "Skype", "")]
-        public String Skype { get { return _Skype; } set { if (OnPropertyChanging(__.Skype, value)) { _Skype = value; OnPropertyChanged(__.Skype); } } }
+        public String Skype { get => _Skype; set { if (OnPropertyChanging(__.Skype, value)) { _Skype = value; OnPropertyChanged(__.Skype); } } }
 
         private String _HomePage;
         /// <summary>主页</summary>
@@ -141,7 +141,7 @@ namespace COMCMS.Core
         [Description("主页")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("HomePage", "主页", "")]
-        public String HomePage { get { return _HomePage; } set { if (OnPropertyChanging(__.HomePage, value)) { _HomePage = value; OnPropertyChanged(__.HomePage); } } }
+        public String HomePage { get => _HomePage; set { if (OnPropertyChanging(__.HomePage, value)) { _HomePage = value; OnPropertyChanged(__.HomePage); } } }
 
         private String _Address;
         /// <summary>地址</summary>
@@ -149,7 +149,7 @@ namespace COMCMS.Core
         [Description("地址")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Address", "地址", "")]
-        public String Address { get { return _Address; } set { if (OnPropertyChanging(__.Address, value)) { _Address = value; OnPropertyChanged(__.Address); } } }
+        public String Address { get => _Address; set { if (OnPropertyChanging(__.Address, value)) { _Address = value; OnPropertyChanged(__.Address); } } }
 
         private String _Company;
         /// <summary>公司</summary>
@@ -157,7 +157,7 @@ namespace COMCMS.Core
         [Description("公司")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Company", "公司", "")]
-        public String Company { get { return _Company; } set { if (OnPropertyChanging(__.Company, value)) { _Company = value; OnPropertyChanged(__.Company); } } }
+        public String Company { get => _Company; set { if (OnPropertyChanging(__.Company, value)) { _Company = value; OnPropertyChanged(__.Company); } } }
 
         private String _ReplyTitle;
         /// <summary>回复标题</summary>
@@ -165,7 +165,7 @@ namespace COMCMS.Core
         [Description("回复标题")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("ReplyTitle", "回复标题", "")]
-        public String ReplyTitle { get { return _ReplyTitle; } set { if (OnPropertyChanging(__.ReplyTitle, value)) { _ReplyTitle = value; OnPropertyChanged(__.ReplyTitle); } } }
+        public String ReplyTitle { get => _ReplyTitle; set { if (OnPropertyChanging(__.ReplyTitle, value)) { _ReplyTitle = value; OnPropertyChanged(__.ReplyTitle); } } }
 
         private String _ReplyContent;
         /// <summary>回复的详情</summary>
@@ -173,7 +173,7 @@ namespace COMCMS.Core
         [Description("回复的详情")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("ReplyContent", "回复的详情", "")]
-        public String ReplyContent { get { return _ReplyContent; } set { if (OnPropertyChanging(__.ReplyContent, value)) { _ReplyContent = value; OnPropertyChanged(__.ReplyContent); } } }
+        public String ReplyContent { get => _ReplyContent; set { if (OnPropertyChanging(__.ReplyContent, value)) { _ReplyContent = value; OnPropertyChanged(__.ReplyContent); } } }
 
         private DateTime _ReplyAddTime;
         /// <summary>回复时间</summary>
@@ -181,7 +181,7 @@ namespace COMCMS.Core
         [Description("回复时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("ReplyAddTime", "回复时间", "")]
-        public DateTime ReplyAddTime { get { return _ReplyAddTime; } set { if (OnPropertyChanging(__.ReplyAddTime, value)) { _ReplyAddTime = value; OnPropertyChanged(__.ReplyAddTime); } } }
+        public DateTime ReplyAddTime { get => _ReplyAddTime; set { if (OnPropertyChanging(__.ReplyAddTime, value)) { _ReplyAddTime = value; OnPropertyChanged(__.ReplyAddTime); } } }
 
         private String _ReplyIP;
         /// <summary>用户回复IP</summary>
@@ -189,7 +189,7 @@ namespace COMCMS.Core
         [Description("用户回复IP")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("ReplyIP", "用户回复IP", "")]
-        public String ReplyIP { get { return _ReplyIP; } set { if (OnPropertyChanging(__.ReplyIP, value)) { _ReplyIP = value; OnPropertyChanged(__.ReplyIP); } } }
+        public String ReplyIP { get => _ReplyIP; set { if (OnPropertyChanging(__.ReplyIP, value)) { _ReplyIP = value; OnPropertyChanged(__.ReplyIP); } } }
 
         private Int32 _ReplyAdminId;
         /// <summary>用户的管理员ID</summary>
@@ -197,7 +197,7 @@ namespace COMCMS.Core
         [Description("用户的管理员ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("ReplyAdminId", "用户的管理员ID", "")]
-        public Int32 ReplyAdminId { get { return _ReplyAdminId; } set { if (OnPropertyChanging(__.ReplyAdminId, value)) { _ReplyAdminId = value; OnPropertyChanged(__.ReplyAdminId); } } }
+        public Int32 ReplyAdminId { get => _ReplyAdminId; set { if (OnPropertyChanging(__.ReplyAdminId, value)) { _ReplyAdminId = value; OnPropertyChanged(__.ReplyAdminId); } } }
 
         private String _ReplyNickName;
         /// <summary>回复者昵称</summary>
@@ -205,7 +205,7 @@ namespace COMCMS.Core
         [Description("回复者昵称")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("ReplyNickName", "回复者昵称", "")]
-        public String ReplyNickName { get { return _ReplyNickName; } set { if (OnPropertyChanging(__.ReplyNickName, value)) { _ReplyNickName = value; OnPropertyChanged(__.ReplyNickName); } } }
+        public String ReplyNickName { get => _ReplyNickName; set { if (OnPropertyChanging(__.ReplyNickName, value)) { _ReplyNickName = value; OnPropertyChanged(__.ReplyNickName); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -218,30 +218,30 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.KId : return _KId;
-                    case __.UId : return _UId;
-                    case __.Title : return _Title;
-                    case __.Content : return _Content;
-                    case __.AddTime : return _AddTime;
-                    case __.IsVerify : return _IsVerify;
-                    case __.IsRead : return _IsRead;
-                    case __.IsDel : return _IsDel;
-                    case __.Ip : return _Ip;
-                    case __.Nickname : return _Nickname;
-                    case __.Email : return _Email;
-                    case __.Tel : return _Tel;
-                    case __.Qq : return _Qq;
-                    case __.Skype : return _Skype;
-                    case __.HomePage : return _HomePage;
-                    case __.Address : return _Address;
-                    case __.Company : return _Company;
-                    case __.ReplyTitle : return _ReplyTitle;
-                    case __.ReplyContent : return _ReplyContent;
-                    case __.ReplyAddTime : return _ReplyAddTime;
-                    case __.ReplyIP : return _ReplyIP;
-                    case __.ReplyAdminId : return _ReplyAdminId;
-                    case __.ReplyNickName : return _ReplyNickName;
+                    case __.Id: return _Id;
+                    case __.KId: return _KId;
+                    case __.UId: return _UId;
+                    case __.Title: return _Title;
+                    case __.Content: return _Content;
+                    case __.AddTime: return _AddTime;
+                    case __.IsVerify: return _IsVerify;
+                    case __.IsRead: return _IsRead;
+                    case __.IsDel: return _IsDel;
+                    case __.Ip: return _Ip;
+                    case __.Nickname: return _Nickname;
+                    case __.Email: return _Email;
+                    case __.Tel: return _Tel;
+                    case __.Qq: return _Qq;
+                    case __.Skype: return _Skype;
+                    case __.HomePage: return _HomePage;
+                    case __.Address: return _Address;
+                    case __.Company: return _Company;
+                    case __.ReplyTitle: return _ReplyTitle;
+                    case __.ReplyContent: return _ReplyContent;
+                    case __.ReplyAddTime: return _ReplyAddTime;
+                    case __.ReplyIP: return _ReplyIP;
+                    case __.ReplyAdminId: return _ReplyAdminId;
+                    case __.ReplyNickName: return _ReplyNickName;
                     default: return base[name];
                 }
             }
@@ -249,30 +249,30 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.KId : _KId = value.ToInt(); break;
-                    case __.UId : _UId = value.ToInt(); break;
-                    case __.Title : _Title = Convert.ToString(value); break;
-                    case __.Content : _Content = Convert.ToString(value); break;
-                    case __.AddTime : _AddTime = value.ToDateTime(); break;
-                    case __.IsVerify : _IsVerify = value.ToInt(); break;
-                    case __.IsRead : _IsRead = value.ToInt(); break;
-                    case __.IsDel : _IsDel = value.ToInt(); break;
-                    case __.Ip : _Ip = Convert.ToString(value); break;
-                    case __.Nickname : _Nickname = Convert.ToString(value); break;
-                    case __.Email : _Email = Convert.ToString(value); break;
-                    case __.Tel : _Tel = Convert.ToString(value); break;
-                    case __.Qq : _Qq = Convert.ToString(value); break;
-                    case __.Skype : _Skype = Convert.ToString(value); break;
-                    case __.HomePage : _HomePage = Convert.ToString(value); break;
-                    case __.Address : _Address = Convert.ToString(value); break;
-                    case __.Company : _Company = Convert.ToString(value); break;
-                    case __.ReplyTitle : _ReplyTitle = Convert.ToString(value); break;
-                    case __.ReplyContent : _ReplyContent = Convert.ToString(value); break;
-                    case __.ReplyAddTime : _ReplyAddTime = value.ToDateTime(); break;
-                    case __.ReplyIP : _ReplyIP = Convert.ToString(value); break;
-                    case __.ReplyAdminId : _ReplyAdminId = value.ToInt(); break;
-                    case __.ReplyNickName : _ReplyNickName = Convert.ToString(value); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.KId: _KId = value.ToInt(); break;
+                    case __.UId: _UId = value.ToInt(); break;
+                    case __.Title: _Title = Convert.ToString(value); break;
+                    case __.Content: _Content = Convert.ToString(value); break;
+                    case __.AddTime: _AddTime = value.ToDateTime(); break;
+                    case __.IsVerify: _IsVerify = value.ToInt(); break;
+                    case __.IsRead: _IsRead = value.ToInt(); break;
+                    case __.IsDel: _IsDel = value.ToInt(); break;
+                    case __.Ip: _Ip = Convert.ToString(value); break;
+                    case __.Nickname: _Nickname = Convert.ToString(value); break;
+                    case __.Email: _Email = Convert.ToString(value); break;
+                    case __.Tel: _Tel = Convert.ToString(value); break;
+                    case __.Qq: _Qq = Convert.ToString(value); break;
+                    case __.Skype: _Skype = Convert.ToString(value); break;
+                    case __.HomePage: _HomePage = Convert.ToString(value); break;
+                    case __.Address: _Address = Convert.ToString(value); break;
+                    case __.Company: _Company = Convert.ToString(value); break;
+                    case __.ReplyTitle: _ReplyTitle = Convert.ToString(value); break;
+                    case __.ReplyContent: _ReplyContent = Convert.ToString(value); break;
+                    case __.ReplyAddTime: _ReplyAddTime = value.ToDateTime(); break;
+                    case __.ReplyIP: _ReplyIP = Convert.ToString(value); break;
+                    case __.ReplyAdminId: _ReplyAdminId = value.ToInt(); break;
+                    case __.ReplyNickName: _ReplyNickName = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -355,7 +355,7 @@ namespace COMCMS.Core
             /// <summary>回复者昵称</summary>
             public static readonly Field ReplyNickName = FindByName(__.ReplyNickName);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得留言详情字段名称的快捷方式</summary>

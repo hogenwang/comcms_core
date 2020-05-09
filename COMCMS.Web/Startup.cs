@@ -151,16 +151,24 @@ namespace COMCMS.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute(
-                name: "article",
-                pattern: "{title}/index.html",
-                defaults: new { controller = "Home", action = "Article" }
+                name: "index",
+                pattern: "/index.html",
+                defaults: new { controller = "Home", action = "Index" }
                 );
-                endpoints.MapControllerRoute(
-                name: "article2",
-                pattern: "{title}/",
-                defaults: new { controller = "Home", action = "Article" }
-                );
+
+                //endpoints.MapControllerRoute(
+                //name: "article",
+                //pattern: "{title}/index.html",
+                //defaults: new { controller = "Home", action = "Article" }
+                //);
+
+                //endpoints.MapControllerRoute(
+                //name: "article2",
+                //pattern: "{title}/",
+                //defaults: new { controller = "Home", action = "Article" }
+                //);
             });
 
             //使用环境变量

@@ -150,9 +150,25 @@ namespace COMCMS.Core
         #endregion
 
         #region 高级查询
+        /// <summary>
+        /// 通过FileName查找
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <param name="kid"></param>
+        /// <returns></returns>
+        public static Article FindByFileName(string filename,int kid=0)
+        {
+            var where = _.FileName == filename;
+            if (kid > 0) where &= _.KId == kid;
+            return Find(where);
+        }
+
+
         #endregion
 
         #region 业务操作
+
+
         /// <summary>
         /// 获取上一条记录/前一条记录
         /// </summary>

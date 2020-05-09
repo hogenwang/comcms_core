@@ -35,7 +35,7 @@
         <ul class="sec-nav-list">
             @foreach (var k in sameList)
             {
-                <li class="@(k.Id == Model.KId?"sec-on":"")"><a asp-controller="Article" asp-action="Index" asp-route-id="@(k.Id)" title="@k.KindName">@k.KindName</a></li>
+                <li class="@(k.Id == Model.KId?"sec-on":"")"><a  href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a></li>
             }
         </ul>
 

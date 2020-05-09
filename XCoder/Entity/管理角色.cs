@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private Int32 _RoleType;
         /// <summary>角色类型</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("角色类型")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("RoleType", "角色类型", "")]
-        public Int32 RoleType { get { return _RoleType; } set { if (OnPropertyChanging(__.RoleType, value)) { _RoleType = value; OnPropertyChanged(__.RoleType); } } }
+        public Int32 RoleType { get => _RoleType; set { if (OnPropertyChanging(__.RoleType, value)) { _RoleType = value; OnPropertyChanged(__.RoleType); } } }
 
         private String _RoleName;
         /// <summary>角色名称</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("角色名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("RoleName", "角色名称", "", Master = true)]
-        public String RoleName { get { return _RoleName; } set { if (OnPropertyChanging(__.RoleName, value)) { _RoleName = value; OnPropertyChanged(__.RoleName); } } }
+        public String RoleName { get => _RoleName; set { if (OnPropertyChanging(__.RoleName, value)) { _RoleName = value; OnPropertyChanged(__.RoleName); } } }
 
         private String _RoleDescription;
         /// <summary>角色简单介绍</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("角色简单介绍")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("RoleDescription", "角色简单介绍", "", Master = true)]
-        public String RoleDescription { get { return _RoleDescription; } set { if (OnPropertyChanging(__.RoleDescription, value)) { _RoleDescription = value; OnPropertyChanged(__.RoleDescription); } } }
+        public String RoleDescription { get => _RoleDescription; set { if (OnPropertyChanging(__.RoleDescription, value)) { _RoleDescription = value; OnPropertyChanged(__.RoleDescription); } } }
 
         private Int32 _IsSuperAdmin;
         /// <summary>是否是超级管理员</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("是否是超级管理员")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsSuperAdmin", "是否是超级管理员", "")]
-        public Int32 IsSuperAdmin { get { return _IsSuperAdmin; } set { if (OnPropertyChanging(__.IsSuperAdmin, value)) { _IsSuperAdmin = value; OnPropertyChanged(__.IsSuperAdmin); } } }
+        public Int32 IsSuperAdmin { get => _IsSuperAdmin; set { if (OnPropertyChanging(__.IsSuperAdmin, value)) { _IsSuperAdmin = value; OnPropertyChanged(__.IsSuperAdmin); } } }
 
         private Int32 _Stars;
         /// <summary>星级</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("星级")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Stars", "星级", "")]
-        public Int32 Stars { get { return _Stars; } set { if (OnPropertyChanging(__.Stars, value)) { _Stars = value; OnPropertyChanged(__.Stars); } } }
+        public Int32 Stars { get => _Stars; set { if (OnPropertyChanging(__.Stars, value)) { _Stars = value; OnPropertyChanged(__.Stars); } } }
 
         private Int32 _NotAllowDel;
         /// <summary>是否不允许删除</summary>
@@ -69,7 +69,7 @@ namespace COMCMS.Core
         [Description("是否不允许删除")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("NotAllowDel", "是否不允许删除", "")]
-        public Int32 NotAllowDel { get { return _NotAllowDel; } set { if (OnPropertyChanging(__.NotAllowDel, value)) { _NotAllowDel = value; OnPropertyChanged(__.NotAllowDel); } } }
+        public Int32 NotAllowDel { get => _NotAllowDel; set { if (OnPropertyChanging(__.NotAllowDel, value)) { _NotAllowDel = value; OnPropertyChanged(__.NotAllowDel); } } }
 
         private Int32 _Rank;
         /// <summary>排序</summary>
@@ -77,7 +77,7 @@ namespace COMCMS.Core
         [Description("排序")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Rank", "排序", "")]
-        public Int32 Rank { get { return _Rank; } set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
+        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
 
         private String _Color;
         /// <summary>颜色</summary>
@@ -85,7 +85,7 @@ namespace COMCMS.Core
         [Description("颜色")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Color", "颜色", "", Master = true)]
-        public String Color { get { return _Color; } set { if (OnPropertyChanging(__.Color, value)) { _Color = value; OnPropertyChanged(__.Color); } } }
+        public String Color { get => _Color; set { if (OnPropertyChanging(__.Color, value)) { _Color = value; OnPropertyChanged(__.Color); } } }
 
         private String _Menus;
         /// <summary>管理菜单</summary>
@@ -93,7 +93,7 @@ namespace COMCMS.Core
         [Description("管理菜单")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("Menus", "管理菜单", "", Master = true)]
-        public String Menus { get { return _Menus; } set { if (OnPropertyChanging(__.Menus, value)) { _Menus = value; OnPropertyChanged(__.Menus); } } }
+        public String Menus { get => _Menus; set { if (OnPropertyChanging(__.Menus, value)) { _Menus = value; OnPropertyChanged(__.Menus); } } }
 
         private String _Powers;
         /// <summary>权限</summary>
@@ -101,7 +101,7 @@ namespace COMCMS.Core
         [Description("权限")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("Powers", "权限", "", Master = true)]
-        public String Powers { get { return _Powers; } set { if (OnPropertyChanging(__.Powers, value)) { _Powers = value; OnPropertyChanged(__.Powers); } } }
+        public String Powers { get => _Powers; set { if (OnPropertyChanging(__.Powers, value)) { _Powers = value; OnPropertyChanged(__.Powers); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -114,17 +114,17 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.RoleType : return _RoleType;
-                    case __.RoleName : return _RoleName;
-                    case __.RoleDescription : return _RoleDescription;
-                    case __.IsSuperAdmin : return _IsSuperAdmin;
-                    case __.Stars : return _Stars;
-                    case __.NotAllowDel : return _NotAllowDel;
-                    case __.Rank : return _Rank;
-                    case __.Color : return _Color;
-                    case __.Menus : return _Menus;
-                    case __.Powers : return _Powers;
+                    case __.Id: return _Id;
+                    case __.RoleType: return _RoleType;
+                    case __.RoleName: return _RoleName;
+                    case __.RoleDescription: return _RoleDescription;
+                    case __.IsSuperAdmin: return _IsSuperAdmin;
+                    case __.Stars: return _Stars;
+                    case __.NotAllowDel: return _NotAllowDel;
+                    case __.Rank: return _Rank;
+                    case __.Color: return _Color;
+                    case __.Menus: return _Menus;
+                    case __.Powers: return _Powers;
                     default: return base[name];
                 }
             }
@@ -132,17 +132,17 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.RoleType : _RoleType = value.ToInt(); break;
-                    case __.RoleName : _RoleName = Convert.ToString(value); break;
-                    case __.RoleDescription : _RoleDescription = Convert.ToString(value); break;
-                    case __.IsSuperAdmin : _IsSuperAdmin = value.ToInt(); break;
-                    case __.Stars : _Stars = value.ToInt(); break;
-                    case __.NotAllowDel : _NotAllowDel = value.ToInt(); break;
-                    case __.Rank : _Rank = value.ToInt(); break;
-                    case __.Color : _Color = Convert.ToString(value); break;
-                    case __.Menus : _Menus = Convert.ToString(value); break;
-                    case __.Powers : _Powers = Convert.ToString(value); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.RoleType: _RoleType = value.ToInt(); break;
+                    case __.RoleName: _RoleName = Convert.ToString(value); break;
+                    case __.RoleDescription: _RoleDescription = Convert.ToString(value); break;
+                    case __.IsSuperAdmin: _IsSuperAdmin = value.ToInt(); break;
+                    case __.Stars: _Stars = value.ToInt(); break;
+                    case __.NotAllowDel: _NotAllowDel = value.ToInt(); break;
+                    case __.Rank: _Rank = value.ToInt(); break;
+                    case __.Color: _Color = Convert.ToString(value); break;
+                    case __.Menus: _Menus = Convert.ToString(value); break;
+                    case __.Powers: _Powers = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -186,7 +186,7 @@ namespace COMCMS.Core
             /// <summary>权限</summary>
             public static readonly Field Powers = FindByName(__.Powers);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得管理角色字段名称的快捷方式</summary>

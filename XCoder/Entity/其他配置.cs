@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private String _ConfigName;
         /// <summary>配置名称</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("配置名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("ConfigName", "配置名称", "")]
-        public String ConfigName { get { return _ConfigName; } set { if (OnPropertyChanging(__.ConfigName, value)) { _ConfigName = value; OnPropertyChanged(__.ConfigName); } } }
+        public String ConfigName { get => _ConfigName; set { if (OnPropertyChanging(__.ConfigName, value)) { _ConfigName = value; OnPropertyChanged(__.ConfigName); } } }
 
         private String _ConfigValue;
         /// <summary>配置值 JSON</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("配置值 JSON")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("ConfigValue", "配置值 JSON", "")]
-        public String ConfigValue { get { return _ConfigValue; } set { if (OnPropertyChanging(__.ConfigValue, value)) { _ConfigValue = value; OnPropertyChanged(__.ConfigValue); } } }
+        public String ConfigValue { get => _ConfigValue; set { if (OnPropertyChanging(__.ConfigValue, value)) { _ConfigValue = value; OnPropertyChanged(__.ConfigValue); } } }
 
         private DateTime _LastUpdateTime;
         /// <summary>最后更新时间</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("最后更新时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("LastUpdateTime", "最后更新时间", "")]
-        public DateTime LastUpdateTime { get { return _LastUpdateTime; } set { if (OnPropertyChanging(__.LastUpdateTime, value)) { _LastUpdateTime = value; OnPropertyChanged(__.LastUpdateTime); } } }
+        public DateTime LastUpdateTime { get => _LastUpdateTime; set { if (OnPropertyChanging(__.LastUpdateTime, value)) { _LastUpdateTime = value; OnPropertyChanged(__.LastUpdateTime); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -58,10 +58,10 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.ConfigName : return _ConfigName;
-                    case __.ConfigValue : return _ConfigValue;
-                    case __.LastUpdateTime : return _LastUpdateTime;
+                    case __.Id: return _Id;
+                    case __.ConfigName: return _ConfigName;
+                    case __.ConfigValue: return _ConfigValue;
+                    case __.LastUpdateTime: return _LastUpdateTime;
                     default: return base[name];
                 }
             }
@@ -69,10 +69,10 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.ConfigName : _ConfigName = Convert.ToString(value); break;
-                    case __.ConfigValue : _ConfigValue = Convert.ToString(value); break;
-                    case __.LastUpdateTime : _LastUpdateTime = value.ToDateTime(); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.ConfigName: _ConfigName = Convert.ToString(value); break;
+                    case __.ConfigValue: _ConfigValue = Convert.ToString(value); break;
+                    case __.LastUpdateTime: _LastUpdateTime = value.ToDateTime(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -95,7 +95,7 @@ namespace COMCMS.Core
             /// <summary>最后更新时间</summary>
             public static readonly Field LastUpdateTime = FindByName(__.LastUpdateTime);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得其他配置字段名称的快捷方式</summary>

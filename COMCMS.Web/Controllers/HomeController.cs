@@ -186,11 +186,27 @@ namespace COMCMS.Web.Controllers
 
         #region 测试
         //[Route("c/{*path}/index2.html")]
-        //public IActionResult Test(string path = "")
-        //{
-        //    string tel = "13332835377";
-        //    return Content(tel.Substring(tel.Length - 5) + ";path:" + path);
-        //}
+        public IActionResult Test(string path = "")
+        {
+            var asms = AppDomain.CurrentDomain.GetAssemblies();
+            List<string> list = new List<string>();
+            foreach (var item in asms)
+            {
+                string fullName = item.GetName().ToString();
+                if (fullName.IndexOf("COMCMS.Web.Views")>-1)
+                {
+                    var types = item.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
+                    foreach (var type in types)
+                    {
+                        string viewName = type.Name.Replace("Views_Article_", "") + ".cshtml";
+                        list.Add(viewName);
+                    }
+
+                }
+                //list.Add(item.GetName().ToString());
+            }
+            return Content(JsonConvert.SerializeObject(list));
+        }
         //[Route("{path1:regex([[a-zA-Z0-9-]])}/{path2:regex([[a-zA-Z0-9-]])}/index.html")]
         //public IActionResult Test2(string path1 = "", string path2 = "")
         //{
@@ -207,9 +223,9 @@ namespace COMCMS.Web.Controllers
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        [Route("{path:regex([[a-zA-Z0-9-]])}/index.html")]
-        [Route("{path:regex([[a-zA-Z0-9-]])}/index-{page:int}.html")]
-        [Route("{path:regex([[a-zA-Z0-9-]])}/")]
+        [Route("{path:regex(^(?!swagger\\b)[[a-zA-Z0-9-]]+$)}/index.html")]
+        [Route("{path:regex(^(?!swagger\\b)[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
+        [Route("{path:regex(^(?!swagger\\b)[[a-zA-Z0-9-]]+$)}/")]
         public IActionResult ShowCategory(string path,int page=1)
         {
             //先判断文章栏目
@@ -218,7 +234,7 @@ namespace COMCMS.Web.Controllers
             {
                 //return Content(articleCategory.Id.ToString());
                 ArticleController ac = new ArticleController();
-                return ac.Index(articleCategory.Id);
+                return ac.Index(articleCategory.Id, page);
             }
             //再判断商品
             Category category = Category.FindByFilePath("/" + path);
@@ -229,7 +245,186 @@ namespace COMCMS.Web.Controllers
             }
             return EchoTip("系统找不到本栏目！"+"/"+path);
         }
+
+        /// <summary>
+        /// 二级路径栏目
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/index.html")]
+        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
+        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/")]
+        public IActionResult ShowCategory(string path, string path2, int page = 1)
+        {
+            string fullPath = $"/{path}/{path2}";
+            //先判断文章栏目
+            ArticleCategory articleCategory = ArticleCategory.FindByFilePath(fullPath);
+            if (articleCategory != null)
+            {
+                //return Content(articleCategory.Id.ToString());
+                ArticleController ac = new ArticleController();
+                return ac.Index(articleCategory.Id, page);
+            }
+            //再判断商品
+            Category category = Category.FindByFilePath(fullPath);
+            if (category != null)
+            {
+                ProductController pc = new ProductController();
+                return pc.Index(category.Id, page);
+            }
+            return EchoTip("系统找不到本栏目！" + path + "|" + path2);
+        }
+        /// <summary>
+        /// 三级路径栏目
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/index.html")]
+        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
+        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/")]
+        public IActionResult ShowCategory(string path, string path2, string path3, int page = 1)
+        {
+            string fullPath = $"/{path}/{path2}/{path3}";
+            //先判断文章栏目
+            ArticleCategory articleCategory = ArticleCategory.FindByFilePath(fullPath);
+            if (articleCategory != null)
+            {
+                //return Content(articleCategory.Id.ToString());
+                ArticleController ac = new ArticleController();
+                return ac.Index(articleCategory.Id, page);
+            }
+            //再判断商品
+            Category category = Category.FindByFilePath(fullPath);
+            if (category != null)
+            {
+                ProductController pc = new ProductController();
+                return pc.Index(category.Id, page);
+            }
+            return EchoTip("系统找不到本栏目！" + fullPath);
+        }
+        /// <summary>
+        /// 四级路径栏目
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/index.html")]
+        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
+        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/")]
+        public IActionResult ShowCategory(string path, string path2, string path3, string path4, int page = 1)
+        {
+            string fullPath = $"/{path}/{path2}/{path3}/{path4}";
+            //先判断文章栏目
+            ArticleCategory articleCategory = ArticleCategory.FindByFilePath(fullPath);
+            if (articleCategory != null)
+            {
+                //return Content(articleCategory.Id.ToString());
+                ArticleController ac = new ArticleController();
+                return ac.Index(articleCategory.Id,page);
+            }
+            //再判断商品
+            Category category = Category.FindByFilePath(fullPath);
+            if (category != null)
+            {
+                ProductController pc = new ProductController();
+                return pc.Index(category.Id, page);
+            }
+            return EchoTip("系统找不到本栏目！" + fullPath);
+        }
+        #endregion
+
+        #region 文章详情、商品详情
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{path:regex(^(?!swagger\\b)[[a-zA-Z0-9-]]+$)}/{filename:regex(^(?!index\\b)[[a-zA-Z0-9-]]+$)}.html")]
+        public IActionResult ShowDetail(string path, string filename)
+        {
+            string fullPath = $"/{path}";
+            //先判断文章栏目
+            ArticleCategory articleCategory = ArticleCategory.FindByFilePath(fullPath);
+            if (articleCategory != null)
+            {
+                Article article = null;
+                //判断文件名
+                if (Utils.IsInt(filename))
+                {
+                    article = Article.FindById(int.Parse(filename));
+                }
+                if (article == null)
+                {
+                    filename = filename + ".html";
+                    article = Article.FindByFileName(filename, articleCategory.Id);
+                }
+                if(article != null)
+                {
+                    ArticleController ac = new ArticleController();
+                    return ac.Detail(article.Id);
+                }
+            }
+            //再判断商品
+            Category category = Category.FindByFilePath(fullPath);
+            if (category != null)
+            {
+                Product product = null;
+                //判断文件名
+                if (Utils.IsInt(filename))
+                {
+                    product = Product.FindById(int.Parse(filename));
+                }
+                if (product == null)
+                {
+                    filename = filename + ".html";
+                    product = Product.FindByFileName(filename, articleCategory.Id);
+                }
+                if (product != null)
+                {
+                    ProductController pc = new ProductController();
+                    return pc.Detail(product.Id);
+                }
+            }
+
+            return EchoTip("系统找不到本详情！" + "/" + path + "/" + filename);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{filename:regex(^(?!index\\b)[[a-zA-Z0-9-]]+$)}.html")]
+        public IActionResult ShowDetail(string path, string path2, string filename)
+        {
+            string fullPath = $"{path}/{path2}";
+            return ShowDetail(fullPath, filename);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{filename:regex(^(?!index\\b)[[a-zA-Z0-9-]]+$)}.html")]
+        public IActionResult ShowDetail(string path, string path2, string path3, string filename)
+        {
+            string fullPath = $"{path}/{path2}/{path3}";
+            return ShowDetail(fullPath, filename);
+        }
+        //四级
+        [HttpGet]
+        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/{filename:regex(^(?!index\\b)[[a-zA-Z0-9-]]+$)}.html")]
+        public IActionResult ShowDetail(string path, string path2, string path3, string path4, string filename)
+        {
+            string fullPath = $"{path}/{path2}/{path3}/{path4}";
+            return ShowDetail(fullPath, filename);
+        }
         #endregion
 
     }
 }
+    

@@ -150,6 +150,15 @@ namespace COMCMS.Common
             //A-Z, a-z, 0-9, -, /, =
             return Regex.IsMatch(str, @"[A-Za-z0-9-\/]");
         }
+        /// <summary>
+        /// 判断静态化文件名是否正确
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public static bool ChekHTMLFileNameIsOK(string filename)
+        {
+            return Regex.IsMatch(filename, @"^(?!index\b)[a-zA-Z0-9-]+(\.html)$");
+        }
 
         /// <summary>
         /// 验证对象是否为货币格式

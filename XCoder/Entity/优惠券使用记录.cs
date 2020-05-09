@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private Int32 _UId;
         /// <summary>用户ID</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("UId", "用户ID", "", Master = true)]
-        public Int32 UId { get { return _UId; } set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
+        public Int32 UId { get => _UId; set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
 
         private Int32 _CouponId;
         /// <summary>优惠券ID</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("优惠券ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("CouponId", "优惠券ID", "")]
-        public Int32 CouponId { get { return _CouponId; } set { if (OnPropertyChanging(__.CouponId, value)) { _CouponId = value; OnPropertyChanged(__.CouponId); } } }
+        public Int32 CouponId { get => _CouponId; set { if (OnPropertyChanging(__.CouponId, value)) { _CouponId = value; OnPropertyChanged(__.CouponId); } } }
 
         private String _ItemNO;
         /// <summary>优惠券编号</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("优惠券编号")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("ItemNO", "优惠券编号", "")]
-        public String ItemNO { get { return _ItemNO; } set { if (OnPropertyChanging(__.ItemNO, value)) { _ItemNO = value; OnPropertyChanged(__.ItemNO); } } }
+        public String ItemNO { get => _ItemNO; set { if (OnPropertyChanging(__.ItemNO, value)) { _ItemNO = value; OnPropertyChanged(__.ItemNO); } } }
 
         private String _OrderNum;
         /// <summary>订单号</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("订单号")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("OrderNum", "订单号", "")]
-        public String OrderNum { get { return _OrderNum; } set { if (OnPropertyChanging(__.OrderNum, value)) { _OrderNum = value; OnPropertyChanged(__.OrderNum); } } }
+        public String OrderNum { get => _OrderNum; set { if (OnPropertyChanging(__.OrderNum, value)) { _OrderNum = value; OnPropertyChanged(__.OrderNum); } } }
 
         private Int32 _OrderId;
         /// <summary>订单编号</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("订单编号")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("OrderId", "订单编号", "")]
-        public Int32 OrderId { get { return _OrderId; } set { if (OnPropertyChanging(__.OrderId, value)) { _OrderId = value; OnPropertyChanged(__.OrderId); } } }
+        public Int32 OrderId { get => _OrderId; set { if (OnPropertyChanging(__.OrderId, value)) { _OrderId = value; OnPropertyChanged(__.OrderId); } } }
 
         private String _UserName;
         /// <summary>用户名</summary>
@@ -69,7 +69,7 @@ namespace COMCMS.Core
         [Description("用户名")]
         [DataObjectField(false, false, true, 200)]
         [BindColumn("UserName", "用户名", "")]
-        public String UserName { get { return _UserName; } set { if (OnPropertyChanging(__.UserName, value)) { _UserName = value; OnPropertyChanged(__.UserName); } } }
+        public String UserName { get => _UserName; set { if (OnPropertyChanging(__.UserName, value)) { _UserName = value; OnPropertyChanged(__.UserName); } } }
 
         private String _Title;
         /// <summary>订单名称</summary>
@@ -77,7 +77,7 @@ namespace COMCMS.Core
         [Description("订单名称")]
         [DataObjectField(false, false, true, 200)]
         [BindColumn("Title", "订单名称", "")]
-        public String Title { get { return _Title; } set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
+        public String Title { get => _Title; set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
 
         private DateTime _AddTime;
         /// <summary>时间</summary>
@@ -85,7 +85,7 @@ namespace COMCMS.Core
         [Description("时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "时间", "")]
-        public DateTime AddTime { get { return _AddTime; } set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
 
         private String _Ip;
         /// <summary>登录IP</summary>
@@ -93,7 +93,7 @@ namespace COMCMS.Core
         [Description("登录IP")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Ip", "登录IP", "")]
-        public String Ip { get { return _Ip; } set { if (OnPropertyChanging(__.Ip, value)) { _Ip = value; OnPropertyChanged(__.Ip); } } }
+        public String Ip { get => _Ip; set { if (OnPropertyChanging(__.Ip, value)) { _Ip = value; OnPropertyChanged(__.Ip); } } }
 
         private String _Actions;
         /// <summary>记录详情</summary>
@@ -101,7 +101,7 @@ namespace COMCMS.Core
         [Description("记录详情")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Actions", "记录详情", "")]
-        public String Actions { get { return _Actions; } set { if (OnPropertyChanging(__.Actions, value)) { _Actions = value; OnPropertyChanged(__.Actions); } } }
+        public String Actions { get => _Actions; set { if (OnPropertyChanging(__.Actions, value)) { _Actions = value; OnPropertyChanged(__.Actions); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -114,17 +114,17 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.UId : return _UId;
-                    case __.CouponId : return _CouponId;
-                    case __.ItemNO : return _ItemNO;
-                    case __.OrderNum : return _OrderNum;
-                    case __.OrderId : return _OrderId;
-                    case __.UserName : return _UserName;
-                    case __.Title : return _Title;
-                    case __.AddTime : return _AddTime;
-                    case __.Ip : return _Ip;
-                    case __.Actions : return _Actions;
+                    case __.Id: return _Id;
+                    case __.UId: return _UId;
+                    case __.CouponId: return _CouponId;
+                    case __.ItemNO: return _ItemNO;
+                    case __.OrderNum: return _OrderNum;
+                    case __.OrderId: return _OrderId;
+                    case __.UserName: return _UserName;
+                    case __.Title: return _Title;
+                    case __.AddTime: return _AddTime;
+                    case __.Ip: return _Ip;
+                    case __.Actions: return _Actions;
                     default: return base[name];
                 }
             }
@@ -132,17 +132,17 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.UId : _UId = value.ToInt(); break;
-                    case __.CouponId : _CouponId = value.ToInt(); break;
-                    case __.ItemNO : _ItemNO = Convert.ToString(value); break;
-                    case __.OrderNum : _OrderNum = Convert.ToString(value); break;
-                    case __.OrderId : _OrderId = value.ToInt(); break;
-                    case __.UserName : _UserName = Convert.ToString(value); break;
-                    case __.Title : _Title = Convert.ToString(value); break;
-                    case __.AddTime : _AddTime = value.ToDateTime(); break;
-                    case __.Ip : _Ip = Convert.ToString(value); break;
-                    case __.Actions : _Actions = Convert.ToString(value); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.UId: _UId = value.ToInt(); break;
+                    case __.CouponId: _CouponId = value.ToInt(); break;
+                    case __.ItemNO: _ItemNO = Convert.ToString(value); break;
+                    case __.OrderNum: _OrderNum = Convert.ToString(value); break;
+                    case __.OrderId: _OrderId = value.ToInt(); break;
+                    case __.UserName: _UserName = Convert.ToString(value); break;
+                    case __.Title: _Title = Convert.ToString(value); break;
+                    case __.AddTime: _AddTime = value.ToDateTime(); break;
+                    case __.Ip: _Ip = Convert.ToString(value); break;
+                    case __.Actions: _Actions = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -186,7 +186,7 @@ namespace COMCMS.Core
             /// <summary>记录详情</summary>
             public static readonly Field Actions = FindByName(__.Actions);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得优惠券使用记录字段名称的快捷方式</summary>

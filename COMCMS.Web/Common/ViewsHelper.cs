@@ -23,7 +23,7 @@ namespace COMCMS.Web.Common
         public static string EchoURL(ArticleCategory model)
         {
             if (model == null)
-                return "";
+                return "javascript:;";
             if (!string.IsNullOrEmpty(model.FilePath))
                 return model.FilePath + "/index.html";
             else
@@ -37,7 +37,7 @@ namespace COMCMS.Web.Common
         public static string EchoURL(Category model)
         {
             if (model == null)
-                return "";
+                return "javascript:;";
             if (!string.IsNullOrEmpty(model.FilePath))
                 return model.FilePath + "/index.html";
             else
@@ -68,6 +68,32 @@ namespace COMCMS.Web.Common
             }
 
             return url;
+        }
+        #endregion
+
+        #region 生成详情地址
+        /// <summary>
+        /// 生成文章详情地址
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static string EchoArticleURL(Article model)
+        {
+            if (model == null)
+                return "javascript:;";
+
+            if (!string.IsNullOrEmpty(model.ArticleKind.FilePath))
+            {
+                string url = $"{model.ArticleKind.FilePath}/{model.Id}.html";
+                if (!string.IsNullOrEmpty(model.FileName))
+                {
+                    url = $"{model.ArticleKind.FilePath}/{model.FileName}";
+                }
+                return url;
+            }
+            else
+                return $"/article/detail/{model.Id}";
+
         }
         #endregion
 

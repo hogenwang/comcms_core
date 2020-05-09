@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private String _RoleName;
         /// <summary>角色名称</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("角色名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("RoleName", "角色名称", "", Master = true)]
-        public String RoleName { get { return _RoleName; } set { if (OnPropertyChanging(__.RoleName, value)) { _RoleName = value; OnPropertyChanged(__.RoleName); } } }
+        public String RoleName { get => _RoleName; set { if (OnPropertyChanging(__.RoleName, value)) { _RoleName = value; OnPropertyChanged(__.RoleName); } } }
 
         private String _RoleDescription;
         /// <summary>角色简单介绍</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("角色简单介绍")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("RoleDescription", "角色简单介绍", "", Master = true)]
-        public String RoleDescription { get { return _RoleDescription; } set { if (OnPropertyChanging(__.RoleDescription, value)) { _RoleDescription = value; OnPropertyChanged(__.RoleDescription); } } }
+        public String RoleDescription { get => _RoleDescription; set { if (OnPropertyChanging(__.RoleDescription, value)) { _RoleDescription = value; OnPropertyChanged(__.RoleDescription); } } }
 
         private Int32 _Stars;
         /// <summary>星级</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("星级")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Stars", "星级", "")]
-        public Int32 Stars { get { return _Stars; } set { if (OnPropertyChanging(__.Stars, value)) { _Stars = value; OnPropertyChanged(__.Stars); } } }
+        public Int32 Stars { get => _Stars; set { if (OnPropertyChanging(__.Stars, value)) { _Stars = value; OnPropertyChanged(__.Stars); } } }
 
         private Int32 _NotAllowDel;
         /// <summary>是否不允许删除</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("是否不允许删除")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("NotAllowDel", "是否不允许删除", "")]
-        public Int32 NotAllowDel { get { return _NotAllowDel; } set { if (OnPropertyChanging(__.NotAllowDel, value)) { _NotAllowDel = value; OnPropertyChanged(__.NotAllowDel); } } }
+        public Int32 NotAllowDel { get => _NotAllowDel; set { if (OnPropertyChanging(__.NotAllowDel, value)) { _NotAllowDel = value; OnPropertyChanged(__.NotAllowDel); } } }
 
         private Int32 _Rank;
         /// <summary>排序</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("排序")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Rank", "排序", "")]
-        public Int32 Rank { get { return _Rank; } set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
+        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
 
         private String _Color;
         /// <summary>颜色</summary>
@@ -69,7 +69,7 @@ namespace COMCMS.Core
         [Description("颜色")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Color", "颜色", "", Master = true)]
-        public String Color { get { return _Color; } set { if (OnPropertyChanging(__.Color, value)) { _Color = value; OnPropertyChanged(__.Color); } } }
+        public String Color { get => _Color; set { if (OnPropertyChanging(__.Color, value)) { _Color = value; OnPropertyChanged(__.Color); } } }
 
         private Decimal _CashBack;
         /// <summary>返现百分比</summary>
@@ -77,7 +77,7 @@ namespace COMCMS.Core
         [Description("返现百分比")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("CashBack", "返现百分比", "")]
-        public Decimal CashBack { get { return _CashBack; } set { if (OnPropertyChanging(__.CashBack, value)) { _CashBack = value; OnPropertyChanged(__.CashBack); } } }
+        public Decimal CashBack { get => _CashBack; set { if (OnPropertyChanging(__.CashBack, value)) { _CashBack = value; OnPropertyChanged(__.CashBack); } } }
 
         private Decimal _ParentCashBack;
         /// <summary>父级返现百分比</summary>
@@ -85,7 +85,7 @@ namespace COMCMS.Core
         [Description("父级返现百分比")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("ParentCashBack", "父级返现百分比", "")]
-        public Decimal ParentCashBack { get { return _ParentCashBack; } set { if (OnPropertyChanging(__.ParentCashBack, value)) { _ParentCashBack = value; OnPropertyChanged(__.ParentCashBack); } } }
+        public Decimal ParentCashBack { get => _ParentCashBack; set { if (OnPropertyChanging(__.ParentCashBack, value)) { _ParentCashBack = value; OnPropertyChanged(__.ParentCashBack); } } }
 
         private Decimal _GrandfatherCashBack;
         /// <summary>爷级返现百分比</summary>
@@ -93,7 +93,7 @@ namespace COMCMS.Core
         [Description("爷级返现百分比")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("GrandfatherCashBack", "爷级返现百分比", "")]
-        public Decimal GrandfatherCashBack { get { return _GrandfatherCashBack; } set { if (OnPropertyChanging(__.GrandfatherCashBack, value)) { _GrandfatherCashBack = value; OnPropertyChanged(__.GrandfatherCashBack); } } }
+        public Decimal GrandfatherCashBack { get => _GrandfatherCashBack; set { if (OnPropertyChanging(__.GrandfatherCashBack, value)) { _GrandfatherCashBack = value; OnPropertyChanged(__.GrandfatherCashBack); } } }
 
         private Int32 _IsDefault;
         /// <summary>是否是默认角色</summary>
@@ -101,7 +101,7 @@ namespace COMCMS.Core
         [Description("是否是默认角色")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsDefault", "是否是默认角色", "")]
-        public Int32 IsDefault { get { return _IsDefault; } set { if (OnPropertyChanging(__.IsDefault, value)) { _IsDefault = value; OnPropertyChanged(__.IsDefault); } } }
+        public Int32 IsDefault { get => _IsDefault; set { if (OnPropertyChanging(__.IsDefault, value)) { _IsDefault = value; OnPropertyChanged(__.IsDefault); } } }
 
         private Int32 _IsHalved;
         /// <summary>超过级别是否减半</summary>
@@ -109,7 +109,7 @@ namespace COMCMS.Core
         [Description("超过级别是否减半")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsHalved", "超过级别是否减半", "")]
-        public Int32 IsHalved { get { return _IsHalved; } set { if (OnPropertyChanging(__.IsHalved, value)) { _IsHalved = value; OnPropertyChanged(__.IsHalved); } } }
+        public Int32 IsHalved { get => _IsHalved; set { if (OnPropertyChanging(__.IsHalved, value)) { _IsHalved = value; OnPropertyChanged(__.IsHalved); } } }
 
         private Decimal _HalvedParentCashBack;
         /// <summary>超过级别父级返现百分比</summary>
@@ -117,7 +117,7 @@ namespace COMCMS.Core
         [Description("超过级别父级返现百分比")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("HalvedParentCashBack", "超过级别父级返现百分比", "")]
-        public Decimal HalvedParentCashBack { get { return _HalvedParentCashBack; } set { if (OnPropertyChanging(__.HalvedParentCashBack, value)) { _HalvedParentCashBack = value; OnPropertyChanged(__.HalvedParentCashBack); } } }
+        public Decimal HalvedParentCashBack { get => _HalvedParentCashBack; set { if (OnPropertyChanging(__.HalvedParentCashBack, value)) { _HalvedParentCashBack = value; OnPropertyChanged(__.HalvedParentCashBack); } } }
 
         private Decimal _HalvedGrandfatherCashBack;
         /// <summary>超过级别爷级返现百分比</summary>
@@ -125,7 +125,7 @@ namespace COMCMS.Core
         [Description("超过级别爷级返现百分比")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("HalvedGrandfatherCashBack", "超过级别爷级返现百分比", "")]
-        public Decimal HalvedGrandfatherCashBack { get { return _HalvedGrandfatherCashBack; } set { if (OnPropertyChanging(__.HalvedGrandfatherCashBack, value)) { _HalvedGrandfatherCashBack = value; OnPropertyChanged(__.HalvedGrandfatherCashBack); } } }
+        public Decimal HalvedGrandfatherCashBack { get => _HalvedGrandfatherCashBack; set { if (OnPropertyChanging(__.HalvedGrandfatherCashBack, value)) { _HalvedGrandfatherCashBack = value; OnPropertyChanged(__.HalvedGrandfatherCashBack); } } }
 
         private Decimal _YearsPerformance;
         /// <summary>年业务量</summary>
@@ -133,7 +133,7 @@ namespace COMCMS.Core
         [Description("年业务量")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("YearsPerformance", "年业务量", "")]
-        public Decimal YearsPerformance { get { return _YearsPerformance; } set { if (OnPropertyChanging(__.YearsPerformance, value)) { _YearsPerformance = value; OnPropertyChanged(__.YearsPerformance); } } }
+        public Decimal YearsPerformance { get => _YearsPerformance; set { if (OnPropertyChanging(__.YearsPerformance, value)) { _YearsPerformance = value; OnPropertyChanged(__.YearsPerformance); } } }
 
         private Int32 _IsSellers;
         /// <summary>是否是分销商</summary>
@@ -141,7 +141,7 @@ namespace COMCMS.Core
         [Description("是否是分销商")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsSellers", "是否是分销商", "")]
-        public Int32 IsSellers { get { return _IsSellers; } set { if (OnPropertyChanging(__.IsSellers, value)) { _IsSellers = value; OnPropertyChanged(__.IsSellers); } } }
+        public Int32 IsSellers { get => _IsSellers; set { if (OnPropertyChanging(__.IsSellers, value)) { _IsSellers = value; OnPropertyChanged(__.IsSellers); } } }
 
         private Decimal _JoinPrice;
         /// <summary>加入分销商价格</summary>
@@ -149,7 +149,7 @@ namespace COMCMS.Core
         [Description("加入分销商价格")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("JoinPrice", "加入分销商价格", "")]
-        public Decimal JoinPrice { get { return _JoinPrice; } set { if (OnPropertyChanging(__.JoinPrice, value)) { _JoinPrice = value; OnPropertyChanged(__.JoinPrice); } } }
+        public Decimal JoinPrice { get => _JoinPrice; set { if (OnPropertyChanging(__.JoinPrice, value)) { _JoinPrice = value; OnPropertyChanged(__.JoinPrice); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -162,23 +162,23 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.RoleName : return _RoleName;
-                    case __.RoleDescription : return _RoleDescription;
-                    case __.Stars : return _Stars;
-                    case __.NotAllowDel : return _NotAllowDel;
-                    case __.Rank : return _Rank;
-                    case __.Color : return _Color;
-                    case __.CashBack : return _CashBack;
-                    case __.ParentCashBack : return _ParentCashBack;
-                    case __.GrandfatherCashBack : return _GrandfatherCashBack;
-                    case __.IsDefault : return _IsDefault;
-                    case __.IsHalved : return _IsHalved;
-                    case __.HalvedParentCashBack : return _HalvedParentCashBack;
-                    case __.HalvedGrandfatherCashBack : return _HalvedGrandfatherCashBack;
-                    case __.YearsPerformance : return _YearsPerformance;
-                    case __.IsSellers : return _IsSellers;
-                    case __.JoinPrice : return _JoinPrice;
+                    case __.Id: return _Id;
+                    case __.RoleName: return _RoleName;
+                    case __.RoleDescription: return _RoleDescription;
+                    case __.Stars: return _Stars;
+                    case __.NotAllowDel: return _NotAllowDel;
+                    case __.Rank: return _Rank;
+                    case __.Color: return _Color;
+                    case __.CashBack: return _CashBack;
+                    case __.ParentCashBack: return _ParentCashBack;
+                    case __.GrandfatherCashBack: return _GrandfatherCashBack;
+                    case __.IsDefault: return _IsDefault;
+                    case __.IsHalved: return _IsHalved;
+                    case __.HalvedParentCashBack: return _HalvedParentCashBack;
+                    case __.HalvedGrandfatherCashBack: return _HalvedGrandfatherCashBack;
+                    case __.YearsPerformance: return _YearsPerformance;
+                    case __.IsSellers: return _IsSellers;
+                    case __.JoinPrice: return _JoinPrice;
                     default: return base[name];
                 }
             }
@@ -186,23 +186,23 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.RoleName : _RoleName = Convert.ToString(value); break;
-                    case __.RoleDescription : _RoleDescription = Convert.ToString(value); break;
-                    case __.Stars : _Stars = value.ToInt(); break;
-                    case __.NotAllowDel : _NotAllowDel = value.ToInt(); break;
-                    case __.Rank : _Rank = value.ToInt(); break;
-                    case __.Color : _Color = Convert.ToString(value); break;
-                    case __.CashBack : _CashBack = Convert.ToDecimal(value); break;
-                    case __.ParentCashBack : _ParentCashBack = Convert.ToDecimal(value); break;
-                    case __.GrandfatherCashBack : _GrandfatherCashBack = Convert.ToDecimal(value); break;
-                    case __.IsDefault : _IsDefault = value.ToInt(); break;
-                    case __.IsHalved : _IsHalved = value.ToInt(); break;
-                    case __.HalvedParentCashBack : _HalvedParentCashBack = Convert.ToDecimal(value); break;
-                    case __.HalvedGrandfatherCashBack : _HalvedGrandfatherCashBack = Convert.ToDecimal(value); break;
-                    case __.YearsPerformance : _YearsPerformance = Convert.ToDecimal(value); break;
-                    case __.IsSellers : _IsSellers = value.ToInt(); break;
-                    case __.JoinPrice : _JoinPrice = Convert.ToDecimal(value); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.RoleName: _RoleName = Convert.ToString(value); break;
+                    case __.RoleDescription: _RoleDescription = Convert.ToString(value); break;
+                    case __.Stars: _Stars = value.ToInt(); break;
+                    case __.NotAllowDel: _NotAllowDel = value.ToInt(); break;
+                    case __.Rank: _Rank = value.ToInt(); break;
+                    case __.Color: _Color = Convert.ToString(value); break;
+                    case __.CashBack: _CashBack = Convert.ToDecimal(value); break;
+                    case __.ParentCashBack: _ParentCashBack = Convert.ToDecimal(value); break;
+                    case __.GrandfatherCashBack: _GrandfatherCashBack = Convert.ToDecimal(value); break;
+                    case __.IsDefault: _IsDefault = value.ToInt(); break;
+                    case __.IsHalved: _IsHalved = value.ToInt(); break;
+                    case __.HalvedParentCashBack: _HalvedParentCashBack = Convert.ToDecimal(value); break;
+                    case __.HalvedGrandfatherCashBack: _HalvedGrandfatherCashBack = Convert.ToDecimal(value); break;
+                    case __.YearsPerformance: _YearsPerformance = Convert.ToDecimal(value); break;
+                    case __.IsSellers: _IsSellers = value.ToInt(); break;
+                    case __.JoinPrice: _JoinPrice = Convert.ToDecimal(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -264,7 +264,7 @@ namespace COMCMS.Core
             /// <summary>加入分销商价格</summary>
             public static readonly Field JoinPrice = FindByName(__.JoinPrice);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得用户角色字段名称的快捷方式</summary>

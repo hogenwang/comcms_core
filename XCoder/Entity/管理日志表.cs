@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private Int32 _UId;
         /// <summary>管理员ID</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("管理员ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("UId", "管理员ID", "", Master = true)]
-        public Int32 UId { get { return _UId; } set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
+        public Int32 UId { get => _UId; set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
 
         private String _Guid;
         /// <summary>唯一ID</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("唯一ID")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Guid", "唯一ID", "")]
-        public String Guid { get { return _Guid; } set { if (OnPropertyChanging(__.Guid, value)) { _Guid = value; OnPropertyChanged(__.Guid); } } }
+        public String Guid { get => _Guid; set { if (OnPropertyChanging(__.Guid, value)) { _Guid = value; OnPropertyChanged(__.Guid); } } }
 
         private String _UserName;
         /// <summary>用户名</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("用户名")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("UserName", "用户名", "", Master = true)]
-        public String UserName { get { return _UserName; } set { if (OnPropertyChanging(__.UserName, value)) { _UserName = value; OnPropertyChanged(__.UserName); } } }
+        public String UserName { get => _UserName; set { if (OnPropertyChanging(__.UserName, value)) { _UserName = value; OnPropertyChanged(__.UserName); } } }
 
         private String _PassWord;
         /// <summary>密码</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("密码")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("PassWord", "密码", "")]
-        public String PassWord { get { return _PassWord; } set { if (OnPropertyChanging(__.PassWord, value)) { _PassWord = value; OnPropertyChanged(__.PassWord); } } }
+        public String PassWord { get => _PassWord; set { if (OnPropertyChanging(__.PassWord, value)) { _PassWord = value; OnPropertyChanged(__.PassWord); } } }
 
         private DateTime _LoginTime;
         /// <summary>登录时间</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("登录时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("LoginTime", "登录时间", "")]
-        public DateTime LoginTime { get { return _LoginTime; } set { if (OnPropertyChanging(__.LoginTime, value)) { _LoginTime = value; OnPropertyChanged(__.LoginTime); } } }
+        public DateTime LoginTime { get => _LoginTime; set { if (OnPropertyChanging(__.LoginTime, value)) { _LoginTime = value; OnPropertyChanged(__.LoginTime); } } }
 
         private String _LoginIP;
         /// <summary>登录IP</summary>
@@ -69,7 +69,7 @@ namespace COMCMS.Core
         [Description("登录IP")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("LoginIP", "登录IP", "")]
-        public String LoginIP { get { return _LoginIP; } set { if (OnPropertyChanging(__.LoginIP, value)) { _LoginIP = value; OnPropertyChanged(__.LoginIP); } } }
+        public String LoginIP { get => _LoginIP; set { if (OnPropertyChanging(__.LoginIP, value)) { _LoginIP = value; OnPropertyChanged(__.LoginIP); } } }
 
         private Int32 _IsLoginOK;
         /// <summary>是否登录成功</summary>
@@ -77,7 +77,7 @@ namespace COMCMS.Core
         [Description("是否登录成功")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsLoginOK", "是否登录成功", "")]
-        public Int32 IsLoginOK { get { return _IsLoginOK; } set { if (OnPropertyChanging(__.IsLoginOK, value)) { _IsLoginOK = value; OnPropertyChanged(__.IsLoginOK); } } }
+        public Int32 IsLoginOK { get => _IsLoginOK; set { if (OnPropertyChanging(__.IsLoginOK, value)) { _IsLoginOK = value; OnPropertyChanged(__.IsLoginOK); } } }
 
         private String _Actions;
         /// <summary>记录</summary>
@@ -85,7 +85,7 @@ namespace COMCMS.Core
         [Description("记录")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("Actions", "记录", "", Master = true)]
-        public String Actions { get { return _Actions; } set { if (OnPropertyChanging(__.Actions, value)) { _Actions = value; OnPropertyChanged(__.Actions); } } }
+        public String Actions { get => _Actions; set { if (OnPropertyChanging(__.Actions, value)) { _Actions = value; OnPropertyChanged(__.Actions); } } }
 
         private DateTime _LastUpdateTime;
         /// <summary>登录时间</summary>
@@ -93,7 +93,7 @@ namespace COMCMS.Core
         [Description("登录时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("LastUpdateTime", "登录时间", "")]
-        public DateTime LastUpdateTime { get { return _LastUpdateTime; } set { if (OnPropertyChanging(__.LastUpdateTime, value)) { _LastUpdateTime = value; OnPropertyChanged(__.LastUpdateTime); } } }
+        public DateTime LastUpdateTime { get => _LastUpdateTime; set { if (OnPropertyChanging(__.LastUpdateTime, value)) { _LastUpdateTime = value; OnPropertyChanged(__.LastUpdateTime); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -106,16 +106,16 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.UId : return _UId;
-                    case __.Guid : return _Guid;
-                    case __.UserName : return _UserName;
-                    case __.PassWord : return _PassWord;
-                    case __.LoginTime : return _LoginTime;
-                    case __.LoginIP : return _LoginIP;
-                    case __.IsLoginOK : return _IsLoginOK;
-                    case __.Actions : return _Actions;
-                    case __.LastUpdateTime : return _LastUpdateTime;
+                    case __.Id: return _Id;
+                    case __.UId: return _UId;
+                    case __.Guid: return _Guid;
+                    case __.UserName: return _UserName;
+                    case __.PassWord: return _PassWord;
+                    case __.LoginTime: return _LoginTime;
+                    case __.LoginIP: return _LoginIP;
+                    case __.IsLoginOK: return _IsLoginOK;
+                    case __.Actions: return _Actions;
+                    case __.LastUpdateTime: return _LastUpdateTime;
                     default: return base[name];
                 }
             }
@@ -123,16 +123,16 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.UId : _UId = value.ToInt(); break;
-                    case __.Guid : _Guid = Convert.ToString(value); break;
-                    case __.UserName : _UserName = Convert.ToString(value); break;
-                    case __.PassWord : _PassWord = Convert.ToString(value); break;
-                    case __.LoginTime : _LoginTime = value.ToDateTime(); break;
-                    case __.LoginIP : _LoginIP = Convert.ToString(value); break;
-                    case __.IsLoginOK : _IsLoginOK = value.ToInt(); break;
-                    case __.Actions : _Actions = Convert.ToString(value); break;
-                    case __.LastUpdateTime : _LastUpdateTime = value.ToDateTime(); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.UId: _UId = value.ToInt(); break;
+                    case __.Guid: _Guid = Convert.ToString(value); break;
+                    case __.UserName: _UserName = Convert.ToString(value); break;
+                    case __.PassWord: _PassWord = Convert.ToString(value); break;
+                    case __.LoginTime: _LoginTime = value.ToDateTime(); break;
+                    case __.LoginIP: _LoginIP = Convert.ToString(value); break;
+                    case __.IsLoginOK: _IsLoginOK = value.ToInt(); break;
+                    case __.Actions: _Actions = Convert.ToString(value); break;
+                    case __.LastUpdateTime: _LastUpdateTime = value.ToDateTime(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -173,7 +173,7 @@ namespace COMCMS.Core
             /// <summary>登录时间</summary>
             public static readonly Field LastUpdateTime = FindByName(__.LastUpdateTime);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得管理日志表字段名称的快捷方式</summary>

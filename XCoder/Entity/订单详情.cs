@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "", Master = true)]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private Int32 _OrderId;
         /// <summary>订单ID</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("订单ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("OrderId", "订单ID", "")]
-        public Int32 OrderId { get { return _OrderId; } set { if (OnPropertyChanging(__.OrderId, value)) { _OrderId = value; OnPropertyChanged(__.OrderId); } } }
+        public Int32 OrderId { get => _OrderId; set { if (OnPropertyChanging(__.OrderId, value)) { _OrderId = value; OnPropertyChanged(__.OrderId); } } }
 
         private String _OrderNum;
         /// <summary>订单号</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("订单号")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("OrderNum", "订单号", "")]
-        public String OrderNum { get { return _OrderNum; } set { if (OnPropertyChanging(__.OrderNum, value)) { _OrderNum = value; OnPropertyChanged(__.OrderNum); } } }
+        public String OrderNum { get => _OrderNum; set { if (OnPropertyChanging(__.OrderNum, value)) { _OrderNum = value; OnPropertyChanged(__.OrderNum); } } }
 
         private Int32 _ShopId;
         /// <summary>商户ID</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("商户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("ShopId", "商户ID", "")]
-        public Int32 ShopId { get { return _ShopId; } set { if (OnPropertyChanging(__.ShopId, value)) { _ShopId = value; OnPropertyChanged(__.ShopId); } } }
+        public Int32 ShopId { get => _ShopId; set { if (OnPropertyChanging(__.ShopId, value)) { _ShopId = value; OnPropertyChanged(__.ShopId); } } }
 
         private Int32 _UId;
         /// <summary>用户ID</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("UId", "用户ID", "")]
-        public Int32 UId { get { return _UId; } set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
+        public Int32 UId { get => _UId; set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
 
         private Int32 _PId;
         /// <summary>商品ID</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("商品ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("PId", "商品ID", "")]
-        public Int32 PId { get { return _PId; } set { if (OnPropertyChanging(__.PId, value)) { _PId = value; OnPropertyChanged(__.PId); } } }
+        public Int32 PId { get => _PId; set { if (OnPropertyChanging(__.PId, value)) { _PId = value; OnPropertyChanged(__.PId); } } }
 
         private Int32 _TypeId;
         /// <summary>类型ID</summary>
@@ -69,7 +69,7 @@ namespace COMCMS.Core
         [Description("类型ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("TypeId", "类型ID", "")]
-        public Int32 TypeId { get { return _TypeId; } set { if (OnPropertyChanging(__.TypeId, value)) { _TypeId = value; OnPropertyChanged(__.TypeId); } } }
+        public Int32 TypeId { get => _TypeId; set { if (OnPropertyChanging(__.TypeId, value)) { _TypeId = value; OnPropertyChanged(__.TypeId); } } }
 
         private Int32 _PriceId;
         /// <summary>价格ID</summary>
@@ -77,7 +77,7 @@ namespace COMCMS.Core
         [Description("价格ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("PriceId", "价格ID", "")]
-        public Int32 PriceId { get { return _PriceId; } set { if (OnPropertyChanging(__.PriceId, value)) { _PriceId = value; OnPropertyChanged(__.PriceId); } } }
+        public Int32 PriceId { get => _PriceId; set { if (OnPropertyChanging(__.PriceId, value)) { _PriceId = value; OnPropertyChanged(__.PriceId); } } }
 
         private String _Title;
         /// <summary>商品名称</summary>
@@ -85,7 +85,7 @@ namespace COMCMS.Core
         [Description("商品名称")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Title", "商品名称", "")]
-        public String Title { get { return _Title; } set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
+        public String Title { get => _Title; set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
 
         private String _Pic;
         /// <summary>商品名称</summary>
@@ -93,7 +93,7 @@ namespace COMCMS.Core
         [Description("商品名称")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Pic", "商品名称", "")]
-        public String Pic { get { return _Pic; } set { if (OnPropertyChanging(__.Pic, value)) { _Pic = value; OnPropertyChanged(__.Pic); } } }
+        public String Pic { get => _Pic; set { if (OnPropertyChanging(__.Pic, value)) { _Pic = value; OnPropertyChanged(__.Pic); } } }
 
         private String _Attr;
         /// <summary>商品属性</summary>
@@ -101,7 +101,7 @@ namespace COMCMS.Core
         [Description("商品属性")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Attr", "商品属性", "")]
-        public String Attr { get { return _Attr; } set { if (OnPropertyChanging(__.Attr, value)) { _Attr = value; OnPropertyChanged(__.Attr); } } }
+        public String Attr { get => _Attr; set { if (OnPropertyChanging(__.Attr, value)) { _Attr = value; OnPropertyChanged(__.Attr); } } }
 
         private String _Color;
         /// <summary>商品颜色</summary>
@@ -109,7 +109,7 @@ namespace COMCMS.Core
         [Description("商品颜色")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Color", "商品颜色", "")]
-        public String Color { get { return _Color; } set { if (OnPropertyChanging(__.Color, value)) { _Color = value; OnPropertyChanged(__.Color); } } }
+        public String Color { get => _Color; set { if (OnPropertyChanging(__.Color, value)) { _Color = value; OnPropertyChanged(__.Color); } } }
 
         private String _Spec;
         /// <summary>规格</summary>
@@ -117,7 +117,7 @@ namespace COMCMS.Core
         [Description("规格")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Spec", "规格", "")]
-        public String Spec { get { return _Spec; } set { if (OnPropertyChanging(__.Spec, value)) { _Spec = value; OnPropertyChanged(__.Spec); } } }
+        public String Spec { get => _Spec; set { if (OnPropertyChanging(__.Spec, value)) { _Spec = value; OnPropertyChanged(__.Spec); } } }
 
         private String _ItemNO;
         /// <summary>编号</summary>
@@ -125,7 +125,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("ItemNO", "编号", "")]
-        public String ItemNO { get { return _ItemNO; } set { if (OnPropertyChanging(__.ItemNO, value)) { _ItemNO = value; OnPropertyChanged(__.ItemNO); } } }
+        public String ItemNO { get => _ItemNO; set { if (OnPropertyChanging(__.ItemNO, value)) { _ItemNO = value; OnPropertyChanged(__.ItemNO); } } }
 
         private Int32 _Qty;
         /// <summary>数量</summary>
@@ -133,7 +133,7 @@ namespace COMCMS.Core
         [Description("数量")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Qty", "数量", "")]
-        public Int32 Qty { get { return _Qty; } set { if (OnPropertyChanging(__.Qty, value)) { _Qty = value; OnPropertyChanged(__.Qty); } } }
+        public Int32 Qty { get => _Qty; set { if (OnPropertyChanging(__.Qty, value)) { _Qty = value; OnPropertyChanged(__.Qty); } } }
 
         private Decimal _Price;
         /// <summary>商品价格</summary>
@@ -141,7 +141,7 @@ namespace COMCMS.Core
         [Description("商品价格")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Price", "商品价格", "")]
-        public Decimal Price { get { return _Price; } set { if (OnPropertyChanging(__.Price, value)) { _Price = value; OnPropertyChanged(__.Price); } } }
+        public Decimal Price { get => _Price; set { if (OnPropertyChanging(__.Price, value)) { _Price = value; OnPropertyChanged(__.Price); } } }
 
         private Decimal _MarketPrice;
         /// <summary>商品市场价格</summary>
@@ -149,7 +149,7 @@ namespace COMCMS.Core
         [Description("商品市场价格")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("MarketPrice", "商品市场价格", "")]
-        public Decimal MarketPrice { get { return _MarketPrice; } set { if (OnPropertyChanging(__.MarketPrice, value)) { _MarketPrice = value; OnPropertyChanged(__.MarketPrice); } } }
+        public Decimal MarketPrice { get => _MarketPrice; set { if (OnPropertyChanging(__.MarketPrice, value)) { _MarketPrice = value; OnPropertyChanged(__.MarketPrice); } } }
 
         private Decimal _SpecialPrice;
         /// <summary>商品特价</summary>
@@ -157,7 +157,7 @@ namespace COMCMS.Core
         [Description("商品特价")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("SpecialPrice", "商品特价", "")]
-        public Decimal SpecialPrice { get { return _SpecialPrice; } set { if (OnPropertyChanging(__.SpecialPrice, value)) { _SpecialPrice = value; OnPropertyChanged(__.SpecialPrice); } } }
+        public Decimal SpecialPrice { get => _SpecialPrice; set { if (OnPropertyChanging(__.SpecialPrice, value)) { _SpecialPrice = value; OnPropertyChanged(__.SpecialPrice); } } }
 
         private Decimal _Discount;
         /// <summary>商品优惠</summary>
@@ -165,7 +165,7 @@ namespace COMCMS.Core
         [Description("商品优惠")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Discount", "商品优惠", "")]
-        public Decimal Discount { get { return _Discount; } set { if (OnPropertyChanging(__.Discount, value)) { _Discount = value; OnPropertyChanged(__.Discount); } } }
+        public Decimal Discount { get => _Discount; set { if (OnPropertyChanging(__.Discount, value)) { _Discount = value; OnPropertyChanged(__.Discount); } } }
 
         private Decimal _Tax;
         /// <summary>商品税</summary>
@@ -173,7 +173,7 @@ namespace COMCMS.Core
         [Description("商品税")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Tax", "商品税", "")]
-        public Decimal Tax { get { return _Tax; } set { if (OnPropertyChanging(__.Tax, value)) { _Tax = value; OnPropertyChanged(__.Tax); } } }
+        public Decimal Tax { get => _Tax; set { if (OnPropertyChanging(__.Tax, value)) { _Tax = value; OnPropertyChanged(__.Tax); } } }
 
         private Int32 _Credit;
         /// <summary>积分</summary>
@@ -181,7 +181,7 @@ namespace COMCMS.Core
         [Description("积分")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Credit", "积分", "")]
-        public Int32 Credit { get { return _Credit; } set { if (OnPropertyChanging(__.Credit, value)) { _Credit = value; OnPropertyChanged(__.Credit); } } }
+        public Int32 Credit { get => _Credit; set { if (OnPropertyChanging(__.Credit, value)) { _Credit = value; OnPropertyChanged(__.Credit); } } }
 
         private Int32 _BackCredits;
         /// <summary>返现积分</summary>
@@ -189,7 +189,7 @@ namespace COMCMS.Core
         [Description("返现积分")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("BackCredits", "返现积分", "")]
-        public Int32 BackCredits { get { return _BackCredits; } set { if (OnPropertyChanging(__.BackCredits, value)) { _BackCredits = value; OnPropertyChanged(__.BackCredits); } } }
+        public Int32 BackCredits { get => _BackCredits; set { if (OnPropertyChanging(__.BackCredits, value)) { _BackCredits = value; OnPropertyChanged(__.BackCredits); } } }
 
         private Int32 _IsOK;
         /// <summary>是否完成</summary>
@@ -197,7 +197,7 @@ namespace COMCMS.Core
         [Description("是否完成")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsOK", "是否完成", "")]
-        public Int32 IsOK { get { return _IsOK; } set { if (OnPropertyChanging(__.IsOK, value)) { _IsOK = value; OnPropertyChanged(__.IsOK); } } }
+        public Int32 IsOK { get => _IsOK; set { if (OnPropertyChanging(__.IsOK, value)) { _IsOK = value; OnPropertyChanged(__.IsOK); } } }
 
         private Int32 _IsComment;
         /// <summary>是否已经评论</summary>
@@ -205,7 +205,7 @@ namespace COMCMS.Core
         [Description("是否已经评论")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsComment", "是否已经评论", "")]
-        public Int32 IsComment { get { return _IsComment; } set { if (OnPropertyChanging(__.IsComment, value)) { _IsComment = value; OnPropertyChanged(__.IsComment); } } }
+        public Int32 IsComment { get => _IsComment; set { if (OnPropertyChanging(__.IsComment, value)) { _IsComment = value; OnPropertyChanged(__.IsComment); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -213,7 +213,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get { return _AddTime; } set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
 
         private DateTime _CheckInDate;
         /// <summary>入住日期</summary>
@@ -221,7 +221,7 @@ namespace COMCMS.Core
         [Description("入住日期")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("CheckInDate", "入住日期", "")]
-        public DateTime CheckInDate { get { return _CheckInDate; } set { if (OnPropertyChanging(__.CheckInDate, value)) { _CheckInDate = value; OnPropertyChanged(__.CheckInDate); } } }
+        public DateTime CheckInDate { get => _CheckInDate; set { if (OnPropertyChanging(__.CheckInDate, value)) { _CheckInDate = value; OnPropertyChanged(__.CheckInDate); } } }
 
         private DateTime _LeaveDate;
         /// <summary>离开日期</summary>
@@ -229,7 +229,7 @@ namespace COMCMS.Core
         [Description("离开日期")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("LeaveDate", "离开日期", "")]
-        public DateTime LeaveDate { get { return _LeaveDate; } set { if (OnPropertyChanging(__.LeaveDate, value)) { _LeaveDate = value; OnPropertyChanged(__.LeaveDate); } } }
+        public DateTime LeaveDate { get => _LeaveDate; set { if (OnPropertyChanging(__.LeaveDate, value)) { _LeaveDate = value; OnPropertyChanged(__.LeaveDate); } } }
 
         private Int32 _MyType;
         /// <summary>系统类型</summary>
@@ -237,7 +237,7 @@ namespace COMCMS.Core
         [Description("系统类型")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("MyType", "系统类型", "")]
-        public Int32 MyType { get { return _MyType; } set { if (OnPropertyChanging(__.MyType, value)) { _MyType = value; OnPropertyChanged(__.MyType); } } }
+        public Int32 MyType { get => _MyType; set { if (OnPropertyChanging(__.MyType, value)) { _MyType = value; OnPropertyChanged(__.MyType); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -250,34 +250,34 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.OrderId : return _OrderId;
-                    case __.OrderNum : return _OrderNum;
-                    case __.ShopId : return _ShopId;
-                    case __.UId : return _UId;
-                    case __.PId : return _PId;
-                    case __.TypeId : return _TypeId;
-                    case __.PriceId : return _PriceId;
-                    case __.Title : return _Title;
-                    case __.Pic : return _Pic;
-                    case __.Attr : return _Attr;
-                    case __.Color : return _Color;
-                    case __.Spec : return _Spec;
-                    case __.ItemNO : return _ItemNO;
-                    case __.Qty : return _Qty;
-                    case __.Price : return _Price;
-                    case __.MarketPrice : return _MarketPrice;
-                    case __.SpecialPrice : return _SpecialPrice;
-                    case __.Discount : return _Discount;
-                    case __.Tax : return _Tax;
-                    case __.Credit : return _Credit;
-                    case __.BackCredits : return _BackCredits;
-                    case __.IsOK : return _IsOK;
-                    case __.IsComment : return _IsComment;
-                    case __.AddTime : return _AddTime;
-                    case __.CheckInDate : return _CheckInDate;
-                    case __.LeaveDate : return _LeaveDate;
-                    case __.MyType : return _MyType;
+                    case __.Id: return _Id;
+                    case __.OrderId: return _OrderId;
+                    case __.OrderNum: return _OrderNum;
+                    case __.ShopId: return _ShopId;
+                    case __.UId: return _UId;
+                    case __.PId: return _PId;
+                    case __.TypeId: return _TypeId;
+                    case __.PriceId: return _PriceId;
+                    case __.Title: return _Title;
+                    case __.Pic: return _Pic;
+                    case __.Attr: return _Attr;
+                    case __.Color: return _Color;
+                    case __.Spec: return _Spec;
+                    case __.ItemNO: return _ItemNO;
+                    case __.Qty: return _Qty;
+                    case __.Price: return _Price;
+                    case __.MarketPrice: return _MarketPrice;
+                    case __.SpecialPrice: return _SpecialPrice;
+                    case __.Discount: return _Discount;
+                    case __.Tax: return _Tax;
+                    case __.Credit: return _Credit;
+                    case __.BackCredits: return _BackCredits;
+                    case __.IsOK: return _IsOK;
+                    case __.IsComment: return _IsComment;
+                    case __.AddTime: return _AddTime;
+                    case __.CheckInDate: return _CheckInDate;
+                    case __.LeaveDate: return _LeaveDate;
+                    case __.MyType: return _MyType;
                     default: return base[name];
                 }
             }
@@ -285,34 +285,34 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.OrderId : _OrderId = value.ToInt(); break;
-                    case __.OrderNum : _OrderNum = Convert.ToString(value); break;
-                    case __.ShopId : _ShopId = value.ToInt(); break;
-                    case __.UId : _UId = value.ToInt(); break;
-                    case __.PId : _PId = value.ToInt(); break;
-                    case __.TypeId : _TypeId = value.ToInt(); break;
-                    case __.PriceId : _PriceId = value.ToInt(); break;
-                    case __.Title : _Title = Convert.ToString(value); break;
-                    case __.Pic : _Pic = Convert.ToString(value); break;
-                    case __.Attr : _Attr = Convert.ToString(value); break;
-                    case __.Color : _Color = Convert.ToString(value); break;
-                    case __.Spec : _Spec = Convert.ToString(value); break;
-                    case __.ItemNO : _ItemNO = Convert.ToString(value); break;
-                    case __.Qty : _Qty = value.ToInt(); break;
-                    case __.Price : _Price = Convert.ToDecimal(value); break;
-                    case __.MarketPrice : _MarketPrice = Convert.ToDecimal(value); break;
-                    case __.SpecialPrice : _SpecialPrice = Convert.ToDecimal(value); break;
-                    case __.Discount : _Discount = Convert.ToDecimal(value); break;
-                    case __.Tax : _Tax = Convert.ToDecimal(value); break;
-                    case __.Credit : _Credit = value.ToInt(); break;
-                    case __.BackCredits : _BackCredits = value.ToInt(); break;
-                    case __.IsOK : _IsOK = value.ToInt(); break;
-                    case __.IsComment : _IsComment = value.ToInt(); break;
-                    case __.AddTime : _AddTime = value.ToDateTime(); break;
-                    case __.CheckInDate : _CheckInDate = value.ToDateTime(); break;
-                    case __.LeaveDate : _LeaveDate = value.ToDateTime(); break;
-                    case __.MyType : _MyType = value.ToInt(); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.OrderId: _OrderId = value.ToInt(); break;
+                    case __.OrderNum: _OrderNum = Convert.ToString(value); break;
+                    case __.ShopId: _ShopId = value.ToInt(); break;
+                    case __.UId: _UId = value.ToInt(); break;
+                    case __.PId: _PId = value.ToInt(); break;
+                    case __.TypeId: _TypeId = value.ToInt(); break;
+                    case __.PriceId: _PriceId = value.ToInt(); break;
+                    case __.Title: _Title = Convert.ToString(value); break;
+                    case __.Pic: _Pic = Convert.ToString(value); break;
+                    case __.Attr: _Attr = Convert.ToString(value); break;
+                    case __.Color: _Color = Convert.ToString(value); break;
+                    case __.Spec: _Spec = Convert.ToString(value); break;
+                    case __.ItemNO: _ItemNO = Convert.ToString(value); break;
+                    case __.Qty: _Qty = value.ToInt(); break;
+                    case __.Price: _Price = Convert.ToDecimal(value); break;
+                    case __.MarketPrice: _MarketPrice = Convert.ToDecimal(value); break;
+                    case __.SpecialPrice: _SpecialPrice = Convert.ToDecimal(value); break;
+                    case __.Discount: _Discount = Convert.ToDecimal(value); break;
+                    case __.Tax: _Tax = Convert.ToDecimal(value); break;
+                    case __.Credit: _Credit = value.ToInt(); break;
+                    case __.BackCredits: _BackCredits = value.ToInt(); break;
+                    case __.IsOK: _IsOK = value.ToInt(); break;
+                    case __.IsComment: _IsComment = value.ToInt(); break;
+                    case __.AddTime: _AddTime = value.ToDateTime(); break;
+                    case __.CheckInDate: _CheckInDate = value.ToDateTime(); break;
+                    case __.LeaveDate: _LeaveDate = value.ToDateTime(); break;
+                    case __.MyType: _MyType = value.ToInt(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -407,7 +407,7 @@ namespace COMCMS.Core
             /// <summary>系统类型</summary>
             public static readonly Field MyType = FindByName(__.MyType);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得订单详情字段名称的快捷方式</summary>
