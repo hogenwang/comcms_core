@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private String _OpenId;
         /// <summary>用户OpenId</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("用户OpenId")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("OpenId", "用户OpenId", "")]
-        public String OpenId { get { return _OpenId; } set { if (OnPropertyChanging(__.OpenId, value)) { _OpenId = value; OnPropertyChanged(__.OpenId); } } }
+        public String OpenId { get => _OpenId; set { if (OnPropertyChanging(__.OpenId, value)) { _OpenId = value; OnPropertyChanged(__.OpenId); } } }
 
         private String _RequestType;
         /// <summary>请求类型</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("请求类型")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("RequestType", "请求类型", "")]
-        public String RequestType { get { return _RequestType; } set { if (OnPropertyChanging(__.RequestType, value)) { _RequestType = value; OnPropertyChanged(__.RequestType); } } }
+        public String RequestType { get => _RequestType; set { if (OnPropertyChanging(__.RequestType, value)) { _RequestType = value; OnPropertyChanged(__.RequestType); } } }
 
         private String _RequestContent;
         /// <summary>内容</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("内容")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("RequestContent", "内容", "")]
-        public String RequestContent { get { return _RequestContent; } set { if (OnPropertyChanging(__.RequestContent, value)) { _RequestContent = value; OnPropertyChanged(__.RequestContent); } } }
+        public String RequestContent { get => _RequestContent; set { if (OnPropertyChanging(__.RequestContent, value)) { _RequestContent = value; OnPropertyChanged(__.RequestContent); } } }
 
         private String _ResponseType;
         /// <summary>回复的类型 文本消息：text 图片消息:image 地理位置消息:location 链接消息:link</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("回复的类型 文本消息：text 图片消息:image 地理位置消息:location 链接消息:link")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("ResponseType", "回复的类型 文本消息：text 图片消息:image 地理位置消息:location 链接消息:link", "")]
-        public String ResponseType { get { return _ResponseType; } set { if (OnPropertyChanging(__.ResponseType, value)) { _ResponseType = value; OnPropertyChanged(__.ResponseType); } } }
+        public String ResponseType { get => _ResponseType; set { if (OnPropertyChanging(__.ResponseType, value)) { _ResponseType = value; OnPropertyChanged(__.ResponseType); } } }
 
         private String _ReponseContent;
         /// <summary>系统回复的内容</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("系统回复的内容")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("ReponseContent", "系统回复的内容", "")]
-        public String ReponseContent { get { return _ReponseContent; } set { if (OnPropertyChanging(__.ReponseContent, value)) { _ReponseContent = value; OnPropertyChanged(__.ReponseContent); } } }
+        public String ReponseContent { get => _ReponseContent; set { if (OnPropertyChanging(__.ReponseContent, value)) { _ReponseContent = value; OnPropertyChanged(__.ReponseContent); } } }
 
         private String _XmlContent;
         /// <summary>xml原始内容</summary>
@@ -69,7 +69,7 @@ namespace COMCMS.Core
         [Description("xml原始内容")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("XmlContent", "xml原始内容", "")]
-        public String XmlContent { get { return _XmlContent; } set { if (OnPropertyChanging(__.XmlContent, value)) { _XmlContent = value; OnPropertyChanged(__.XmlContent); } } }
+        public String XmlContent { get => _XmlContent; set { if (OnPropertyChanging(__.XmlContent, value)) { _XmlContent = value; OnPropertyChanged(__.XmlContent); } } }
 
         private DateTime _UpdateTime;
         /// <summary>修改时间</summary>
@@ -77,7 +77,7 @@ namespace COMCMS.Core
         [Description("修改时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("UpdateTime", "修改时间", "")]
-        public DateTime UpdateTime { get { return _UpdateTime; } set { if (OnPropertyChanging(__.UpdateTime, value)) { _UpdateTime = value; OnPropertyChanged(__.UpdateTime); } } }
+        public DateTime UpdateTime { get => _UpdateTime; set { if (OnPropertyChanging(__.UpdateTime, value)) { _UpdateTime = value; OnPropertyChanged(__.UpdateTime); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -90,14 +90,14 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.OpenId : return _OpenId;
-                    case __.RequestType : return _RequestType;
-                    case __.RequestContent : return _RequestContent;
-                    case __.ResponseType : return _ResponseType;
-                    case __.ReponseContent : return _ReponseContent;
-                    case __.XmlContent : return _XmlContent;
-                    case __.UpdateTime : return _UpdateTime;
+                    case __.Id: return _Id;
+                    case __.OpenId: return _OpenId;
+                    case __.RequestType: return _RequestType;
+                    case __.RequestContent: return _RequestContent;
+                    case __.ResponseType: return _ResponseType;
+                    case __.ReponseContent: return _ReponseContent;
+                    case __.XmlContent: return _XmlContent;
+                    case __.UpdateTime: return _UpdateTime;
                     default: return base[name];
                 }
             }
@@ -105,14 +105,14 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.OpenId : _OpenId = Convert.ToString(value); break;
-                    case __.RequestType : _RequestType = Convert.ToString(value); break;
-                    case __.RequestContent : _RequestContent = Convert.ToString(value); break;
-                    case __.ResponseType : _ResponseType = Convert.ToString(value); break;
-                    case __.ReponseContent : _ReponseContent = Convert.ToString(value); break;
-                    case __.XmlContent : _XmlContent = Convert.ToString(value); break;
-                    case __.UpdateTime : _UpdateTime = value.ToDateTime(); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.OpenId: _OpenId = Convert.ToString(value); break;
+                    case __.RequestType: _RequestType = Convert.ToString(value); break;
+                    case __.RequestContent: _RequestContent = Convert.ToString(value); break;
+                    case __.ResponseType: _ResponseType = Convert.ToString(value); break;
+                    case __.ReponseContent: _ReponseContent = Convert.ToString(value); break;
+                    case __.XmlContent: _XmlContent = Convert.ToString(value); break;
+                    case __.UpdateTime: _UpdateTime = value.ToDateTime(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -147,7 +147,7 @@ namespace COMCMS.Core
             /// <summary>修改时间</summary>
             public static readonly Field UpdateTime = FindByName(__.UpdateTime);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得公众平台回复信息字段名称的快捷方式</summary>

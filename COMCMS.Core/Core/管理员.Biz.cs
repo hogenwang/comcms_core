@@ -412,12 +412,12 @@ namespace COMCMS.Core
         {
             if (IsAdminLogin())
             {
-                //string adminLogId = SessionHelper.GetSession(sessionAdminLogIDKey).ToString();
-                string adminLogId = AuthenticationHelper.GetClaim(sessionAdminLogIDKey);
+                string adminLogId = SessionHelper.GetSession(sessionAdminLogIDKey).ToString();
+                //string adminLogId = AuthenticationHelper.GetClaim(sessionAdminLogIDKey);
                 if (string.IsNullOrEmpty(adminLogId))
                 {
-                    //adminLogId = CookiesHelper.GetCookie(cookiesAdminLogIDKey);//日志GUID
-                    adminLogId = AuthenticationHelper.GetClaim(cookiesAdminLogIDKey);//日志GUID
+                    adminLogId = CookiesHelper.GetCookie(cookiesAdminLogIDKey);//日志GUID
+                    //adminLogId = AuthenticationHelper.GetClaim(cookiesAdminLogIDKey);//日志GUID
                 }
                 if (!string.IsNullOrEmpty(adminLogId))
                 {

@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private String _RuleName;
         /// <summary>规则名称</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("规则名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("RuleName", "规则名称", "")]
-        public String RuleName { get { return _RuleName; } set { if (OnPropertyChanging(__.RuleName, value)) { _RuleName = value; OnPropertyChanged(__.RuleName); } } }
+        public String RuleName { get => _RuleName; set { if (OnPropertyChanging(__.RuleName, value)) { _RuleName = value; OnPropertyChanged(__.RuleName); } } }
 
         private String _Keywords;
         /// <summary>请求关键词,逗号分隔</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("请求关键词,逗号分隔")]
         [DataObjectField(false, false, true, 200)]
         [BindColumn("Keywords", "请求关键词,逗号分隔", "")]
-        public String Keywords { get { return _Keywords; } set { if (OnPropertyChanging(__.Keywords, value)) { _Keywords = value; OnPropertyChanged(__.Keywords); } } }
+        public String Keywords { get => _Keywords; set { if (OnPropertyChanging(__.Keywords, value)) { _Keywords = value; OnPropertyChanged(__.Keywords); } } }
 
         private Int32 _RequestType;
         /// <summary>请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("RequestType", "请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）", "")]
-        public Int32 RequestType { get { return _RequestType; } set { if (OnPropertyChanging(__.RequestType, value)) { _RequestType = value; OnPropertyChanged(__.RequestType); } } }
+        public Int32 RequestType { get => _RequestType; set { if (OnPropertyChanging(__.RequestType, value)) { _RequestType = value; OnPropertyChanged(__.RequestType); } } }
 
         private Int32 _ResponseType;
         /// <summary>回复类型(1文本2图文3语音4视频5第三方接口)</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("回复类型(1文本2图文3语音4视频5第三方接口)")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("ResponseType", "回复类型(1文本2图文3语音4视频5第三方接口)", "")]
-        public Int32 ResponseType { get { return _ResponseType; } set { if (OnPropertyChanging(__.ResponseType, value)) { _ResponseType = value; OnPropertyChanged(__.ResponseType); } } }
+        public Int32 ResponseType { get => _ResponseType; set { if (OnPropertyChanging(__.ResponseType, value)) { _ResponseType = value; OnPropertyChanged(__.ResponseType); } } }
 
         private Int32 _IsLikeQuery;
         /// <summary>是否模糊查询 0 是完全匹配；1是模糊匹配</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("是否模糊查询 0 是完全匹配；1是模糊匹配")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsLikeQuery", "是否模糊查询 0 是完全匹配；1是模糊匹配", "")]
-        public Int32 IsLikeQuery { get { return _IsLikeQuery; } set { if (OnPropertyChanging(__.IsLikeQuery, value)) { _IsLikeQuery = value; OnPropertyChanged(__.IsLikeQuery); } } }
+        public Int32 IsLikeQuery { get => _IsLikeQuery; set { if (OnPropertyChanging(__.IsLikeQuery, value)) { _IsLikeQuery = value; OnPropertyChanged(__.IsLikeQuery); } } }
 
         private Int32 _IsDefault;
         /// <summary>是否是默认回复</summary>
@@ -69,7 +69,7 @@ namespace COMCMS.Core
         [Description("是否是默认回复")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsDefault", "是否是默认回复", "")]
-        public Int32 IsDefault { get { return _IsDefault; } set { if (OnPropertyChanging(__.IsDefault, value)) { _IsDefault = value; OnPropertyChanged(__.IsDefault); } } }
+        public Int32 IsDefault { get => _IsDefault; set { if (OnPropertyChanging(__.IsDefault, value)) { _IsDefault = value; OnPropertyChanged(__.IsDefault); } } }
 
         private Int32 _Rank;
         /// <summary>排序</summary>
@@ -77,7 +77,7 @@ namespace COMCMS.Core
         [Description("排序")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Rank", "排序", "")]
-        public Int32 Rank { get { return _Rank; } set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
+        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -85,7 +85,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get { return _AddTime; } set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
 
         private DateTime _UpdateTime;
         /// <summary>修改时间</summary>
@@ -93,7 +93,7 @@ namespace COMCMS.Core
         [Description("修改时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("UpdateTime", "修改时间", "")]
-        public DateTime UpdateTime { get { return _UpdateTime; } set { if (OnPropertyChanging(__.UpdateTime, value)) { _UpdateTime = value; OnPropertyChanged(__.UpdateTime); } } }
+        public DateTime UpdateTime { get => _UpdateTime; set { if (OnPropertyChanging(__.UpdateTime, value)) { _UpdateTime = value; OnPropertyChanged(__.UpdateTime); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -106,16 +106,16 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.RuleName : return _RuleName;
-                    case __.Keywords : return _Keywords;
-                    case __.RequestType : return _RequestType;
-                    case __.ResponseType : return _ResponseType;
-                    case __.IsLikeQuery : return _IsLikeQuery;
-                    case __.IsDefault : return _IsDefault;
-                    case __.Rank : return _Rank;
-                    case __.AddTime : return _AddTime;
-                    case __.UpdateTime : return _UpdateTime;
+                    case __.Id: return _Id;
+                    case __.RuleName: return _RuleName;
+                    case __.Keywords: return _Keywords;
+                    case __.RequestType: return _RequestType;
+                    case __.ResponseType: return _ResponseType;
+                    case __.IsLikeQuery: return _IsLikeQuery;
+                    case __.IsDefault: return _IsDefault;
+                    case __.Rank: return _Rank;
+                    case __.AddTime: return _AddTime;
+                    case __.UpdateTime: return _UpdateTime;
                     default: return base[name];
                 }
             }
@@ -123,16 +123,16 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.RuleName : _RuleName = Convert.ToString(value); break;
-                    case __.Keywords : _Keywords = Convert.ToString(value); break;
-                    case __.RequestType : _RequestType = value.ToInt(); break;
-                    case __.ResponseType : _ResponseType = value.ToInt(); break;
-                    case __.IsLikeQuery : _IsLikeQuery = value.ToInt(); break;
-                    case __.IsDefault : _IsDefault = value.ToInt(); break;
-                    case __.Rank : _Rank = value.ToInt(); break;
-                    case __.AddTime : _AddTime = value.ToDateTime(); break;
-                    case __.UpdateTime : _UpdateTime = value.ToDateTime(); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.RuleName: _RuleName = Convert.ToString(value); break;
+                    case __.Keywords: _Keywords = Convert.ToString(value); break;
+                    case __.RequestType: _RequestType = value.ToInt(); break;
+                    case __.ResponseType: _ResponseType = value.ToInt(); break;
+                    case __.IsLikeQuery: _IsLikeQuery = value.ToInt(); break;
+                    case __.IsDefault: _IsDefault = value.ToInt(); break;
+                    case __.Rank: _Rank = value.ToInt(); break;
+                    case __.AddTime: _AddTime = value.ToDateTime(); break;
+                    case __.UpdateTime: _UpdateTime = value.ToDateTime(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -173,7 +173,7 @@ namespace COMCMS.Core
             /// <summary>修改时间</summary>
             public static readonly Field UpdateTime = FindByName(__.UpdateTime);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得微信公众号回复规则字段名称的快捷方式</summary>

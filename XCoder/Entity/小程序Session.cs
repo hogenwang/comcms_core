@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private Int32 _UId;
         /// <summary>用户ID</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("UId", "用户ID", "")]
-        public Int32 UId { get { return _UId; } set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
+        public Int32 UId { get => _UId; set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
 
         private String _Ip;
         /// <summary>登录IP</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("登录IP")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Ip", "登录IP", "")]
-        public String Ip { get { return _Ip; } set { if (OnPropertyChanging(__.Ip, value)) { _Ip = value; OnPropertyChanged(__.Ip); } } }
+        public String Ip { get => _Ip; set { if (OnPropertyChanging(__.Ip, value)) { _Ip = value; OnPropertyChanged(__.Ip); } } }
 
         private String _Key;
         /// <summary>系统生成Key</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("系统生成Key")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Key", "系统生成Key", "")]
-        public String Key { get { return _Key; } set { if (OnPropertyChanging(__.Key, value)) { _Key = value; OnPropertyChanged(__.Key); } } }
+        public String Key { get => _Key; set { if (OnPropertyChanging(__.Key, value)) { _Key = value; OnPropertyChanged(__.Key); } } }
 
         private String _SessionKey;
         /// <summary>微信SessionKey</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("微信SessionKey")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("SessionKey", "微信SessionKey", "")]
-        public String SessionKey { get { return _SessionKey; } set { if (OnPropertyChanging(__.SessionKey, value)) { _SessionKey = value; OnPropertyChanged(__.SessionKey); } } }
+        public String SessionKey { get => _SessionKey; set { if (OnPropertyChanging(__.SessionKey, value)) { _SessionKey = value; OnPropertyChanged(__.SessionKey); } } }
 
         private String _OpenId;
         /// <summary>微信小程序OpenId</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("微信小程序OpenId")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("OpenId", "微信小程序OpenId", "")]
-        public String OpenId { get { return _OpenId; } set { if (OnPropertyChanging(__.OpenId, value)) { _OpenId = value; OnPropertyChanged(__.OpenId); } } }
+        public String OpenId { get => _OpenId; set { if (OnPropertyChanging(__.OpenId, value)) { _OpenId = value; OnPropertyChanged(__.OpenId); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -69,7 +69,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get { return _AddTime; } set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -82,13 +82,13 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.UId : return _UId;
-                    case __.Ip : return _Ip;
-                    case __.Key : return _Key;
-                    case __.SessionKey : return _SessionKey;
-                    case __.OpenId : return _OpenId;
-                    case __.AddTime : return _AddTime;
+                    case __.Id: return _Id;
+                    case __.UId: return _UId;
+                    case __.Ip: return _Ip;
+                    case __.Key: return _Key;
+                    case __.SessionKey: return _SessionKey;
+                    case __.OpenId: return _OpenId;
+                    case __.AddTime: return _AddTime;
                     default: return base[name];
                 }
             }
@@ -96,13 +96,13 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.UId : _UId = value.ToInt(); break;
-                    case __.Ip : _Ip = Convert.ToString(value); break;
-                    case __.Key : _Key = Convert.ToString(value); break;
-                    case __.SessionKey : _SessionKey = Convert.ToString(value); break;
-                    case __.OpenId : _OpenId = Convert.ToString(value); break;
-                    case __.AddTime : _AddTime = value.ToDateTime(); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.UId: _UId = value.ToInt(); break;
+                    case __.Ip: _Ip = Convert.ToString(value); break;
+                    case __.Key: _Key = Convert.ToString(value); break;
+                    case __.SessionKey: _SessionKey = Convert.ToString(value); break;
+                    case __.OpenId: _OpenId = Convert.ToString(value); break;
+                    case __.AddTime: _AddTime = value.ToDateTime(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -134,7 +134,7 @@ namespace COMCMS.Core
             /// <summary>添加时间</summary>
             public static readonly Field AddTime = FindByName(__.AddTime);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得小程序Session字段名称的快捷方式</summary>

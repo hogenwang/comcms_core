@@ -139,9 +139,9 @@ namespace COMCMS.Web.Controllers
             }
             string templatesname = "";//模板名称
             if (!string.IsNullOrEmpty(kind.TemplateFile))
-            { 
-                templatesname = kind.DetailTemplateFile.Replace(".cshtml", "").Replace(".aspx", "");
-                return View(templatesname, entity);
+            {
+                templatesname = kind.DetailTemplateFile;//.Replace(".cshtml", "").Replace(".aspx", "");
+                return View("~/Views/Article/" + templatesname, entity);
             }
             else
             {

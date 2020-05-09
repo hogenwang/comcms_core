@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private String _KindName;
         /// <summary>类别名称</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("类别名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("KindName", "类别名称", "")]
-        public String KindName { get { return _KindName; } set { if (OnPropertyChanging(__.KindName, value)) { _KindName = value; OnPropertyChanged(__.KindName); } } }
+        public String KindName { get => _KindName; set { if (OnPropertyChanging(__.KindName, value)) { _KindName = value; OnPropertyChanged(__.KindName); } } }
 
         private String _KindInfo;
         /// <summary>简单说明</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("简单说明")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("KindInfo", "简单说明", "")]
-        public String KindInfo { get { return _KindInfo; } set { if (OnPropertyChanging(__.KindInfo, value)) { _KindInfo = value; OnPropertyChanged(__.KindInfo); } } }
+        public String KindInfo { get => _KindInfo; set { if (OnPropertyChanging(__.KindInfo, value)) { _KindInfo = value; OnPropertyChanged(__.KindInfo); } } }
 
         private String _Pic;
         /// <summary>分类图片</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("分类图片")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Pic", "分类图片", "")]
-        public String Pic { get { return _Pic; } set { if (OnPropertyChanging(__.Pic, value)) { _Pic = value; OnPropertyChanged(__.Pic); } } }
+        public String Pic { get => _Pic; set { if (OnPropertyChanging(__.Pic, value)) { _Pic = value; OnPropertyChanged(__.Pic); } } }
 
         private Int32 _Rank;
         /// <summary>排序</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("排序")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Rank", "排序", "")]
-        public Int32 Rank { get { return _Rank; } set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
+        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -66,11 +66,11 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.KindName : return _KindName;
-                    case __.KindInfo : return _KindInfo;
-                    case __.Pic : return _Pic;
-                    case __.Rank : return _Rank;
+                    case __.Id: return _Id;
+                    case __.KindName: return _KindName;
+                    case __.KindInfo: return _KindInfo;
+                    case __.Pic: return _Pic;
+                    case __.Rank: return _Rank;
                     default: return base[name];
                 }
             }
@@ -78,11 +78,11 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.KindName : _KindName = Convert.ToString(value); break;
-                    case __.KindInfo : _KindInfo = Convert.ToString(value); break;
-                    case __.Pic : _Pic = Convert.ToString(value); break;
-                    case __.Rank : _Rank = value.ToInt(); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.KindName: _KindName = Convert.ToString(value); break;
+                    case __.KindInfo: _KindInfo = Convert.ToString(value); break;
+                    case __.Pic: _Pic = Convert.ToString(value); break;
+                    case __.Rank: _Rank = value.ToInt(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -108,7 +108,7 @@ namespace COMCMS.Core
             /// <summary>排序</summary>
             public static readonly Field Rank = FindByName(__.Rank);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得友情链接分类字段名称的快捷方式</summary>

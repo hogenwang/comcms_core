@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private Int32 _KId;
         /// <summary>栏目ID</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("栏目ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("KId", "栏目ID", "")]
-        public Int32 KId { get { return _KId; } set { if (OnPropertyChanging(__.KId, value)) { _KId = value; OnPropertyChanged(__.KId); } } }
+        public Int32 KId { get => _KId; set { if (OnPropertyChanging(__.KId, value)) { _KId = value; OnPropertyChanged(__.KId); } } }
 
         private String _Title;
         /// <summary>标题</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("标题")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Title", "标题", "", Master = true)]
-        public String Title { get { return _Title; } set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
+        public String Title { get => _Title; set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
 
         private String _SubTitle;
         /// <summary>副标题</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("副标题")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("SubTitle", "副标题", "")]
-        public String SubTitle { get { return _SubTitle; } set { if (OnPropertyChanging(__.SubTitle, value)) { _SubTitle = value; OnPropertyChanged(__.SubTitle); } } }
+        public String SubTitle { get => _SubTitle; set { if (OnPropertyChanging(__.SubTitle, value)) { _SubTitle = value; OnPropertyChanged(__.SubTitle); } } }
 
         private String _Content;
         /// <summary>内容</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("内容")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("Content", "内容", "")]
-        public String Content { get { return _Content; } set { if (OnPropertyChanging(__.Content, value)) { _Content = value; OnPropertyChanged(__.Content); } } }
+        public String Content { get => _Content; set { if (OnPropertyChanging(__.Content, value)) { _Content = value; OnPropertyChanged(__.Content); } } }
 
         private String _Keyword;
         /// <summary>描述</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("描述")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Keyword", "描述", "")]
-        public String Keyword { get { return _Keyword; } set { if (OnPropertyChanging(__.Keyword, value)) { _Keyword = value; OnPropertyChanged(__.Keyword); } } }
+        public String Keyword { get => _Keyword; set { if (OnPropertyChanging(__.Keyword, value)) { _Keyword = value; OnPropertyChanged(__.Keyword); } } }
 
         private String _Description;
         /// <summary>介绍</summary>
@@ -69,7 +69,7 @@ namespace COMCMS.Core
         [Description("介绍")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Description", "介绍", "")]
-        public String Description { get { return _Description; } set { if (OnPropertyChanging(__.Description, value)) { _Description = value; OnPropertyChanged(__.Description); } } }
+        public String Description { get => _Description; set { if (OnPropertyChanging(__.Description, value)) { _Description = value; OnPropertyChanged(__.Description); } } }
 
         private String _LinkURL;
         /// <summary>跳转链接</summary>
@@ -77,7 +77,7 @@ namespace COMCMS.Core
         [Description("跳转链接")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("LinkURL", "跳转链接", "")]
-        public String LinkURL { get { return _LinkURL; } set { if (OnPropertyChanging(__.LinkURL, value)) { _LinkURL = value; OnPropertyChanged(__.LinkURL); } } }
+        public String LinkURL { get => _LinkURL; set { if (OnPropertyChanging(__.LinkURL, value)) { _LinkURL = value; OnPropertyChanged(__.LinkURL); } } }
 
         private String _TitleColor;
         /// <summary>类别名称颜色</summary>
@@ -85,7 +85,7 @@ namespace COMCMS.Core
         [Description("类别名称颜色")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("TitleColor", "类别名称颜色", "")]
-        public String TitleColor { get { return _TitleColor; } set { if (OnPropertyChanging(__.TitleColor, value)) { _TitleColor = value; OnPropertyChanged(__.TitleColor); } } }
+        public String TitleColor { get => _TitleColor; set { if (OnPropertyChanging(__.TitleColor, value)) { _TitleColor = value; OnPropertyChanged(__.TitleColor); } } }
 
         private String _TemplateFile;
         /// <summary>模板</summary>
@@ -93,7 +93,7 @@ namespace COMCMS.Core
         [Description("模板")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("TemplateFile", "模板", "")]
-        public String TemplateFile { get { return _TemplateFile; } set { if (OnPropertyChanging(__.TemplateFile, value)) { _TemplateFile = value; OnPropertyChanged(__.TemplateFile); } } }
+        public String TemplateFile { get => _TemplateFile; set { if (OnPropertyChanging(__.TemplateFile, value)) { _TemplateFile = value; OnPropertyChanged(__.TemplateFile); } } }
 
         private Int32 _IsRecommend;
         /// <summary>是否推荐</summary>
@@ -101,7 +101,7 @@ namespace COMCMS.Core
         [Description("是否推荐")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsRecommend", "是否推荐", "")]
-        public Int32 IsRecommend { get { return _IsRecommend; } set { if (OnPropertyChanging(__.IsRecommend, value)) { _IsRecommend = value; OnPropertyChanged(__.IsRecommend); } } }
+        public Int32 IsRecommend { get => _IsRecommend; set { if (OnPropertyChanging(__.IsRecommend, value)) { _IsRecommend = value; OnPropertyChanged(__.IsRecommend); } } }
 
         private Int32 _IsNew;
         /// <summary>是否最新</summary>
@@ -109,7 +109,7 @@ namespace COMCMS.Core
         [Description("是否最新")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsNew", "是否最新", "")]
-        public Int32 IsNew { get { return _IsNew; } set { if (OnPropertyChanging(__.IsNew, value)) { _IsNew = value; OnPropertyChanged(__.IsNew); } } }
+        public Int32 IsNew { get => _IsNew; set { if (OnPropertyChanging(__.IsNew, value)) { _IsNew = value; OnPropertyChanged(__.IsNew); } } }
 
         private Int32 _IsBest;
         /// <summary>是否推荐</summary>
@@ -117,7 +117,7 @@ namespace COMCMS.Core
         [Description("是否推荐")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsBest", "是否推荐", "")]
-        public Int32 IsBest { get { return _IsBest; } set { if (OnPropertyChanging(__.IsBest, value)) { _IsBest = value; OnPropertyChanged(__.IsBest); } } }
+        public Int32 IsBest { get => _IsBest; set { if (OnPropertyChanging(__.IsBest, value)) { _IsBest = value; OnPropertyChanged(__.IsBest); } } }
 
         private Int32 _IsHide;
         /// <summary>是否隐藏</summary>
@@ -125,7 +125,7 @@ namespace COMCMS.Core
         [Description("是否隐藏")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsHide", "是否隐藏", "")]
-        public Int32 IsHide { get { return _IsHide; } set { if (OnPropertyChanging(__.IsHide, value)) { _IsHide = value; OnPropertyChanged(__.IsHide); } } }
+        public Int32 IsHide { get => _IsHide; set { if (OnPropertyChanging(__.IsHide, value)) { _IsHide = value; OnPropertyChanged(__.IsHide); } } }
 
         private Int32 _IsLock;
         /// <summary>是否锁定，不允许删除</summary>
@@ -133,7 +133,7 @@ namespace COMCMS.Core
         [Description("是否锁定，不允许删除")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsLock", "是否锁定，不允许删除", "")]
-        public Int32 IsLock { get { return _IsLock; } set { if (OnPropertyChanging(__.IsLock, value)) { _IsLock = value; OnPropertyChanged(__.IsLock); } } }
+        public Int32 IsLock { get => _IsLock; set { if (OnPropertyChanging(__.IsLock, value)) { _IsLock = value; OnPropertyChanged(__.IsLock); } } }
 
         private Int32 _IsDel;
         /// <summary>是否删除,已经删除到回收站</summary>
@@ -141,7 +141,7 @@ namespace COMCMS.Core
         [Description("是否删除,已经删除到回收站")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsDel", "是否删除,已经删除到回收站", "")]
-        public Int32 IsDel { get { return _IsDel; } set { if (OnPropertyChanging(__.IsDel, value)) { _IsDel = value; OnPropertyChanged(__.IsDel); } } }
+        public Int32 IsDel { get => _IsDel; set { if (OnPropertyChanging(__.IsDel, value)) { _IsDel = value; OnPropertyChanged(__.IsDel); } } }
 
         private Int32 _IsTop;
         /// <summary>是否置顶</summary>
@@ -149,7 +149,7 @@ namespace COMCMS.Core
         [Description("是否置顶")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsTop", "是否置顶", "")]
-        public Int32 IsTop { get { return _IsTop; } set { if (OnPropertyChanging(__.IsTop, value)) { _IsTop = value; OnPropertyChanged(__.IsTop); } } }
+        public Int32 IsTop { get => _IsTop; set { if (OnPropertyChanging(__.IsTop, value)) { _IsTop = value; OnPropertyChanged(__.IsTop); } } }
 
         private Int32 _IsComment;
         /// <summary>是否允许评论</summary>
@@ -157,7 +157,7 @@ namespace COMCMS.Core
         [Description("是否允许评论")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsComment", "是否允许评论", "")]
-        public Int32 IsComment { get { return _IsComment; } set { if (OnPropertyChanging(__.IsComment, value)) { _IsComment = value; OnPropertyChanged(__.IsComment); } } }
+        public Int32 IsComment { get => _IsComment; set { if (OnPropertyChanging(__.IsComment, value)) { _IsComment = value; OnPropertyChanged(__.IsComment); } } }
 
         private Int32 _IsMember;
         /// <summary>是否会员栏目</summary>
@@ -165,7 +165,7 @@ namespace COMCMS.Core
         [Description("是否会员栏目")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsMember", "是否会员栏目", "")]
-        public Int32 IsMember { get { return _IsMember; } set { if (OnPropertyChanging(__.IsMember, value)) { _IsMember = value; OnPropertyChanged(__.IsMember); } } }
+        public Int32 IsMember { get => _IsMember; set { if (OnPropertyChanging(__.IsMember, value)) { _IsMember = value; OnPropertyChanged(__.IsMember); } } }
 
         private Int32 _Hits;
         /// <summary>点击数量</summary>
@@ -173,7 +173,7 @@ namespace COMCMS.Core
         [Description("点击数量")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Hits", "点击数量", "")]
-        public Int32 Hits { get { return _Hits; } set { if (OnPropertyChanging(__.Hits, value)) { _Hits = value; OnPropertyChanged(__.Hits); } } }
+        public Int32 Hits { get => _Hits; set { if (OnPropertyChanging(__.Hits, value)) { _Hits = value; OnPropertyChanged(__.Hits); } } }
 
         private Int32 _Sequence;
         /// <summary>排序</summary>
@@ -181,7 +181,7 @@ namespace COMCMS.Core
         [Description("排序")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Sequence", "排序", "")]
-        public Int32 Sequence { get { return _Sequence; } set { if (OnPropertyChanging(__.Sequence, value)) { _Sequence = value; OnPropertyChanged(__.Sequence); } } }
+        public Int32 Sequence { get => _Sequence; set { if (OnPropertyChanging(__.Sequence, value)) { _Sequence = value; OnPropertyChanged(__.Sequence); } } }
 
         private Int32 _CommentCount;
         /// <summary>评论数量</summary>
@@ -189,7 +189,7 @@ namespace COMCMS.Core
         [Description("评论数量")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("CommentCount", "评论数量", "")]
-        public Int32 CommentCount { get { return _CommentCount; } set { if (OnPropertyChanging(__.CommentCount, value)) { _CommentCount = value; OnPropertyChanged(__.CommentCount); } } }
+        public Int32 CommentCount { get => _CommentCount; set { if (OnPropertyChanging(__.CommentCount, value)) { _CommentCount = value; OnPropertyChanged(__.CommentCount); } } }
 
         private String _Icon;
         /// <summary>图标</summary>
@@ -197,7 +197,7 @@ namespace COMCMS.Core
         [Description("图标")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Icon", "图标", "")]
-        public String Icon { get { return _Icon; } set { if (OnPropertyChanging(__.Icon, value)) { _Icon = value; OnPropertyChanged(__.Icon); } } }
+        public String Icon { get => _Icon; set { if (OnPropertyChanging(__.Icon, value)) { _Icon = value; OnPropertyChanged(__.Icon); } } }
 
         private String _ClassName;
         /// <summary>样式名称</summary>
@@ -205,7 +205,7 @@ namespace COMCMS.Core
         [Description("样式名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("ClassName", "样式名称", "")]
-        public String ClassName { get { return _ClassName; } set { if (OnPropertyChanging(__.ClassName, value)) { _ClassName = value; OnPropertyChanged(__.ClassName); } } }
+        public String ClassName { get => _ClassName; set { if (OnPropertyChanging(__.ClassName, value)) { _ClassName = value; OnPropertyChanged(__.ClassName); } } }
 
         private String _BannerImg;
         /// <summary>banner图片</summary>
@@ -213,7 +213,7 @@ namespace COMCMS.Core
         [Description("banner图片")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("BannerImg", "banner图片", "")]
-        public String BannerImg { get { return _BannerImg; } set { if (OnPropertyChanging(__.BannerImg, value)) { _BannerImg = value; OnPropertyChanged(__.BannerImg); } } }
+        public String BannerImg { get => _BannerImg; set { if (OnPropertyChanging(__.BannerImg, value)) { _BannerImg = value; OnPropertyChanged(__.BannerImg); } } }
 
         private String _Pic;
         /// <summary>图片</summary>
@@ -221,7 +221,7 @@ namespace COMCMS.Core
         [Description("图片")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Pic", "图片", "")]
-        public String Pic { get { return _Pic; } set { if (OnPropertyChanging(__.Pic, value)) { _Pic = value; OnPropertyChanged(__.Pic); } } }
+        public String Pic { get => _Pic; set { if (OnPropertyChanging(__.Pic, value)) { _Pic = value; OnPropertyChanged(__.Pic); } } }
 
         private Int32 _AdsId;
         /// <summary>广告ID</summary>
@@ -229,7 +229,7 @@ namespace COMCMS.Core
         [Description("广告ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("AdsId", "广告ID", "")]
-        public Int32 AdsId { get { return _AdsId; } set { if (OnPropertyChanging(__.AdsId, value)) { _AdsId = value; OnPropertyChanged(__.AdsId); } } }
+        public Int32 AdsId { get => _AdsId; set { if (OnPropertyChanging(__.AdsId, value)) { _AdsId = value; OnPropertyChanged(__.AdsId); } } }
 
         private String _Tags;
         /// <summary>TAG</summary>
@@ -237,7 +237,7 @@ namespace COMCMS.Core
         [Description("TAG")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Tags", "TAG", "")]
-        public String Tags { get { return _Tags; } set { if (OnPropertyChanging(__.Tags, value)) { _Tags = value; OnPropertyChanged(__.Tags); } } }
+        public String Tags { get => _Tags; set { if (OnPropertyChanging(__.Tags, value)) { _Tags = value; OnPropertyChanged(__.Tags); } } }
 
         private String _Origin;
         /// <summary>来源</summary>
@@ -245,7 +245,7 @@ namespace COMCMS.Core
         [Description("来源")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Origin", "来源", "")]
-        public String Origin { get { return _Origin; } set { if (OnPropertyChanging(__.Origin, value)) { _Origin = value; OnPropertyChanged(__.Origin); } } }
+        public String Origin { get => _Origin; set { if (OnPropertyChanging(__.Origin, value)) { _Origin = value; OnPropertyChanged(__.Origin); } } }
 
         private String _OriginURL;
         /// <summary>来源地址</summary>
@@ -253,7 +253,7 @@ namespace COMCMS.Core
         [Description("来源地址")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("OriginURL", "来源地址", "")]
-        public String OriginURL { get { return _OriginURL; } set { if (OnPropertyChanging(__.OriginURL, value)) { _OriginURL = value; OnPropertyChanged(__.OriginURL); } } }
+        public String OriginURL { get => _OriginURL; set { if (OnPropertyChanging(__.OriginURL, value)) { _OriginURL = value; OnPropertyChanged(__.OriginURL); } } }
 
         private String _ItemImg;
         /// <summary>更多图片</summary>
@@ -261,7 +261,7 @@ namespace COMCMS.Core
         [Description("更多图片")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("ItemImg", "更多图片", "")]
-        public String ItemImg { get { return _ItemImg; } set { if (OnPropertyChanging(__.ItemImg, value)) { _ItemImg = value; OnPropertyChanged(__.ItemImg); } } }
+        public String ItemImg { get => _ItemImg; set { if (OnPropertyChanging(__.ItemImg, value)) { _ItemImg = value; OnPropertyChanged(__.ItemImg); } } }
 
         private Int32 _AuthorId;
         /// <summary>添加管理员ID</summary>
@@ -269,7 +269,7 @@ namespace COMCMS.Core
         [Description("添加管理员ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("AuthorId", "添加管理员ID", "")]
-        public Int32 AuthorId { get { return _AuthorId; } set { if (OnPropertyChanging(__.AuthorId, value)) { _AuthorId = value; OnPropertyChanged(__.AuthorId); } } }
+        public Int32 AuthorId { get => _AuthorId; set { if (OnPropertyChanging(__.AuthorId, value)) { _AuthorId = value; OnPropertyChanged(__.AuthorId); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -277,7 +277,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get { return _AddTime; } set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
 
         private DateTime _UpdateTime;
         /// <summary>时间</summary>
@@ -285,7 +285,7 @@ namespace COMCMS.Core
         [Description("时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("UpdateTime", "时间", "")]
-        public DateTime UpdateTime { get { return _UpdateTime; } set { if (OnPropertyChanging(__.UpdateTime, value)) { _UpdateTime = value; OnPropertyChanged(__.UpdateTime); } } }
+        public DateTime UpdateTime { get => _UpdateTime; set { if (OnPropertyChanging(__.UpdateTime, value)) { _UpdateTime = value; OnPropertyChanged(__.UpdateTime); } } }
 
         private String _Location;
         /// <summary>路径</summary>
@@ -293,7 +293,7 @@ namespace COMCMS.Core
         [Description("路径")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Location", "路径", "")]
-        public String Location { get { return _Location; } set { if (OnPropertyChanging(__.Location, value)) { _Location = value; OnPropertyChanged(__.Location); } } }
+        public String Location { get => _Location; set { if (OnPropertyChanging(__.Location, value)) { _Location = value; OnPropertyChanged(__.Location); } } }
 
         private String _FilePath;
         /// <summary>存放目录</summary>
@@ -301,7 +301,7 @@ namespace COMCMS.Core
         [Description("存放目录")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("FilePath", "存放目录", "")]
-        public String FilePath { get { return _FilePath; } set { if (OnPropertyChanging(__.FilePath, value)) { _FilePath = value; OnPropertyChanged(__.FilePath); } } }
+        public String FilePath { get => _FilePath; set { if (OnPropertyChanging(__.FilePath, value)) { _FilePath = value; OnPropertyChanged(__.FilePath); } } }
 
         private String _FileName;
         /// <summary>文件名称</summary>
@@ -309,7 +309,7 @@ namespace COMCMS.Core
         [Description("文件名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("FileName", "文件名称", "")]
-        public String FileName { get { return _FileName; } set { if (OnPropertyChanging(__.FileName, value)) { _FileName = value; OnPropertyChanged(__.FileName); } } }
+        public String FileName { get => _FileName; set { if (OnPropertyChanging(__.FileName, value)) { _FileName = value; OnPropertyChanged(__.FileName); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -322,43 +322,43 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.KId : return _KId;
-                    case __.Title : return _Title;
-                    case __.SubTitle : return _SubTitle;
-                    case __.Content : return _Content;
-                    case __.Keyword : return _Keyword;
-                    case __.Description : return _Description;
-                    case __.LinkURL : return _LinkURL;
-                    case __.TitleColor : return _TitleColor;
-                    case __.TemplateFile : return _TemplateFile;
-                    case __.IsRecommend : return _IsRecommend;
-                    case __.IsNew : return _IsNew;
-                    case __.IsBest : return _IsBest;
-                    case __.IsHide : return _IsHide;
-                    case __.IsLock : return _IsLock;
-                    case __.IsDel : return _IsDel;
-                    case __.IsTop : return _IsTop;
-                    case __.IsComment : return _IsComment;
-                    case __.IsMember : return _IsMember;
-                    case __.Hits : return _Hits;
-                    case __.Sequence : return _Sequence;
-                    case __.CommentCount : return _CommentCount;
-                    case __.Icon : return _Icon;
-                    case __.ClassName : return _ClassName;
-                    case __.BannerImg : return _BannerImg;
-                    case __.Pic : return _Pic;
-                    case __.AdsId : return _AdsId;
-                    case __.Tags : return _Tags;
-                    case __.Origin : return _Origin;
-                    case __.OriginURL : return _OriginURL;
-                    case __.ItemImg : return _ItemImg;
-                    case __.AuthorId : return _AuthorId;
-                    case __.AddTime : return _AddTime;
-                    case __.UpdateTime : return _UpdateTime;
-                    case __.Location : return _Location;
-                    case __.FilePath : return _FilePath;
-                    case __.FileName : return _FileName;
+                    case __.Id: return _Id;
+                    case __.KId: return _KId;
+                    case __.Title: return _Title;
+                    case __.SubTitle: return _SubTitle;
+                    case __.Content: return _Content;
+                    case __.Keyword: return _Keyword;
+                    case __.Description: return _Description;
+                    case __.LinkURL: return _LinkURL;
+                    case __.TitleColor: return _TitleColor;
+                    case __.TemplateFile: return _TemplateFile;
+                    case __.IsRecommend: return _IsRecommend;
+                    case __.IsNew: return _IsNew;
+                    case __.IsBest: return _IsBest;
+                    case __.IsHide: return _IsHide;
+                    case __.IsLock: return _IsLock;
+                    case __.IsDel: return _IsDel;
+                    case __.IsTop: return _IsTop;
+                    case __.IsComment: return _IsComment;
+                    case __.IsMember: return _IsMember;
+                    case __.Hits: return _Hits;
+                    case __.Sequence: return _Sequence;
+                    case __.CommentCount: return _CommentCount;
+                    case __.Icon: return _Icon;
+                    case __.ClassName: return _ClassName;
+                    case __.BannerImg: return _BannerImg;
+                    case __.Pic: return _Pic;
+                    case __.AdsId: return _AdsId;
+                    case __.Tags: return _Tags;
+                    case __.Origin: return _Origin;
+                    case __.OriginURL: return _OriginURL;
+                    case __.ItemImg: return _ItemImg;
+                    case __.AuthorId: return _AuthorId;
+                    case __.AddTime: return _AddTime;
+                    case __.UpdateTime: return _UpdateTime;
+                    case __.Location: return _Location;
+                    case __.FilePath: return _FilePath;
+                    case __.FileName: return _FileName;
                     default: return base[name];
                 }
             }
@@ -366,43 +366,43 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.KId : _KId = value.ToInt(); break;
-                    case __.Title : _Title = Convert.ToString(value); break;
-                    case __.SubTitle : _SubTitle = Convert.ToString(value); break;
-                    case __.Content : _Content = Convert.ToString(value); break;
-                    case __.Keyword : _Keyword = Convert.ToString(value); break;
-                    case __.Description : _Description = Convert.ToString(value); break;
-                    case __.LinkURL : _LinkURL = Convert.ToString(value); break;
-                    case __.TitleColor : _TitleColor = Convert.ToString(value); break;
-                    case __.TemplateFile : _TemplateFile = Convert.ToString(value); break;
-                    case __.IsRecommend : _IsRecommend = value.ToInt(); break;
-                    case __.IsNew : _IsNew = value.ToInt(); break;
-                    case __.IsBest : _IsBest = value.ToInt(); break;
-                    case __.IsHide : _IsHide = value.ToInt(); break;
-                    case __.IsLock : _IsLock = value.ToInt(); break;
-                    case __.IsDel : _IsDel = value.ToInt(); break;
-                    case __.IsTop : _IsTop = value.ToInt(); break;
-                    case __.IsComment : _IsComment = value.ToInt(); break;
-                    case __.IsMember : _IsMember = value.ToInt(); break;
-                    case __.Hits : _Hits = value.ToInt(); break;
-                    case __.Sequence : _Sequence = value.ToInt(); break;
-                    case __.CommentCount : _CommentCount = value.ToInt(); break;
-                    case __.Icon : _Icon = Convert.ToString(value); break;
-                    case __.ClassName : _ClassName = Convert.ToString(value); break;
-                    case __.BannerImg : _BannerImg = Convert.ToString(value); break;
-                    case __.Pic : _Pic = Convert.ToString(value); break;
-                    case __.AdsId : _AdsId = value.ToInt(); break;
-                    case __.Tags : _Tags = Convert.ToString(value); break;
-                    case __.Origin : _Origin = Convert.ToString(value); break;
-                    case __.OriginURL : _OriginURL = Convert.ToString(value); break;
-                    case __.ItemImg : _ItemImg = Convert.ToString(value); break;
-                    case __.AuthorId : _AuthorId = value.ToInt(); break;
-                    case __.AddTime : _AddTime = value.ToDateTime(); break;
-                    case __.UpdateTime : _UpdateTime = value.ToDateTime(); break;
-                    case __.Location : _Location = Convert.ToString(value); break;
-                    case __.FilePath : _FilePath = Convert.ToString(value); break;
-                    case __.FileName : _FileName = Convert.ToString(value); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.KId: _KId = value.ToInt(); break;
+                    case __.Title: _Title = Convert.ToString(value); break;
+                    case __.SubTitle: _SubTitle = Convert.ToString(value); break;
+                    case __.Content: _Content = Convert.ToString(value); break;
+                    case __.Keyword: _Keyword = Convert.ToString(value); break;
+                    case __.Description: _Description = Convert.ToString(value); break;
+                    case __.LinkURL: _LinkURL = Convert.ToString(value); break;
+                    case __.TitleColor: _TitleColor = Convert.ToString(value); break;
+                    case __.TemplateFile: _TemplateFile = Convert.ToString(value); break;
+                    case __.IsRecommend: _IsRecommend = value.ToInt(); break;
+                    case __.IsNew: _IsNew = value.ToInt(); break;
+                    case __.IsBest: _IsBest = value.ToInt(); break;
+                    case __.IsHide: _IsHide = value.ToInt(); break;
+                    case __.IsLock: _IsLock = value.ToInt(); break;
+                    case __.IsDel: _IsDel = value.ToInt(); break;
+                    case __.IsTop: _IsTop = value.ToInt(); break;
+                    case __.IsComment: _IsComment = value.ToInt(); break;
+                    case __.IsMember: _IsMember = value.ToInt(); break;
+                    case __.Hits: _Hits = value.ToInt(); break;
+                    case __.Sequence: _Sequence = value.ToInt(); break;
+                    case __.CommentCount: _CommentCount = value.ToInt(); break;
+                    case __.Icon: _Icon = Convert.ToString(value); break;
+                    case __.ClassName: _ClassName = Convert.ToString(value); break;
+                    case __.BannerImg: _BannerImg = Convert.ToString(value); break;
+                    case __.Pic: _Pic = Convert.ToString(value); break;
+                    case __.AdsId: _AdsId = value.ToInt(); break;
+                    case __.Tags: _Tags = Convert.ToString(value); break;
+                    case __.Origin: _Origin = Convert.ToString(value); break;
+                    case __.OriginURL: _OriginURL = Convert.ToString(value); break;
+                    case __.ItemImg: _ItemImg = Convert.ToString(value); break;
+                    case __.AuthorId: _AuthorId = value.ToInt(); break;
+                    case __.AddTime: _AddTime = value.ToDateTime(); break;
+                    case __.UpdateTime: _UpdateTime = value.ToDateTime(); break;
+                    case __.Location: _Location = Convert.ToString(value); break;
+                    case __.FilePath: _FilePath = Convert.ToString(value); break;
+                    case __.FileName: _FileName = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -524,7 +524,7 @@ namespace COMCMS.Core
             /// <summary>文件名称</summary>
             public static readonly Field FileName = FindByName(__.FileName);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得文章字段名称的快捷方式</summary>

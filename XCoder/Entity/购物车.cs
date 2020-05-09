@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private Int32 _UId;
         /// <summary>用户ID</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("UId", "用户ID", "")]
-        public Int32 UId { get { return _UId; } set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
+        public Int32 UId { get => _UId; set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
 
         private String _Guid;
         /// <summary>唯一GUID，没登录用户使用</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("唯一GUID，没登录用户使用")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Guid", "唯一GUID，没登录用户使用", "")]
-        public String Guid { get { return _Guid; } set { if (OnPropertyChanging(__.Guid, value)) { _Guid = value; OnPropertyChanged(__.Guid); } } }
+        public String Guid { get => _Guid; set { if (OnPropertyChanging(__.Guid, value)) { _Guid = value; OnPropertyChanged(__.Guid); } } }
 
         private String _Details;
         /// <summary>购物车内容，JOSN</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("购物车内容，JOSN")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("Details", "购物车内容，JOSN", "")]
-        public String Details { get { return _Details; } set { if (OnPropertyChanging(__.Details, value)) { _Details = value; OnPropertyChanged(__.Details); } } }
+        public String Details { get => _Details; set { if (OnPropertyChanging(__.Details, value)) { _Details = value; OnPropertyChanged(__.Details); } } }
 
         private DateTime _AddTime;
         /// <summary>加入购物车时间</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("加入购物车时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "加入购物车时间", "")]
-        public DateTime AddTime { get { return _AddTime; } set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
 
         private DateTime _UpdateTime;
         /// <summary>最后更新时间</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("最后更新时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("UpdateTime", "最后更新时间", "")]
-        public DateTime UpdateTime { get { return _UpdateTime; } set { if (OnPropertyChanging(__.UpdateTime, value)) { _UpdateTime = value; OnPropertyChanged(__.UpdateTime); } } }
+        public DateTime UpdateTime { get => _UpdateTime; set { if (OnPropertyChanging(__.UpdateTime, value)) { _UpdateTime = value; OnPropertyChanged(__.UpdateTime); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -74,12 +74,12 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.UId : return _UId;
-                    case __.Guid : return _Guid;
-                    case __.Details : return _Details;
-                    case __.AddTime : return _AddTime;
-                    case __.UpdateTime : return _UpdateTime;
+                    case __.Id: return _Id;
+                    case __.UId: return _UId;
+                    case __.Guid: return _Guid;
+                    case __.Details: return _Details;
+                    case __.AddTime: return _AddTime;
+                    case __.UpdateTime: return _UpdateTime;
                     default: return base[name];
                 }
             }
@@ -87,12 +87,12 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.UId : _UId = value.ToInt(); break;
-                    case __.Guid : _Guid = Convert.ToString(value); break;
-                    case __.Details : _Details = Convert.ToString(value); break;
-                    case __.AddTime : _AddTime = value.ToDateTime(); break;
-                    case __.UpdateTime : _UpdateTime = value.ToDateTime(); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.UId: _UId = value.ToInt(); break;
+                    case __.Guid: _Guid = Convert.ToString(value); break;
+                    case __.Details: _Details = Convert.ToString(value); break;
+                    case __.AddTime: _AddTime = value.ToDateTime(); break;
+                    case __.UpdateTime: _UpdateTime = value.ToDateTime(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -121,7 +121,7 @@ namespace COMCMS.Core
             /// <summary>最后更新时间</summary>
             public static readonly Field UpdateTime = FindByName(__.UpdateTime);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得购物车字段名称的快捷方式</summary>

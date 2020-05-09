@@ -42,12 +42,16 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             var asms = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var asmItem in asms)
             {
-                var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
-                if (types.Count == 0) continue;
-                foreach (var type in types)
+                string fullName = asmItem.GetName().ToString();
+                if (fullName.IndexOf("COMCMS.Web.Views") > -1)
                 {
-                    string viewName = type.Name.Replace("Views_Article_", "") + ".cshtml";
-                    listTpls.Add(viewName);
+                    var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
+                    if (types.Count == 0) continue;
+                    foreach (var type in types)
+                    {
+                        string viewName = type.Name.Replace("Views_Article_", "") + ".cshtml";
+                        listTpls.Add(viewName);
+                    }
                 }
             }
             ViewBag.ListTpl = listTpls;
@@ -120,12 +124,16 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             var asms = AppDomain.CurrentDomain.GetAssemblies();
             foreach (var asmItem in asms)
             {
-                var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
-                if (types.Count == 0) continue;
-                foreach (var type in types)
+                string fullName = asmItem.GetName().ToString();
+                if (fullName.IndexOf("COMCMS.Web.Views") > -1)
                 {
-                    string viewName = type.Name.Replace("Views_Article_", "") + ".cshtml";
-                    listTpls.Add(viewName);
+                    var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
+                    if (types.Count == 0) continue;
+                    foreach (var type in types)
+                    {
+                        string viewName = type.Name.Replace("Views_Article_", "") + ".cshtml";
+                        listTpls.Add(viewName);
+                    }
                 }
             }
             ViewBag.ListTpl = listTpls;
@@ -387,6 +395,11 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "文章图片填写的不是图片格式！";
                 return Json(tip);
             }
+            if (!string.IsNullOrEmpty(model.FileName) && !Utils.ChekHTMLFileNameIsOK(model.FileName))
+            {
+                tip.Message = "静态化文件名错误，请填写正确的，或者留空！";
+                return Json(tip);
+            }
             //处理文章更多图片
             string[] moreImgSrc = Request.Form["nImgUrl"];
             string morIMG = string.Empty;//更多图片的时候用到
@@ -470,6 +483,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "文章图片填写的不是图片格式！";
                 return Json(tip);
             }
+            //处理
+            if (!string.IsNullOrEmpty(model.FileName) && !Utils.ChekHTMLFileNameIsOK(model.FileName))
+            {
+                tip.Message = "静态化文件名错误，请填写正确的，或者留空！";
+                return Json(tip);
+            }
             //处理文章更多图片
             string[] moreImgSrc = Request.Form["nImgUrl"];
             string morIMG = string.Empty;//更多图片的时候用到
@@ -537,6 +556,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.Title = model.Title;
             entity.TitleColor = model.TitleColor;
             entity.UpdateTime = DateTime.Now;
+            entity.FileName = model.FileName;
 
             //model.AuthorId = Core.Admin.GetMyInfo().Id;
             entity.Update();

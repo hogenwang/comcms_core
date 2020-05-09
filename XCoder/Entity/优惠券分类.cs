@@ -21,7 +21,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get { return _Id; } set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
 
         private Int32 _IsLimit;
         /// <summary>是否有类别限制，0 无限制；1 是类别限制，2是商品限制</summary>
@@ -29,7 +29,7 @@ namespace COMCMS.Core
         [Description("是否有类别限制，0 无限制；1 是类别限制，2是商品限制")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsLimit", "是否有类别限制，0 无限制；1 是类别限制，2是商品限制", "")]
-        public Int32 IsLimit { get { return _IsLimit; } set { if (OnPropertyChanging(__.IsLimit, value)) { _IsLimit = value; OnPropertyChanged(__.IsLimit); } } }
+        public Int32 IsLimit { get => _IsLimit; set { if (OnPropertyChanging(__.IsLimit, value)) { _IsLimit = value; OnPropertyChanged(__.IsLimit); } } }
 
         private String _KindName;
         /// <summary>类别名称</summary>
@@ -37,7 +37,7 @@ namespace COMCMS.Core
         [Description("类别名称")]
         [DataObjectField(false, false, true, 200)]
         [BindColumn("KindName", "类别名称", "")]
-        public String KindName { get { return _KindName; } set { if (OnPropertyChanging(__.KindName, value)) { _KindName = value; OnPropertyChanged(__.KindName); } } }
+        public String KindName { get => _KindName; set { if (OnPropertyChanging(__.KindName, value)) { _KindName = value; OnPropertyChanged(__.KindName); } } }
 
         private Int32 _CouponType;
         /// <summary>优惠券类型，0 现金用券，1打折券</summary>
@@ -45,7 +45,7 @@ namespace COMCMS.Core
         [Description("优惠券类型，0 现金用券，1打折券")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("CouponType", "优惠券类型，0 现金用券，1打折券", "")]
-        public Int32 CouponType { get { return _CouponType; } set { if (OnPropertyChanging(__.CouponType, value)) { _CouponType = value; OnPropertyChanged(__.CouponType); } } }
+        public Int32 CouponType { get => _CouponType; set { if (OnPropertyChanging(__.CouponType, value)) { _CouponType = value; OnPropertyChanged(__.CouponType); } } }
 
         private String _KIds;
         /// <summary>类别按逗号分开</summary>
@@ -53,7 +53,7 @@ namespace COMCMS.Core
         [Description("类别按逗号分开")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("KIds", "类别按逗号分开", "")]
-        public String KIds { get { return _KIds; } set { if (OnPropertyChanging(__.KIds, value)) { _KIds = value; OnPropertyChanged(__.KIds); } } }
+        public String KIds { get => _KIds; set { if (OnPropertyChanging(__.KIds, value)) { _KIds = value; OnPropertyChanged(__.KIds); } } }
 
         private String _PIds;
         /// <summary>商品ID，按逗号分开</summary>
@@ -61,7 +61,7 @@ namespace COMCMS.Core
         [Description("商品ID，按逗号分开")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("PIds", "商品ID，按逗号分开", "")]
-        public String PIds { get { return _PIds; } set { if (OnPropertyChanging(__.PIds, value)) { _PIds = value; OnPropertyChanged(__.PIds); } } }
+        public String PIds { get => _PIds; set { if (OnPropertyChanging(__.PIds, value)) { _PIds = value; OnPropertyChanged(__.PIds); } } }
 
         private String _KindNote;
         /// <summary>类别说明</summary>
@@ -69,7 +69,7 @@ namespace COMCMS.Core
         [Description("类别说明")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("KindNote", "类别说明", "")]
-        public String KindNote { get { return _KindNote; } set { if (OnPropertyChanging(__.KindNote, value)) { _KindNote = value; OnPropertyChanged(__.KindNote); } } }
+        public String KindNote { get => _KindNote; set { if (OnPropertyChanging(__.KindNote, value)) { _KindNote = value; OnPropertyChanged(__.KindNote); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -77,7 +77,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get { return _AddTime; } set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
 
         private Int32 _MyType;
         /// <summary>可使用类型</summary>
@@ -85,7 +85,7 @@ namespace COMCMS.Core
         [Description("可使用类型")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("MyType", "可使用类型", "")]
-        public Int32 MyType { get { return _MyType; } set { if (OnPropertyChanging(__.MyType, value)) { _MyType = value; OnPropertyChanged(__.MyType); } } }
+        public Int32 MyType { get => _MyType; set { if (OnPropertyChanging(__.MyType, value)) { _MyType = value; OnPropertyChanged(__.MyType); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -98,15 +98,15 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : return _Id;
-                    case __.IsLimit : return _IsLimit;
-                    case __.KindName : return _KindName;
-                    case __.CouponType : return _CouponType;
-                    case __.KIds : return _KIds;
-                    case __.PIds : return _PIds;
-                    case __.KindNote : return _KindNote;
-                    case __.AddTime : return _AddTime;
-                    case __.MyType : return _MyType;
+                    case __.Id: return _Id;
+                    case __.IsLimit: return _IsLimit;
+                    case __.KindName: return _KindName;
+                    case __.CouponType: return _CouponType;
+                    case __.KIds: return _KIds;
+                    case __.PIds: return _PIds;
+                    case __.KindNote: return _KindNote;
+                    case __.AddTime: return _AddTime;
+                    case __.MyType: return _MyType;
                     default: return base[name];
                 }
             }
@@ -114,15 +114,15 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id : _Id = value.ToInt(); break;
-                    case __.IsLimit : _IsLimit = value.ToInt(); break;
-                    case __.KindName : _KindName = Convert.ToString(value); break;
-                    case __.CouponType : _CouponType = value.ToInt(); break;
-                    case __.KIds : _KIds = Convert.ToString(value); break;
-                    case __.PIds : _PIds = Convert.ToString(value); break;
-                    case __.KindNote : _KindNote = Convert.ToString(value); break;
-                    case __.AddTime : _AddTime = value.ToDateTime(); break;
-                    case __.MyType : _MyType = value.ToInt(); break;
+                    case __.Id: _Id = value.ToInt(); break;
+                    case __.IsLimit: _IsLimit = value.ToInt(); break;
+                    case __.KindName: _KindName = Convert.ToString(value); break;
+                    case __.CouponType: _CouponType = value.ToInt(); break;
+                    case __.KIds: _KIds = Convert.ToString(value); break;
+                    case __.PIds: _PIds = Convert.ToString(value); break;
+                    case __.KindNote: _KindNote = Convert.ToString(value); break;
+                    case __.AddTime: _AddTime = value.ToDateTime(); break;
+                    case __.MyType: _MyType = value.ToInt(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -160,7 +160,7 @@ namespace COMCMS.Core
             /// <summary>可使用类型</summary>
             public static readonly Field MyType = FindByName(__.MyType);
 
-            static Field FindByName(String name) { return Meta.Table.FindByName(name); }
+            static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
         /// <summary>取得优惠券分类字段名称的快捷方式</summary>
