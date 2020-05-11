@@ -186,27 +186,27 @@ namespace COMCMS.Web.Controllers
 
         #region 测试
         //[Route("c/{*path}/index2.html")]
-        public IActionResult Test(string path = "")
-        {
-            var asms = AppDomain.CurrentDomain.GetAssemblies();
-            List<string> list = new List<string>();
-            foreach (var item in asms)
-            {
-                string fullName = item.GetName().ToString();
-                if (fullName.IndexOf("COMCMS.Web.Views")>-1)
-                {
-                    var types = item.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
-                    foreach (var type in types)
-                    {
-                        string viewName = type.Name.Replace("Views_Article_", "") + ".cshtml";
-                        list.Add(viewName);
-                    }
+        //public IActionResult Test(string path = "")
+        //{
+        //    var asms = AppDomain.CurrentDomain.GetAssemblies();
+        //    List<string> list = new List<string>();
+        //    foreach (var item in asms)
+        //    {
+        //        string fullName = item.GetName().ToString();
+        //        if (fullName.IndexOf("COMCMS.Web.Views")>-1)
+        //        {
+        //            var types = item.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
+        //            foreach (var type in types)
+        //            {
+        //                string viewName = type.Name.Replace("Views_Article_", "") + ".cshtml";
+        //                list.Add(viewName);
+        //            }
 
-                }
-                //list.Add(item.GetName().ToString());
-            }
-            return Content(JsonConvert.SerializeObject(list));
-        }
+        //        }
+        //        //list.Add(item.GetName().ToString());
+        //    }
+        //    return Content(JsonConvert.SerializeObject(list));
+        //}
         //[Route("{path1:regex([[a-zA-Z0-9-]])}/{path2:regex([[a-zA-Z0-9-]])}/index.html")]
         //public IActionResult Test2(string path1 = "", string path2 = "")
         //{
@@ -422,6 +422,25 @@ namespace COMCMS.Web.Controllers
         {
             string fullPath = $"{path}/{path2}/{path3}/{path4}";
             return ShowDetail(fullPath, filename);
+        }
+        #endregion
+
+        #region sitemap html
+        [Route("sitemap.html")]
+        [HttpGet]
+        public IActionResult SitemapHTML()
+        {
+            return View();
+        }
+        #endregion
+
+        #region sitemap xml
+        [HttpGet]
+        [Route("sitemap.xml")]
+        public IActionResult SitemapXML()
+        {
+            Response.ContentType = "text/xml";
+            return View();
         }
         #endregion
 

@@ -1,0 +1,32 @@
+﻿@{
+    Layout = "~/Views/Shared/_SitemapLayout.cshtml";
+    string url = Utils.GetServerUrl();
+    string lastmod = DateTime.Now.ToString("yyyy-MM-dd");
+    //所有文章栏目
+    IList<ArticleCategory> articleCategories = ArticleCategory.FindAll(ArticleCategory._.IsHide == 0, null, null, 0, 0);
+    //前2000篇文章
+    IList<Article> articles = Article.FindAll(Article._.IsHide == 0, null, null, 0, 2000);
+}
+<url>
+    <loc>@url</loc>
+    <priority>1.0</priority>
+    <changefreq>daily</changefreq>
+</url>
+@foreach (var item in articleCategories)
+{
+    <url>
+        <loc>@(url)/article/index/@(item.Id)</loc>
+        <priority>0.80</priority>
+        <lastmod>@(lastmod)</lastmod>
+        <changefreq>daily</changefreq>
+    </url>
+}
+@foreach (var item in articles)
+{
+    <url>
+        <loc>@(url)/article/detail/@(item.Id)</loc>
+        <priority>0.80</priority>
+        <lastmod>@(lastmod)</lastmod>
+        <changefreq>daily</changefreq>
+    </url>
+}
