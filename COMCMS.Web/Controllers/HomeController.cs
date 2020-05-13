@@ -430,6 +430,7 @@ namespace COMCMS.Web.Controllers
         [HttpGet]
         public IActionResult SitemapHTML()
         {
+            ViewBag.cfg = cfg;
             return View();
         }
         #endregion
