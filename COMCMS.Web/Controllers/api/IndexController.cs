@@ -27,6 +27,12 @@ namespace COMCMS.Web.Controllers.api
             return cfg;
         }
 
+        [HttpGet]
+        public string Index()
+        {
+            return "Hello World";
+        }
+
         #region 测试验签
         /// <summary>
         /// 测试验签

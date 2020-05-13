@@ -44,6 +44,39 @@ namespace COMCMS.Web.Common
                 return $"/product/index/{model.Id}";
         }
         /// <summary>
+        /// 生成文章详情地址
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static string EchoURL(Article model)
+        {
+            if (model == null)
+                return "javascript:;";
+
+            if (!string.IsNullOrEmpty(model.ArticleKind.FilePath))
+            {
+                string url = $"{model.ArticleKind.FilePath}/{model.Id}.html";
+                if (!string.IsNullOrEmpty(model.FileName))
+                {
+                    url = $"{model.ArticleKind.FilePath}/{model.FileName}";
+                }
+                return url;
+            }
+            else
+                return $"/article/detail/{model.Id}";
+
+        }
+        /// <summary>
+        /// 商品
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static string EchoURL(Product model)
+        {
+           return $"/product/detail/{model.Id}";
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="ctype"></param>

@@ -6,6 +6,12 @@
     IList<ArticleCategory> articleCategories = ArticleCategory.FindAll(ArticleCategory._.IsHide == 0, null, null, 0, 0);
     //前2000篇文章
     IList<Article> articles = Article.FindAll(Article._.IsHide == 0, null, null, 0, 2000);
+
+    //所有商品栏目
+    IList<Category> productCategories = Category.FindAll(Category._.IsHide == 0, null, null, 0, 0);
+
+    //前2000个商品
+    IList<Product> products = Product.FindAll(Product._.IsHide == 0, null, null, 0, 2000);
 }
 <url>
     <loc>@url</loc>
@@ -15,7 +21,16 @@
 @foreach (var item in articleCategories)
 {
     <url>
-        <loc>@(url)/article/index/@(item.Id)</loc>
+        <loc>@(url)@(ViewsHelper.EchoURL(item))</loc>
+        <priority>0.80</priority>
+        <lastmod>@(lastmod)</lastmod>
+        <changefreq>daily</changefreq>
+    </url>
+}
+@foreach (var item in productCategories)
+{
+    <url>
+        <loc>@(url)@(ViewsHelper.EchoURL(item)))</loc>
         <priority>0.80</priority>
         <lastmod>@(lastmod)</lastmod>
         <changefreq>daily</changefreq>
@@ -24,7 +39,16 @@
 @foreach (var item in articles)
 {
     <url>
-        <loc>@(url)/article/detail/@(item.Id)</loc>
+        <loc>@(url)@(ViewsHelper.EchoURL(item)))</loc>
+        <priority>0.80</priority>
+        <lastmod>@(lastmod)</lastmod>
+        <changefreq>daily</changefreq>
+    </url>
+}
+@foreach (var item in products)
+{
+    <url>
+        <loc>@(url)@(ViewsHelper.EchoURL(item)))</loc>
         <priority>0.80</priority>
         <lastmod>@(lastmod)</lastmod>
         <changefreq>daily</changefreq>
