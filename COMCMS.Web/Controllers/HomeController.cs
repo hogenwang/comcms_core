@@ -152,6 +152,11 @@ namespace COMCMS.Web.Controllers
                 return Json(tip);
             }
             string fullsql = System.IO.File.ReadAllText(sqlFullPath);
+            //如果是mssql 需要替换一下 GO不能在程序中直接执行
+            if (sqltype == "mssql")
+            {
+                fullsql = fullsql.Replace("GO", ";");
+            }
 
             Admin.FindAll(fullsql);//执行
 
