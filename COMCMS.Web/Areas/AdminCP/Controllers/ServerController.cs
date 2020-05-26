@@ -16,13 +16,24 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     public class ServerController : AdminBaseController
     {
         #region 中文转拼音
-        public IActionResult Hanzi2Pinyin(string name)
+        [HttpPost]
+        public IActionResult Hanzi2Pinyin(string name,int pid=0,string t="")
         {
-            string pinyin = "";
+            string pinyin = "/";
+            if(t == "articlecategory" && pid>0)
+            {
+                ArticleCategory pcategory = ArticleCategory.FindById(pid);
+                if(pcategory !=null && !string.IsNullOrEmpty(pcategory.FilePath))
+                {
+                    pinyin = pcategory.FilePath+"/";
+                }
+            }
+
             if (!string.IsNullOrEmpty(name))
             {
-                pinyin = PinYinHelper.GetPinyin(name).ToLower().Replace(" ","-");
+                pinyin += PinYinHelper.GetPinyin(name).ToLower().Replace(" ","-");
             }
+
             tip.Status = JsonTip.SUCCESS;
             tip.Message = pinyin;
             return Json(tip);

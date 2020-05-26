@@ -43,16 +43,10 @@ namespace COMCMS.Common
             pageLink = url + "?" + strQueryString;
             string currPage = MyHttpContext.Current.Request.Query["page"];
             string id = MyHttpContext.Current.Request.Query["id"];
+
             if (isRewrite == 5)
             {
                 url = $"/{filepath}/index.html";
-            }
-            if (url == "memberdownloads.aspx" && isRewrite == 2)
-            {
-                string t = MyHttpContext.Current.Request.Query["t"];
-                if (string.IsNullOrEmpty(t) || !Utils.IsInt(t))
-                    t = "1";
-                url = string.Format("memberdownloads-{0}.aspx", t);
             }
 
             switch (isRewrite)
@@ -71,8 +65,15 @@ namespace COMCMS.Common
                     pageLink = url.Replace(".", "-{0}.");
                     break;
                 case 3:
-                    url = url.Replace(".aspx", ".html");//避免设置错之后出现问题
-                    pageLink = url.Replace(".", "-{0}.");
+                    if(url.EndsWith(".html") || url.EndsWith(".aspx"))
+                    {
+                        url = url.Replace(".aspx", ".html");//避免设置错之后出现问题
+                        pageLink = url.Replace(".", "-{0}.");
+                    }
+                    else
+                    {
+                        pageLink = url + "?page={0}";
+                    }
                     break;
                 case 5:
                     pageLink = url.Replace(".", "-{0}.");
