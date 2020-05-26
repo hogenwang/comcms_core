@@ -69,29 +69,28 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "文章栏目标题不能为空！";
                 return Json(tip);
             }
-            if (string.IsNullOrEmpty(model.FilePath))
+
+            if (!string.IsNullOrEmpty(model.FilePath))
             {
-                tip.Message = "文章栏目路径不能为空！";
-                return Json(tip);
+                if (!model.FilePath.StartsWith("/"))
+                {
+                    tip.Message = "栏目路径请以/开头！";
+                    return Json(tip);
+                }
+                if (model.FilePath.EndsWith("/"))
+                {
+                    tip.Message = "栏目路径结尾不用加上/";
+                    return Json(tip);
+                }
+
+                if (model.FilePath.Count(x => x == '/') > 4)
+                {
+                    tip.Message = "最多只能四级路径！";
+                    return Json(tip);
+                }
             }
 
-            if (!model.FilePath.StartsWith("/"))
-            {
-                tip.Message = "栏目路径请以/开头！";
-                return Json(tip);
-            }
-            if (model.FilePath.EndsWith("/"))
-            {
-                tip.Message = "栏目路径结尾不用加上/";
-                return Json(tip);
-            }
-            if (model.FilePath.Count(x => x == '/') > 4)
-            {
-                tip.Message = "最多只能四级路径！";
-                return Json(tip);
-            }
-
-            if (!AdminUtils.CheckFilePathIsOK(model.FilePath, 0, 0))
+            if (!string.IsNullOrEmpty(model.FilePath) && !AdminUtils.CheckFilePathIsOK(model.FilePath, 0, 0))
             {
                 tip.Message = "栏目路径不可用，请重新填写！";
                 return Json(tip);
@@ -163,27 +162,29 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 Json(tip);
             }
 
-            if (string.IsNullOrEmpty(model.FilePath))
+            if (!string.IsNullOrEmpty(model.FilePath))
             {
-                tip.Message = "文章栏目路径不能为空！";
-                return Json(tip);
+                if (!model.FilePath.StartsWith("/"))
+                {
+                    tip.Message = "栏目路径请以/开头！";
+                    return Json(tip);
+                }
+                if (model.FilePath.EndsWith("/"))
+                {
+                    tip.Message = "栏目路径结尾不用加上/";
+                    return Json(tip);
+                }
+
+                if (model.FilePath.Count(x => x == '/') > 4)
+                {
+                    tip.Message = "最多只能四级路径！";
+                    return Json(tip);
+                }
             }
-            if (!model.FilePath.StartsWith("/"))
-            {
-                tip.Message = "栏目路径请以/开头！";
-                return Json(tip);
-            }
-            if (model.FilePath.EndsWith("/"))
-            {
-                tip.Message = "栏目路径结尾不用加上/";
-                return Json(tip);
-            }
-            if (model.FilePath.Count(x => x == '/') > 4)
-            {
-                tip.Message = "最多只能四级路径！";
-                return Json(tip);
-            }
-            if (!AdminUtils.CheckFilePathIsOK(model.FilePath, entity.Id, 0))
+
+
+
+            if (!string.IsNullOrEmpty(model.FilePath) && !AdminUtils.CheckFilePathIsOK(model.FilePath, entity.Id, 0))
             {
                 tip.Message = "栏目路径不可用，请重新填写！";
                 return Json(tip);

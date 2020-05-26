@@ -95,6 +95,14 @@ namespace COMCMS.Web.Common
                     Category pc = Category.FindById(id);
                     url = EchoURL(pc);
                     break;
+                case Utils.CMSType.Article:
+                    Article a = Article.FindById(id);
+                    url = EchoURL(a);
+                    break;
+                case Utils.CMSType.Product:
+                    Product p = Product.FindById(id);
+                    url = EchoURL(p);
+                    break;
                 default:
                     url= "/";
                     break;
@@ -126,7 +134,16 @@ namespace COMCMS.Web.Common
             }
             else
                 return $"/article/detail/{model.Id}";
-
+        }
+        /// <summary>
+        /// 生成文章详情地址
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public static string EchoArticleURL(int id)
+        {
+            Article model = Article.FindById(id);
+            return EchoArticleURL(model);
         }
         #endregion
 
