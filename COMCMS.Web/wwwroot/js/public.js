@@ -534,7 +534,7 @@ function doPostMessage() {
     var name = $("#name_txt").val();
     var phone = $("#phone_txt").val();
     var content = $("#content_txt").val();
-    var __RequestVerificationToken = $("intput[name='__RequestVerificationToken']").val();
+	var __RequestVerificationToken = $("intput[name='__RequestVerificationToken']").val();
     if (!name) {
         alert('请输入您的姓名！');
         return false;
@@ -551,7 +551,7 @@ function doPostMessage() {
         name: name,
         phone: phone,
         content: content,
-        __RequestVerificationToken: __RequestVerificationToken
+		__RequestVerificationToken: __RequestVerificationToken
     };
     var loading = layer.load(0, { shade: [0.2, '#000'] });
     $.ajax({
