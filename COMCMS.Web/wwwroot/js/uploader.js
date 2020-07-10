@@ -123,6 +123,14 @@ $(function () {
                     if (!p.multiple) {
                         //parentObj.siblings(".upload-name").val(data.name);
                         parentObj.siblings(".upload-path").val(data.path);
+                        //处理vue的问题
+                        var listname = parentObj.siblings(".upload-path").data("listname");
+                        var itemKey = parentObj.siblings(".upload-path").data("key");
+                        var itemIndex = parentObj.siblings(".upload-path").data("index");
+                        //console.log("当前：",listname, itemKey, itemIndex);
+                        if (listname && itemKey && app) {
+                            app[listname][itemIndex][itemKey] = data.path;
+                        }
                         //parentObj.siblings(".upload-size").val(data.size);
                     } else {
                         addImage(parentObj, data.path, data.thumb);
