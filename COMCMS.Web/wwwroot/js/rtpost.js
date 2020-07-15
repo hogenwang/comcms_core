@@ -1,4 +1,4 @@
-//所有异步提交 formId 不需要加上#  last:2015-11-12  by Hogen Wang
+//所有异步提交 formId 不需要加上#  last:2020-07-15  by Hogen Wang
 //依赖jquery jquery.form jquery.validate jquery.metadata
 function DoPost(formId, rules, messages) {
     //提交地址
@@ -348,4 +348,60 @@ function DoAdminLogin(formId, rules, messages) {
         }
     });
     return false;
+}
+
+
+//后台列表执行批量操作
+function doBatchAction(url, title) {
+    var list = $('#tb_departments').bootstrapTable('getAllSelections');
+    var ids = [];
+    if (!list || list.length < 1) {
+        layer.alert("请至少选择一条记录！", { icon: 2 });
+        return false;
+    }
+    list.map(function (item, index) {
+        if (item.id) {
+            ids.push(item.id);
+        }
+    })
+
+    layer.confirm('确认要执行批量' + title + '吗？', {
+        icon: 3,
+        title: '系统提示',
+        btn: ['确定', '取消 '] //按钮
+    }, function () {
+        var loading = layer.load(0, {
+            shade: [0.2, '#000'] //0.1透明度的背景
+        });
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { ids: JSON.stringify(ids) },
+            dataType: "JSON",
+            success: function (data) {
+                if (data.status == "success") {
+                    layer.close(loading);
+                    layer.msg(data.message, {
+                        time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        //执行重新载入
+                        if (doSearch) {
+                            doSearch();
+                        } else {
+                            refreshCurrentTab();
+                        }
+                    });
+                } else {
+                    layer.close(loading);
+                    layer.alert(data.message, { icon: 2 });
+
+                }
+            },
+            error: function () {
+                layer.close(loading);
+                layer.alert('执行错误，请联系管理员！', { icon: 2 });
+            }
+        });
+    }, function () {
+    });
 }

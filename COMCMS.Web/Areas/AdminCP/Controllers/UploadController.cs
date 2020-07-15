@@ -74,7 +74,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 return Json(errorJson);
             }
             //判断是否是图片类型
-            List<string> imgtypelist = new List<string> { "image/pjpeg", "image/png", "image/x-png", "image/gif", "image/bmp", "image/jpeg" };
+            List<string> imgtypelist = new List<string> { "image/jpg", "image/png", "image/x-png", "image/gif", "image/bmp", "image/jpeg" };
             if (imgtypelist.FindIndex(x => x == upload.ContentType) == -1)
             {
                 errorJson.error.message = "请选择一张图片!";
@@ -244,7 +244,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //判断是否是图片，如果是图片，后面需要生成缩略图并可能的话，就加上水印
             bool isImage = false;
             //判断是否是图片类型
-            List<string> imgtypelist = new List<string> { "image/pjpeg", "image/png", "image/x-png", "image/gif", "image/bmp" };
+            List<string> imgtypelist = new List<string> { "image/jpg", "image/png", "image/x-png", "image/gif", "image/bmp", "image/jpeg" };
             if (imgtypelist.FindIndex(x => x == upload.ContentType) >= 0)
             {
                 isImage = true;
@@ -556,7 +556,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             if (data != null)
             {
                 //判断是否是图片类型
-                List<string> imgtypelist = new List<string> { "image/pjpeg", "image/png", "image/x-png", "image/gif", "image/bmp", "image/jpeg" };
+                List<string> imgtypelist = new List<string> { "image/jpg", "image/png", "image/x-png", "image/gif", "image/bmp", "image/jpeg" };
                 if (imgtypelist.FindIndex(x => x == data.ContentType) == -1)
                 {
                     msg = "只能上传一张图片格式文件！";

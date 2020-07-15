@@ -424,7 +424,10 @@ namespace COMCMS.Core
                     AdminLog log = AdminLog.FindByGUID(adminLogId);
                     if (log != null)
                     {
-                        log.Actions = log.Actions + $"|||{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}: {action}";
+                        if (string.IsNullOrEmpty(log.Actions))
+                            log.Actions = $"{DateTime.Now:yyyy-MM-dd HH:mm}: {action}";
+                        else
+                            log.Actions = log.Actions + $"|||{DateTime.Now:yyyy-MM-dd HH:mm}: {action}";
                         log.LastUpdateTime = DateTime.Now;
                         log.Update();
 
