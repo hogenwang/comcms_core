@@ -717,5 +717,51 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             return Json(tip);
         }
         #endregion
+
+        #region 批量删除文章
+        [HttpPost]
+        [MyAuthorize("batch", "article", "JSON")]
+        public IActionResult DoBatchDelArticle(string ids)
+        {
+            if (string.IsNullOrEmpty(ids))
+            {
+                tip.Message = "请最少选择一篇文章！";
+                return Json(tip);
+            }
+            List<int> listIds = new List<int>();
+            try
+            {
+                listIds = JsonConvert.DeserializeObject<List<int>>(ids);
+            }
+            catch (Exception ex)
+            {
+                tip.Message = "转换出错：" + ex.Message;
+                return Json(tip);
+            }
+
+            if (listIds == null || listIds.Count < 1)
+            {
+                tip.Message = "请至少选择一篇文章！";
+                return Json(tip);
+            }
+
+            IList<Article> list = Article.FindAll(Article._.Id.In(listIds), null, null, 0, 0);
+            if (list == null || list.Count < 1)
+            {
+                tip.Message = "请至少选择一篇文章！";
+                return Json(tip);
+            }
+
+            foreach (var item in list)
+            {
+                item.IsHide = 0;
+            }
+            list.Delete();
+            Admin.WriteLogActions($"批量删除文章：{ids};");
+            tip.Message = "批量删除文章成功！";
+            tip.Status = JsonTip.SUCCESS;
+            return Json(tip);
+        }
+        #endregion
     }
 }

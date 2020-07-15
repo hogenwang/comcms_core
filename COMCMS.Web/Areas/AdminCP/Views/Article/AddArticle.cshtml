@@ -11,8 +11,7 @@
             </div>
         </div>
         <div class="ibox-content">
-            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "addArticleForm", @class = "form-horizontal m-t" }))
-            {
+            <form asp-action="AddArticle" asp-controller="Article" asp-area="AdminCP" method="post" class="form-horizontal m-t" id="addArticleForm">
                 <div class="form-group">
                     <label class="col-sm-3 control-label">文章栏目：</label>
                     <div class="col-sm-8">
@@ -156,7 +155,7 @@
                         <button class="btn btn-default" type="button" onclick="closethisdialog();"><i class="fa fa-close"></i> 取消 </button>
                     </div>
                 </div>
-            }
+            </form>
         </div>
     </div>
 
