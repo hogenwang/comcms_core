@@ -38,4 +38,29 @@ namespace COMCMS.Core.Models
         public int qty { get; set; } = 1;
     }
     #endregion
+
+    #region 系统文件目录信息列表
+    /// <summary>
+    /// 系统文件目录信息
+    /// </summary>
+    public class DirInfo
+    {
+        /// <summary>
+        /// 目录名称
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// 目录
+        /// </summary>
+        public string path { get; set; }
+        /// <summary>
+        /// 目录详情
+        /// </summary>
+        public string fullPath { get; set; }
+        /// <summary>
+        /// 子目录
+        /// </summary>
+        public List<DirInfo> subList { get; set; }
+    }
+    #endregion
 }
