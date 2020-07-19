@@ -7833,8 +7833,15 @@ body.skin-3 {
 .gohome a:hover {
     opacity: 1;
 }
+.my-preview > img {
+    width: 33px;
+    height: 33px;
+    cursor: pointer;
+    border: 1px solid #e5e6e7;
+    border-right: none
+}
 
-@media only screen and (-webkit-min-device-pixel-ratio : 2){
+@media only screen and (-webkit-min-device-pixel-ratio : 2) {
     #content-main {
         -webkit-overflow-scrolling: touch;
     }

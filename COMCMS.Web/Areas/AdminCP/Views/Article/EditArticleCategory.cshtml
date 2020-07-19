@@ -48,6 +48,16 @@
                     <label class="col-sm-3 control-label">Banner图片：</label>
                     <div class="col-sm-8">
                         <div class="input-group">
+                            <span class="input-group-btn my-preview">
+                                @if (!string.IsNullOrEmpty(Model.BannerImg))
+                                {
+                                    <img src="@Model.BannerImg" />
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-primary"><i class="fa fa-search-plus"></i></button>
+                                }
+                            </span>
                             <input id="BannerImg" name="BannerImg" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个Banner图片" value="@Model.BannerImg">
                             <span class="input-group-addon my-upload-span upload-img"></span>
                         </div>

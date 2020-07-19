@@ -40,7 +40,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             List<DirInfo> all = getAllAttach("");
             string allJson = JsonConvert.SerializeObject(all);
             //string basePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}";//基础目录
-
+            ViewBag.folderJson = allJson;
             //string[] arrDirs = Directory.GetDirectories(basePath);
             return View();
             //return Content(JsonConvert.SerializeObject(allJson));

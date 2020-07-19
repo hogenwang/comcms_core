@@ -84,6 +84,16 @@
                     <label class="col-sm-3 control-label">水印文件：</label>
                     <div class="col-sm-8">
                         <div class="input-group">
+                            <span class="input-group-btn my-preview">
+                                @if (!string.IsNullOrEmpty(Model.WaterMarkImg))
+                                {
+                                    <img src="@Model.WaterMarkImg" />
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-primary"><i class="fa fa-search-plus"></i></button>
+                                }
+                            </span>
                             <input id="WaterMarkImg" type="text" class="form-control upload-path" name="WaterMarkImg" value="@Model.WaterMarkImg" placeholder="水印文件，只支持jpg、png" aria-required="true">
                             <span class="input-group-addon my-upload-span upload-img"></span>
                         </div>
