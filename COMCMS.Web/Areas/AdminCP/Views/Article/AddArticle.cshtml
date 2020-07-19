@@ -163,9 +163,10 @@
 </div>
 <script>
     var htmlText = '<div class="form-group" id="nImgRow{0}">';
-    htmlText += '<label class="col-sm-3 control-label"><button type="button" class="btn btn-danger btn-sm" onclick="delmyImgRow(\'nImgRow{0}\')"> <i class="fa fa-close"></i> 删除</button></label>';
+    htmlText += '<div class="col-sm-3 text-right"><button type="button" class="btn btn-danger btn-sm" onclick="delmyImgRow(\'nImgRow{0}\')"> <i class="fa fa-close"></i> 删除</button></div>';
     htmlText += '<div class="col-sm-8">';
     htmlText += '<div class="input-group">';
+    htmlText += '<span class="input-group-btn my-preview"><button type="button" class="btn btn-primary"><i class="fa fa-search-plus"></i></button></span>';
     htmlText += '<input id="nImgUrlnImgRow{0}" name="nImgUrl" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个图片" value="">';
     htmlText += '<span class="input-group-addon my-upload-span upload-img" id="newimg_{0}"></span>';
     htmlText += '</div></div></div>';

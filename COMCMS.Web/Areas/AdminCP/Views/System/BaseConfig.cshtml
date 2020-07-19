@@ -40,6 +40,16 @@
                                 <label class="col-sm-3 control-label">站点LOGO：</label>
                                 <div class="col-sm-8">
                                     <div class="input-group">
+                                        <span class="input-group-btn my-preview">
+                                            @if (!string.IsNullOrEmpty(Model.SiteLogo))
+                                            {
+                                                <img src="@Model.SiteLogo" />
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-primary"><i class="fa fa-search-plus"></i></button>
+                                            }
+                                        </span>
                                         <input id="SiteLogo" name="SiteLogo" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个网站LOGO" value="@Model.SiteLogo">
                                         <span class="input-group-addon my-upload-span upload-img"></span>
                                     </div>
