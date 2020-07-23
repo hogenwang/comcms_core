@@ -1,0 +1,66 @@
+﻿@model IList<Department>
+@{
+    ViewBag.title = "部门管理";
+}
+
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.Title</h5>
+        </div>
+        <div class="ibox-content">
+            <div id="toolbar" class="btn-group">
+                <button id="btn_add" type="button" class="btn btn-outline btn-default" onclick="showDialog('adddepartment','添加部门','/AdminCP/Department/AddDepartment',0,0);">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                </button>
+            </div>
+
+            <div id="toolbar2" class="btn-group pull-right">
+                <button id="btn_refresh" type="button" class="btn btn-outline btn-default" onclick="refresh();">
+                    <span class="fa fa-refresh" aria-hidden="true"></span>刷新
+                </button>
+            </div>
+            <table class="tree table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>部门名称</th>
+                        <th>ID</th>
+                        <th class="text-center">排序</th>
+                        <th>联系电话</th>
+                        <th>说明/备注</th>
+                        <th width="200">操作</th>
+                    </tr>
+                </thead>
+                @if (Model.Count == 0)
+                {
+                    <tr><td colspan="6" class="text-center">暂无记录...</td></tr>
+                }
+                @foreach (var m in Model)
+                {
+                    <tr class="treegrid-@m.Id @(m.PId !=0?"treegrid-parent-"+m.PId:"") ">
+                        <td>@m.DepartmentName</td>
+                        <td>
+                            @m.Id
+                        </td>
+                        <td class="text-center">@m.Rank</td>
+                        <td>@m.Tel</td>
+                        <td>
+                            @m.DepartmentDescription
+                        </td>
+                        <td>
+                            <a href="javascript:;" class="btn btn-xs btn-primary" title="编辑" onclick="top.showDialog('eidtdepartment', '编辑部门详情', '/AdminCP/Department/EditDepartment?id=@m.Id', 0, 0)"><i class="fa fa-edit"></i> 编辑</a>
+                            <a href="javascript:;" class="btn btn-xs btn-danger" title="删除" onclick="doDel('/AdminCP/Department/DelDepartment',@m.Id);"><i class="fa fa-close"></i> 删除</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('.tree').treegrid();
+                });
+            </script>
+        </div>
+    </div>
+
+
+</div>

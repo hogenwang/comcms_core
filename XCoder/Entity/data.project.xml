@@ -1126,4 +1126,43 @@
       <Column Name="UpdateTime" DataType="DateTime" Description="修改时间" />
     </Columns>
   </Table>
+  <Table Name="Department" Description="部门" DbType="SqlServer">
+    <Columns>
+      <Column Name="Id" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
+      <Column Name="DepartmentName" DataType="String" Description="部门名称" />
+      <Column Name="PId" DataType="Int32" Description="上级部门ID" />
+      <Column Name="Level" DataType="Int32" Description="级别" />
+      <Column Name="Location" DataType="String" Length="100" Description="路径" />
+      <Column Name="DepartmentDescription" DataType="String" Length="250" Description="部门说明" />
+      <Column Name="Pic" DataType="String" Length="250" Description="部门图片" />
+      <Column Name="Rank" DataType="Int32" Description="排序" />
+      <Column Name="IsNotAllowDel" DataType="Int32" Description="是否不允许删除" />
+      <Column Name="Powers" DataType="String" Master="True" Length="-1" Description="部门权限" />
+      <Column Name="IsDel" DataType="Int32" Description="是否删除" />
+      <Column Name="Tel" DataType="String" Length="30" Description="联系电话" />
+      <Column Name="Fax" DataType="String" Length="30" Description="传真" />
+      <Column Name="Email" DataType="String" Length="100" Description="邮件" />
+    </Columns>
+  </Table>
+  <Table Name="DataDictionary" Description="数据字典" DbType="SqlServer">
+    <Columns>
+      <Column Name="Id" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
+      <Column Name="Key" DataType="String" Description="字典key" />
+      <Column Name="Description" DataType="String" Description="字典介绍" />
+      <Column Name="Rank" DataType="Int32" Description="排序" />
+      <Column Name="AddTime" DataType="DateTime" Description="添加时间" />
+    </Columns>
+  </Table>
+  <Table Name="DataDictionaryDetail" Description="数据字典详情" DbType="SqlServer">
+    <Columns>
+      <Column Name="Id" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
+      <Column Name="DataDictionaryId" DataType="Int32" Description="字典ID" />
+      <Column Name="Val" DataType="String" Description="字典值" />
+      <Column Name="Title" DataType="String" Master="True" Description="字典标签" />
+      <Column Name="Description" DataType="String" Description="字典介绍" />
+      <Column Name="Rank" DataType="Int32" Description="排序" />
+      <Column Name="IsDefault" DataType="Int32" Description="是否默认值" />
+      <Column Name="AddTime" DataType="DateTime" Description="添加时间" />
+    </Columns>
+  </Table>
 </Tables>

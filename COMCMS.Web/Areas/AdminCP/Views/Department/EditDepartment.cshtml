@@ -1,0 +1,91 @@
+﻿@model Department
+@{
+    ViewBag.title = "编辑部门详情";
+}
+
+<div class="wrapper wrapper-content">
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@ViewBag.Title</h5>
+            <div class="ibox-tools">
+            </div>
+        </div>
+        <div class="ibox-content">
+            <form id="editDepartmentForm" class="form-horizontal m-t" method="post">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">上级部门：</label>
+                    <div class="col-sm-8">
+                        <select class="form-control m-b" asp-for="PId">
+                            <option value="0">一级部门</option>
+                            @foreach (var m in ViewBag.ListTree)
+                            {
+                                <option value="@m.Id">@m.DepartmentName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">部门名称：</label>
+                    <div class="col-sm-8">
+                        <input asp-for="DepartmentName" maxlength="200" type="text" class="form-control" required aria-required="true" placeholder="填写部门名称">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">说明/备注：</label>
+                    <div class="col-sm-8">
+                        <input asp-for="DepartmentDescription" type="text" class="form-control" placeholder="部门副标题，非必填" maxlength="200">
+                    </div>
+                </div>
+                <div class="form-group hidden">
+                    <label class="col-sm-3 control-label">部门图片：</label>
+                    <div class="col-sm-8">
+                        <div class="input-group">
+                            <input asp-for="Pic" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个图片" value="">
+                            <span class="input-group-addon my-upload-span upload-img"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">排序：</label>
+                    <div class="col-sm-8">
+                        <input asp-for="Rank" type="number" class="form-control" maxlength="20" placeholder="越小排得越前" aria-required="true">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">部门联系电话：</label>
+                    <div class="col-sm-8">
+                        <input asp-for="Tel" type="text" class="form-control" maxlength="30" placeholder="部门联系电话" aria-required="true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">部门传真：</label>
+                    <div class="col-sm-8">
+                        <input asp-for="Fax" type="text" class="form-control" maxlength="30" placeholder="部门传真" aria-required="true">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">部门邮箱：</label>
+                    <div class="col-sm-8">
+                        <input asp-for="Email" type="text" class="form-control" maxlength="100" placeholder="部门邮箱" aria-required="true">
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-3">
+                        <input type="hidden" asp-for="Id" />
+                        <button class="btn btn-primary" type="submit"><i class="fa fa-save"></i> 提交 </button>
+                        <button class="btn btn-default" type="button" onclick="closethisdialog();"><i class="fa fa-close"></i> 取消 </button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp", notwater: true });
+        DoPost("editDepartmentForm");
+    })
+</script>
