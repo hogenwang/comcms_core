@@ -1,0 +1,262 @@
+﻿@{
+    ViewBag.title = "数据字典管理";
+}
+<script src="~/js/vue/vue.min.js"></script>
+<div class="wrapper wrapper-content ">
+    <div class="row" id="app">
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>@ViewBag.Title</h5>
+                    <div class="ibox-tools">
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">筛选条件</div>
+                        <div class="panel-body">
+                            <form id="formSearch" class="form-horizontal form-inline" onsubmit="return doSearch(); return false;">
+                                <div>
+                                    <label class="control-label">关键字：</label>
+                                    <input type="text" placeholder="Key关键字" name="keyword" id="keyword" class="form-control">
+                                    <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary" onclick="doSearch();">查询</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div id="toolbar" class="btn-group">
+                        <button id="btn_add" type="button" class="btn btn-outline btn-default" onclick="app.getDataDictionary(0)">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                        </button>
+                    </div>
+                    <table id="tb_departments"></table>
+
+                    <script>
+                        $(function () {
+
+                            //1.初始化Table
+                            var oTable = new TableInit();
+                            oTable.Init();
+
+                            //2.初始化Button的点击事件
+                            var oButtonInit = new ButtonInit();
+                            oButtonInit.Init();
+
+                        });
+                        function doSearch() {
+                            var params = $('#tb_departments').bootstrapTable('getOptions');
+                            //console.log(params);
+                            params.queryParams = function (params) {
+
+                                var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                                    limit: params.limit,   //页面大小
+                                    page: (params.offset / params.limit) + 1,  //页码
+                                    keyword: $("#keyword").val(),
+                                };
+                                return temp;
+                            }
+                            $('#tb_departments').bootstrapTable('refresh', params);
+                        }
+
+                        var TableInit = function () {
+                            var oTableInit = new Object();
+                            //初始化Table
+                            oTableInit.Init = function () {
+                                $('#tb_departments').bootstrapTable({
+                                    url: '/AdminCP/DataDictionary/GetDataDictionaryList',         //请求后台的URL（*）
+                                    method: 'get',                      //请求方式（*）
+                                    toolbar: '#toolbar',                //工具按钮用哪个容器
+                                    striped: true,                      //是否显示行间隔色
+                                    cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                                    pagination: true,                   //是否显示分页（*）
+                                    sortable: false,                     //是否启用排序
+                                    sortOrder: "asc",                   //排序方式
+                                    queryParams: oTableInit.queryParams,//传递参数（*）
+                                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                                    pageNumber: 1,                       //初始化加载第一页，默认第一页
+                                    pageSize: 25,                       //每页的记录行数（*）
+                                    pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
+                                    search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                                    strictSearch: true,
+                                    showColumns: true,                  //是否显示所有的列
+                                    showRefresh: true,                  //是否显示刷新按钮
+                                    minimumCountColumns: 2,             //最少允许的列数
+                                    clickToSelect: true,                //是否启用点击选中行
+                                    height: 0,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                                    uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+                                    showToggle: true,                    //是否显示详细视图和列表视图的切换按钮
+                                    cardView: false,                    //是否显示详细视图
+                                    detailView: false,                   //是否显示父子表
+                                    columns: [{
+                                        checkbox: true
+                                    }, {
+                                        field: 'id',
+                                        title: 'ID'
+                                    }, {
+                                        field: 'key',
+                                        title: '字典Key'
+                                    }, {
+                                        field: 'description',
+                                        title: '说明'
+                                    }, {
+                                        field: 'rank',
+                                        title: '排序'
+                                    }, {
+                                        field: 'addTime',
+                                        title: '添加时间'
+                                    },
+                                    {
+                                        field: 'id',
+                                        title: '操作',
+                                        formatter: 'actionFormatter'
+                                    }
+                                    ]
+                                });
+                            };
+
+                            //得到查询的参数
+                            oTableInit.queryParams = function (params) {
+                                var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                                    limit: params.limit,   //页面大小
+                                    page: (params.offset / params.limit) + 1,  //页码
+                                    kid: $("#kid").val(),
+                                    keyword: $("#keyword").val(),
+                                    isshowsub: $("#isshowsub").prop("checked") ? 1 : 0
+                                };
+                                return temp;
+                            };
+                            return oTableInit;
+                        };
+
+                        function actionFormatter(value, row, index) {
+                            return [
+                                '<a href="javascript:;" class="btn btn-xs btn-primary" title="编辑" onclick="top.showDialog(\'eidtarticle\', \'编辑文章详情\', \'/AdminCP/DataDictionary/EditArticle/' + value + '\', 0, 0)"><i class="fa fa-edit"></i> 编辑</a>',
+                                '<a href="javascript:;" class="btn btn-xs btn-danger m-l-xs" title="删除" onclick="doDel(\'/AdminCP/DataDictionary/DelDataDictionary\',' + value + ');"><i class="fa fa-close"></i> 删除</a>',
+                            ].join('');
+                        }
+
+                        function newFormatter(value, row, index) {
+                            if (value == 1) {
+                                return '<i class="fa fa-circle-o"></i>';
+                            } else {
+                                return '';
+                            }
+                        }
+
+                        function recommendFormatter(value, row, index) {
+                            if (value == 1) {
+                                return '<i class="fa fa-star"></i>';
+                            } else {
+                                return '';
+                            }
+                        }
+                        function hideFormatter(value, row, index) {
+                            if (value == 1) {
+                                return '<i class="fa fa-eye-slash"></i>';
+                            } else {
+                                return '';
+                            }
+                        }
+
+                        var ButtonInit = function () {
+                            var oInit = new Object();
+                            var postdata = {};
+
+                            oInit.Init = function () {
+                                //初始化页面上面的按钮事件
+                            };
+
+                            return oInit;
+                        };
+                    </script>
+                </div>
+            </div>
+
+            <div id="myModal" class="modal fade" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <h3 class="m-t-none m-b">{{optTitle}}</h3>
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">字典Key：</label>
+                                            <div class="col-sm-8">
+                                                <input v-model="model.key" type="text" class="form-control" maxlength="250" placeholder="字典Key，请填写英文" aria-required="true">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">字典说明：</label>
+                                            <div class="col-sm-8">
+                                                <input v-model="model.description" type="text" class="form-control" maxlength="250" placeholder="字典说明" aria-required="true">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">字典排序：</label>
+                                            <div class="col-sm-8">
+                                                <input v-model="model.rank" type="number" class="form-control" maxlength="250" placeholder="字典排序，越小越前，仅后台" aria-required="true">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-5 col-sm-offset-3">
+                                                <input type="hidden" v-model="model.id" />
+                                                <button class="btn btn-primary" type="button" v-on:click="doSaveDataDictionary"><i class="fa fa-save"></i> 确定 </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>数据字典详情</h5>
+                    <div class="ibox-tools">
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div id="toolbar" class="btn-group">
+                        <button id="btn_add" type="button" class="btn btn-outline btn-default" onclick="top.showDialog('addarticle','添加文章','/AdminCP/Article/AddArticle',0,0)">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                        </button>
+                    </div>
+                    <table id="tb_departments"></table>
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            model: { key: '', id: 0, rank: 0, description:''},
+            optTitle:'添加字典'
+
+        },
+        methods: {
+            getDataDictionary: function (id) {
+                console.log('获取详情：', id);
+            },
+            doSaveDataDictionary: function () {
+                var that = this;
+                if (!that.model.key) {
+                    alert('请输入字典Key!');
+                    return;
+                }
+                var loading = layer.load(0, {
+                    shade: [0.2, '#000'] //0.1透明度的背景
+                });
+            }
+        }
+    })
+</script>
