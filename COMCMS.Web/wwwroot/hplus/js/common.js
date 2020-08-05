@@ -3,9 +3,9 @@ function showDialog(id, title, url, width, height) {
     top.showDialog(id, title, url, width, height)
 }
 //删除数据
-function doDel(url, id) {
-    top.doDel(url, id);
-}
+//function doDel(url, id) {
+//    top.doDel(url, id);
+//}
 //刷新网页
 function refresh() {
 
