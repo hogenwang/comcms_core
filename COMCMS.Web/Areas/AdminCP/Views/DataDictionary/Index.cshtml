@@ -105,7 +105,8 @@
                                     {
                                         field: 'id',
                                         title: '操作',
-                                        formatter: 'actionFormatter'
+                                        formatter: 'actionFormatter',
+                                        width:215
                                     }
                                     ]
                                 });
@@ -128,7 +129,7 @@
                         function actionFormatter(value, row, index) {
                             return [
                                 '<a href="javascript:;" class="btn btn-xs btn-primary" title="编辑" onclick="app.getDataDictionary(' + value + ')"><i class="fa fa-edit"></i> 编辑</a>',
-                                '<a href="javascript:;" class="btn btn-xs btn-success" title="编辑" onclick="app.getDataDictionaryDetail(' + value + ')"><i class="fa fa-edit"></i> 管理字典值</a>',
+                                '<a href="javascript:;" class="btn btn-xs btn-success m-l-xs" title="编辑" onclick="app.getDataDictionaryDetail(' + value + ')"><i class="fa fa-edit"></i> 管理字典值</a>',
                                 '<a href="javascript:;" class="btn btn-xs btn-danger m-l-xs" title="删除" onclick="doDel(\'/AdminCP/DataDictionary/DelDataDictionary\',' + value + ');"><i class="fa fa-close"></i> 删除</a>',
                             ].join('');
                         }
@@ -198,7 +199,7 @@
                 <div class="ibox-content">
                     <div v-show="showDetail">
                         <div id="toolbar" class="btn-group">
-                            <button id="btn_add" type="button" class="btn btn-outline btn-default" onclick="top.showDialog('addarticle','添加文章','/AdminCP/Article/AddArticle',0,0)">
+                            <button id="btn_add" type="button" class="btn btn-outline btn-default" v-on:click="addDetail">
                                 <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
                             </button>
                         </div>
@@ -212,24 +213,24 @@
                                     <th>是否默认</th>
                                     <th>说明</th>
                                     <th>添加时间</th>
-                                    <th>操作</th>
+                                    <th style="width:125px">操作</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(item,index) in detailList" v-bind:key="id">
+                                <tr v-for="(item,index) in detailList">
                                     <td>{{item.id}}</td>
-                                    <td>{{item.id}}</td>
-                                    <td>{{item.id}}</td>
-                                    <td>{{item.id}}</td>
-                                    <td>{{item.id}}</td>
-                                    <td>{{item.id}}</td>
-                                    <td>{{item.id}}</td>
+                                    <td>{{item.val}}</td>
+                                    <td>{{item.title}}</td>
+                                    <td>{{item.rank}}</td>
+                                    <td>{{item.isDefault==1?'是':'否'}}</td>
+                                    <td>{{item.description}}</td>
+                                    <td>{{item.addTime}}</td>
                                     <td>
-                                        <button class="btn btn-primary btn-xm" v-on:click="doEditDetail(item)"><i class="fa fa-edit"></i> 编辑</button>
-                                        <button class="btn btn-danger btn-sm" v-on:click="doDelDetail(item.id)"><i class="fa fa-close"></i> 删除</button>
+                                        <button class="btn btn-primary btn-xs" v-on:click="doEditDetail(item)"><i class="fa fa-edit"></i> 编辑</button>
+                                        <button class="btn btn-danger btn-xs" v-on:click="doDelDetail(item.id)"><i class="fa fa-close"></i> 删除</button>
                                     </td>
                                 </tr>
-                                <tr v-if="detailList.length>0">
+                                <tr v-if="detailList.length<=0">
                                     <td colspan="8">暂无记录</td>
                                 </tr>
                             </tbody>
@@ -243,27 +244,43 @@
                                                 <h3 class="m-t-none m-b">{{detailModel.id==0?'添加新数据字典值':'编辑数据字典值'}}</h3>
                                                 <div class="row">
                                                     <div class="form-group">
-                                                        <label class="col-sm-3 control-label">字典值Key：</label>
+                                                        <label class="col-sm-3 control-label">字典值（存放数据库）：</label>
                                                         <div class="col-sm-8">
-                                                            <input v-model="model.key" type="text" class="form-control" maxlength="250" placeholder="字典Key，请填写英文" aria-required="true">
+                                                            <input v-model="detailModel.val" type="text" class="form-control" maxlength="250" placeholder="字典值（存放数据库）" aria-required="true">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="col-sm-3 control-label">字典说明：</label>
+                                                        <label class="col-sm-3 control-label">字典值标签名称：</label>
                                                         <div class="col-sm-8">
-                                                            <input v-model="model.description" type="text" class="form-control" maxlength="250" placeholder="字典说明" aria-required="true">
+                                                            <input v-model="detailModel.title" type="text" class="form-control" maxlength="250" placeholder="字典值标签名称（显示）" aria-required="true">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="col-sm-3 control-label">字典排序：</label>
+                                                        <label class="col-sm-3 control-label">是否默认值：</label>
                                                         <div class="col-sm-8">
-                                                            <input v-model="model.rank" type="number" class="form-control" maxlength="250" placeholder="字典排序，越小越前，仅后台" aria-required="true">
+                                                            <input type="radio" id="y" value="1" v-model="detailModel.isDefault">
+                                                            <label for="y">是（将默认选中）</label>
+
+                                                            <input type="radio" id="n" value="0" v-model="detailModel.isDefault">
+                                                            <label for="n">否</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label">字典值排序：</label>
+                                                        <div class="col-sm-8">
+                                                            <input v-model="detailModel.rank" type="number" class="form-control" maxlength="250" placeholder="字典排序，越小越前" aria-required="true">
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="col-sm-3 control-label">字典值备注：</label>
+                                                        <div class="col-sm-8">
+                                                            <input v-model="detailModel.description" type="text" class="form-control" maxlength="250" placeholder="字典说明" aria-required="true">
                                                         </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <div class="col-sm-5 col-sm-offset-3">
-                                                            <input type="hidden" v-model="model.id" />
-                                                            <button class="btn btn-primary" type="button" v-on:click="doSaveDataDictionary"><i class="fa fa-save"></i> 确定 </button>
+                                                            <input type="hidden" v-model="detailModel.id" />
+                                                            <button class="btn btn-primary" type="button" v-on:click="doSaveDataDictionaryDetail"><i class="fa fa-save"></i> 确定 </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -289,7 +306,8 @@
             optTitle: '添加字典',
             showDetail: false,
             detailList: [],
-            detailModel: {}
+            detailModel: { dataDictionaryId: 0, id: 0, val: '', title: '', description: '', rank: 0, isDefault:0},
+            dataDictId:0
         },
         methods: {
             getDataDictionary: function (id) {
@@ -359,7 +377,7 @@
                 });
             },
             getDataDictionaryDetail: function (id) {
-                let that = this;
+                var that = this;
                 var loading = layer.load(0, {
                     shade: [0.2, '#000'] //0.1透明度的背景
                 });
@@ -373,6 +391,7 @@
                             layer.close(loading);
                             that.showDetail = true;
                             that.detailList = data.detail;
+                            that.dataDictId = id;
                         } else {
                             layer.close(loading);
                             layer.alert(data.message, { icon: 2 });
@@ -385,10 +404,85 @@
                 });
             },
             doEditDetail: function (item) {
-
+                this.detailModel = item;
+                $("#detailModal").modal('show');
             },
             doDelDetail: function (id) {
+                var that = this;
+                top.layer.confirm('确认要删除当前记录？此操作不可恢复！', {
+                    icon: 3,
+                    title: '系统提示',
+                    btn: ['确定', '取消 '] //按钮
+                }, function () {
+                        var loading = layer.load(0, {
+                            shade: [0.2, '#000'] //0.1透明度的背景
+                        });
+                        $.ajax({
+                            type: "POST",
+                            url: "/AdminCP/DataDictionary/DelDataDictionaryDetail",
+                            data: { id: id },
+                            dataType: "JSON",
+                            success: function (data) {
+                                if (data.status == "success") {
+                                    layer.close(loading);
+                                    that.getDataDictionaryDetail(that.dataDictId);
+                                } else {
+                                    layer.close(loading);
+                                    layer.alert(data.message, { icon: 2 });
+                                }
+                            },
+                            error: function () {
+                                layer.close(loading);
+                                layer.alert('执行错误，请联系管理员！', { icon: 2 });
+                            }
+                        });
+                }, function () {
+                });
 
+            },
+            addDetail() {
+                this.detailModel = { dataDictionaryId: this.dataDictId, id: 0, val: '', title: '', description: '', rank: 0, isDefault: 0 };
+                $("#detailModal").modal('show');
+                return;
+            },
+            doSaveDataDictionaryDetail: function () {
+                var that = this;
+                if (!that.detailModel.val) {
+                    alert('请输入字典值!');
+                    return;
+                }
+                if (!that.detailModel.title) {
+                    alert('请输入字典值标签名称!');
+                    return;
+                }
+                var loading = layer.load(0, {
+                    shade: [0.2, '#000'] //0.1透明度的背景
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminCP/DataDictionary/DoSaveDataDictionaryDetail",
+                    data: that.detailModel,
+                    dataType: "JSON",
+                    success: function (data) {
+                        if (data.status == "success") {
+                            layer.close(loading);
+                            layer.msg(data.message, {
+                                time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                    $('#detailModal').modal('hide');
+                                    that.getDataDictionaryDetail(that.dataDictId);
+                                //$("#tb_departments").bootstrapTable('refresh');
+                            });
+                        } else {
+                            layer.close(loading);
+                            layer.alert(data.message, { icon: 2 });
+                        }
+                    },
+                    error: function () {
+                        layer.close(loading);
+                        layer.alert('执行错误，请联系管理员！', { icon: 2 });
+                    }
+                });
             }
         }
     })

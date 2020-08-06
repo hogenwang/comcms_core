@@ -249,7 +249,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     {
                         item.FilePath = entity.FilePath;
                     }
-                    listArticles.BatchUpdate();
+                    listArticles.Update();
                 }
             }
             Core.Admin.WriteLogActions("修改文章栏目(id:" + entity.Id + ");");

@@ -196,5 +196,83 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         }
         #endregion
 
+        #region 保存字典值详情
+        [HttpPost]
+        [MyAuthorize("add", "datadictionary", "JSON")]
+        public IActionResult DoSaveDataDictionaryDetail(DataDictionaryDetail model)
+        {
+            if (string.IsNullOrEmpty(model.Val))
+            {
+                tip.Message = "请输入字典值";
+                return Json(tip);
+            }
+            if(model.DataDictionaryId == 0)
+            {
+                tip.Message = "请先选择一个字典进行查看后再编辑或者添加！";
+                return Json(tip);
+            }
+            if (model.Id == 0 && DataDictionaryDetail.FindCount(DataDictionaryDetail._.Val == model.Val & DataDictionaryDetail._.DataDictionaryId == model.DataDictionaryId, null, null, 0, 0) > 0)
+            {
+                tip.Message = "此字典值已经存在，请填写其他的！";
+                return Json(tip);
+            }
+            if (model.Id > 0 && DataDictionaryDetail.FindCount(DataDictionaryDetail._.Val == model.Val & DataDictionaryDetail._.DataDictionaryId == model.DataDictionaryId & DataDictionaryDetail._.Id != model.Id, null, null, 0, 0) > 0)
+            {
+                tip.Message = "此字典值已经存在，请填写其他的！";
+                return Json(tip);
+            }
+            DataDictionaryDetail entity = null;
+            string tipMessage = "";
+            if (model.Id > 0)
+            {
+                entity = DataDictionaryDetail.Find(DataDictionaryDetail._.Id == model.Id);
+                if (entity == null)
+                {
+                    tip.Message = "系统找不到本记录！";
+                    return Json(tip);
+                }
+                tipMessage = "修改";
+            }
+            else
+            {
+                entity = new DataDictionaryDetail();
+                entity.AddTime = DateTime.Now;
+                entity.DataDictionaryId = model.DataDictionaryId;
+                tipMessage = "添加";
+            }
+            entity.Val = model.Val;
+            entity.Description = model.Description;
+            entity.Title = model.Title;
+            entity.IsDefault = model.IsDefault;
+            entity.Rank = model.Rank;
+            entity.Save();
+
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = $"{tipMessage}数据字典成功！";
+            Admin.WriteLogActions($"{tipMessage}数据字典成功({entity.Id});");
+            return Json(tip);
+        }
+        #endregion
+
+        #region 删除数据字典
+        [HttpPost]
+        [MyAuthorize("del", "datadictionary", "JSON")]
+        public IActionResult DelDataDictionaryDetail(int id)
+        {
+            var entity = DataDictionaryDetail.Find(DataDictionaryDetail._.Id == id);
+            if (entity == null)
+            {
+                tip.Message = "系统找不到本记录！";
+                return Json(tip);
+            }
+
+            Admin.WriteLogActions($"删除数据字典详情（{entity.Id}）;");
+            entity.Delete();
+
+            tip.Message = "删除数据字典值详情成功！";
+            tip.Status = JsonTip.SUCCESS;
+            return Json(tip);
+        }
+        #endregion
     }
 }
