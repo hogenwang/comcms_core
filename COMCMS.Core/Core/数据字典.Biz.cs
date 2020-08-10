@@ -117,6 +117,33 @@ namespace COMCMS.Core
         #endregion
 
         #region 业务操作
+        /// <summary>
+        /// 获取数据字典到Select控件
+        /// </summary>
+        /// <param name="dictKey">字典key</param>
+        /// <param name="selectedVal">选中值</param>
+        /// <param name="id">下拉表单的Id和Name</param>
+        /// <param name="className">样式名称</param>
+        /// <returns></returns>
+        public static String GetDataDictSelect(string dictKey,string selectedVal,string id,string className= "form-control")
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"<select name=\"{id}\" id=\"{id}\" class=\"{className}\">");
+
+            var entity = DataDictionary.Find(DataDictionary._.Key == dictKey);
+            if (entity != null)
+            {
+                IList<DataDictionaryDetail> list = DataDictionaryDetail.FindAll(DataDictionaryDetail._.DataDictionaryId == entity.Id, DataDictionaryDetail._.Rank.Asc().And(DataDictionaryDetail._.Id.Desc()), null, 0, 0);
+                foreach (var item in list)
+                {
+                    string selected = item.Val == selectedVal ? "selected=\"selected\"" : "";
+                    sb.Append($"<option value=\"{item.Val}\" {selected} >{item.Title}</option>");
+                }
+            }
+            sb.Append("</select>");
+            return sb.ToString();
+        }
+
         #endregion
     }
 }
