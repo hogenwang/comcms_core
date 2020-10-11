@@ -10,6 +10,7 @@ using XCode;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using COMCMS.Web.Common;
+using System.Diagnostics;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -60,6 +61,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             ViewBag.host = host;
             ViewBag.contentPath = _env.ContentRootPath;
             ViewBag.rootPath = _env.WebRootPath;
+
+            Admin admin = Admin.GetMyInfo();
+            ViewBag.admin = admin;
 
             return View();
         }

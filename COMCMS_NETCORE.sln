@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2037
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMCMS.Web", "COMCMS.Web\COMCMS.Web.csproj", "{BEE79494-B5B8-49D0-8040-818AE601C800}"
 EndProject
@@ -16,8 +16,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Core", "Lib.Core\Lib.Core.csproj", "{D95FC3C1-B035-4A19-A706-71C31DD1E52D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLife.UserGroup.WebUploader", "NewLife.UserGroup.WebUploader\NewLife.UserGroup.WebUploader.csproj", "{F8D6AE11-1436-44CA-BDD9-4AFD7B489DD0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebTest", "WebTest\WebTest.csproj", "{9226DDB8-57D8-484A-9B3E-CB73CDB2F20B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,10 +51,6 @@ Global
 		{F8D6AE11-1436-44CA-BDD9-4AFD7B489DD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8D6AE11-1436-44CA-BDD9-4AFD7B489DD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8D6AE11-1436-44CA-BDD9-4AFD7B489DD0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9226DDB8-57D8-484A-9B3E-CB73CDB2F20B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9226DDB8-57D8-484A-9B3E-CB73CDB2F20B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9226DDB8-57D8-484A-9B3E-CB73CDB2F20B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9226DDB8-57D8-484A-9B3E-CB73CDB2F20B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
