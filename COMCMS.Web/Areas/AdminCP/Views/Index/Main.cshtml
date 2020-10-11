@@ -1,6 +1,8 @@
 ﻿@{
     Layout = null;
+    Admin my = ViewBag.admin;
 }
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
 <!DOCTYPE html>
 <html>
 
@@ -28,7 +30,7 @@
                         <h5>网站文章数量</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">0</h1>
+                        <h1 class="no-margins">@(Article.FindCount(null,null,null,0,0))</h1>
                         <div class="stat-percent font-bold text-success">
                             <span id="resultspan"></span> <i class="fa fa-bolt"></i>
                         </div>
@@ -40,158 +42,175 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <span class="label label-info pull-right">全部</span>
-                        <h5>网站留言</h5>
+                        <h5>总产品数量</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">0</h1>
-                        <div class="stat-percent font-bold text-info">
-                            0 <i class="fa fa-level-up"></i>
-                        </div>
-                        <small>新留言</small>
+                        <h1 class="no-margins">@(Product.FindCount(null,null,null,0,0))</h1>
+                        <small>系统总产品数量</small>
                     </div>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <span class="label label-primary pull-right">计划任务</span>
-                        <h5>生成sitemap.xml</h5>
+                        <h5>总会员数量</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"><button type="button" class="btn btn-success" onclick="doCreateSitemap();">执行生成</button></h1>
-                        <div class="stat-percent font-bold text-success">
-                            <span id="resultsitemapspan"></span> <i class="fa fa-bolt"></i>
-                        </div>
-                        <small>如果有更新内容，请执行</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <span class="label label-danger pull-right">最近一个月</span>
-                        <h5>活跃用户</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins">0</h1>
+                        <h1 class="no-margins">@(Member.FindCount(null,null,null,0,0))</h1>
                         <div class="stat-percent font-bold text-danger">
                             <i class="fa fa-level-up"></i>
                         </div>
-                        <small>@(DateTime.Now.Month)月</small>
+                        <small>系统总会员数量</small>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>留言</h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ibox-content ibox-heading">
-                        <h3><i class="fa fa-envelope-o"></i> 最新留言</h3>
-                        <small><i class="fa fa-tim"></i> 您有0条未读消息</small>
+                        <h5>未读留言</h5>
                     </div>
                     <div class="ibox-content">
-                        <div class="feed-activity-list">
-                            @*@foreach (Guestbook item in ViewBag.listguestbook)
-                                {
-                                    <div class="feed-element">
-                                        <div>
-                                            <small class="pull-right text-navy"></small>
-                                            <strong>@item.UserName</strong>
-                                            <div>@item.Title</div>
-                                            <small class="text-muted">@item.AddTime.ToString("yyyy-MM-dd HH:mm")</small>
-                                        </div>
-                                    </div>
-                                }*@
-
-                        </div>
+                        <h1 class="no-margins" id="smsCount">@(Guestbook.FindCount(Guestbook._.IsRead==0, null,null,0,0))</h1>
+                        <small>未读留言数量</small>
                     </div>
                 </div>
             </div>
-
-            <div class="col-sm-8">
-
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-title">
-                                <h5>服务器信息</h5>
-                                <div class="ibox-tools">
-                                    <a class="collapse-link">
-                                        <i class="fa fa-chevron-up"></i>
-                                    </a>
-                                    <a class="close-link">
-                                        <i class="fa fa-times"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="ibox-content">
-
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <table class="table table-hover margin bottom">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">项目名称</th>
-                                                    <th>详细信息</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="text-center small">本程序绝对路径</td>
-                                                    <td>
-                                                        @ViewBag.contentPath
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center small">站点物理路径</td>
-                                                    <td>
-                                                        @ViewBag.rootPath
-
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center small">服务器地址</td>
-                                                    <td>
-                                                        @Utils.GetServerUrl()
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center small">程序端口</td>
-                                                    <td>
-                                                        @ViewBag.port
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center small">本地IP地址</td>
-                                                    <td>
-                                                        @Utils.GetIP()
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-
         </div>
+
+        @if(my.Roles.IsSuperAdmin == 1)
+        {
+    <div class="row">
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>服务器信息</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-hover table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center small">服务器名称</td>
+                                        <td>
+                                            @Environment.MachineName
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center small">操作系统</td>
+                                        <td>
+                                            @System.Runtime.InteropServices.RuntimeInformation.OSDescription
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center small">系统架构</td>
+                                        <td>
+                                            @System.Runtime.InteropServices.RuntimeInformation.OSArchitecture
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center small">核心数</td>
+                                        <td>
+                                            @Environment.ProcessorCount
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>应用程序信息</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-hover table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center small">本程序绝对路径</td>
+                                        <td>
+                                            @ViewBag.contentPath
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center small">站点物理路径</td>
+                                        <td>
+                                            @ViewBag.rootPath
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center small">服务器地址</td>
+                                        <td>
+                                            @Utils.GetServerUrl():@(ViewBag.port)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center small">服务器IP地址</td>
+                                        <td>
+                                            @Utils.GetIP()
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>.NET Core 信息</h5>
+                </div>
+                <div class="ibox-content">
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="table table-hover table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center small">.NET Core版本</td>
+                                        <td>
+                                            @Html.Raw(System.Runtime.InteropServices.RuntimeInformation.FrameworkDescription)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center small">环境变量</td>
+                                        <td>
+                                            @Html.Raw(env.EnvironmentName)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center small">内存占用</td>
+                                        <td>
+                                            @Html.Raw(((Double)System.Diagnostics.Process.GetCurrentProcess().WorkingSet64 / 1048576).ToString("N2") + " MB")
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-center small">启动时间</td>
+                                        <td>
+                                            @System.Diagnostics.Process.GetCurrentProcess().StartTime.ToString("yyyy-MM-dd HH:mm:ss")
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        }
     </div>
     <script src="~/js/treegrid/jquery.treegrid.min.js"></script>
     <script src="~/js/treegrid/jquery.treegrid.bootstrap3.js"></script>
