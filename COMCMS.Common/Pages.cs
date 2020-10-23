@@ -38,7 +38,7 @@ namespace COMCMS.Common
             StringBuilder strPage = new StringBuilder();
             string pageLink = "";// url + "?id=" + HttpContext.Current.Request.QueryString["id"] + "&page={0}";
             string strQueryString = MyHttpContext.Current.Request.QueryString.ToString().ToLower();
-            if (isRewrite != 5)
+            if (isRewrite != 5 && isRewrite != 99)
                 url = url.ToLower();
             pageLink = url + "?" + strQueryString;
             string currPage = MyHttpContext.Current.Request.Query["page"];
