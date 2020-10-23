@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="NewLife.Core" Version="8.10.2020.1002" />
     <PackageReference Include="Senparc.Weixin" Version="6.7.600" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.10.600" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.10.601" />
   </ItemGroup>
 
   <ItemGroup>
