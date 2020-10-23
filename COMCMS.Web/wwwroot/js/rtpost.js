@@ -354,7 +354,7 @@ function DoAdminLogin(formId, rules, messages) {
 
 //后台列表执行批量操作
 function doBatchAction(url, title) {
-    var list = $('#tb_departments').bootstrapTable('getAllSelections');
+    var list = $('#tb_departments').bootstrapTable('getSelections');
     var ids = [];
     if (!list || list.length < 1) {
         layer.alert("请至少选择一条记录！", { icon: 2 });
@@ -363,6 +363,9 @@ function doBatchAction(url, title) {
     list.map(function (item, index) {
         if (item.id) {
             ids.push(item.id);
+        }
+        if (item.Id) {
+            ids.push(item.Id);
         }
     })
 

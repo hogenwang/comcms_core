@@ -29,8 +29,9 @@ namespace COMCMS.Web.Controllers
             {
                 if (Utils.IsInt(model.LinkURL))//如果是数字，则跳转到详情
                 {
-                    //Redirect($"/aritcle/{model.LinkURL}.html");
-                    return Redirect($"/Article/Detail/{model.LinkURL}");
+                    //return Redirect($"/Article/Detail/{model.LinkURL}");
+                    string linkUrl = ViewsHelper.EchoArticleURL(int.Parse(model.LinkURL));
+                    return Redirect(linkUrl);
                 }
                 else
                 {

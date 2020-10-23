@@ -7,7 +7,7 @@ using COMCMS.Common;
 using XCode;
 
 
-namespace COMCMS.Web.Common
+namespace COMCMS.Core
 {
     /// <summary>
     /// 识图方法
@@ -53,12 +53,14 @@ namespace COMCMS.Web.Common
             if (model == null)
                 return "javascript:;";
 
-            if (!string.IsNullOrEmpty(model.ArticleKind.FilePath))
+            ArticleCategory categoty = ArticleCategory.FindById(model.KId);
+
+            if (categoty != null && !string.IsNullOrEmpty(categoty.FilePath))
             {
-                string url = $"{model.ArticleKind.FilePath}/{model.Id}.html";
+                string url = $"{categoty.FilePath}/{model.Id}.html";
                 if (!string.IsNullOrEmpty(model.FileName))
                 {
-                    url = $"{model.ArticleKind.FilePath}/{model.FileName}";
+                    url = $"{categoty.FilePath}/{model.FileName}";
                 }
                 return url;
             }
@@ -73,7 +75,7 @@ namespace COMCMS.Web.Common
         /// <returns></returns>
         public static string EchoURL(Product model)
         {
-           return $"/product/detail/{model.Id}";
+            return $"/product/detail/{model.Id}";
         }
 
         /// <summary>
@@ -82,7 +84,7 @@ namespace COMCMS.Web.Common
         /// <param name="ctype"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static string EchoURL(Utils.CMSType ctype,int id)
+        public static string EchoURL(Utils.CMSType ctype, int id)
         {
             string url = "/";
             switch (ctype)
@@ -104,7 +106,7 @@ namespace COMCMS.Web.Common
                     url = EchoURL(p);
                     break;
                 default:
-                    url= "/";
+                    url = "/";
                     break;
             }
 
