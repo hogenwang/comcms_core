@@ -35,7 +35,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         public IActionResult AddArticleCategory()
         {
             //获取上级栏目
-            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, false);
+            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, true);
             ViewBag.ListTree = list;
             //获取模板 模板规则，以Index_开头的，为栏目列表，以Detial_开头的为文章详情
             List<string> listTpls = new List<string>();
@@ -115,7 +115,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 return EchoTipPage("系统找不到本记录！");
             }
             //获取上级栏目
-            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, false);
+            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, true);
             ViewBag.ListTree = list;
 
             //获取模板 模板规则，以Index_开头的，为栏目列表，以Detial_开头的为文章详情
@@ -300,7 +300,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         public IActionResult ArticleList()
         {
             //获取上级栏目
-            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, false);
+            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, true);
             ViewBag.ListKinds = list;
             Core.Admin.WriteLogActions("查看文章列表;");
             return View();
@@ -363,7 +363,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         [MyAuthorize("add", "article")]
         public IActionResult AddArticle()
         {
-            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, false);
+            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, true);
             ViewBag.ListKinds = list;
             string lastkid = SessionHelper.GetSession("com_add_article_kid").ToString();
             ViewBag.lastkid = lastkid;
@@ -439,7 +439,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         [MyAuthorize("edit", "article")]
         public IActionResult EditArticle(int id)
         {
-            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, false);
+            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, true);
             ViewBag.ListKinds = list;
 
             Article entity = Article.Find(Article._.Id == id);
@@ -572,7 +572,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         //删除文章
         [HttpPost]
         [MyAuthorize("del", "article", "JSON")]
-        public JsonResult DelArtice(int id)
+        public JsonResult DelArticle(int id)
         {
             Article entity = Article.Find(Article._.Id == id);
             if (entity == null)
