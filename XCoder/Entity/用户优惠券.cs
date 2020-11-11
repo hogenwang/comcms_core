@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("用户优惠券")]
     [BindTable("MemberCoupon", Description = "用户优惠券", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class MemberCoupon : IMemberCoupon
+    public partial class MemberCoupon
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private Int32 _UId;
         /// <summary>用户ID</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("UId", "用户ID", "", Master = true)]
-        public Int32 UId { get => _UId; set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
+        public Int32 UId { get => _UId; set { if (OnPropertyChanging("UId", value)) { _UId = value; OnPropertyChanged("UId"); } } }
 
         private String _ItemNO;
         /// <summary>券号</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("券号")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("ItemNO", "券号", "")]
-        public String ItemNO { get => _ItemNO; set { if (OnPropertyChanging(__.ItemNO, value)) { _ItemNO = value; OnPropertyChanged(__.ItemNO); } } }
+        public String ItemNO { get => _ItemNO; set { if (OnPropertyChanging("ItemNO", value)) { _ItemNO = value; OnPropertyChanged("ItemNO"); } } }
 
         private Int32 _CouponId;
         /// <summary>优惠券ID</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("优惠券ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("CouponId", "优惠券ID", "")]
-        public Int32 CouponId { get => _CouponId; set { if (OnPropertyChanging(__.CouponId, value)) { _CouponId = value; OnPropertyChanged(__.CouponId); } } }
+        public Int32 CouponId { get => _CouponId; set { if (OnPropertyChanging("CouponId", value)) { _CouponId = value; OnPropertyChanged("CouponId"); } } }
 
         private Int32 _CouponType;
         /// <summary>优惠券类型，0 现金用券，1打折券</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("优惠券类型，0 现金用券，1打折券")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("CouponType", "优惠券类型，0 现金用券，1打折券", "")]
-        public Int32 CouponType { get => _CouponType; set { if (OnPropertyChanging(__.CouponType, value)) { _CouponType = value; OnPropertyChanged(__.CouponType); } } }
+        public Int32 CouponType { get => _CouponType; set { if (OnPropertyChanging("CouponType", value)) { _CouponType = value; OnPropertyChanged("CouponType"); } } }
 
         private Decimal _DiscuountRates;
         /// <summary>打折率，只有是打折券才有用</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("打折率，只有是打折券才有用")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("DiscuountRates", "打折率，只有是打折券才有用", "")]
-        public Decimal DiscuountRates { get => _DiscuountRates; set { if (OnPropertyChanging(__.DiscuountRates, value)) { _DiscuountRates = value; OnPropertyChanged(__.DiscuountRates); } } }
+        public Decimal DiscuountRates { get => _DiscuountRates; set { if (OnPropertyChanging("DiscuountRates", value)) { _DiscuountRates = value; OnPropertyChanged("DiscuountRates"); } } }
 
         private Int32 _IsLimit;
         /// <summary>是否有类别限制，0 无限制；1 是类别限制，2是商品限制</summary>
@@ -69,7 +72,7 @@ namespace COMCMS.Core
         [Description("是否有类别限制，0 无限制；1 是类别限制，2是商品限制")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsLimit", "是否有类别限制，0 无限制；1 是类别限制，2是商品限制", "")]
-        public Int32 IsLimit { get => _IsLimit; set { if (OnPropertyChanging(__.IsLimit, value)) { _IsLimit = value; OnPropertyChanged(__.IsLimit); } } }
+        public Int32 IsLimit { get => _IsLimit; set { if (OnPropertyChanging("IsLimit", value)) { _IsLimit = value; OnPropertyChanged("IsLimit"); } } }
 
         private Decimal _Price;
         /// <summary>面额</summary>
@@ -77,7 +80,7 @@ namespace COMCMS.Core
         [Description("面额")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Price", "面额", "")]
-        public Decimal Price { get => _Price; set { if (OnPropertyChanging(__.Price, value)) { _Price = value; OnPropertyChanged(__.Price); } } }
+        public Decimal Price { get => _Price; set { if (OnPropertyChanging("Price", value)) { _Price = value; OnPropertyChanged("Price"); } } }
 
         private Decimal _NeedPrice;
         /// <summary>需要消费面额</summary>
@@ -85,7 +88,7 @@ namespace COMCMS.Core
         [Description("需要消费面额")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("NeedPrice", "需要消费面额", "")]
-        public Decimal NeedPrice { get => _NeedPrice; set { if (OnPropertyChanging(__.NeedPrice, value)) { _NeedPrice = value; OnPropertyChanged(__.NeedPrice); } } }
+        public Decimal NeedPrice { get => _NeedPrice; set { if (OnPropertyChanging("NeedPrice", value)) { _NeedPrice = value; OnPropertyChanged("NeedPrice"); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -93,7 +96,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging("AddTime", value)) { _AddTime = value; OnPropertyChanged("AddTime"); } } }
 
         private DateTime _StartTime;
         /// <summary>添加时间</summary>
@@ -101,7 +104,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("StartTime", "添加时间", "")]
-        public DateTime StartTime { get => _StartTime; set { if (OnPropertyChanging(__.StartTime, value)) { _StartTime = value; OnPropertyChanged(__.StartTime); } } }
+        public DateTime StartTime { get => _StartTime; set { if (OnPropertyChanging("StartTime", value)) { _StartTime = value; OnPropertyChanged("StartTime"); } } }
 
         private DateTime _EndTime;
         /// <summary>添加时间</summary>
@@ -109,7 +112,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("EndTime", "添加时间", "")]
-        public DateTime EndTime { get => _EndTime; set { if (OnPropertyChanging(__.EndTime, value)) { _EndTime = value; OnPropertyChanged(__.EndTime); } } }
+        public DateTime EndTime { get => _EndTime; set { if (OnPropertyChanging("EndTime", value)) { _EndTime = value; OnPropertyChanged("EndTime"); } } }
 
         private Int32 _IsUse;
         /// <summary>是否使用</summary>
@@ -117,7 +120,7 @@ namespace COMCMS.Core
         [Description("是否使用")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsUse", "是否使用", "")]
-        public Int32 IsUse { get => _IsUse; set { if (OnPropertyChanging(__.IsUse, value)) { _IsUse = value; OnPropertyChanged(__.IsUse); } } }
+        public Int32 IsUse { get => _IsUse; set { if (OnPropertyChanging("IsUse", value)) { _IsUse = value; OnPropertyChanged("IsUse"); } } }
 
         private DateTime _UseTime;
         /// <summary>使用时间</summary>
@@ -125,7 +128,7 @@ namespace COMCMS.Core
         [Description("使用时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("UseTime", "使用时间", "")]
-        public DateTime UseTime { get => _UseTime; set { if (OnPropertyChanging(__.UseTime, value)) { _UseTime = value; OnPropertyChanged(__.UseTime); } } }
+        public DateTime UseTime { get => _UseTime; set { if (OnPropertyChanging("UseTime", value)) { _UseTime = value; OnPropertyChanged("UseTime"); } } }
 
         private String _OrderNum;
         /// <summary>订单号（使用后）</summary>
@@ -133,7 +136,7 @@ namespace COMCMS.Core
         [Description("订单号（使用后）")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("OrderNum", "订单号（使用后）", "")]
-        public String OrderNum { get => _OrderNum; set { if (OnPropertyChanging(__.OrderNum, value)) { _OrderNum = value; OnPropertyChanged(__.OrderNum); } } }
+        public String OrderNum { get => _OrderNum; set { if (OnPropertyChanging("OrderNum", value)) { _OrderNum = value; OnPropertyChanged("OrderNum"); } } }
 
         private Int32 _OrderId;
         /// <summary>订单编号（使用后）</summary>
@@ -141,7 +144,7 @@ namespace COMCMS.Core
         [Description("订单编号（使用后）")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("OrderId", "订单编号（使用后）", "")]
-        public Int32 OrderId { get => _OrderId; set { if (OnPropertyChanging(__.OrderId, value)) { _OrderId = value; OnPropertyChanged(__.OrderId); } } }
+        public Int32 OrderId { get => _OrderId; set { if (OnPropertyChanging("OrderId", value)) { _OrderId = value; OnPropertyChanged("OrderId"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -154,22 +157,22 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.UId: return _UId;
-                    case __.ItemNO: return _ItemNO;
-                    case __.CouponId: return _CouponId;
-                    case __.CouponType: return _CouponType;
-                    case __.DiscuountRates: return _DiscuountRates;
-                    case __.IsLimit: return _IsLimit;
-                    case __.Price: return _Price;
-                    case __.NeedPrice: return _NeedPrice;
-                    case __.AddTime: return _AddTime;
-                    case __.StartTime: return _StartTime;
-                    case __.EndTime: return _EndTime;
-                    case __.IsUse: return _IsUse;
-                    case __.UseTime: return _UseTime;
-                    case __.OrderNum: return _OrderNum;
-                    case __.OrderId: return _OrderId;
+                    case "Id": return _Id;
+                    case "UId": return _UId;
+                    case "ItemNO": return _ItemNO;
+                    case "CouponId": return _CouponId;
+                    case "CouponType": return _CouponType;
+                    case "DiscuountRates": return _DiscuountRates;
+                    case "IsLimit": return _IsLimit;
+                    case "Price": return _Price;
+                    case "NeedPrice": return _NeedPrice;
+                    case "AddTime": return _AddTime;
+                    case "StartTime": return _StartTime;
+                    case "EndTime": return _EndTime;
+                    case "IsUse": return _IsUse;
+                    case "UseTime": return _UseTime;
+                    case "OrderNum": return _OrderNum;
+                    case "OrderId": return _OrderId;
                     default: return base[name];
                 }
             }
@@ -177,22 +180,22 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.UId: _UId = value.ToInt(); break;
-                    case __.ItemNO: _ItemNO = Convert.ToString(value); break;
-                    case __.CouponId: _CouponId = value.ToInt(); break;
-                    case __.CouponType: _CouponType = value.ToInt(); break;
-                    case __.DiscuountRates: _DiscuountRates = Convert.ToDecimal(value); break;
-                    case __.IsLimit: _IsLimit = value.ToInt(); break;
-                    case __.Price: _Price = Convert.ToDecimal(value); break;
-                    case __.NeedPrice: _NeedPrice = Convert.ToDecimal(value); break;
-                    case __.AddTime: _AddTime = value.ToDateTime(); break;
-                    case __.StartTime: _StartTime = value.ToDateTime(); break;
-                    case __.EndTime: _EndTime = value.ToDateTime(); break;
-                    case __.IsUse: _IsUse = value.ToInt(); break;
-                    case __.UseTime: _UseTime = value.ToDateTime(); break;
-                    case __.OrderNum: _OrderNum = Convert.ToString(value); break;
-                    case __.OrderId: _OrderId = value.ToInt(); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "UId": _UId = value.ToInt(); break;
+                    case "ItemNO": _ItemNO = Convert.ToString(value); break;
+                    case "CouponId": _CouponId = value.ToInt(); break;
+                    case "CouponType": _CouponType = value.ToInt(); break;
+                    case "DiscuountRates": _DiscuountRates = Convert.ToDecimal(value); break;
+                    case "IsLimit": _IsLimit = value.ToInt(); break;
+                    case "Price": _Price = Convert.ToDecimal(value); break;
+                    case "NeedPrice": _NeedPrice = Convert.ToDecimal(value); break;
+                    case "AddTime": _AddTime = value.ToDateTime(); break;
+                    case "StartTime": _StartTime = value.ToDateTime(); break;
+                    case "EndTime": _EndTime = value.ToDateTime(); break;
+                    case "IsUse": _IsUse = value.ToInt(); break;
+                    case "UseTime": _UseTime = value.ToDateTime(); break;
+                    case "OrderNum": _OrderNum = Convert.ToString(value); break;
+                    case "OrderId": _OrderId = value.ToInt(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -204,52 +207,52 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>用户ID</summary>
-            public static readonly Field UId = FindByName(__.UId);
+            public static readonly Field UId = FindByName("UId");
 
             /// <summary>券号</summary>
-            public static readonly Field ItemNO = FindByName(__.ItemNO);
+            public static readonly Field ItemNO = FindByName("ItemNO");
 
             /// <summary>优惠券ID</summary>
-            public static readonly Field CouponId = FindByName(__.CouponId);
+            public static readonly Field CouponId = FindByName("CouponId");
 
             /// <summary>优惠券类型，0 现金用券，1打折券</summary>
-            public static readonly Field CouponType = FindByName(__.CouponType);
+            public static readonly Field CouponType = FindByName("CouponType");
 
             /// <summary>打折率，只有是打折券才有用</summary>
-            public static readonly Field DiscuountRates = FindByName(__.DiscuountRates);
+            public static readonly Field DiscuountRates = FindByName("DiscuountRates");
 
             /// <summary>是否有类别限制，0 无限制；1 是类别限制，2是商品限制</summary>
-            public static readonly Field IsLimit = FindByName(__.IsLimit);
+            public static readonly Field IsLimit = FindByName("IsLimit");
 
             /// <summary>面额</summary>
-            public static readonly Field Price = FindByName(__.Price);
+            public static readonly Field Price = FindByName("Price");
 
             /// <summary>需要消费面额</summary>
-            public static readonly Field NeedPrice = FindByName(__.NeedPrice);
+            public static readonly Field NeedPrice = FindByName("NeedPrice");
 
             /// <summary>添加时间</summary>
-            public static readonly Field AddTime = FindByName(__.AddTime);
+            public static readonly Field AddTime = FindByName("AddTime");
 
             /// <summary>添加时间</summary>
-            public static readonly Field StartTime = FindByName(__.StartTime);
+            public static readonly Field StartTime = FindByName("StartTime");
 
             /// <summary>添加时间</summary>
-            public static readonly Field EndTime = FindByName(__.EndTime);
+            public static readonly Field EndTime = FindByName("EndTime");
 
             /// <summary>是否使用</summary>
-            public static readonly Field IsUse = FindByName(__.IsUse);
+            public static readonly Field IsUse = FindByName("IsUse");
 
             /// <summary>使用时间</summary>
-            public static readonly Field UseTime = FindByName(__.UseTime);
+            public static readonly Field UseTime = FindByName("UseTime");
 
             /// <summary>订单号（使用后）</summary>
-            public static readonly Field OrderNum = FindByName(__.OrderNum);
+            public static readonly Field OrderNum = FindByName("OrderNum");
 
             /// <summary>订单编号（使用后）</summary>
-            public static readonly Field OrderId = FindByName(__.OrderId);
+            public static readonly Field OrderId = FindByName("OrderId");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -305,67 +308,6 @@ namespace COMCMS.Core
             /// <summary>订单编号（使用后）</summary>
             public const String OrderId = "OrderId";
         }
-        #endregion
-    }
-
-    /// <summary>用户优惠券接口</summary>
-    public partial interface IMemberCoupon
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>用户ID</summary>
-        Int32 UId { get; set; }
-
-        /// <summary>券号</summary>
-        String ItemNO { get; set; }
-
-        /// <summary>优惠券ID</summary>
-        Int32 CouponId { get; set; }
-
-        /// <summary>优惠券类型，0 现金用券，1打折券</summary>
-        Int32 CouponType { get; set; }
-
-        /// <summary>打折率，只有是打折券才有用</summary>
-        Decimal DiscuountRates { get; set; }
-
-        /// <summary>是否有类别限制，0 无限制；1 是类别限制，2是商品限制</summary>
-        Int32 IsLimit { get; set; }
-
-        /// <summary>面额</summary>
-        Decimal Price { get; set; }
-
-        /// <summary>需要消费面额</summary>
-        Decimal NeedPrice { get; set; }
-
-        /// <summary>添加时间</summary>
-        DateTime AddTime { get; set; }
-
-        /// <summary>添加时间</summary>
-        DateTime StartTime { get; set; }
-
-        /// <summary>添加时间</summary>
-        DateTime EndTime { get; set; }
-
-        /// <summary>是否使用</summary>
-        Int32 IsUse { get; set; }
-
-        /// <summary>使用时间</summary>
-        DateTime UseTime { get; set; }
-
-        /// <summary>订单号（使用后）</summary>
-        String OrderNum { get; set; }
-
-        /// <summary>订单编号（使用后）</summary>
-        Int32 OrderId { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

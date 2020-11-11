@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("系统配置")]
     [BindTable("Config", Description = "系统配置", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class Config : IConfig
+    public partial class Config
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private String _SiteName;
         /// <summary>站点名称</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("站点名称")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("SiteName", "站点名称", "")]
-        public String SiteName { get => _SiteName; set { if (OnPropertyChanging(__.SiteName, value)) { _SiteName = value; OnPropertyChanged(__.SiteName); } } }
+        public String SiteName { get => _SiteName; set { if (OnPropertyChanging("SiteName", value)) { _SiteName = value; OnPropertyChanged("SiteName"); } } }
 
         private String _SiteUrl;
         /// <summary>站点URL</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("站点URL")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("SiteUrl", "站点URL", "")]
-        public String SiteUrl { get => _SiteUrl; set { if (OnPropertyChanging(__.SiteUrl, value)) { _SiteUrl = value; OnPropertyChanged(__.SiteUrl); } } }
+        public String SiteUrl { get => _SiteUrl; set { if (OnPropertyChanging("SiteUrl", value)) { _SiteUrl = value; OnPropertyChanged("SiteUrl"); } } }
 
         private String _SiteLogo;
         /// <summary>站点LOGO</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("站点LOGO")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("SiteLogo", "站点LOGO", "")]
-        public String SiteLogo { get => _SiteLogo; set { if (OnPropertyChanging(__.SiteLogo, value)) { _SiteLogo = value; OnPropertyChanged(__.SiteLogo); } } }
+        public String SiteLogo { get => _SiteLogo; set { if (OnPropertyChanging("SiteLogo", value)) { _SiteLogo = value; OnPropertyChanged("SiteLogo"); } } }
 
         private String _Icp;
         /// <summary>ICP备案</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("ICP备案")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Icp", "ICP备案", "")]
-        public String Icp { get => _Icp; set { if (OnPropertyChanging(__.Icp, value)) { _Icp = value; OnPropertyChanged(__.Icp); } } }
+        public String Icp { get => _Icp; set { if (OnPropertyChanging("Icp", value)) { _Icp = value; OnPropertyChanged("Icp"); } } }
 
         private String _SiteEmail;
         /// <summary>联系我们Email</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("联系我们Email")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("SiteEmail", "联系我们Email", "")]
-        public String SiteEmail { get => _SiteEmail; set { if (OnPropertyChanging(__.SiteEmail, value)) { _SiteEmail = value; OnPropertyChanged(__.SiteEmail); } } }
+        public String SiteEmail { get => _SiteEmail; set { if (OnPropertyChanging("SiteEmail", value)) { _SiteEmail = value; OnPropertyChanged("SiteEmail"); } } }
 
         private String _SiteTel;
         /// <summary>网站电话</summary>
@@ -69,7 +72,7 @@ namespace COMCMS.Core
         [Description("网站电话")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("SiteTel", "网站电话", "")]
-        public String SiteTel { get => _SiteTel; set { if (OnPropertyChanging(__.SiteTel, value)) { _SiteTel = value; OnPropertyChanged(__.SiteTel); } } }
+        public String SiteTel { get => _SiteTel; set { if (OnPropertyChanging("SiteTel", value)) { _SiteTel = value; OnPropertyChanged("SiteTel"); } } }
 
         private String _Copyright;
         /// <summary>版权所有</summary>
@@ -77,7 +80,7 @@ namespace COMCMS.Core
         [Description("版权所有")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("Copyright", "版权所有", "")]
-        public String Copyright { get => _Copyright; set { if (OnPropertyChanging(__.Copyright, value)) { _Copyright = value; OnPropertyChanged(__.Copyright); } } }
+        public String Copyright { get => _Copyright; set { if (OnPropertyChanging("Copyright", value)) { _Copyright = value; OnPropertyChanged("Copyright"); } } }
 
         private Boolean _IsCloseSite;
         /// <summary>是否关闭网站</summary>
@@ -85,7 +88,7 @@ namespace COMCMS.Core
         [Description("是否关闭网站")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsCloseSite", "是否关闭网站", "")]
-        public Boolean IsCloseSite { get => _IsCloseSite; set { if (OnPropertyChanging(__.IsCloseSite, value)) { _IsCloseSite = value; OnPropertyChanged(__.IsCloseSite); } } }
+        public Boolean IsCloseSite { get => _IsCloseSite; set { if (OnPropertyChanging("IsCloseSite", value)) { _IsCloseSite = value; OnPropertyChanged("IsCloseSite"); } } }
 
         private String _CloseReason;
         /// <summary>关闭原因</summary>
@@ -93,7 +96,7 @@ namespace COMCMS.Core
         [Description("关闭原因")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("CloseReason", "关闭原因", "")]
-        public String CloseReason { get => _CloseReason; set { if (OnPropertyChanging(__.CloseReason, value)) { _CloseReason = value; OnPropertyChanged(__.CloseReason); } } }
+        public String CloseReason { get => _CloseReason; set { if (OnPropertyChanging("CloseReason", value)) { _CloseReason = value; OnPropertyChanged("CloseReason"); } } }
 
         private String _CountScript;
         /// <summary>统计代码</summary>
@@ -101,7 +104,7 @@ namespace COMCMS.Core
         [Description("统计代码")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("CountScript", "统计代码", "")]
-        public String CountScript { get => _CountScript; set { if (OnPropertyChanging(__.CountScript, value)) { _CountScript = value; OnPropertyChanged(__.CountScript); } } }
+        public String CountScript { get => _CountScript; set { if (OnPropertyChanging("CountScript", value)) { _CountScript = value; OnPropertyChanged("CountScript"); } } }
 
         private String _WeiboQRCode;
         /// <summary>微博二维码</summary>
@@ -109,7 +112,7 @@ namespace COMCMS.Core
         [Description("微博二维码")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("WeiboQRCode", "微博二维码", "")]
-        public String WeiboQRCode { get => _WeiboQRCode; set { if (OnPropertyChanging(__.WeiboQRCode, value)) { _WeiboQRCode = value; OnPropertyChanged(__.WeiboQRCode); } } }
+        public String WeiboQRCode { get => _WeiboQRCode; set { if (OnPropertyChanging("WeiboQRCode", value)) { _WeiboQRCode = value; OnPropertyChanged("WeiboQRCode"); } } }
 
         private String _WinxinQRCode;
         /// <summary>微信二维码</summary>
@@ -117,7 +120,7 @@ namespace COMCMS.Core
         [Description("微信二维码")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("WinxinQRCode", "微信二维码", "")]
-        public String WinxinQRCode { get => _WinxinQRCode; set { if (OnPropertyChanging(__.WinxinQRCode, value)) { _WinxinQRCode = value; OnPropertyChanged(__.WinxinQRCode); } } }
+        public String WinxinQRCode { get => _WinxinQRCode; set { if (OnPropertyChanging("WinxinQRCode", value)) { _WinxinQRCode = value; OnPropertyChanged("WinxinQRCode"); } } }
 
         private String _Keyword;
         /// <summary>关键字</summary>
@@ -125,7 +128,7 @@ namespace COMCMS.Core
         [Description("关键字")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Keyword", "关键字", "")]
-        public String Keyword { get => _Keyword; set { if (OnPropertyChanging(__.Keyword, value)) { _Keyword = value; OnPropertyChanged(__.Keyword); } } }
+        public String Keyword { get => _Keyword; set { if (OnPropertyChanging("Keyword", value)) { _Keyword = value; OnPropertyChanged("Keyword"); } } }
 
         private String _Description;
         /// <summary>描述</summary>
@@ -133,7 +136,7 @@ namespace COMCMS.Core
         [Description("描述")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Description", "描述", "")]
-        public String Description { get => _Description; set { if (OnPropertyChanging(__.Description, value)) { _Description = value; OnPropertyChanged(__.Description); } } }
+        public String Description { get => _Description; set { if (OnPropertyChanging("Description", value)) { _Description = value; OnPropertyChanged("Description"); } } }
 
         private String _IndexTitle;
         /// <summary>首页标题</summary>
@@ -141,7 +144,7 @@ namespace COMCMS.Core
         [Description("首页标题")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("IndexTitle", "首页标题", "")]
-        public String IndexTitle { get => _IndexTitle; set { if (OnPropertyChanging(__.IndexTitle, value)) { _IndexTitle = value; OnPropertyChanged(__.IndexTitle); } } }
+        public String IndexTitle { get => _IndexTitle; set { if (OnPropertyChanging("IndexTitle", value)) { _IndexTitle = value; OnPropertyChanged("IndexTitle"); } } }
 
         private Int32 _IsRewrite;
         /// <summary>是否URL地址重写</summary>
@@ -149,7 +152,7 @@ namespace COMCMS.Core
         [Description("是否URL地址重写")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsRewrite", "是否URL地址重写", "")]
-        public Int32 IsRewrite { get => _IsRewrite; set { if (OnPropertyChanging(__.IsRewrite, value)) { _IsRewrite = value; OnPropertyChanged(__.IsRewrite); } } }
+        public Int32 IsRewrite { get => _IsRewrite; set { if (OnPropertyChanging("IsRewrite", value)) { _IsRewrite = value; OnPropertyChanged("IsRewrite"); } } }
 
         private Int32 _SearchMinTime;
         /// <summary>搜索最小时间间距 秒</summary>
@@ -157,7 +160,7 @@ namespace COMCMS.Core
         [Description("搜索最小时间间距 秒")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("SearchMinTime", "搜索最小时间间距 秒", "")]
-        public Int32 SearchMinTime { get => _SearchMinTime; set { if (OnPropertyChanging(__.SearchMinTime, value)) { _SearchMinTime = value; OnPropertyChanged(__.SearchMinTime); } } }
+        public Int32 SearchMinTime { get => _SearchMinTime; set { if (OnPropertyChanging("SearchMinTime", value)) { _SearchMinTime = value; OnPropertyChanged("SearchMinTime"); } } }
 
         private String _OnlineQQ;
         /// <summary>在线QQ</summary>
@@ -165,7 +168,7 @@ namespace COMCMS.Core
         [Description("在线QQ")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("OnlineQQ", "在线QQ", "")]
-        public String OnlineQQ { get => _OnlineQQ; set { if (OnPropertyChanging(__.OnlineQQ, value)) { _OnlineQQ = value; OnPropertyChanged(__.OnlineQQ); } } }
+        public String OnlineQQ { get => _OnlineQQ; set { if (OnPropertyChanging("OnlineQQ", value)) { _OnlineQQ = value; OnPropertyChanged("OnlineQQ"); } } }
 
         private String _OnlineSkype;
         /// <summary>在线Skype</summary>
@@ -173,7 +176,7 @@ namespace COMCMS.Core
         [Description("在线Skype")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("OnlineSkype", "在线Skype", "")]
-        public String OnlineSkype { get => _OnlineSkype; set { if (OnPropertyChanging(__.OnlineSkype, value)) { _OnlineSkype = value; OnPropertyChanged(__.OnlineSkype); } } }
+        public String OnlineSkype { get => _OnlineSkype; set { if (OnPropertyChanging("OnlineSkype", value)) { _OnlineSkype = value; OnPropertyChanged("OnlineSkype"); } } }
 
         private String _OnlineWangWang;
         /// <summary>在线阿里旺旺</summary>
@@ -181,7 +184,7 @@ namespace COMCMS.Core
         [Description("在线阿里旺旺")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("OnlineWangWang", "在线阿里旺旺", "")]
-        public String OnlineWangWang { get => _OnlineWangWang; set { if (OnPropertyChanging(__.OnlineWangWang, value)) { _OnlineWangWang = value; OnPropertyChanged(__.OnlineWangWang); } } }
+        public String OnlineWangWang { get => _OnlineWangWang; set { if (OnPropertyChanging("OnlineWangWang", value)) { _OnlineWangWang = value; OnPropertyChanged("OnlineWangWang"); } } }
 
         private String _SkinName;
         /// <summary>站点URL</summary>
@@ -189,7 +192,7 @@ namespace COMCMS.Core
         [Description("站点URL")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("SkinName", "站点URL", "")]
-        public String SkinName { get => _SkinName; set { if (OnPropertyChanging(__.SkinName, value)) { _SkinName = value; OnPropertyChanged(__.SkinName); } } }
+        public String SkinName { get => _SkinName; set { if (OnPropertyChanging("SkinName", value)) { _SkinName = value; OnPropertyChanged("SkinName"); } } }
 
         private String _OfficialName;
         /// <summary>公众号名称</summary>
@@ -197,7 +200,7 @@ namespace COMCMS.Core
         [Description("公众号名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("OfficialName", "公众号名称", "")]
-        public String OfficialName { get => _OfficialName; set { if (OnPropertyChanging(__.OfficialName, value)) { _OfficialName = value; OnPropertyChanged(__.OfficialName); } } }
+        public String OfficialName { get => _OfficialName; set { if (OnPropertyChanging("OfficialName", value)) { _OfficialName = value; OnPropertyChanged("OfficialName"); } } }
 
         private String _OfficialDecsription;
         /// <summary>公众号介绍</summary>
@@ -205,7 +208,7 @@ namespace COMCMS.Core
         [Description("公众号介绍")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("OfficialDecsription", "公众号介绍", "")]
-        public String OfficialDecsription { get => _OfficialDecsription; set { if (OnPropertyChanging(__.OfficialDecsription, value)) { _OfficialDecsription = value; OnPropertyChanged(__.OfficialDecsription); } } }
+        public String OfficialDecsription { get => _OfficialDecsription; set { if (OnPropertyChanging("OfficialDecsription", value)) { _OfficialDecsription = value; OnPropertyChanged("OfficialDecsription"); } } }
 
         private String _OfficialOriginalId;
         /// <summary>公众号原始ID</summary>
@@ -213,7 +216,7 @@ namespace COMCMS.Core
         [Description("公众号原始ID")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("OfficialOriginalId", "公众号原始ID", "")]
-        public String OfficialOriginalId { get => _OfficialOriginalId; set { if (OnPropertyChanging(__.OfficialOriginalId, value)) { _OfficialOriginalId = value; OnPropertyChanged(__.OfficialOriginalId); } } }
+        public String OfficialOriginalId { get => _OfficialOriginalId; set { if (OnPropertyChanging("OfficialOriginalId", value)) { _OfficialOriginalId = value; OnPropertyChanged("OfficialOriginalId"); } } }
 
         private String _WexinAccount;
         /// <summary>微信名称</summary>
@@ -221,7 +224,7 @@ namespace COMCMS.Core
         [Description("微信名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("WexinAccount", "微信名称", "")]
-        public String WexinAccount { get => _WexinAccount; set { if (OnPropertyChanging(__.WexinAccount, value)) { _WexinAccount = value; OnPropertyChanged(__.WexinAccount); } } }
+        public String WexinAccount { get => _WexinAccount; set { if (OnPropertyChanging("WexinAccount", value)) { _WexinAccount = value; OnPropertyChanged("WexinAccount"); } } }
 
         private String _Token;
         /// <summary>Token</summary>
@@ -229,7 +232,7 @@ namespace COMCMS.Core
         [Description("Token")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Token", "Token", "")]
-        public String Token { get => _Token; set { if (OnPropertyChanging(__.Token, value)) { _Token = value; OnPropertyChanged(__.Token); } } }
+        public String Token { get => _Token; set { if (OnPropertyChanging("Token", value)) { _Token = value; OnPropertyChanged("Token"); } } }
 
         private String _AppId;
         /// <summary>AppId</summary>
@@ -237,7 +240,7 @@ namespace COMCMS.Core
         [Description("AppId")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("AppId", "AppId", "")]
-        public String AppId { get => _AppId; set { if (OnPropertyChanging(__.AppId, value)) { _AppId = value; OnPropertyChanged(__.AppId); } } }
+        public String AppId { get => _AppId; set { if (OnPropertyChanging("AppId", value)) { _AppId = value; OnPropertyChanged("AppId"); } } }
 
         private String _AppSecret;
         /// <summary>AppSecret</summary>
@@ -245,7 +248,7 @@ namespace COMCMS.Core
         [Description("AppSecret")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("AppSecret", "AppSecret", "")]
-        public String AppSecret { get => _AppSecret; set { if (OnPropertyChanging(__.AppSecret, value)) { _AppSecret = value; OnPropertyChanged(__.AppSecret); } } }
+        public String AppSecret { get => _AppSecret; set { if (OnPropertyChanging("AppSecret", value)) { _AppSecret = value; OnPropertyChanged("AppSecret"); } } }
 
         private String _FllowTipPageURL;
         /// <summary>引导关注素材地址</summary>
@@ -253,7 +256,7 @@ namespace COMCMS.Core
         [Description("引导关注素材地址")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("FllowTipPageURL", "引导关注素材地址", "")]
-        public String FllowTipPageURL { get => _FllowTipPageURL; set { if (OnPropertyChanging(__.FllowTipPageURL, value)) { _FllowTipPageURL = value; OnPropertyChanged(__.FllowTipPageURL); } } }
+        public String FllowTipPageURL { get => _FllowTipPageURL; set { if (OnPropertyChanging("FllowTipPageURL", value)) { _FllowTipPageURL = value; OnPropertyChanged("FllowTipPageURL"); } } }
 
         private Int32 _OfficialType;
         /// <summary>公众号类型：0普通订阅号  1普通服务号  2认证订阅号  3认证服务号 4企业号 5认证企业号</summary>
@@ -261,7 +264,7 @@ namespace COMCMS.Core
         [Description("公众号类型：0普通订阅号  1普通服务号  2认证订阅号  3认证服务号 4企业号 5认证企业号")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("OfficialType", "公众号类型：0普通订阅号  1普通服务号  2认证订阅号  3认证服务号 4企业号 5认证企业号", "")]
-        public Int32 OfficialType { get => _OfficialType; set { if (OnPropertyChanging(__.OfficialType, value)) { _OfficialType = value; OnPropertyChanged(__.OfficialType); } } }
+        public Int32 OfficialType { get => _OfficialType; set { if (OnPropertyChanging("OfficialType", value)) { _OfficialType = value; OnPropertyChanged("OfficialType"); } } }
 
         private String _EncodingAESKey;
         /// <summary>EncodingAESKey</summary>
@@ -269,7 +272,7 @@ namespace COMCMS.Core
         [Description("EncodingAESKey")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("EncodingAESKey", "EncodingAESKey", "")]
-        public String EncodingAESKey { get => _EncodingAESKey; set { if (OnPropertyChanging(__.EncodingAESKey, value)) { _EncodingAESKey = value; OnPropertyChanged(__.EncodingAESKey); } } }
+        public String EncodingAESKey { get => _EncodingAESKey; set { if (OnPropertyChanging("EncodingAESKey", value)) { _EncodingAESKey = value; OnPropertyChanged("EncodingAESKey"); } } }
 
         private Int32 _DEType;
         /// <summary>解密方式0,明文</summary>
@@ -277,7 +280,7 @@ namespace COMCMS.Core
         [Description("解密方式0,明文")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("DEType", "解密方式0,明文", "")]
-        public Int32 DEType { get => _DEType; set { if (OnPropertyChanging(__.DEType, value)) { _DEType = value; OnPropertyChanged(__.DEType); } } }
+        public Int32 DEType { get => _DEType; set { if (OnPropertyChanging("DEType", value)) { _DEType = value; OnPropertyChanged("DEType"); } } }
 
         private String _OfficialQRCode;
         /// <summary>公众号二维码地址</summary>
@@ -285,7 +288,7 @@ namespace COMCMS.Core
         [Description("公众号二维码地址")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("OfficialQRCode", "公众号二维码地址", "")]
-        public String OfficialQRCode { get => _OfficialQRCode; set { if (OnPropertyChanging(__.OfficialQRCode, value)) { _OfficialQRCode = value; OnPropertyChanged(__.OfficialQRCode); } } }
+        public String OfficialQRCode { get => _OfficialQRCode; set { if (OnPropertyChanging("OfficialQRCode", value)) { _OfficialQRCode = value; OnPropertyChanged("OfficialQRCode"); } } }
 
         private String _OfficialImg;
         /// <summary>公众号头像</summary>
@@ -293,7 +296,7 @@ namespace COMCMS.Core
         [Description("公众号头像")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("OfficialImg", "公众号头像", "")]
-        public String OfficialImg { get => _OfficialImg; set { if (OnPropertyChanging(__.OfficialImg, value)) { _OfficialImg = value; OnPropertyChanged(__.OfficialImg); } } }
+        public String OfficialImg { get => _OfficialImg; set { if (OnPropertyChanging("OfficialImg", value)) { _OfficialImg = value; OnPropertyChanged("OfficialImg"); } } }
 
         private DateTime _LastUpdateTime;
         /// <summary>最后更新时间</summary>
@@ -301,7 +304,7 @@ namespace COMCMS.Core
         [Description("最后更新时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("LastUpdateTime", "最后更新时间", "")]
-        public DateTime LastUpdateTime { get => _LastUpdateTime; set { if (OnPropertyChanging(__.LastUpdateTime, value)) { _LastUpdateTime = value; OnPropertyChanged(__.LastUpdateTime); } } }
+        public DateTime LastUpdateTime { get => _LastUpdateTime; set { if (OnPropertyChanging("LastUpdateTime", value)) { _LastUpdateTime = value; OnPropertyChanged("LastUpdateTime"); } } }
 
         private DateTime _LastCacheTime;
         /// <summary>最后缓存时间</summary>
@@ -309,7 +312,7 @@ namespace COMCMS.Core
         [Description("最后缓存时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("LastCacheTime", "最后缓存时间", "")]
-        public DateTime LastCacheTime { get => _LastCacheTime; set { if (OnPropertyChanging(__.LastCacheTime, value)) { _LastCacheTime = value; OnPropertyChanged(__.LastCacheTime); } } }
+        public DateTime LastCacheTime { get => _LastCacheTime; set { if (OnPropertyChanging("LastCacheTime", value)) { _LastCacheTime = value; OnPropertyChanged("LastCacheTime"); } } }
 
         private String _MCHId;
         /// <summary>微信商家MCHId</summary>
@@ -317,7 +320,7 @@ namespace COMCMS.Core
         [Description("微信商家MCHId")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("MCHId", "微信商家MCHId", "")]
-        public String MCHId { get => _MCHId; set { if (OnPropertyChanging(__.MCHId, value)) { _MCHId = value; OnPropertyChanged(__.MCHId); } } }
+        public String MCHId { get => _MCHId; set { if (OnPropertyChanging("MCHId", value)) { _MCHId = value; OnPropertyChanged("MCHId"); } } }
 
         private String _MCHKey;
         /// <summary>微信商家key</summary>
@@ -325,7 +328,7 @@ namespace COMCMS.Core
         [Description("微信商家key")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("MCHKey", "微信商家key", "")]
-        public String MCHKey { get => _MCHKey; set { if (OnPropertyChanging(__.MCHKey, value)) { _MCHKey = value; OnPropertyChanged(__.MCHKey); } } }
+        public String MCHKey { get => _MCHKey; set { if (OnPropertyChanging("MCHKey", value)) { _MCHKey = value; OnPropertyChanged("MCHKey"); } } }
 
         private Decimal _DefaultFare;
         /// <summary>默认运费</summary>
@@ -333,7 +336,7 @@ namespace COMCMS.Core
         [Description("默认运费")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("DefaultFare", "默认运费", "")]
-        public Decimal DefaultFare { get => _DefaultFare; set { if (OnPropertyChanging(__.DefaultFare, value)) { _DefaultFare = value; OnPropertyChanged(__.DefaultFare); } } }
+        public Decimal DefaultFare { get => _DefaultFare; set { if (OnPropertyChanging("DefaultFare", value)) { _DefaultFare = value; OnPropertyChanged("DefaultFare"); } } }
 
         private Decimal _MaxFreeFare;
         /// <summary>最大免运费金额</summary>
@@ -341,7 +344,7 @@ namespace COMCMS.Core
         [Description("最大免运费金额")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("MaxFreeFare", "最大免运费金额", "")]
-        public Decimal MaxFreeFare { get => _MaxFreeFare; set { if (OnPropertyChanging(__.MaxFreeFare, value)) { _MaxFreeFare = value; OnPropertyChanged(__.MaxFreeFare); } } }
+        public Decimal MaxFreeFare { get => _MaxFreeFare; set { if (OnPropertyChanging("MaxFreeFare", value)) { _MaxFreeFare = value; OnPropertyChanged("MaxFreeFare"); } } }
 
         private String _WXAppId;
         /// <summary>微信小程序AppId</summary>
@@ -349,7 +352,7 @@ namespace COMCMS.Core
         [Description("微信小程序AppId")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("WXAppId", "微信小程序AppId", "")]
-        public String WXAppId { get => _WXAppId; set { if (OnPropertyChanging(__.WXAppId, value)) { _WXAppId = value; OnPropertyChanged(__.WXAppId); } } }
+        public String WXAppId { get => _WXAppId; set { if (OnPropertyChanging("WXAppId", value)) { _WXAppId = value; OnPropertyChanged("WXAppId"); } } }
 
         private String _WXAppSecret;
         /// <summary>微信小程序AppSecret</summary>
@@ -357,7 +360,7 @@ namespace COMCMS.Core
         [Description("微信小程序AppSecret")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("WXAppSecret", "微信小程序AppSecret", "")]
-        public String WXAppSecret { get => _WXAppSecret; set { if (OnPropertyChanging(__.WXAppSecret, value)) { _WXAppSecret = value; OnPropertyChanged(__.WXAppSecret); } } }
+        public String WXAppSecret { get => _WXAppSecret; set { if (OnPropertyChanging("WXAppSecret", value)) { _WXAppSecret = value; OnPropertyChanged("WXAppSecret"); } } }
 
         private Int32 _IsResetData;
         /// <summary>小程序首页是否显示清除数据按钮</summary>
@@ -365,7 +368,7 @@ namespace COMCMS.Core
         [Description("小程序首页是否显示清除数据按钮")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsResetData", "小程序首页是否显示清除数据按钮", "")]
-        public Int32 IsResetData { get => _IsResetData; set { if (OnPropertyChanging(__.IsResetData, value)) { _IsResetData = value; OnPropertyChanged(__.IsResetData); } } }
+        public Int32 IsResetData { get => _IsResetData; set { if (OnPropertyChanging("IsResetData", value)) { _IsResetData = value; OnPropertyChanged("IsResetData"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -378,50 +381,50 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.SiteName: return _SiteName;
-                    case __.SiteUrl: return _SiteUrl;
-                    case __.SiteLogo: return _SiteLogo;
-                    case __.Icp: return _Icp;
-                    case __.SiteEmail: return _SiteEmail;
-                    case __.SiteTel: return _SiteTel;
-                    case __.Copyright: return _Copyright;
-                    case __.IsCloseSite: return _IsCloseSite;
-                    case __.CloseReason: return _CloseReason;
-                    case __.CountScript: return _CountScript;
-                    case __.WeiboQRCode: return _WeiboQRCode;
-                    case __.WinxinQRCode: return _WinxinQRCode;
-                    case __.Keyword: return _Keyword;
-                    case __.Description: return _Description;
-                    case __.IndexTitle: return _IndexTitle;
-                    case __.IsRewrite: return _IsRewrite;
-                    case __.SearchMinTime: return _SearchMinTime;
-                    case __.OnlineQQ: return _OnlineQQ;
-                    case __.OnlineSkype: return _OnlineSkype;
-                    case __.OnlineWangWang: return _OnlineWangWang;
-                    case __.SkinName: return _SkinName;
-                    case __.OfficialName: return _OfficialName;
-                    case __.OfficialDecsription: return _OfficialDecsription;
-                    case __.OfficialOriginalId: return _OfficialOriginalId;
-                    case __.WexinAccount: return _WexinAccount;
-                    case __.Token: return _Token;
-                    case __.AppId: return _AppId;
-                    case __.AppSecret: return _AppSecret;
-                    case __.FllowTipPageURL: return _FllowTipPageURL;
-                    case __.OfficialType: return _OfficialType;
-                    case __.EncodingAESKey: return _EncodingAESKey;
-                    case __.DEType: return _DEType;
-                    case __.OfficialQRCode: return _OfficialQRCode;
-                    case __.OfficialImg: return _OfficialImg;
-                    case __.LastUpdateTime: return _LastUpdateTime;
-                    case __.LastCacheTime: return _LastCacheTime;
-                    case __.MCHId: return _MCHId;
-                    case __.MCHKey: return _MCHKey;
-                    case __.DefaultFare: return _DefaultFare;
-                    case __.MaxFreeFare: return _MaxFreeFare;
-                    case __.WXAppId: return _WXAppId;
-                    case __.WXAppSecret: return _WXAppSecret;
-                    case __.IsResetData: return _IsResetData;
+                    case "Id": return _Id;
+                    case "SiteName": return _SiteName;
+                    case "SiteUrl": return _SiteUrl;
+                    case "SiteLogo": return _SiteLogo;
+                    case "Icp": return _Icp;
+                    case "SiteEmail": return _SiteEmail;
+                    case "SiteTel": return _SiteTel;
+                    case "Copyright": return _Copyright;
+                    case "IsCloseSite": return _IsCloseSite;
+                    case "CloseReason": return _CloseReason;
+                    case "CountScript": return _CountScript;
+                    case "WeiboQRCode": return _WeiboQRCode;
+                    case "WinxinQRCode": return _WinxinQRCode;
+                    case "Keyword": return _Keyword;
+                    case "Description": return _Description;
+                    case "IndexTitle": return _IndexTitle;
+                    case "IsRewrite": return _IsRewrite;
+                    case "SearchMinTime": return _SearchMinTime;
+                    case "OnlineQQ": return _OnlineQQ;
+                    case "OnlineSkype": return _OnlineSkype;
+                    case "OnlineWangWang": return _OnlineWangWang;
+                    case "SkinName": return _SkinName;
+                    case "OfficialName": return _OfficialName;
+                    case "OfficialDecsription": return _OfficialDecsription;
+                    case "OfficialOriginalId": return _OfficialOriginalId;
+                    case "WexinAccount": return _WexinAccount;
+                    case "Token": return _Token;
+                    case "AppId": return _AppId;
+                    case "AppSecret": return _AppSecret;
+                    case "FllowTipPageURL": return _FllowTipPageURL;
+                    case "OfficialType": return _OfficialType;
+                    case "EncodingAESKey": return _EncodingAESKey;
+                    case "DEType": return _DEType;
+                    case "OfficialQRCode": return _OfficialQRCode;
+                    case "OfficialImg": return _OfficialImg;
+                    case "LastUpdateTime": return _LastUpdateTime;
+                    case "LastCacheTime": return _LastCacheTime;
+                    case "MCHId": return _MCHId;
+                    case "MCHKey": return _MCHKey;
+                    case "DefaultFare": return _DefaultFare;
+                    case "MaxFreeFare": return _MaxFreeFare;
+                    case "WXAppId": return _WXAppId;
+                    case "WXAppSecret": return _WXAppSecret;
+                    case "IsResetData": return _IsResetData;
                     default: return base[name];
                 }
             }
@@ -429,50 +432,50 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.SiteName: _SiteName = Convert.ToString(value); break;
-                    case __.SiteUrl: _SiteUrl = Convert.ToString(value); break;
-                    case __.SiteLogo: _SiteLogo = Convert.ToString(value); break;
-                    case __.Icp: _Icp = Convert.ToString(value); break;
-                    case __.SiteEmail: _SiteEmail = Convert.ToString(value); break;
-                    case __.SiteTel: _SiteTel = Convert.ToString(value); break;
-                    case __.Copyright: _Copyright = Convert.ToString(value); break;
-                    case __.IsCloseSite: _IsCloseSite = value.ToBoolean(); break;
-                    case __.CloseReason: _CloseReason = Convert.ToString(value); break;
-                    case __.CountScript: _CountScript = Convert.ToString(value); break;
-                    case __.WeiboQRCode: _WeiboQRCode = Convert.ToString(value); break;
-                    case __.WinxinQRCode: _WinxinQRCode = Convert.ToString(value); break;
-                    case __.Keyword: _Keyword = Convert.ToString(value); break;
-                    case __.Description: _Description = Convert.ToString(value); break;
-                    case __.IndexTitle: _IndexTitle = Convert.ToString(value); break;
-                    case __.IsRewrite: _IsRewrite = value.ToInt(); break;
-                    case __.SearchMinTime: _SearchMinTime = value.ToInt(); break;
-                    case __.OnlineQQ: _OnlineQQ = Convert.ToString(value); break;
-                    case __.OnlineSkype: _OnlineSkype = Convert.ToString(value); break;
-                    case __.OnlineWangWang: _OnlineWangWang = Convert.ToString(value); break;
-                    case __.SkinName: _SkinName = Convert.ToString(value); break;
-                    case __.OfficialName: _OfficialName = Convert.ToString(value); break;
-                    case __.OfficialDecsription: _OfficialDecsription = Convert.ToString(value); break;
-                    case __.OfficialOriginalId: _OfficialOriginalId = Convert.ToString(value); break;
-                    case __.WexinAccount: _WexinAccount = Convert.ToString(value); break;
-                    case __.Token: _Token = Convert.ToString(value); break;
-                    case __.AppId: _AppId = Convert.ToString(value); break;
-                    case __.AppSecret: _AppSecret = Convert.ToString(value); break;
-                    case __.FllowTipPageURL: _FllowTipPageURL = Convert.ToString(value); break;
-                    case __.OfficialType: _OfficialType = value.ToInt(); break;
-                    case __.EncodingAESKey: _EncodingAESKey = Convert.ToString(value); break;
-                    case __.DEType: _DEType = value.ToInt(); break;
-                    case __.OfficialQRCode: _OfficialQRCode = Convert.ToString(value); break;
-                    case __.OfficialImg: _OfficialImg = Convert.ToString(value); break;
-                    case __.LastUpdateTime: _LastUpdateTime = value.ToDateTime(); break;
-                    case __.LastCacheTime: _LastCacheTime = value.ToDateTime(); break;
-                    case __.MCHId: _MCHId = Convert.ToString(value); break;
-                    case __.MCHKey: _MCHKey = Convert.ToString(value); break;
-                    case __.DefaultFare: _DefaultFare = Convert.ToDecimal(value); break;
-                    case __.MaxFreeFare: _MaxFreeFare = Convert.ToDecimal(value); break;
-                    case __.WXAppId: _WXAppId = Convert.ToString(value); break;
-                    case __.WXAppSecret: _WXAppSecret = Convert.ToString(value); break;
-                    case __.IsResetData: _IsResetData = value.ToInt(); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "SiteName": _SiteName = Convert.ToString(value); break;
+                    case "SiteUrl": _SiteUrl = Convert.ToString(value); break;
+                    case "SiteLogo": _SiteLogo = Convert.ToString(value); break;
+                    case "Icp": _Icp = Convert.ToString(value); break;
+                    case "SiteEmail": _SiteEmail = Convert.ToString(value); break;
+                    case "SiteTel": _SiteTel = Convert.ToString(value); break;
+                    case "Copyright": _Copyright = Convert.ToString(value); break;
+                    case "IsCloseSite": _IsCloseSite = value.ToBoolean(); break;
+                    case "CloseReason": _CloseReason = Convert.ToString(value); break;
+                    case "CountScript": _CountScript = Convert.ToString(value); break;
+                    case "WeiboQRCode": _WeiboQRCode = Convert.ToString(value); break;
+                    case "WinxinQRCode": _WinxinQRCode = Convert.ToString(value); break;
+                    case "Keyword": _Keyword = Convert.ToString(value); break;
+                    case "Description": _Description = Convert.ToString(value); break;
+                    case "IndexTitle": _IndexTitle = Convert.ToString(value); break;
+                    case "IsRewrite": _IsRewrite = value.ToInt(); break;
+                    case "SearchMinTime": _SearchMinTime = value.ToInt(); break;
+                    case "OnlineQQ": _OnlineQQ = Convert.ToString(value); break;
+                    case "OnlineSkype": _OnlineSkype = Convert.ToString(value); break;
+                    case "OnlineWangWang": _OnlineWangWang = Convert.ToString(value); break;
+                    case "SkinName": _SkinName = Convert.ToString(value); break;
+                    case "OfficialName": _OfficialName = Convert.ToString(value); break;
+                    case "OfficialDecsription": _OfficialDecsription = Convert.ToString(value); break;
+                    case "OfficialOriginalId": _OfficialOriginalId = Convert.ToString(value); break;
+                    case "WexinAccount": _WexinAccount = Convert.ToString(value); break;
+                    case "Token": _Token = Convert.ToString(value); break;
+                    case "AppId": _AppId = Convert.ToString(value); break;
+                    case "AppSecret": _AppSecret = Convert.ToString(value); break;
+                    case "FllowTipPageURL": _FllowTipPageURL = Convert.ToString(value); break;
+                    case "OfficialType": _OfficialType = value.ToInt(); break;
+                    case "EncodingAESKey": _EncodingAESKey = Convert.ToString(value); break;
+                    case "DEType": _DEType = value.ToInt(); break;
+                    case "OfficialQRCode": _OfficialQRCode = Convert.ToString(value); break;
+                    case "OfficialImg": _OfficialImg = Convert.ToString(value); break;
+                    case "LastUpdateTime": _LastUpdateTime = value.ToDateTime(); break;
+                    case "LastCacheTime": _LastCacheTime = value.ToDateTime(); break;
+                    case "MCHId": _MCHId = Convert.ToString(value); break;
+                    case "MCHKey": _MCHKey = Convert.ToString(value); break;
+                    case "DefaultFare": _DefaultFare = Convert.ToDecimal(value); break;
+                    case "MaxFreeFare": _MaxFreeFare = Convert.ToDecimal(value); break;
+                    case "WXAppId": _WXAppId = Convert.ToString(value); break;
+                    case "WXAppSecret": _WXAppSecret = Convert.ToString(value); break;
+                    case "IsResetData": _IsResetData = value.ToInt(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -484,136 +487,136 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>站点名称</summary>
-            public static readonly Field SiteName = FindByName(__.SiteName);
+            public static readonly Field SiteName = FindByName("SiteName");
 
             /// <summary>站点URL</summary>
-            public static readonly Field SiteUrl = FindByName(__.SiteUrl);
+            public static readonly Field SiteUrl = FindByName("SiteUrl");
 
             /// <summary>站点LOGO</summary>
-            public static readonly Field SiteLogo = FindByName(__.SiteLogo);
+            public static readonly Field SiteLogo = FindByName("SiteLogo");
 
             /// <summary>ICP备案</summary>
-            public static readonly Field Icp = FindByName(__.Icp);
+            public static readonly Field Icp = FindByName("Icp");
 
             /// <summary>联系我们Email</summary>
-            public static readonly Field SiteEmail = FindByName(__.SiteEmail);
+            public static readonly Field SiteEmail = FindByName("SiteEmail");
 
             /// <summary>网站电话</summary>
-            public static readonly Field SiteTel = FindByName(__.SiteTel);
+            public static readonly Field SiteTel = FindByName("SiteTel");
 
             /// <summary>版权所有</summary>
-            public static readonly Field Copyright = FindByName(__.Copyright);
+            public static readonly Field Copyright = FindByName("Copyright");
 
             /// <summary>是否关闭网站</summary>
-            public static readonly Field IsCloseSite = FindByName(__.IsCloseSite);
+            public static readonly Field IsCloseSite = FindByName("IsCloseSite");
 
             /// <summary>关闭原因</summary>
-            public static readonly Field CloseReason = FindByName(__.CloseReason);
+            public static readonly Field CloseReason = FindByName("CloseReason");
 
             /// <summary>统计代码</summary>
-            public static readonly Field CountScript = FindByName(__.CountScript);
+            public static readonly Field CountScript = FindByName("CountScript");
 
             /// <summary>微博二维码</summary>
-            public static readonly Field WeiboQRCode = FindByName(__.WeiboQRCode);
+            public static readonly Field WeiboQRCode = FindByName("WeiboQRCode");
 
             /// <summary>微信二维码</summary>
-            public static readonly Field WinxinQRCode = FindByName(__.WinxinQRCode);
+            public static readonly Field WinxinQRCode = FindByName("WinxinQRCode");
 
             /// <summary>关键字</summary>
-            public static readonly Field Keyword = FindByName(__.Keyword);
+            public static readonly Field Keyword = FindByName("Keyword");
 
             /// <summary>描述</summary>
-            public static readonly Field Description = FindByName(__.Description);
+            public static readonly Field Description = FindByName("Description");
 
             /// <summary>首页标题</summary>
-            public static readonly Field IndexTitle = FindByName(__.IndexTitle);
+            public static readonly Field IndexTitle = FindByName("IndexTitle");
 
             /// <summary>是否URL地址重写</summary>
-            public static readonly Field IsRewrite = FindByName(__.IsRewrite);
+            public static readonly Field IsRewrite = FindByName("IsRewrite");
 
             /// <summary>搜索最小时间间距 秒</summary>
-            public static readonly Field SearchMinTime = FindByName(__.SearchMinTime);
+            public static readonly Field SearchMinTime = FindByName("SearchMinTime");
 
             /// <summary>在线QQ</summary>
-            public static readonly Field OnlineQQ = FindByName(__.OnlineQQ);
+            public static readonly Field OnlineQQ = FindByName("OnlineQQ");
 
             /// <summary>在线Skype</summary>
-            public static readonly Field OnlineSkype = FindByName(__.OnlineSkype);
+            public static readonly Field OnlineSkype = FindByName("OnlineSkype");
 
             /// <summary>在线阿里旺旺</summary>
-            public static readonly Field OnlineWangWang = FindByName(__.OnlineWangWang);
+            public static readonly Field OnlineWangWang = FindByName("OnlineWangWang");
 
             /// <summary>站点URL</summary>
-            public static readonly Field SkinName = FindByName(__.SkinName);
+            public static readonly Field SkinName = FindByName("SkinName");
 
             /// <summary>公众号名称</summary>
-            public static readonly Field OfficialName = FindByName(__.OfficialName);
+            public static readonly Field OfficialName = FindByName("OfficialName");
 
             /// <summary>公众号介绍</summary>
-            public static readonly Field OfficialDecsription = FindByName(__.OfficialDecsription);
+            public static readonly Field OfficialDecsription = FindByName("OfficialDecsription");
 
             /// <summary>公众号原始ID</summary>
-            public static readonly Field OfficialOriginalId = FindByName(__.OfficialOriginalId);
+            public static readonly Field OfficialOriginalId = FindByName("OfficialOriginalId");
 
             /// <summary>微信名称</summary>
-            public static readonly Field WexinAccount = FindByName(__.WexinAccount);
+            public static readonly Field WexinAccount = FindByName("WexinAccount");
 
             /// <summary>Token</summary>
-            public static readonly Field Token = FindByName(__.Token);
+            public static readonly Field Token = FindByName("Token");
 
             /// <summary>AppId</summary>
-            public static readonly Field AppId = FindByName(__.AppId);
+            public static readonly Field AppId = FindByName("AppId");
 
             /// <summary>AppSecret</summary>
-            public static readonly Field AppSecret = FindByName(__.AppSecret);
+            public static readonly Field AppSecret = FindByName("AppSecret");
 
             /// <summary>引导关注素材地址</summary>
-            public static readonly Field FllowTipPageURL = FindByName(__.FllowTipPageURL);
+            public static readonly Field FllowTipPageURL = FindByName("FllowTipPageURL");
 
             /// <summary>公众号类型：0普通订阅号  1普通服务号  2认证订阅号  3认证服务号 4企业号 5认证企业号</summary>
-            public static readonly Field OfficialType = FindByName(__.OfficialType);
+            public static readonly Field OfficialType = FindByName("OfficialType");
 
             /// <summary>EncodingAESKey</summary>
-            public static readonly Field EncodingAESKey = FindByName(__.EncodingAESKey);
+            public static readonly Field EncodingAESKey = FindByName("EncodingAESKey");
 
             /// <summary>解密方式0,明文</summary>
-            public static readonly Field DEType = FindByName(__.DEType);
+            public static readonly Field DEType = FindByName("DEType");
 
             /// <summary>公众号二维码地址</summary>
-            public static readonly Field OfficialQRCode = FindByName(__.OfficialQRCode);
+            public static readonly Field OfficialQRCode = FindByName("OfficialQRCode");
 
             /// <summary>公众号头像</summary>
-            public static readonly Field OfficialImg = FindByName(__.OfficialImg);
+            public static readonly Field OfficialImg = FindByName("OfficialImg");
 
             /// <summary>最后更新时间</summary>
-            public static readonly Field LastUpdateTime = FindByName(__.LastUpdateTime);
+            public static readonly Field LastUpdateTime = FindByName("LastUpdateTime");
 
             /// <summary>最后缓存时间</summary>
-            public static readonly Field LastCacheTime = FindByName(__.LastCacheTime);
+            public static readonly Field LastCacheTime = FindByName("LastCacheTime");
 
             /// <summary>微信商家MCHId</summary>
-            public static readonly Field MCHId = FindByName(__.MCHId);
+            public static readonly Field MCHId = FindByName("MCHId");
 
             /// <summary>微信商家key</summary>
-            public static readonly Field MCHKey = FindByName(__.MCHKey);
+            public static readonly Field MCHKey = FindByName("MCHKey");
 
             /// <summary>默认运费</summary>
-            public static readonly Field DefaultFare = FindByName(__.DefaultFare);
+            public static readonly Field DefaultFare = FindByName("DefaultFare");
 
             /// <summary>最大免运费金额</summary>
-            public static readonly Field MaxFreeFare = FindByName(__.MaxFreeFare);
+            public static readonly Field MaxFreeFare = FindByName("MaxFreeFare");
 
             /// <summary>微信小程序AppId</summary>
-            public static readonly Field WXAppId = FindByName(__.WXAppId);
+            public static readonly Field WXAppId = FindByName("WXAppId");
 
             /// <summary>微信小程序AppSecret</summary>
-            public static readonly Field WXAppSecret = FindByName(__.WXAppSecret);
+            public static readonly Field WXAppSecret = FindByName("WXAppSecret");
 
             /// <summary>小程序首页是否显示清除数据按钮</summary>
-            public static readonly Field IsResetData = FindByName(__.IsResetData);
+            public static readonly Field IsResetData = FindByName("IsResetData");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -753,151 +756,6 @@ namespace COMCMS.Core
             /// <summary>小程序首页是否显示清除数据按钮</summary>
             public const String IsResetData = "IsResetData";
         }
-        #endregion
-    }
-
-    /// <summary>系统配置接口</summary>
-    public partial interface IConfig
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>站点名称</summary>
-        String SiteName { get; set; }
-
-        /// <summary>站点URL</summary>
-        String SiteUrl { get; set; }
-
-        /// <summary>站点LOGO</summary>
-        String SiteLogo { get; set; }
-
-        /// <summary>ICP备案</summary>
-        String Icp { get; set; }
-
-        /// <summary>联系我们Email</summary>
-        String SiteEmail { get; set; }
-
-        /// <summary>网站电话</summary>
-        String SiteTel { get; set; }
-
-        /// <summary>版权所有</summary>
-        String Copyright { get; set; }
-
-        /// <summary>是否关闭网站</summary>
-        Boolean IsCloseSite { get; set; }
-
-        /// <summary>关闭原因</summary>
-        String CloseReason { get; set; }
-
-        /// <summary>统计代码</summary>
-        String CountScript { get; set; }
-
-        /// <summary>微博二维码</summary>
-        String WeiboQRCode { get; set; }
-
-        /// <summary>微信二维码</summary>
-        String WinxinQRCode { get; set; }
-
-        /// <summary>关键字</summary>
-        String Keyword { get; set; }
-
-        /// <summary>描述</summary>
-        String Description { get; set; }
-
-        /// <summary>首页标题</summary>
-        String IndexTitle { get; set; }
-
-        /// <summary>是否URL地址重写</summary>
-        Int32 IsRewrite { get; set; }
-
-        /// <summary>搜索最小时间间距 秒</summary>
-        Int32 SearchMinTime { get; set; }
-
-        /// <summary>在线QQ</summary>
-        String OnlineQQ { get; set; }
-
-        /// <summary>在线Skype</summary>
-        String OnlineSkype { get; set; }
-
-        /// <summary>在线阿里旺旺</summary>
-        String OnlineWangWang { get; set; }
-
-        /// <summary>站点URL</summary>
-        String SkinName { get; set; }
-
-        /// <summary>公众号名称</summary>
-        String OfficialName { get; set; }
-
-        /// <summary>公众号介绍</summary>
-        String OfficialDecsription { get; set; }
-
-        /// <summary>公众号原始ID</summary>
-        String OfficialOriginalId { get; set; }
-
-        /// <summary>微信名称</summary>
-        String WexinAccount { get; set; }
-
-        /// <summary>Token</summary>
-        String Token { get; set; }
-
-        /// <summary>AppId</summary>
-        String AppId { get; set; }
-
-        /// <summary>AppSecret</summary>
-        String AppSecret { get; set; }
-
-        /// <summary>引导关注素材地址</summary>
-        String FllowTipPageURL { get; set; }
-
-        /// <summary>公众号类型：0普通订阅号  1普通服务号  2认证订阅号  3认证服务号 4企业号 5认证企业号</summary>
-        Int32 OfficialType { get; set; }
-
-        /// <summary>EncodingAESKey</summary>
-        String EncodingAESKey { get; set; }
-
-        /// <summary>解密方式0,明文</summary>
-        Int32 DEType { get; set; }
-
-        /// <summary>公众号二维码地址</summary>
-        String OfficialQRCode { get; set; }
-
-        /// <summary>公众号头像</summary>
-        String OfficialImg { get; set; }
-
-        /// <summary>最后更新时间</summary>
-        DateTime LastUpdateTime { get; set; }
-
-        /// <summary>最后缓存时间</summary>
-        DateTime LastCacheTime { get; set; }
-
-        /// <summary>微信商家MCHId</summary>
-        String MCHId { get; set; }
-
-        /// <summary>微信商家key</summary>
-        String MCHKey { get; set; }
-
-        /// <summary>默认运费</summary>
-        Decimal DefaultFare { get; set; }
-
-        /// <summary>最大免运费金额</summary>
-        Decimal MaxFreeFare { get; set; }
-
-        /// <summary>微信小程序AppId</summary>
-        String WXAppId { get; set; }
-
-        /// <summary>微信小程序AppSecret</summary>
-        String WXAppSecret { get; set; }
-
-        /// <summary>小程序首页是否显示清除数据按钮</summary>
-        Int32 IsResetData { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

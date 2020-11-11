@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("后台菜单对应的事件权限")]
     [BindTable("AdminMenuEvent", Description = "后台菜单对应的事件权限", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class AdminMenuEvent : IAdminMenuEvent
+    public partial class AdminMenuEvent
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private Int32 _MenuId;
         /// <summary>菜单ID</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("菜单ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("MenuId", "菜单ID", "")]
-        public Int32 MenuId { get => _MenuId; set { if (OnPropertyChanging(__.MenuId, value)) { _MenuId = value; OnPropertyChanged(__.MenuId); } } }
+        public Int32 MenuId { get => _MenuId; set { if (OnPropertyChanging("MenuId", value)) { _MenuId = value; OnPropertyChanged("MenuId"); } } }
 
         private String _MenuKey;
         /// <summary>菜单key</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("菜单key")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("MenuKey", "菜单key", "", Master = true)]
-        public String MenuKey { get => _MenuKey; set { if (OnPropertyChanging(__.MenuKey, value)) { _MenuKey = value; OnPropertyChanged(__.MenuKey); } } }
+        public String MenuKey { get => _MenuKey; set { if (OnPropertyChanging("MenuKey", value)) { _MenuKey = value; OnPropertyChanged("MenuKey"); } } }
 
         private Int32 _EventId;
         /// <summary>事件ID</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("事件ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("EventId", "事件ID", "")]
-        public Int32 EventId { get => _EventId; set { if (OnPropertyChanging(__.EventId, value)) { _EventId = value; OnPropertyChanged(__.EventId); } } }
+        public Int32 EventId { get => _EventId; set { if (OnPropertyChanging("EventId", value)) { _EventId = value; OnPropertyChanged("EventId"); } } }
 
         private String _EventKey;
         /// <summary>事件key</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("事件key")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("EventKey", "事件key", "", Master = true)]
-        public String EventKey { get => _EventKey; set { if (OnPropertyChanging(__.EventKey, value)) { _EventKey = value; OnPropertyChanged(__.EventKey); } } }
+        public String EventKey { get => _EventKey; set { if (OnPropertyChanging("EventKey", value)) { _EventKey = value; OnPropertyChanged("EventKey"); } } }
 
         private String _EventName;
         /// <summary>事件名称</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("事件名称")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("EventName", "事件名称", "")]
-        public String EventName { get => _EventName; set { if (OnPropertyChanging(__.EventName, value)) { _EventName = value; OnPropertyChanged(__.EventName); } } }
+        public String EventName { get => _EventName; set { if (OnPropertyChanging("EventName", value)) { _EventName = value; OnPropertyChanged("EventName"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -74,12 +77,12 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.MenuId: return _MenuId;
-                    case __.MenuKey: return _MenuKey;
-                    case __.EventId: return _EventId;
-                    case __.EventKey: return _EventKey;
-                    case __.EventName: return _EventName;
+                    case "Id": return _Id;
+                    case "MenuId": return _MenuId;
+                    case "MenuKey": return _MenuKey;
+                    case "EventId": return _EventId;
+                    case "EventKey": return _EventKey;
+                    case "EventName": return _EventName;
                     default: return base[name];
                 }
             }
@@ -87,12 +90,12 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.MenuId: _MenuId = value.ToInt(); break;
-                    case __.MenuKey: _MenuKey = Convert.ToString(value); break;
-                    case __.EventId: _EventId = value.ToInt(); break;
-                    case __.EventKey: _EventKey = Convert.ToString(value); break;
-                    case __.EventName: _EventName = Convert.ToString(value); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "MenuId": _MenuId = value.ToInt(); break;
+                    case "MenuKey": _MenuKey = Convert.ToString(value); break;
+                    case "EventId": _EventId = value.ToInt(); break;
+                    case "EventKey": _EventKey = Convert.ToString(value); break;
+                    case "EventName": _EventName = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -104,22 +107,22 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>菜单ID</summary>
-            public static readonly Field MenuId = FindByName(__.MenuId);
+            public static readonly Field MenuId = FindByName("MenuId");
 
             /// <summary>菜单key</summary>
-            public static readonly Field MenuKey = FindByName(__.MenuKey);
+            public static readonly Field MenuKey = FindByName("MenuKey");
 
             /// <summary>事件ID</summary>
-            public static readonly Field EventId = FindByName(__.EventId);
+            public static readonly Field EventId = FindByName("EventId");
 
             /// <summary>事件key</summary>
-            public static readonly Field EventKey = FindByName(__.EventKey);
+            public static readonly Field EventKey = FindByName("EventKey");
 
             /// <summary>事件名称</summary>
-            public static readonly Field EventName = FindByName(__.EventName);
+            public static readonly Field EventName = FindByName("EventName");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -145,37 +148,6 @@ namespace COMCMS.Core
             /// <summary>事件名称</summary>
             public const String EventName = "EventName";
         }
-        #endregion
-    }
-
-    /// <summary>后台菜单对应的事件权限接口</summary>
-    public partial interface IAdminMenuEvent
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>菜单ID</summary>
-        Int32 MenuId { get; set; }
-
-        /// <summary>菜单key</summary>
-        String MenuKey { get; set; }
-
-        /// <summary>事件ID</summary>
-        Int32 EventId { get; set; }
-
-        /// <summary>事件key</summary>
-        String EventKey { get; set; }
-
-        /// <summary>事件名称</summary>
-        String EventName { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

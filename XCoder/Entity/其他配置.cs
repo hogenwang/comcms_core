@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("其他配置")]
     [BindTable("OtherConfig", Description = "其他配置", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class OtherConfig : IOtherConfig
+    public partial class OtherConfig
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private String _ConfigName;
         /// <summary>配置名称</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("配置名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("ConfigName", "配置名称", "")]
-        public String ConfigName { get => _ConfigName; set { if (OnPropertyChanging(__.ConfigName, value)) { _ConfigName = value; OnPropertyChanged(__.ConfigName); } } }
+        public String ConfigName { get => _ConfigName; set { if (OnPropertyChanging("ConfigName", value)) { _ConfigName = value; OnPropertyChanged("ConfigName"); } } }
 
         private String _ConfigValue;
         /// <summary>配置值 JSON</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("配置值 JSON")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("ConfigValue", "配置值 JSON", "")]
-        public String ConfigValue { get => _ConfigValue; set { if (OnPropertyChanging(__.ConfigValue, value)) { _ConfigValue = value; OnPropertyChanged(__.ConfigValue); } } }
+        public String ConfigValue { get => _ConfigValue; set { if (OnPropertyChanging("ConfigValue", value)) { _ConfigValue = value; OnPropertyChanged("ConfigValue"); } } }
 
         private DateTime _LastUpdateTime;
         /// <summary>最后更新时间</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("最后更新时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("LastUpdateTime", "最后更新时间", "")]
-        public DateTime LastUpdateTime { get => _LastUpdateTime; set { if (OnPropertyChanging(__.LastUpdateTime, value)) { _LastUpdateTime = value; OnPropertyChanged(__.LastUpdateTime); } } }
+        public DateTime LastUpdateTime { get => _LastUpdateTime; set { if (OnPropertyChanging("LastUpdateTime", value)) { _LastUpdateTime = value; OnPropertyChanged("LastUpdateTime"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -58,10 +61,10 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.ConfigName: return _ConfigName;
-                    case __.ConfigValue: return _ConfigValue;
-                    case __.LastUpdateTime: return _LastUpdateTime;
+                    case "Id": return _Id;
+                    case "ConfigName": return _ConfigName;
+                    case "ConfigValue": return _ConfigValue;
+                    case "LastUpdateTime": return _LastUpdateTime;
                     default: return base[name];
                 }
             }
@@ -69,10 +72,10 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.ConfigName: _ConfigName = Convert.ToString(value); break;
-                    case __.ConfigValue: _ConfigValue = Convert.ToString(value); break;
-                    case __.LastUpdateTime: _LastUpdateTime = value.ToDateTime(); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "ConfigName": _ConfigName = Convert.ToString(value); break;
+                    case "ConfigValue": _ConfigValue = Convert.ToString(value); break;
+                    case "LastUpdateTime": _LastUpdateTime = value.ToDateTime(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -84,16 +87,16 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>配置名称</summary>
-            public static readonly Field ConfigName = FindByName(__.ConfigName);
+            public static readonly Field ConfigName = FindByName("ConfigName");
 
             /// <summary>配置值 JSON</summary>
-            public static readonly Field ConfigValue = FindByName(__.ConfigValue);
+            public static readonly Field ConfigValue = FindByName("ConfigValue");
 
             /// <summary>最后更新时间</summary>
-            public static readonly Field LastUpdateTime = FindByName(__.LastUpdateTime);
+            public static readonly Field LastUpdateTime = FindByName("LastUpdateTime");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -113,31 +116,6 @@ namespace COMCMS.Core
             /// <summary>最后更新时间</summary>
             public const String LastUpdateTime = "LastUpdateTime";
         }
-        #endregion
-    }
-
-    /// <summary>其他配置接口</summary>
-    public partial interface IOtherConfig
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>配置名称</summary>
-        String ConfigName { get; set; }
-
-        /// <summary>配置值 JSON</summary>
-        String ConfigValue { get; set; }
-
-        /// <summary>最后更新时间</summary>
-        DateTime LastUpdateTime { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

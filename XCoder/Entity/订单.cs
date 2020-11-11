@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("订单")]
     [BindTable("Order", Description = "订单", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class Order : IOrder
+    public partial class Order
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "", Master = true)]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private String _OrderNum;
         /// <summary>订单号</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("订单号")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("OrderNum", "订单号", "")]
-        public String OrderNum { get => _OrderNum; set { if (OnPropertyChanging(__.OrderNum, value)) { _OrderNum = value; OnPropertyChanged(__.OrderNum); } } }
+        public String OrderNum { get => _OrderNum; set { if (OnPropertyChanging("OrderNum", value)) { _OrderNum = value; OnPropertyChanged("OrderNum"); } } }
 
         private Int32 _UId;
         /// <summary>用户ID</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("UId", "用户ID", "")]
-        public Int32 UId { get => _UId; set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
+        public Int32 UId { get => _UId; set { if (OnPropertyChanging("UId", value)) { _UId = value; OnPropertyChanged("UId"); } } }
 
         private String _UserName;
         /// <summary>下单用户名</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("下单用户名")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("UserName", "下单用户名", "")]
-        public String UserName { get => _UserName; set { if (OnPropertyChanging(__.UserName, value)) { _UserName = value; OnPropertyChanged(__.UserName); } } }
+        public String UserName { get => _UserName; set { if (OnPropertyChanging("UserName", value)) { _UserName = value; OnPropertyChanged("UserName"); } } }
 
         private Int32 _ShopId;
         /// <summary>商户ID</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("商户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("ShopId", "商户ID", "")]
-        public Int32 ShopId { get => _ShopId; set { if (OnPropertyChanging(__.ShopId, value)) { _ShopId = value; OnPropertyChanged(__.ShopId); } } }
+        public Int32 ShopId { get => _ShopId; set { if (OnPropertyChanging("ShopId", value)) { _ShopId = value; OnPropertyChanged("ShopId"); } } }
 
         private Int32 _Credit;
         /// <summary>积分</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("积分")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Credit", "积分", "")]
-        public Int32 Credit { get => _Credit; set { if (OnPropertyChanging(__.Credit, value)) { _Credit = value; OnPropertyChanged(__.Credit); } } }
+        public Int32 Credit { get => _Credit; set { if (OnPropertyChanging("Credit", value)) { _Credit = value; OnPropertyChanged("Credit"); } } }
 
         private Int32 _TotalQty;
         /// <summary>总数量</summary>
@@ -69,7 +72,7 @@ namespace COMCMS.Core
         [Description("总数量")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("TotalQty", "总数量", "")]
-        public Int32 TotalQty { get => _TotalQty; set { if (OnPropertyChanging(__.TotalQty, value)) { _TotalQty = value; OnPropertyChanged(__.TotalQty); } } }
+        public Int32 TotalQty { get => _TotalQty; set { if (OnPropertyChanging("TotalQty", value)) { _TotalQty = value; OnPropertyChanged("TotalQty"); } } }
 
         private Decimal _TotalPrice;
         /// <summary>总价格</summary>
@@ -77,7 +80,7 @@ namespace COMCMS.Core
         [Description("总价格")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("TotalPrice", "总价格", "")]
-        public Decimal TotalPrice { get => _TotalPrice; set { if (OnPropertyChanging(__.TotalPrice, value)) { _TotalPrice = value; OnPropertyChanged(__.TotalPrice); } } }
+        public Decimal TotalPrice { get => _TotalPrice; set { if (OnPropertyChanging("TotalPrice", value)) { _TotalPrice = value; OnPropertyChanged("TotalPrice"); } } }
 
         private Decimal _Discount;
         /// <summary>折扣</summary>
@@ -85,7 +88,7 @@ namespace COMCMS.Core
         [Description("折扣")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Discount", "折扣", "")]
-        public Decimal Discount { get => _Discount; set { if (OnPropertyChanging(__.Discount, value)) { _Discount = value; OnPropertyChanged(__.Discount); } } }
+        public Decimal Discount { get => _Discount; set { if (OnPropertyChanging("Discount", value)) { _Discount = value; OnPropertyChanged("Discount"); } } }
 
         private Decimal _Fare;
         /// <summary>运费</summary>
@@ -93,7 +96,7 @@ namespace COMCMS.Core
         [Description("运费")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Fare", "运费", "")]
-        public Decimal Fare { get => _Fare; set { if (OnPropertyChanging(__.Fare, value)) { _Fare = value; OnPropertyChanged(__.Fare); } } }
+        public Decimal Fare { get => _Fare; set { if (OnPropertyChanging("Fare", value)) { _Fare = value; OnPropertyChanged("Fare"); } } }
 
         private Decimal _TotalTax;
         /// <summary>税</summary>
@@ -101,7 +104,7 @@ namespace COMCMS.Core
         [Description("税")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("TotalTax", "税", "")]
-        public Decimal TotalTax { get => _TotalTax; set { if (OnPropertyChanging(__.TotalTax, value)) { _TotalTax = value; OnPropertyChanged(__.TotalTax); } } }
+        public Decimal TotalTax { get => _TotalTax; set { if (OnPropertyChanging("TotalTax", value)) { _TotalTax = value; OnPropertyChanged("TotalTax"); } } }
 
         private Decimal _TotalPay;
         /// <summary>总支付价格</summary>
@@ -109,7 +112,7 @@ namespace COMCMS.Core
         [Description("总支付价格")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("TotalPay", "总支付价格", "")]
-        public Decimal TotalPay { get => _TotalPay; set { if (OnPropertyChanging(__.TotalPay, value)) { _TotalPay = value; OnPropertyChanged(__.TotalPay); } } }
+        public Decimal TotalPay { get => _TotalPay; set { if (OnPropertyChanging("TotalPay", value)) { _TotalPay = value; OnPropertyChanged("TotalPay"); } } }
 
         private Int32 _BackCredits;
         /// <summary>返现积分</summary>
@@ -117,7 +120,7 @@ namespace COMCMS.Core
         [Description("返现积分")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("BackCredits", "返现积分", "")]
-        public Int32 BackCredits { get => _BackCredits; set { if (OnPropertyChanging(__.BackCredits, value)) { _BackCredits = value; OnPropertyChanged(__.BackCredits); } } }
+        public Int32 BackCredits { get => _BackCredits; set { if (OnPropertyChanging("BackCredits", value)) { _BackCredits = value; OnPropertyChanged("BackCredits"); } } }
 
         private String _RealName;
         /// <summary>姓名</summary>
@@ -125,7 +128,7 @@ namespace COMCMS.Core
         [Description("姓名")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("RealName", "姓名", "")]
-        public String RealName { get => _RealName; set { if (OnPropertyChanging(__.RealName, value)) { _RealName = value; OnPropertyChanged(__.RealName); } } }
+        public String RealName { get => _RealName; set { if (OnPropertyChanging("RealName", value)) { _RealName = value; OnPropertyChanged("RealName"); } } }
 
         private String _Country;
         /// <summary>国家</summary>
@@ -133,7 +136,7 @@ namespace COMCMS.Core
         [Description("国家")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Country", "国家", "")]
-        public String Country { get => _Country; set { if (OnPropertyChanging(__.Country, value)) { _Country = value; OnPropertyChanged(__.Country); } } }
+        public String Country { get => _Country; set { if (OnPropertyChanging("Country", value)) { _Country = value; OnPropertyChanged("Country"); } } }
 
         private String _Province;
         /// <summary>省份</summary>
@@ -141,7 +144,7 @@ namespace COMCMS.Core
         [Description("省份")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Province", "省份", "")]
-        public String Province { get => _Province; set { if (OnPropertyChanging(__.Province, value)) { _Province = value; OnPropertyChanged(__.Province); } } }
+        public String Province { get => _Province; set { if (OnPropertyChanging("Province", value)) { _Province = value; OnPropertyChanged("Province"); } } }
 
         private String _City;
         /// <summary>城市</summary>
@@ -149,7 +152,7 @@ namespace COMCMS.Core
         [Description("城市")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("City", "城市", "")]
-        public String City { get => _City; set { if (OnPropertyChanging(__.City, value)) { _City = value; OnPropertyChanged(__.City); } } }
+        public String City { get => _City; set { if (OnPropertyChanging("City", value)) { _City = value; OnPropertyChanged("City"); } } }
 
         private String _District;
         /// <summary>区</summary>
@@ -157,7 +160,7 @@ namespace COMCMS.Core
         [Description("区")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("District", "区", "")]
-        public String District { get => _District; set { if (OnPropertyChanging(__.District, value)) { _District = value; OnPropertyChanged(__.District); } } }
+        public String District { get => _District; set { if (OnPropertyChanging("District", value)) { _District = value; OnPropertyChanged("District"); } } }
 
         private String _Address;
         /// <summary>详细地址</summary>
@@ -165,7 +168,7 @@ namespace COMCMS.Core
         [Description("详细地址")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Address", "详细地址", "")]
-        public String Address { get => _Address; set { if (OnPropertyChanging(__.Address, value)) { _Address = value; OnPropertyChanged(__.Address); } } }
+        public String Address { get => _Address; set { if (OnPropertyChanging("Address", value)) { _Address = value; OnPropertyChanged("Address"); } } }
 
         private String _PostCode;
         /// <summary>邮编</summary>
@@ -173,7 +176,7 @@ namespace COMCMS.Core
         [Description("邮编")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("PostCode", "邮编", "")]
-        public String PostCode { get => _PostCode; set { if (OnPropertyChanging(__.PostCode, value)) { _PostCode = value; OnPropertyChanged(__.PostCode); } } }
+        public String PostCode { get => _PostCode; set { if (OnPropertyChanging("PostCode", value)) { _PostCode = value; OnPropertyChanged("PostCode"); } } }
 
         private String _Tel;
         /// <summary>手机</summary>
@@ -181,7 +184,7 @@ namespace COMCMS.Core
         [Description("手机")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Tel", "手机", "")]
-        public String Tel { get => _Tel; set { if (OnPropertyChanging(__.Tel, value)) { _Tel = value; OnPropertyChanged(__.Tel); } } }
+        public String Tel { get => _Tel; set { if (OnPropertyChanging("Tel", value)) { _Tel = value; OnPropertyChanged("Tel"); } } }
 
         private String _Mobile;
         /// <summary>手机</summary>
@@ -189,7 +192,7 @@ namespace COMCMS.Core
         [Description("手机")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Mobile", "手机", "")]
-        public String Mobile { get => _Mobile; set { if (OnPropertyChanging(__.Mobile, value)) { _Mobile = value; OnPropertyChanged(__.Mobile); } } }
+        public String Mobile { get => _Mobile; set { if (OnPropertyChanging("Mobile", value)) { _Mobile = value; OnPropertyChanged("Mobile"); } } }
 
         private String _Email;
         /// <summary>邮箱</summary>
@@ -197,7 +200,7 @@ namespace COMCMS.Core
         [Description("邮箱")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Email", "邮箱", "")]
-        public String Email { get => _Email; set { if (OnPropertyChanging(__.Email, value)) { _Email = value; OnPropertyChanged(__.Email); } } }
+        public String Email { get => _Email; set { if (OnPropertyChanging("Email", value)) { _Email = value; OnPropertyChanged("Email"); } } }
 
         private String _Notes;
         /// <summary>备注</summary>
@@ -205,7 +208,7 @@ namespace COMCMS.Core
         [Description("备注")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Notes", "备注", "")]
-        public String Notes { get => _Notes; set { if (OnPropertyChanging(__.Notes, value)) { _Notes = value; OnPropertyChanged(__.Notes); } } }
+        public String Notes { get => _Notes; set { if (OnPropertyChanging("Notes", value)) { _Notes = value; OnPropertyChanged("Notes"); } } }
 
         private String _AdminNotes;
         /// <summary>管理员备注</summary>
@@ -213,7 +216,7 @@ namespace COMCMS.Core
         [Description("管理员备注")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("AdminNotes", "管理员备注", "")]
-        public String AdminNotes { get => _AdminNotes; set { if (OnPropertyChanging(__.AdminNotes, value)) { _AdminNotes = value; OnPropertyChanged(__.AdminNotes); } } }
+        public String AdminNotes { get => _AdminNotes; set { if (OnPropertyChanging("AdminNotes", value)) { _AdminNotes = value; OnPropertyChanged("AdminNotes"); } } }
 
         private String _Pic;
         /// <summary>图片</summary>
@@ -221,7 +224,7 @@ namespace COMCMS.Core
         [Description("图片")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("Pic", "图片", "")]
-        public String Pic { get => _Pic; set { if (OnPropertyChanging(__.Pic, value)) { _Pic = value; OnPropertyChanged(__.Pic); } } }
+        public String Pic { get => _Pic; set { if (OnPropertyChanging("Pic", value)) { _Pic = value; OnPropertyChanged("Pic"); } } }
 
         private Int32 _DeliverId;
         /// <summary>配送方式ID</summary>
@@ -229,7 +232,7 @@ namespace COMCMS.Core
         [Description("配送方式ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("DeliverId", "配送方式ID", "")]
-        public Int32 DeliverId { get => _DeliverId; set { if (OnPropertyChanging(__.DeliverId, value)) { _DeliverId = value; OnPropertyChanged(__.DeliverId); } } }
+        public Int32 DeliverId { get => _DeliverId; set { if (OnPropertyChanging("DeliverId", value)) { _DeliverId = value; OnPropertyChanged("DeliverId"); } } }
 
         private String _DeliverType;
         /// <summary>配送方式名称</summary>
@@ -237,7 +240,7 @@ namespace COMCMS.Core
         [Description("配送方式名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("DeliverType", "配送方式名称", "")]
-        public String DeliverType { get => _DeliverType; set { if (OnPropertyChanging(__.DeliverType, value)) { _DeliverType = value; OnPropertyChanged(__.DeliverType); } } }
+        public String DeliverType { get => _DeliverType; set { if (OnPropertyChanging("DeliverType", value)) { _DeliverType = value; OnPropertyChanged("DeliverType"); } } }
 
         private String _DeliverNO;
         /// <summary>运单号</summary>
@@ -245,7 +248,7 @@ namespace COMCMS.Core
         [Description("运单号")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("DeliverNO", "运单号", "")]
-        public String DeliverNO { get => _DeliverNO; set { if (OnPropertyChanging(__.DeliverNO, value)) { _DeliverNO = value; OnPropertyChanged(__.DeliverNO); } } }
+        public String DeliverNO { get => _DeliverNO; set { if (OnPropertyChanging("DeliverNO", value)) { _DeliverNO = value; OnPropertyChanged("DeliverNO"); } } }
 
         private String _DeliverNotes;
         /// <summary>配送备注</summary>
@@ -253,7 +256,7 @@ namespace COMCMS.Core
         [Description("配送备注")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("DeliverNotes", "配送备注", "")]
-        public String DeliverNotes { get => _DeliverNotes; set { if (OnPropertyChanging(__.DeliverNotes, value)) { _DeliverNotes = value; OnPropertyChanged(__.DeliverNotes); } } }
+        public String DeliverNotes { get => _DeliverNotes; set { if (OnPropertyChanging("DeliverNotes", value)) { _DeliverNotes = value; OnPropertyChanged("DeliverNotes"); } } }
 
         private Int32 _PayId;
         /// <summary>支付方式ID</summary>
@@ -261,7 +264,7 @@ namespace COMCMS.Core
         [Description("支付方式ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("PayId", "支付方式ID", "")]
-        public Int32 PayId { get => _PayId; set { if (OnPropertyChanging(__.PayId, value)) { _PayId = value; OnPropertyChanged(__.PayId); } } }
+        public Int32 PayId { get => _PayId; set { if (OnPropertyChanging("PayId", value)) { _PayId = value; OnPropertyChanged("PayId"); } } }
 
         private String _PayType;
         /// <summary>付款方式</summary>
@@ -269,7 +272,7 @@ namespace COMCMS.Core
         [Description("付款方式")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("PayType", "付款方式", "")]
-        public String PayType { get => _PayType; set { if (OnPropertyChanging(__.PayType, value)) { _PayType = value; OnPropertyChanged(__.PayType); } } }
+        public String PayType { get => _PayType; set { if (OnPropertyChanging("PayType", value)) { _PayType = value; OnPropertyChanged("PayType"); } } }
 
         private String _PayTypeNotes;
         /// <summary>支付备注</summary>
@@ -277,7 +280,7 @@ namespace COMCMS.Core
         [Description("支付备注")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("PayTypeNotes", "支付备注", "")]
-        public String PayTypeNotes { get => _PayTypeNotes; set { if (OnPropertyChanging(__.PayTypeNotes, value)) { _PayTypeNotes = value; OnPropertyChanged(__.PayTypeNotes); } } }
+        public String PayTypeNotes { get => _PayTypeNotes; set { if (OnPropertyChanging("PayTypeNotes", value)) { _PayTypeNotes = value; OnPropertyChanged("PayTypeNotes"); } } }
 
         private String _OrderStatus;
         /// <summary>订单状态：未确认、已确认、已完成、已取消</summary>
@@ -285,7 +288,7 @@ namespace COMCMS.Core
         [Description("订单状态：未确认、已确认、已完成、已取消")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("OrderStatus", "订单状态：未确认、已确认、已完成、已取消", "")]
-        public String OrderStatus { get => _OrderStatus; set { if (OnPropertyChanging(__.OrderStatus, value)) { _OrderStatus = value; OnPropertyChanged(__.OrderStatus); } } }
+        public String OrderStatus { get => _OrderStatus; set { if (OnPropertyChanging("OrderStatus", value)) { _OrderStatus = value; OnPropertyChanged("OrderStatus"); } } }
 
         private String _PaymentStatus;
         /// <summary>支付状态：未支付、已支付、已退款</summary>
@@ -293,7 +296,7 @@ namespace COMCMS.Core
         [Description("支付状态：未支付、已支付、已退款")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("PaymentStatus", "支付状态：未支付、已支付、已退款", "")]
-        public String PaymentStatus { get => _PaymentStatus; set { if (OnPropertyChanging(__.PaymentStatus, value)) { _PaymentStatus = value; OnPropertyChanged(__.PaymentStatus); } } }
+        public String PaymentStatus { get => _PaymentStatus; set { if (OnPropertyChanging("PaymentStatus", value)) { _PaymentStatus = value; OnPropertyChanged("PaymentStatus"); } } }
 
         private String _DeliverStatus;
         /// <summary>配送状态：未配送、配货中、已配送、已收到、退货中、已退货</summary>
@@ -301,7 +304,7 @@ namespace COMCMS.Core
         [Description("配送状态：未配送、配货中、已配送、已收到、退货中、已退货")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("DeliverStatus", "配送状态：未配送、配货中、已配送、已收到、退货中、已退货", "")]
-        public String DeliverStatus { get => _DeliverStatus; set { if (OnPropertyChanging(__.DeliverStatus, value)) { _DeliverStatus = value; OnPropertyChanged(__.DeliverStatus); } } }
+        public String DeliverStatus { get => _DeliverStatus; set { if (OnPropertyChanging("DeliverStatus", value)) { _DeliverStatus = value; OnPropertyChanged("DeliverStatus"); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -309,7 +312,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging("AddTime", value)) { _AddTime = value; OnPropertyChanged("AddTime"); } } }
 
         private String _Ip;
         /// <summary>下单IP</summary>
@@ -317,7 +320,7 @@ namespace COMCMS.Core
         [Description("下单IP")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Ip", "下单IP", "")]
-        public String Ip { get => _Ip; set { if (OnPropertyChanging(__.Ip, value)) { _Ip = value; OnPropertyChanged(__.Ip); } } }
+        public String Ip { get => _Ip; set { if (OnPropertyChanging("Ip", value)) { _Ip = value; OnPropertyChanged("Ip"); } } }
 
         private Int32 _IsInvoice;
         /// <summary>是否需要发票</summary>
@@ -325,7 +328,7 @@ namespace COMCMS.Core
         [Description("是否需要发票")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsInvoice", "是否需要发票", "")]
-        public Int32 IsInvoice { get => _IsInvoice; set { if (OnPropertyChanging(__.IsInvoice, value)) { _IsInvoice = value; OnPropertyChanged(__.IsInvoice); } } }
+        public Int32 IsInvoice { get => _IsInvoice; set { if (OnPropertyChanging("IsInvoice", value)) { _IsInvoice = value; OnPropertyChanged("IsInvoice"); } } }
 
         private String _InvoiceCompanyName;
         /// <summary>抬头</summary>
@@ -333,7 +336,7 @@ namespace COMCMS.Core
         [Description("抬头")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("InvoiceCompanyName", "抬头", "")]
-        public String InvoiceCompanyName { get => _InvoiceCompanyName; set { if (OnPropertyChanging(__.InvoiceCompanyName, value)) { _InvoiceCompanyName = value; OnPropertyChanged(__.InvoiceCompanyName); } } }
+        public String InvoiceCompanyName { get => _InvoiceCompanyName; set { if (OnPropertyChanging("InvoiceCompanyName", value)) { _InvoiceCompanyName = value; OnPropertyChanged("InvoiceCompanyName"); } } }
 
         private String _InvoiceCompanyID;
         /// <summary>纳税人识别号</summary>
@@ -341,7 +344,7 @@ namespace COMCMS.Core
         [Description("纳税人识别号")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("InvoiceCompanyID", "纳税人识别号", "")]
-        public String InvoiceCompanyID { get => _InvoiceCompanyID; set { if (OnPropertyChanging(__.InvoiceCompanyID, value)) { _InvoiceCompanyID = value; OnPropertyChanged(__.InvoiceCompanyID); } } }
+        public String InvoiceCompanyID { get => _InvoiceCompanyID; set { if (OnPropertyChanging("InvoiceCompanyID", value)) { _InvoiceCompanyID = value; OnPropertyChanged("InvoiceCompanyID"); } } }
 
         private String _InvoiceType;
         /// <summary>发票内容</summary>
@@ -349,7 +352,7 @@ namespace COMCMS.Core
         [Description("发票内容")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("InvoiceType", "发票内容", "")]
-        public String InvoiceType { get => _InvoiceType; set { if (OnPropertyChanging(__.InvoiceType, value)) { _InvoiceType = value; OnPropertyChanged(__.InvoiceType); } } }
+        public String InvoiceType { get => _InvoiceType; set { if (OnPropertyChanging("InvoiceType", value)) { _InvoiceType = value; OnPropertyChanged("InvoiceType"); } } }
 
         private String _InvoiceNote;
         /// <summary>发票备注</summary>
@@ -357,7 +360,7 @@ namespace COMCMS.Core
         [Description("发票备注")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("InvoiceNote", "发票备注", "")]
-        public String InvoiceNote { get => _InvoiceNote; set { if (OnPropertyChanging(__.InvoiceNote, value)) { _InvoiceNote = value; OnPropertyChanged(__.InvoiceNote); } } }
+        public String InvoiceNote { get => _InvoiceNote; set { if (OnPropertyChanging("InvoiceNote", value)) { _InvoiceNote = value; OnPropertyChanged("InvoiceNote"); } } }
 
         private Int32 _IsRead;
         /// <summary>是否未读</summary>
@@ -365,7 +368,7 @@ namespace COMCMS.Core
         [Description("是否未读")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsRead", "是否未读", "")]
-        public Int32 IsRead { get => _IsRead; set { if (OnPropertyChanging(__.IsRead, value)) { _IsRead = value; OnPropertyChanged(__.IsRead); } } }
+        public Int32 IsRead { get => _IsRead; set { if (OnPropertyChanging("IsRead", value)) { _IsRead = value; OnPropertyChanged("IsRead"); } } }
 
         private Int32 _IsEnd;
         /// <summary>是否结束</summary>
@@ -373,7 +376,7 @@ namespace COMCMS.Core
         [Description("是否结束")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsEnd", "是否结束", "")]
-        public Int32 IsEnd { get => _IsEnd; set { if (OnPropertyChanging(__.IsEnd, value)) { _IsEnd = value; OnPropertyChanged(__.IsEnd); } } }
+        public Int32 IsEnd { get => _IsEnd; set { if (OnPropertyChanging("IsEnd", value)) { _IsEnd = value; OnPropertyChanged("IsEnd"); } } }
 
         private DateTime _EndTime;
         /// <summary>结束时间</summary>
@@ -381,7 +384,7 @@ namespace COMCMS.Core
         [Description("结束时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("EndTime", "结束时间", "")]
-        public DateTime EndTime { get => _EndTime; set { if (OnPropertyChanging(__.EndTime, value)) { _EndTime = value; OnPropertyChanged(__.EndTime); } } }
+        public DateTime EndTime { get => _EndTime; set { if (OnPropertyChanging("EndTime", value)) { _EndTime = value; OnPropertyChanged("EndTime"); } } }
 
         private Int32 _IsOk;
         /// <summary>订单是否顺利完成</summary>
@@ -389,7 +392,7 @@ namespace COMCMS.Core
         [Description("订单是否顺利完成")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsOk", "订单是否顺利完成", "")]
-        public Int32 IsOk { get => _IsOk; set { if (OnPropertyChanging(__.IsOk, value)) { _IsOk = value; OnPropertyChanged(__.IsOk); } } }
+        public Int32 IsOk { get => _IsOk; set { if (OnPropertyChanging("IsOk", value)) { _IsOk = value; OnPropertyChanged("IsOk"); } } }
 
         private Int32 _IsComment;
         /// <summary>订单已经评论</summary>
@@ -397,7 +400,7 @@ namespace COMCMS.Core
         [Description("订单已经评论")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsComment", "订单已经评论", "")]
-        public Int32 IsComment { get => _IsComment; set { if (OnPropertyChanging(__.IsComment, value)) { _IsComment = value; OnPropertyChanged(__.IsComment); } } }
+        public Int32 IsComment { get => _IsComment; set { if (OnPropertyChanging("IsComment", value)) { _IsComment = value; OnPropertyChanged("IsComment"); } } }
 
         private String _Flag1;
         /// <summary>预留字段1</summary>
@@ -405,7 +408,7 @@ namespace COMCMS.Core
         [Description("预留字段1")]
         [DataObjectField(false, false, true, 200)]
         [BindColumn("Flag1", "预留字段1", "")]
-        public String Flag1 { get => _Flag1; set { if (OnPropertyChanging(__.Flag1, value)) { _Flag1 = value; OnPropertyChanged(__.Flag1); } } }
+        public String Flag1 { get => _Flag1; set { if (OnPropertyChanging("Flag1", value)) { _Flag1 = value; OnPropertyChanged("Flag1"); } } }
 
         private String _Flag2;
         /// <summary>预留字段2</summary>
@@ -413,7 +416,7 @@ namespace COMCMS.Core
         [Description("预留字段2")]
         [DataObjectField(false, false, true, 200)]
         [BindColumn("Flag2", "预留字段2", "")]
-        public String Flag2 { get => _Flag2; set { if (OnPropertyChanging(__.Flag2, value)) { _Flag2 = value; OnPropertyChanged(__.Flag2); } } }
+        public String Flag2 { get => _Flag2; set { if (OnPropertyChanging("Flag2", value)) { _Flag2 = value; OnPropertyChanged("Flag2"); } } }
 
         private String _Flag3;
         /// <summary>预留字段3</summary>
@@ -421,7 +424,7 @@ namespace COMCMS.Core
         [Description("预留字段3")]
         [DataObjectField(false, false, true, 200)]
         [BindColumn("Flag3", "预留字段3", "")]
-        public String Flag3 { get => _Flag3; set { if (OnPropertyChanging(__.Flag3, value)) { _Flag3 = value; OnPropertyChanged(__.Flag3); } } }
+        public String Flag3 { get => _Flag3; set { if (OnPropertyChanging("Flag3", value)) { _Flag3 = value; OnPropertyChanged("Flag3"); } } }
 
         private String _Title;
         /// <summary>订单名称</summary>
@@ -429,7 +432,7 @@ namespace COMCMS.Core
         [Description("订单名称")]
         [DataObjectField(false, false, true, 200)]
         [BindColumn("Title", "订单名称", "")]
-        public String Title { get => _Title; set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
+        public String Title { get => _Title; set { if (OnPropertyChanging("Title", value)) { _Title = value; OnPropertyChanged("Title"); } } }
 
         private DateTime _LastModTime;
         /// <summary>最后操作时间</summary>
@@ -437,7 +440,7 @@ namespace COMCMS.Core
         [Description("最后操作时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("LastModTime", "最后操作时间", "")]
-        public DateTime LastModTime { get => _LastModTime; set { if (OnPropertyChanging(__.LastModTime, value)) { _LastModTime = value; OnPropertyChanged(__.LastModTime); } } }
+        public DateTime LastModTime { get => _LastModTime; set { if (OnPropertyChanging("LastModTime", value)) { _LastModTime = value; OnPropertyChanged("LastModTime"); } } }
 
         private Int32 _OrderType;
         /// <summary>订单类型，0为商品订单</summary>
@@ -445,7 +448,7 @@ namespace COMCMS.Core
         [Description("订单类型，0为商品订单")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("OrderType", "订单类型，0为商品订单", "")]
-        public Int32 OrderType { get => _OrderType; set { if (OnPropertyChanging(__.OrderType, value)) { _OrderType = value; OnPropertyChanged(__.OrderType); } } }
+        public Int32 OrderType { get => _OrderType; set { if (OnPropertyChanging("OrderType", value)) { _OrderType = value; OnPropertyChanged("OrderType"); } } }
 
         private Int32 _MyType;
         /// <summary>系统类型</summary>
@@ -453,7 +456,7 @@ namespace COMCMS.Core
         [Description("系统类型")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("MyType", "系统类型", "")]
-        public Int32 MyType { get => _MyType; set { if (OnPropertyChanging(__.MyType, value)) { _MyType = value; OnPropertyChanged(__.MyType); } } }
+        public Int32 MyType { get => _MyType; set { if (OnPropertyChanging("MyType", value)) { _MyType = value; OnPropertyChanged("MyType"); } } }
 
         private String _OutTradeNo;
         /// <summary>支付成功流水号</summary>
@@ -461,7 +464,7 @@ namespace COMCMS.Core
         [Description("支付成功流水号")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("OutTradeNo", "支付成功流水号", "")]
-        public String OutTradeNo { get => _OutTradeNo; set { if (OnPropertyChanging(__.OutTradeNo, value)) { _OutTradeNo = value; OnPropertyChanged(__.OutTradeNo); } } }
+        public String OutTradeNo { get => _OutTradeNo; set { if (OnPropertyChanging("OutTradeNo", value)) { _OutTradeNo = value; OnPropertyChanged("OutTradeNo"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -474,62 +477,62 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.OrderNum: return _OrderNum;
-                    case __.UId: return _UId;
-                    case __.UserName: return _UserName;
-                    case __.ShopId: return _ShopId;
-                    case __.Credit: return _Credit;
-                    case __.TotalQty: return _TotalQty;
-                    case __.TotalPrice: return _TotalPrice;
-                    case __.Discount: return _Discount;
-                    case __.Fare: return _Fare;
-                    case __.TotalTax: return _TotalTax;
-                    case __.TotalPay: return _TotalPay;
-                    case __.BackCredits: return _BackCredits;
-                    case __.RealName: return _RealName;
-                    case __.Country: return _Country;
-                    case __.Province: return _Province;
-                    case __.City: return _City;
-                    case __.District: return _District;
-                    case __.Address: return _Address;
-                    case __.PostCode: return _PostCode;
-                    case __.Tel: return _Tel;
-                    case __.Mobile: return _Mobile;
-                    case __.Email: return _Email;
-                    case __.Notes: return _Notes;
-                    case __.AdminNotes: return _AdminNotes;
-                    case __.Pic: return _Pic;
-                    case __.DeliverId: return _DeliverId;
-                    case __.DeliverType: return _DeliverType;
-                    case __.DeliverNO: return _DeliverNO;
-                    case __.DeliverNotes: return _DeliverNotes;
-                    case __.PayId: return _PayId;
-                    case __.PayType: return _PayType;
-                    case __.PayTypeNotes: return _PayTypeNotes;
-                    case __.OrderStatus: return _OrderStatus;
-                    case __.PaymentStatus: return _PaymentStatus;
-                    case __.DeliverStatus: return _DeliverStatus;
-                    case __.AddTime: return _AddTime;
-                    case __.Ip: return _Ip;
-                    case __.IsInvoice: return _IsInvoice;
-                    case __.InvoiceCompanyName: return _InvoiceCompanyName;
-                    case __.InvoiceCompanyID: return _InvoiceCompanyID;
-                    case __.InvoiceType: return _InvoiceType;
-                    case __.InvoiceNote: return _InvoiceNote;
-                    case __.IsRead: return _IsRead;
-                    case __.IsEnd: return _IsEnd;
-                    case __.EndTime: return _EndTime;
-                    case __.IsOk: return _IsOk;
-                    case __.IsComment: return _IsComment;
-                    case __.Flag1: return _Flag1;
-                    case __.Flag2: return _Flag2;
-                    case __.Flag3: return _Flag3;
-                    case __.Title: return _Title;
-                    case __.LastModTime: return _LastModTime;
-                    case __.OrderType: return _OrderType;
-                    case __.MyType: return _MyType;
-                    case __.OutTradeNo: return _OutTradeNo;
+                    case "Id": return _Id;
+                    case "OrderNum": return _OrderNum;
+                    case "UId": return _UId;
+                    case "UserName": return _UserName;
+                    case "ShopId": return _ShopId;
+                    case "Credit": return _Credit;
+                    case "TotalQty": return _TotalQty;
+                    case "TotalPrice": return _TotalPrice;
+                    case "Discount": return _Discount;
+                    case "Fare": return _Fare;
+                    case "TotalTax": return _TotalTax;
+                    case "TotalPay": return _TotalPay;
+                    case "BackCredits": return _BackCredits;
+                    case "RealName": return _RealName;
+                    case "Country": return _Country;
+                    case "Province": return _Province;
+                    case "City": return _City;
+                    case "District": return _District;
+                    case "Address": return _Address;
+                    case "PostCode": return _PostCode;
+                    case "Tel": return _Tel;
+                    case "Mobile": return _Mobile;
+                    case "Email": return _Email;
+                    case "Notes": return _Notes;
+                    case "AdminNotes": return _AdminNotes;
+                    case "Pic": return _Pic;
+                    case "DeliverId": return _DeliverId;
+                    case "DeliverType": return _DeliverType;
+                    case "DeliverNO": return _DeliverNO;
+                    case "DeliverNotes": return _DeliverNotes;
+                    case "PayId": return _PayId;
+                    case "PayType": return _PayType;
+                    case "PayTypeNotes": return _PayTypeNotes;
+                    case "OrderStatus": return _OrderStatus;
+                    case "PaymentStatus": return _PaymentStatus;
+                    case "DeliverStatus": return _DeliverStatus;
+                    case "AddTime": return _AddTime;
+                    case "Ip": return _Ip;
+                    case "IsInvoice": return _IsInvoice;
+                    case "InvoiceCompanyName": return _InvoiceCompanyName;
+                    case "InvoiceCompanyID": return _InvoiceCompanyID;
+                    case "InvoiceType": return _InvoiceType;
+                    case "InvoiceNote": return _InvoiceNote;
+                    case "IsRead": return _IsRead;
+                    case "IsEnd": return _IsEnd;
+                    case "EndTime": return _EndTime;
+                    case "IsOk": return _IsOk;
+                    case "IsComment": return _IsComment;
+                    case "Flag1": return _Flag1;
+                    case "Flag2": return _Flag2;
+                    case "Flag3": return _Flag3;
+                    case "Title": return _Title;
+                    case "LastModTime": return _LastModTime;
+                    case "OrderType": return _OrderType;
+                    case "MyType": return _MyType;
+                    case "OutTradeNo": return _OutTradeNo;
                     default: return base[name];
                 }
             }
@@ -537,62 +540,62 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.OrderNum: _OrderNum = Convert.ToString(value); break;
-                    case __.UId: _UId = value.ToInt(); break;
-                    case __.UserName: _UserName = Convert.ToString(value); break;
-                    case __.ShopId: _ShopId = value.ToInt(); break;
-                    case __.Credit: _Credit = value.ToInt(); break;
-                    case __.TotalQty: _TotalQty = value.ToInt(); break;
-                    case __.TotalPrice: _TotalPrice = Convert.ToDecimal(value); break;
-                    case __.Discount: _Discount = Convert.ToDecimal(value); break;
-                    case __.Fare: _Fare = Convert.ToDecimal(value); break;
-                    case __.TotalTax: _TotalTax = Convert.ToDecimal(value); break;
-                    case __.TotalPay: _TotalPay = Convert.ToDecimal(value); break;
-                    case __.BackCredits: _BackCredits = value.ToInt(); break;
-                    case __.RealName: _RealName = Convert.ToString(value); break;
-                    case __.Country: _Country = Convert.ToString(value); break;
-                    case __.Province: _Province = Convert.ToString(value); break;
-                    case __.City: _City = Convert.ToString(value); break;
-                    case __.District: _District = Convert.ToString(value); break;
-                    case __.Address: _Address = Convert.ToString(value); break;
-                    case __.PostCode: _PostCode = Convert.ToString(value); break;
-                    case __.Tel: _Tel = Convert.ToString(value); break;
-                    case __.Mobile: _Mobile = Convert.ToString(value); break;
-                    case __.Email: _Email = Convert.ToString(value); break;
-                    case __.Notes: _Notes = Convert.ToString(value); break;
-                    case __.AdminNotes: _AdminNotes = Convert.ToString(value); break;
-                    case __.Pic: _Pic = Convert.ToString(value); break;
-                    case __.DeliverId: _DeliverId = value.ToInt(); break;
-                    case __.DeliverType: _DeliverType = Convert.ToString(value); break;
-                    case __.DeliverNO: _DeliverNO = Convert.ToString(value); break;
-                    case __.DeliverNotes: _DeliverNotes = Convert.ToString(value); break;
-                    case __.PayId: _PayId = value.ToInt(); break;
-                    case __.PayType: _PayType = Convert.ToString(value); break;
-                    case __.PayTypeNotes: _PayTypeNotes = Convert.ToString(value); break;
-                    case __.OrderStatus: _OrderStatus = Convert.ToString(value); break;
-                    case __.PaymentStatus: _PaymentStatus = Convert.ToString(value); break;
-                    case __.DeliverStatus: _DeliverStatus = Convert.ToString(value); break;
-                    case __.AddTime: _AddTime = value.ToDateTime(); break;
-                    case __.Ip: _Ip = Convert.ToString(value); break;
-                    case __.IsInvoice: _IsInvoice = value.ToInt(); break;
-                    case __.InvoiceCompanyName: _InvoiceCompanyName = Convert.ToString(value); break;
-                    case __.InvoiceCompanyID: _InvoiceCompanyID = Convert.ToString(value); break;
-                    case __.InvoiceType: _InvoiceType = Convert.ToString(value); break;
-                    case __.InvoiceNote: _InvoiceNote = Convert.ToString(value); break;
-                    case __.IsRead: _IsRead = value.ToInt(); break;
-                    case __.IsEnd: _IsEnd = value.ToInt(); break;
-                    case __.EndTime: _EndTime = value.ToDateTime(); break;
-                    case __.IsOk: _IsOk = value.ToInt(); break;
-                    case __.IsComment: _IsComment = value.ToInt(); break;
-                    case __.Flag1: _Flag1 = Convert.ToString(value); break;
-                    case __.Flag2: _Flag2 = Convert.ToString(value); break;
-                    case __.Flag3: _Flag3 = Convert.ToString(value); break;
-                    case __.Title: _Title = Convert.ToString(value); break;
-                    case __.LastModTime: _LastModTime = value.ToDateTime(); break;
-                    case __.OrderType: _OrderType = value.ToInt(); break;
-                    case __.MyType: _MyType = value.ToInt(); break;
-                    case __.OutTradeNo: _OutTradeNo = Convert.ToString(value); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "OrderNum": _OrderNum = Convert.ToString(value); break;
+                    case "UId": _UId = value.ToInt(); break;
+                    case "UserName": _UserName = Convert.ToString(value); break;
+                    case "ShopId": _ShopId = value.ToInt(); break;
+                    case "Credit": _Credit = value.ToInt(); break;
+                    case "TotalQty": _TotalQty = value.ToInt(); break;
+                    case "TotalPrice": _TotalPrice = Convert.ToDecimal(value); break;
+                    case "Discount": _Discount = Convert.ToDecimal(value); break;
+                    case "Fare": _Fare = Convert.ToDecimal(value); break;
+                    case "TotalTax": _TotalTax = Convert.ToDecimal(value); break;
+                    case "TotalPay": _TotalPay = Convert.ToDecimal(value); break;
+                    case "BackCredits": _BackCredits = value.ToInt(); break;
+                    case "RealName": _RealName = Convert.ToString(value); break;
+                    case "Country": _Country = Convert.ToString(value); break;
+                    case "Province": _Province = Convert.ToString(value); break;
+                    case "City": _City = Convert.ToString(value); break;
+                    case "District": _District = Convert.ToString(value); break;
+                    case "Address": _Address = Convert.ToString(value); break;
+                    case "PostCode": _PostCode = Convert.ToString(value); break;
+                    case "Tel": _Tel = Convert.ToString(value); break;
+                    case "Mobile": _Mobile = Convert.ToString(value); break;
+                    case "Email": _Email = Convert.ToString(value); break;
+                    case "Notes": _Notes = Convert.ToString(value); break;
+                    case "AdminNotes": _AdminNotes = Convert.ToString(value); break;
+                    case "Pic": _Pic = Convert.ToString(value); break;
+                    case "DeliverId": _DeliverId = value.ToInt(); break;
+                    case "DeliverType": _DeliverType = Convert.ToString(value); break;
+                    case "DeliverNO": _DeliverNO = Convert.ToString(value); break;
+                    case "DeliverNotes": _DeliverNotes = Convert.ToString(value); break;
+                    case "PayId": _PayId = value.ToInt(); break;
+                    case "PayType": _PayType = Convert.ToString(value); break;
+                    case "PayTypeNotes": _PayTypeNotes = Convert.ToString(value); break;
+                    case "OrderStatus": _OrderStatus = Convert.ToString(value); break;
+                    case "PaymentStatus": _PaymentStatus = Convert.ToString(value); break;
+                    case "DeliverStatus": _DeliverStatus = Convert.ToString(value); break;
+                    case "AddTime": _AddTime = value.ToDateTime(); break;
+                    case "Ip": _Ip = Convert.ToString(value); break;
+                    case "IsInvoice": _IsInvoice = value.ToInt(); break;
+                    case "InvoiceCompanyName": _InvoiceCompanyName = Convert.ToString(value); break;
+                    case "InvoiceCompanyID": _InvoiceCompanyID = Convert.ToString(value); break;
+                    case "InvoiceType": _InvoiceType = Convert.ToString(value); break;
+                    case "InvoiceNote": _InvoiceNote = Convert.ToString(value); break;
+                    case "IsRead": _IsRead = value.ToInt(); break;
+                    case "IsEnd": _IsEnd = value.ToInt(); break;
+                    case "EndTime": _EndTime = value.ToDateTime(); break;
+                    case "IsOk": _IsOk = value.ToInt(); break;
+                    case "IsComment": _IsComment = value.ToInt(); break;
+                    case "Flag1": _Flag1 = Convert.ToString(value); break;
+                    case "Flag2": _Flag2 = Convert.ToString(value); break;
+                    case "Flag3": _Flag3 = Convert.ToString(value); break;
+                    case "Title": _Title = Convert.ToString(value); break;
+                    case "LastModTime": _LastModTime = value.ToDateTime(); break;
+                    case "OrderType": _OrderType = value.ToInt(); break;
+                    case "MyType": _MyType = value.ToInt(); break;
+                    case "OutTradeNo": _OutTradeNo = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -604,172 +607,172 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>订单号</summary>
-            public static readonly Field OrderNum = FindByName(__.OrderNum);
+            public static readonly Field OrderNum = FindByName("OrderNum");
 
             /// <summary>用户ID</summary>
-            public static readonly Field UId = FindByName(__.UId);
+            public static readonly Field UId = FindByName("UId");
 
             /// <summary>下单用户名</summary>
-            public static readonly Field UserName = FindByName(__.UserName);
+            public static readonly Field UserName = FindByName("UserName");
 
             /// <summary>商户ID</summary>
-            public static readonly Field ShopId = FindByName(__.ShopId);
+            public static readonly Field ShopId = FindByName("ShopId");
 
             /// <summary>积分</summary>
-            public static readonly Field Credit = FindByName(__.Credit);
+            public static readonly Field Credit = FindByName("Credit");
 
             /// <summary>总数量</summary>
-            public static readonly Field TotalQty = FindByName(__.TotalQty);
+            public static readonly Field TotalQty = FindByName("TotalQty");
 
             /// <summary>总价格</summary>
-            public static readonly Field TotalPrice = FindByName(__.TotalPrice);
+            public static readonly Field TotalPrice = FindByName("TotalPrice");
 
             /// <summary>折扣</summary>
-            public static readonly Field Discount = FindByName(__.Discount);
+            public static readonly Field Discount = FindByName("Discount");
 
             /// <summary>运费</summary>
-            public static readonly Field Fare = FindByName(__.Fare);
+            public static readonly Field Fare = FindByName("Fare");
 
             /// <summary>税</summary>
-            public static readonly Field TotalTax = FindByName(__.TotalTax);
+            public static readonly Field TotalTax = FindByName("TotalTax");
 
             /// <summary>总支付价格</summary>
-            public static readonly Field TotalPay = FindByName(__.TotalPay);
+            public static readonly Field TotalPay = FindByName("TotalPay");
 
             /// <summary>返现积分</summary>
-            public static readonly Field BackCredits = FindByName(__.BackCredits);
+            public static readonly Field BackCredits = FindByName("BackCredits");
 
             /// <summary>姓名</summary>
-            public static readonly Field RealName = FindByName(__.RealName);
+            public static readonly Field RealName = FindByName("RealName");
 
             /// <summary>国家</summary>
-            public static readonly Field Country = FindByName(__.Country);
+            public static readonly Field Country = FindByName("Country");
 
             /// <summary>省份</summary>
-            public static readonly Field Province = FindByName(__.Province);
+            public static readonly Field Province = FindByName("Province");
 
             /// <summary>城市</summary>
-            public static readonly Field City = FindByName(__.City);
+            public static readonly Field City = FindByName("City");
 
             /// <summary>区</summary>
-            public static readonly Field District = FindByName(__.District);
+            public static readonly Field District = FindByName("District");
 
             /// <summary>详细地址</summary>
-            public static readonly Field Address = FindByName(__.Address);
+            public static readonly Field Address = FindByName("Address");
 
             /// <summary>邮编</summary>
-            public static readonly Field PostCode = FindByName(__.PostCode);
+            public static readonly Field PostCode = FindByName("PostCode");
 
             /// <summary>手机</summary>
-            public static readonly Field Tel = FindByName(__.Tel);
+            public static readonly Field Tel = FindByName("Tel");
 
             /// <summary>手机</summary>
-            public static readonly Field Mobile = FindByName(__.Mobile);
+            public static readonly Field Mobile = FindByName("Mobile");
 
             /// <summary>邮箱</summary>
-            public static readonly Field Email = FindByName(__.Email);
+            public static readonly Field Email = FindByName("Email");
 
             /// <summary>备注</summary>
-            public static readonly Field Notes = FindByName(__.Notes);
+            public static readonly Field Notes = FindByName("Notes");
 
             /// <summary>管理员备注</summary>
-            public static readonly Field AdminNotes = FindByName(__.AdminNotes);
+            public static readonly Field AdminNotes = FindByName("AdminNotes");
 
             /// <summary>图片</summary>
-            public static readonly Field Pic = FindByName(__.Pic);
+            public static readonly Field Pic = FindByName("Pic");
 
             /// <summary>配送方式ID</summary>
-            public static readonly Field DeliverId = FindByName(__.DeliverId);
+            public static readonly Field DeliverId = FindByName("DeliverId");
 
             /// <summary>配送方式名称</summary>
-            public static readonly Field DeliverType = FindByName(__.DeliverType);
+            public static readonly Field DeliverType = FindByName("DeliverType");
 
             /// <summary>运单号</summary>
-            public static readonly Field DeliverNO = FindByName(__.DeliverNO);
+            public static readonly Field DeliverNO = FindByName("DeliverNO");
 
             /// <summary>配送备注</summary>
-            public static readonly Field DeliverNotes = FindByName(__.DeliverNotes);
+            public static readonly Field DeliverNotes = FindByName("DeliverNotes");
 
             /// <summary>支付方式ID</summary>
-            public static readonly Field PayId = FindByName(__.PayId);
+            public static readonly Field PayId = FindByName("PayId");
 
             /// <summary>付款方式</summary>
-            public static readonly Field PayType = FindByName(__.PayType);
+            public static readonly Field PayType = FindByName("PayType");
 
             /// <summary>支付备注</summary>
-            public static readonly Field PayTypeNotes = FindByName(__.PayTypeNotes);
+            public static readonly Field PayTypeNotes = FindByName("PayTypeNotes");
 
             /// <summary>订单状态：未确认、已确认、已完成、已取消</summary>
-            public static readonly Field OrderStatus = FindByName(__.OrderStatus);
+            public static readonly Field OrderStatus = FindByName("OrderStatus");
 
             /// <summary>支付状态：未支付、已支付、已退款</summary>
-            public static readonly Field PaymentStatus = FindByName(__.PaymentStatus);
+            public static readonly Field PaymentStatus = FindByName("PaymentStatus");
 
             /// <summary>配送状态：未配送、配货中、已配送、已收到、退货中、已退货</summary>
-            public static readonly Field DeliverStatus = FindByName(__.DeliverStatus);
+            public static readonly Field DeliverStatus = FindByName("DeliverStatus");
 
             /// <summary>添加时间</summary>
-            public static readonly Field AddTime = FindByName(__.AddTime);
+            public static readonly Field AddTime = FindByName("AddTime");
 
             /// <summary>下单IP</summary>
-            public static readonly Field Ip = FindByName(__.Ip);
+            public static readonly Field Ip = FindByName("Ip");
 
             /// <summary>是否需要发票</summary>
-            public static readonly Field IsInvoice = FindByName(__.IsInvoice);
+            public static readonly Field IsInvoice = FindByName("IsInvoice");
 
             /// <summary>抬头</summary>
-            public static readonly Field InvoiceCompanyName = FindByName(__.InvoiceCompanyName);
+            public static readonly Field InvoiceCompanyName = FindByName("InvoiceCompanyName");
 
             /// <summary>纳税人识别号</summary>
-            public static readonly Field InvoiceCompanyID = FindByName(__.InvoiceCompanyID);
+            public static readonly Field InvoiceCompanyID = FindByName("InvoiceCompanyID");
 
             /// <summary>发票内容</summary>
-            public static readonly Field InvoiceType = FindByName(__.InvoiceType);
+            public static readonly Field InvoiceType = FindByName("InvoiceType");
 
             /// <summary>发票备注</summary>
-            public static readonly Field InvoiceNote = FindByName(__.InvoiceNote);
+            public static readonly Field InvoiceNote = FindByName("InvoiceNote");
 
             /// <summary>是否未读</summary>
-            public static readonly Field IsRead = FindByName(__.IsRead);
+            public static readonly Field IsRead = FindByName("IsRead");
 
             /// <summary>是否结束</summary>
-            public static readonly Field IsEnd = FindByName(__.IsEnd);
+            public static readonly Field IsEnd = FindByName("IsEnd");
 
             /// <summary>结束时间</summary>
-            public static readonly Field EndTime = FindByName(__.EndTime);
+            public static readonly Field EndTime = FindByName("EndTime");
 
             /// <summary>订单是否顺利完成</summary>
-            public static readonly Field IsOk = FindByName(__.IsOk);
+            public static readonly Field IsOk = FindByName("IsOk");
 
             /// <summary>订单已经评论</summary>
-            public static readonly Field IsComment = FindByName(__.IsComment);
+            public static readonly Field IsComment = FindByName("IsComment");
 
             /// <summary>预留字段1</summary>
-            public static readonly Field Flag1 = FindByName(__.Flag1);
+            public static readonly Field Flag1 = FindByName("Flag1");
 
             /// <summary>预留字段2</summary>
-            public static readonly Field Flag2 = FindByName(__.Flag2);
+            public static readonly Field Flag2 = FindByName("Flag2");
 
             /// <summary>预留字段3</summary>
-            public static readonly Field Flag3 = FindByName(__.Flag3);
+            public static readonly Field Flag3 = FindByName("Flag3");
 
             /// <summary>订单名称</summary>
-            public static readonly Field Title = FindByName(__.Title);
+            public static readonly Field Title = FindByName("Title");
 
             /// <summary>最后操作时间</summary>
-            public static readonly Field LastModTime = FindByName(__.LastModTime);
+            public static readonly Field LastModTime = FindByName("LastModTime");
 
             /// <summary>订单类型，0为商品订单</summary>
-            public static readonly Field OrderType = FindByName(__.OrderType);
+            public static readonly Field OrderType = FindByName("OrderType");
 
             /// <summary>系统类型</summary>
-            public static readonly Field MyType = FindByName(__.MyType);
+            public static readonly Field MyType = FindByName("MyType");
 
             /// <summary>支付成功流水号</summary>
-            public static readonly Field OutTradeNo = FindByName(__.OutTradeNo);
+            public static readonly Field OutTradeNo = FindByName("OutTradeNo");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -945,187 +948,6 @@ namespace COMCMS.Core
             /// <summary>支付成功流水号</summary>
             public const String OutTradeNo = "OutTradeNo";
         }
-        #endregion
-    }
-
-    /// <summary>订单接口</summary>
-    public partial interface IOrder
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>订单号</summary>
-        String OrderNum { get; set; }
-
-        /// <summary>用户ID</summary>
-        Int32 UId { get; set; }
-
-        /// <summary>下单用户名</summary>
-        String UserName { get; set; }
-
-        /// <summary>商户ID</summary>
-        Int32 ShopId { get; set; }
-
-        /// <summary>积分</summary>
-        Int32 Credit { get; set; }
-
-        /// <summary>总数量</summary>
-        Int32 TotalQty { get; set; }
-
-        /// <summary>总价格</summary>
-        Decimal TotalPrice { get; set; }
-
-        /// <summary>折扣</summary>
-        Decimal Discount { get; set; }
-
-        /// <summary>运费</summary>
-        Decimal Fare { get; set; }
-
-        /// <summary>税</summary>
-        Decimal TotalTax { get; set; }
-
-        /// <summary>总支付价格</summary>
-        Decimal TotalPay { get; set; }
-
-        /// <summary>返现积分</summary>
-        Int32 BackCredits { get; set; }
-
-        /// <summary>姓名</summary>
-        String RealName { get; set; }
-
-        /// <summary>国家</summary>
-        String Country { get; set; }
-
-        /// <summary>省份</summary>
-        String Province { get; set; }
-
-        /// <summary>城市</summary>
-        String City { get; set; }
-
-        /// <summary>区</summary>
-        String District { get; set; }
-
-        /// <summary>详细地址</summary>
-        String Address { get; set; }
-
-        /// <summary>邮编</summary>
-        String PostCode { get; set; }
-
-        /// <summary>手机</summary>
-        String Tel { get; set; }
-
-        /// <summary>手机</summary>
-        String Mobile { get; set; }
-
-        /// <summary>邮箱</summary>
-        String Email { get; set; }
-
-        /// <summary>备注</summary>
-        String Notes { get; set; }
-
-        /// <summary>管理员备注</summary>
-        String AdminNotes { get; set; }
-
-        /// <summary>图片</summary>
-        String Pic { get; set; }
-
-        /// <summary>配送方式ID</summary>
-        Int32 DeliverId { get; set; }
-
-        /// <summary>配送方式名称</summary>
-        String DeliverType { get; set; }
-
-        /// <summary>运单号</summary>
-        String DeliverNO { get; set; }
-
-        /// <summary>配送备注</summary>
-        String DeliverNotes { get; set; }
-
-        /// <summary>支付方式ID</summary>
-        Int32 PayId { get; set; }
-
-        /// <summary>付款方式</summary>
-        String PayType { get; set; }
-
-        /// <summary>支付备注</summary>
-        String PayTypeNotes { get; set; }
-
-        /// <summary>订单状态：未确认、已确认、已完成、已取消</summary>
-        String OrderStatus { get; set; }
-
-        /// <summary>支付状态：未支付、已支付、已退款</summary>
-        String PaymentStatus { get; set; }
-
-        /// <summary>配送状态：未配送、配货中、已配送、已收到、退货中、已退货</summary>
-        String DeliverStatus { get; set; }
-
-        /// <summary>添加时间</summary>
-        DateTime AddTime { get; set; }
-
-        /// <summary>下单IP</summary>
-        String Ip { get; set; }
-
-        /// <summary>是否需要发票</summary>
-        Int32 IsInvoice { get; set; }
-
-        /// <summary>抬头</summary>
-        String InvoiceCompanyName { get; set; }
-
-        /// <summary>纳税人识别号</summary>
-        String InvoiceCompanyID { get; set; }
-
-        /// <summary>发票内容</summary>
-        String InvoiceType { get; set; }
-
-        /// <summary>发票备注</summary>
-        String InvoiceNote { get; set; }
-
-        /// <summary>是否未读</summary>
-        Int32 IsRead { get; set; }
-
-        /// <summary>是否结束</summary>
-        Int32 IsEnd { get; set; }
-
-        /// <summary>结束时间</summary>
-        DateTime EndTime { get; set; }
-
-        /// <summary>订单是否顺利完成</summary>
-        Int32 IsOk { get; set; }
-
-        /// <summary>订单已经评论</summary>
-        Int32 IsComment { get; set; }
-
-        /// <summary>预留字段1</summary>
-        String Flag1 { get; set; }
-
-        /// <summary>预留字段2</summary>
-        String Flag2 { get; set; }
-
-        /// <summary>预留字段3</summary>
-        String Flag3 { get; set; }
-
-        /// <summary>订单名称</summary>
-        String Title { get; set; }
-
-        /// <summary>最后操作时间</summary>
-        DateTime LastModTime { get; set; }
-
-        /// <summary>订单类型，0为商品订单</summary>
-        Int32 OrderType { get; set; }
-
-        /// <summary>系统类型</summary>
-        Int32 MyType { get; set; }
-
-        /// <summary>支付成功流水号</summary>
-        String OutTradeNo { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

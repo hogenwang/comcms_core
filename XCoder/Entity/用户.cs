@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("用户")]
     [BindTable("Member", Description = "用户", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class Member : IMember
+    public partial class Member
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private String _UserName;
         /// <summary>用户名</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("用户名")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("UserName", "用户名", "", Master = true)]
-        public String UserName { get => _UserName; set { if (OnPropertyChanging(__.UserName, value)) { _UserName = value; OnPropertyChanged(__.UserName); } } }
+        public String UserName { get => _UserName; set { if (OnPropertyChanging("UserName", value)) { _UserName = value; OnPropertyChanged("UserName"); } } }
 
         private String _PassWord;
         /// <summary>密码</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("密码")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("PassWord", "密码", "")]
-        public String PassWord { get => _PassWord; set { if (OnPropertyChanging(__.PassWord, value)) { _PassWord = value; OnPropertyChanged(__.PassWord); } } }
+        public String PassWord { get => _PassWord; set { if (OnPropertyChanging("PassWord", value)) { _PassWord = value; OnPropertyChanged("PassWord"); } } }
 
         private String _Salt;
         /// <summary>盐值</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("盐值")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Salt", "盐值", "")]
-        public String Salt { get => _Salt; set { if (OnPropertyChanging(__.Salt, value)) { _Salt = value; OnPropertyChanged(__.Salt); } } }
+        public String Salt { get => _Salt; set { if (OnPropertyChanging("Salt", value)) { _Salt = value; OnPropertyChanged("Salt"); } } }
 
         private String _RealName;
         /// <summary>姓名</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("姓名")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("RealName", "姓名", "")]
-        public String RealName { get => _RealName; set { if (OnPropertyChanging(__.RealName, value)) { _RealName = value; OnPropertyChanged(__.RealName); } } }
+        public String RealName { get => _RealName; set { if (OnPropertyChanging("RealName", value)) { _RealName = value; OnPropertyChanged("RealName"); } } }
 
         private String _Tel;
         /// <summary>手机</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("手机")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Tel", "手机", "")]
-        public String Tel { get => _Tel; set { if (OnPropertyChanging(__.Tel, value)) { _Tel = value; OnPropertyChanged(__.Tel); } } }
+        public String Tel { get => _Tel; set { if (OnPropertyChanging("Tel", value)) { _Tel = value; OnPropertyChanged("Tel"); } } }
 
         private String _Email;
         /// <summary>邮件</summary>
@@ -69,7 +72,7 @@ namespace COMCMS.Core
         [Description("邮件")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Email", "邮件", "", Master = true)]
-        public String Email { get => _Email; set { if (OnPropertyChanging(__.Email, value)) { _Email = value; OnPropertyChanged(__.Email); } } }
+        public String Email { get => _Email; set { if (OnPropertyChanging("Email", value)) { _Email = value; OnPropertyChanged("Email"); } } }
 
         private Int32 _RoleId;
         /// <summary>会员组，代理级别</summary>
@@ -77,7 +80,7 @@ namespace COMCMS.Core
         [Description("会员组，代理级别")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("RoleId", "会员组，代理级别", "", Master = true)]
-        public Int32 RoleId { get => _RoleId; set { if (OnPropertyChanging(__.RoleId, value)) { _RoleId = value; OnPropertyChanged(__.RoleId); } } }
+        public Int32 RoleId { get => _RoleId; set { if (OnPropertyChanging("RoleId", value)) { _RoleId = value; OnPropertyChanged("RoleId"); } } }
 
         private DateTime _LastLoginTime;
         /// <summary>最后登录时间</summary>
@@ -85,7 +88,7 @@ namespace COMCMS.Core
         [Description("最后登录时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("LastLoginTime", "最后登录时间", "")]
-        public DateTime LastLoginTime { get => _LastLoginTime; set { if (OnPropertyChanging(__.LastLoginTime, value)) { _LastLoginTime = value; OnPropertyChanged(__.LastLoginTime); } } }
+        public DateTime LastLoginTime { get => _LastLoginTime; set { if (OnPropertyChanging("LastLoginTime", value)) { _LastLoginTime = value; OnPropertyChanged("LastLoginTime"); } } }
 
         private String _LastLoginIP;
         /// <summary>上次登录IP</summary>
@@ -93,7 +96,7 @@ namespace COMCMS.Core
         [Description("上次登录IP")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("LastLoginIP", "上次登录IP", "")]
-        public String LastLoginIP { get => _LastLoginIP; set { if (OnPropertyChanging(__.LastLoginIP, value)) { _LastLoginIP = value; OnPropertyChanged(__.LastLoginIP); } } }
+        public String LastLoginIP { get => _LastLoginIP; set { if (OnPropertyChanging("LastLoginIP", value)) { _LastLoginIP = value; OnPropertyChanged("LastLoginIP"); } } }
 
         private DateTime _ThisLoginTime;
         /// <summary>本次登录时间</summary>
@@ -101,7 +104,7 @@ namespace COMCMS.Core
         [Description("本次登录时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("ThisLoginTime", "本次登录时间", "")]
-        public DateTime ThisLoginTime { get => _ThisLoginTime; set { if (OnPropertyChanging(__.ThisLoginTime, value)) { _ThisLoginTime = value; OnPropertyChanged(__.ThisLoginTime); } } }
+        public DateTime ThisLoginTime { get => _ThisLoginTime; set { if (OnPropertyChanging("ThisLoginTime", value)) { _ThisLoginTime = value; OnPropertyChanged("ThisLoginTime"); } } }
 
         private String _ThisLoginIP;
         /// <summary>本次登录IP</summary>
@@ -109,7 +112,7 @@ namespace COMCMS.Core
         [Description("本次登录IP")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("ThisLoginIP", "本次登录IP", "")]
-        public String ThisLoginIP { get => _ThisLoginIP; set { if (OnPropertyChanging(__.ThisLoginIP, value)) { _ThisLoginIP = value; OnPropertyChanged(__.ThisLoginIP); } } }
+        public String ThisLoginIP { get => _ThisLoginIP; set { if (OnPropertyChanging("ThisLoginIP", value)) { _ThisLoginIP = value; OnPropertyChanged("ThisLoginIP"); } } }
 
         private Int32 _IsLock;
         /// <summary>是否是锁定</summary>
@@ -117,7 +120,7 @@ namespace COMCMS.Core
         [Description("是否是锁定")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsLock", "是否是锁定", "")]
-        public Int32 IsLock { get => _IsLock; set { if (OnPropertyChanging(__.IsLock, value)) { _IsLock = value; OnPropertyChanged(__.IsLock); } } }
+        public Int32 IsLock { get => _IsLock; set { if (OnPropertyChanging("IsLock", value)) { _IsLock = value; OnPropertyChanged("IsLock"); } } }
 
         private String _Nickname;
         /// <summary>昵称</summary>
@@ -125,7 +128,7 @@ namespace COMCMS.Core
         [Description("昵称")]
         [DataObjectField(false, false, true, 200)]
         [BindColumn("Nickname", "昵称", "")]
-        public String Nickname { get => _Nickname; set { if (OnPropertyChanging(__.Nickname, value)) { _Nickname = value; OnPropertyChanged(__.Nickname); } } }
+        public String Nickname { get => _Nickname; set { if (OnPropertyChanging("Nickname", value)) { _Nickname = value; OnPropertyChanged("Nickname"); } } }
 
         private String _UserImg;
         /// <summary>头像</summary>
@@ -133,7 +136,7 @@ namespace COMCMS.Core
         [Description("头像")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("UserImg", "头像", "")]
-        public String UserImg { get => _UserImg; set { if (OnPropertyChanging(__.UserImg, value)) { _UserImg = value; OnPropertyChanged(__.UserImg); } } }
+        public String UserImg { get => _UserImg; set { if (OnPropertyChanging("UserImg", value)) { _UserImg = value; OnPropertyChanged("UserImg"); } } }
 
         private Int32 _Sex;
         /// <summary>性别 0 保密 1 男 2女</summary>
@@ -141,7 +144,7 @@ namespace COMCMS.Core
         [Description("性别 0 保密 1 男 2女")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Sex", "性别 0 保密 1 男 2女", "")]
-        public Int32 Sex { get => _Sex; set { if (OnPropertyChanging(__.Sex, value)) { _Sex = value; OnPropertyChanged(__.Sex); } } }
+        public Int32 Sex { get => _Sex; set { if (OnPropertyChanging("Sex", value)) { _Sex = value; OnPropertyChanged("Sex"); } } }
 
         private DateTime _Birthday;
         /// <summary>生日</summary>
@@ -149,7 +152,7 @@ namespace COMCMS.Core
         [Description("生日")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("Birthday", "生日", "")]
-        public DateTime Birthday { get => _Birthday; set { if (OnPropertyChanging(__.Birthday, value)) { _Birthday = value; OnPropertyChanged(__.Birthday); } } }
+        public DateTime Birthday { get => _Birthday; set { if (OnPropertyChanging("Birthday", value)) { _Birthday = value; OnPropertyChanged("Birthday"); } } }
 
         private String _Phone;
         /// <summary>电话</summary>
@@ -157,7 +160,7 @@ namespace COMCMS.Core
         [Description("电话")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Phone", "电话", "")]
-        public String Phone { get => _Phone; set { if (OnPropertyChanging(__.Phone, value)) { _Phone = value; OnPropertyChanged(__.Phone); } } }
+        public String Phone { get => _Phone; set { if (OnPropertyChanging("Phone", value)) { _Phone = value; OnPropertyChanged("Phone"); } } }
 
         private String _Fax;
         /// <summary>传真</summary>
@@ -165,7 +168,7 @@ namespace COMCMS.Core
         [Description("传真")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Fax", "传真", "")]
-        public String Fax { get => _Fax; set { if (OnPropertyChanging(__.Fax, value)) { _Fax = value; OnPropertyChanged(__.Fax); } } }
+        public String Fax { get => _Fax; set { if (OnPropertyChanging("Fax", value)) { _Fax = value; OnPropertyChanged("Fax"); } } }
 
         private String _Qq;
         /// <summary>QQ</summary>
@@ -173,7 +176,7 @@ namespace COMCMS.Core
         [Description("QQ")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Qq", "QQ", "")]
-        public String Qq { get => _Qq; set { if (OnPropertyChanging(__.Qq, value)) { _Qq = value; OnPropertyChanged(__.Qq); } } }
+        public String Qq { get => _Qq; set { if (OnPropertyChanging("Qq", value)) { _Qq = value; OnPropertyChanged("Qq"); } } }
 
         private String _Weixin;
         /// <summary>微信</summary>
@@ -181,7 +184,7 @@ namespace COMCMS.Core
         [Description("微信")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Weixin", "微信", "")]
-        public String Weixin { get => _Weixin; set { if (OnPropertyChanging(__.Weixin, value)) { _Weixin = value; OnPropertyChanged(__.Weixin); } } }
+        public String Weixin { get => _Weixin; set { if (OnPropertyChanging("Weixin", value)) { _Weixin = value; OnPropertyChanged("Weixin"); } } }
 
         private String _Alipay;
         /// <summary>支付宝</summary>
@@ -189,7 +192,7 @@ namespace COMCMS.Core
         [Description("支付宝")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Alipay", "支付宝", "")]
-        public String Alipay { get => _Alipay; set { if (OnPropertyChanging(__.Alipay, value)) { _Alipay = value; OnPropertyChanged(__.Alipay); } } }
+        public String Alipay { get => _Alipay; set { if (OnPropertyChanging("Alipay", value)) { _Alipay = value; OnPropertyChanged("Alipay"); } } }
 
         private String _Skype;
         /// <summary>skype</summary>
@@ -197,7 +200,7 @@ namespace COMCMS.Core
         [Description("skype")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Skype", "skype", "")]
-        public String Skype { get => _Skype; set { if (OnPropertyChanging(__.Skype, value)) { _Skype = value; OnPropertyChanged(__.Skype); } } }
+        public String Skype { get => _Skype; set { if (OnPropertyChanging("Skype", value)) { _Skype = value; OnPropertyChanged("Skype"); } } }
 
         private String _Homepage;
         /// <summary>主页</summary>
@@ -205,7 +208,7 @@ namespace COMCMS.Core
         [Description("主页")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Homepage", "主页", "")]
-        public String Homepage { get => _Homepage; set { if (OnPropertyChanging(__.Homepage, value)) { _Homepage = value; OnPropertyChanged(__.Homepage); } } }
+        public String Homepage { get => _Homepage; set { if (OnPropertyChanging("Homepage", value)) { _Homepage = value; OnPropertyChanged("Homepage"); } } }
 
         private String _Company;
         /// <summary>公司</summary>
@@ -213,7 +216,7 @@ namespace COMCMS.Core
         [Description("公司")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Company", "公司", "")]
-        public String Company { get => _Company; set { if (OnPropertyChanging(__.Company, value)) { _Company = value; OnPropertyChanged(__.Company); } } }
+        public String Company { get => _Company; set { if (OnPropertyChanging("Company", value)) { _Company = value; OnPropertyChanged("Company"); } } }
 
         private String _Idno;
         /// <summary>身份证</summary>
@@ -221,7 +224,7 @@ namespace COMCMS.Core
         [Description("身份证")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Idno", "身份证", "")]
-        public String Idno { get => _Idno; set { if (OnPropertyChanging(__.Idno, value)) { _Idno = value; OnPropertyChanged(__.Idno); } } }
+        public String Idno { get => _Idno; set { if (OnPropertyChanging("Idno", value)) { _Idno = value; OnPropertyChanged("Idno"); } } }
 
         private String _Country;
         /// <summary>国家</summary>
@@ -229,7 +232,7 @@ namespace COMCMS.Core
         [Description("国家")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Country", "国家", "")]
-        public String Country { get => _Country; set { if (OnPropertyChanging(__.Country, value)) { _Country = value; OnPropertyChanged(__.Country); } } }
+        public String Country { get => _Country; set { if (OnPropertyChanging("Country", value)) { _Country = value; OnPropertyChanged("Country"); } } }
 
         private String _Province;
         /// <summary>省</summary>
@@ -237,7 +240,7 @@ namespace COMCMS.Core
         [Description("省")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Province", "省", "")]
-        public String Province { get => _Province; set { if (OnPropertyChanging(__.Province, value)) { _Province = value; OnPropertyChanged(__.Province); } } }
+        public String Province { get => _Province; set { if (OnPropertyChanging("Province", value)) { _Province = value; OnPropertyChanged("Province"); } } }
 
         private String _City;
         /// <summary>市</summary>
@@ -245,7 +248,7 @@ namespace COMCMS.Core
         [Description("市")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("City", "市", "")]
-        public String City { get => _City; set { if (OnPropertyChanging(__.City, value)) { _City = value; OnPropertyChanged(__.City); } } }
+        public String City { get => _City; set { if (OnPropertyChanging("City", value)) { _City = value; OnPropertyChanged("City"); } } }
 
         private String _District;
         /// <summary>区</summary>
@@ -253,7 +256,7 @@ namespace COMCMS.Core
         [Description("区")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("District", "区", "")]
-        public String District { get => _District; set { if (OnPropertyChanging(__.District, value)) { _District = value; OnPropertyChanged(__.District); } } }
+        public String District { get => _District; set { if (OnPropertyChanging("District", value)) { _District = value; OnPropertyChanged("District"); } } }
 
         private String _Address;
         /// <summary>详细地址</summary>
@@ -261,7 +264,7 @@ namespace COMCMS.Core
         [Description("详细地址")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Address", "详细地址", "")]
-        public String Address { get => _Address; set { if (OnPropertyChanging(__.Address, value)) { _Address = value; OnPropertyChanged(__.Address); } } }
+        public String Address { get => _Address; set { if (OnPropertyChanging("Address", value)) { _Address = value; OnPropertyChanged("Address"); } } }
 
         private String _Postcode;
         /// <summary>邮政编码</summary>
@@ -269,7 +272,7 @@ namespace COMCMS.Core
         [Description("邮政编码")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Postcode", "邮政编码", "")]
-        public String Postcode { get => _Postcode; set { if (OnPropertyChanging(__.Postcode, value)) { _Postcode = value; OnPropertyChanged(__.Postcode); } } }
+        public String Postcode { get => _Postcode; set { if (OnPropertyChanging("Postcode", value)) { _Postcode = value; OnPropertyChanged("Postcode"); } } }
 
         private String _RegIP;
         /// <summary>注册IP</summary>
@@ -277,7 +280,7 @@ namespace COMCMS.Core
         [Description("注册IP")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("RegIP", "注册IP", "")]
-        public String RegIP { get => _RegIP; set { if (OnPropertyChanging(__.RegIP, value)) { _RegIP = value; OnPropertyChanged(__.RegIP); } } }
+        public String RegIP { get => _RegIP; set { if (OnPropertyChanging("RegIP", value)) { _RegIP = value; OnPropertyChanged("RegIP"); } } }
 
         private DateTime _RegTime;
         /// <summary>注册时间</summary>
@@ -285,7 +288,7 @@ namespace COMCMS.Core
         [Description("注册时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("RegTime", "注册时间", "")]
-        public DateTime RegTime { get => _RegTime; set { if (OnPropertyChanging(__.RegTime, value)) { _RegTime = value; OnPropertyChanged(__.RegTime); } } }
+        public DateTime RegTime { get => _RegTime; set { if (OnPropertyChanging("RegTime", value)) { _RegTime = value; OnPropertyChanged("RegTime"); } } }
 
         private Int32 _LoginCount;
         /// <summary>登录次数</summary>
@@ -293,7 +296,7 @@ namespace COMCMS.Core
         [Description("登录次数")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("LoginCount", "登录次数", "")]
-        public Int32 LoginCount { get => _LoginCount; set { if (OnPropertyChanging(__.LoginCount, value)) { _LoginCount = value; OnPropertyChanged(__.LoginCount); } } }
+        public Int32 LoginCount { get => _LoginCount; set { if (OnPropertyChanging("LoginCount", value)) { _LoginCount = value; OnPropertyChanged("LoginCount"); } } }
 
         private String _RndNum;
         /// <summary>随机字符</summary>
@@ -301,7 +304,7 @@ namespace COMCMS.Core
         [Description("随机字符")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("RndNum", "随机字符", "")]
-        public String RndNum { get => _RndNum; set { if (OnPropertyChanging(__.RndNum, value)) { _RndNum = value; OnPropertyChanged(__.RndNum); } } }
+        public String RndNum { get => _RndNum; set { if (OnPropertyChanging("RndNum", value)) { _RndNum = value; OnPropertyChanged("RndNum"); } } }
 
         private DateTime _RePassWordTime;
         /// <summary>找回密码时间</summary>
@@ -309,7 +312,7 @@ namespace COMCMS.Core
         [Description("找回密码时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("RePassWordTime", "找回密码时间", "")]
-        public DateTime RePassWordTime { get => _RePassWordTime; set { if (OnPropertyChanging(__.RePassWordTime, value)) { _RePassWordTime = value; OnPropertyChanged(__.RePassWordTime); } } }
+        public DateTime RePassWordTime { get => _RePassWordTime; set { if (OnPropertyChanging("RePassWordTime", value)) { _RePassWordTime = value; OnPropertyChanged("RePassWordTime"); } } }
 
         private String _Question;
         /// <summary>保密问题</summary>
@@ -317,7 +320,7 @@ namespace COMCMS.Core
         [Description("保密问题")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Question", "保密问题", "")]
-        public String Question { get => _Question; set { if (OnPropertyChanging(__.Question, value)) { _Question = value; OnPropertyChanged(__.Question); } } }
+        public String Question { get => _Question; set { if (OnPropertyChanging("Question", value)) { _Question = value; OnPropertyChanged("Question"); } } }
 
         private String _Answer;
         /// <summary>保密答案</summary>
@@ -325,7 +328,7 @@ namespace COMCMS.Core
         [Description("保密答案")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Answer", "保密答案", "")]
-        public String Answer { get => _Answer; set { if (OnPropertyChanging(__.Answer, value)) { _Answer = value; OnPropertyChanged(__.Answer); } } }
+        public String Answer { get => _Answer; set { if (OnPropertyChanging("Answer", value)) { _Answer = value; OnPropertyChanged("Answer"); } } }
 
         private Decimal _Balance;
         /// <summary>可用余额</summary>
@@ -333,7 +336,7 @@ namespace COMCMS.Core
         [Description("可用余额")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Balance", "可用余额", "")]
-        public Decimal Balance { get => _Balance; set { if (OnPropertyChanging(__.Balance, value)) { _Balance = value; OnPropertyChanged(__.Balance); } } }
+        public Decimal Balance { get => _Balance; set { if (OnPropertyChanging("Balance", value)) { _Balance = value; OnPropertyChanged("Balance"); } } }
 
         private Decimal _GiftBalance;
         /// <summary>赠送余额</summary>
@@ -341,7 +344,7 @@ namespace COMCMS.Core
         [Description("赠送余额")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("GiftBalance", "赠送余额", "")]
-        public Decimal GiftBalance { get => _GiftBalance; set { if (OnPropertyChanging(__.GiftBalance, value)) { _GiftBalance = value; OnPropertyChanged(__.GiftBalance); } } }
+        public Decimal GiftBalance { get => _GiftBalance; set { if (OnPropertyChanging("GiftBalance", value)) { _GiftBalance = value; OnPropertyChanged("GiftBalance"); } } }
 
         private Decimal _Rebate;
         /// <summary>返利，分销提成</summary>
@@ -349,7 +352,7 @@ namespace COMCMS.Core
         [Description("返利，分销提成")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Rebate", "返利，分销提成", "")]
-        public Decimal Rebate { get => _Rebate; set { if (OnPropertyChanging(__.Rebate, value)) { _Rebate = value; OnPropertyChanged(__.Rebate); } } }
+        public Decimal Rebate { get => _Rebate; set { if (OnPropertyChanging("Rebate", value)) { _Rebate = value; OnPropertyChanged("Rebate"); } } }
 
         private String _Bank;
         /// <summary>银行</summary>
@@ -357,7 +360,7 @@ namespace COMCMS.Core
         [Description("银行")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Bank", "银行", "")]
-        public String Bank { get => _Bank; set { if (OnPropertyChanging(__.Bank, value)) { _Bank = value; OnPropertyChanged(__.Bank); } } }
+        public String Bank { get => _Bank; set { if (OnPropertyChanging("Bank", value)) { _Bank = value; OnPropertyChanged("Bank"); } } }
 
         private String _BankCardNO;
         /// <summary>银行卡号</summary>
@@ -365,7 +368,7 @@ namespace COMCMS.Core
         [Description("银行卡号")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("BankCardNO", "银行卡号", "")]
-        public String BankCardNO { get => _BankCardNO; set { if (OnPropertyChanging(__.BankCardNO, value)) { _BankCardNO = value; OnPropertyChanged(__.BankCardNO); } } }
+        public String BankCardNO { get => _BankCardNO; set { if (OnPropertyChanging("BankCardNO", value)) { _BankCardNO = value; OnPropertyChanged("BankCardNO"); } } }
 
         private String _BankBranch;
         /// <summary>支行名称</summary>
@@ -373,7 +376,7 @@ namespace COMCMS.Core
         [Description("支行名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("BankBranch", "支行名称", "")]
-        public String BankBranch { get => _BankBranch; set { if (OnPropertyChanging(__.BankBranch, value)) { _BankBranch = value; OnPropertyChanged(__.BankBranch); } } }
+        public String BankBranch { get => _BankBranch; set { if (OnPropertyChanging("BankBranch", value)) { _BankBranch = value; OnPropertyChanged("BankBranch"); } } }
 
         private String _BankRealname;
         /// <summary>银行卡姓名</summary>
@@ -381,7 +384,7 @@ namespace COMCMS.Core
         [Description("银行卡姓名")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("BankRealname", "银行卡姓名", "")]
-        public String BankRealname { get => _BankRealname; set { if (OnPropertyChanging(__.BankRealname, value)) { _BankRealname = value; OnPropertyChanged(__.BankRealname); } } }
+        public String BankRealname { get => _BankRealname; set { if (OnPropertyChanging("BankRealname", value)) { _BankRealname = value; OnPropertyChanged("BankRealname"); } } }
 
         private Decimal _YearsPerformance;
         /// <summary>年业务量</summary>
@@ -389,7 +392,7 @@ namespace COMCMS.Core
         [Description("年业务量")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("YearsPerformance", "年业务量", "")]
-        public Decimal YearsPerformance { get => _YearsPerformance; set { if (OnPropertyChanging(__.YearsPerformance, value)) { _YearsPerformance = value; OnPropertyChanged(__.YearsPerformance); } } }
+        public Decimal YearsPerformance { get => _YearsPerformance; set { if (OnPropertyChanging("YearsPerformance", value)) { _YearsPerformance = value; OnPropertyChanged("YearsPerformance"); } } }
 
         private Decimal _ExtCredits1;
         /// <summary>备用积分1</summary>
@@ -397,7 +400,7 @@ namespace COMCMS.Core
         [Description("备用积分1")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("ExtCredits1", "备用积分1", "")]
-        public Decimal ExtCredits1 { get => _ExtCredits1; set { if (OnPropertyChanging(__.ExtCredits1, value)) { _ExtCredits1 = value; OnPropertyChanged(__.ExtCredits1); } } }
+        public Decimal ExtCredits1 { get => _ExtCredits1; set { if (OnPropertyChanging("ExtCredits1", value)) { _ExtCredits1 = value; OnPropertyChanged("ExtCredits1"); } } }
 
         private Decimal _ExtCredits2;
         /// <summary>备用积分2</summary>
@@ -405,7 +408,7 @@ namespace COMCMS.Core
         [Description("备用积分2")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("ExtCredits2", "备用积分2", "")]
-        public Decimal ExtCredits2 { get => _ExtCredits2; set { if (OnPropertyChanging(__.ExtCredits2, value)) { _ExtCredits2 = value; OnPropertyChanged(__.ExtCredits2); } } }
+        public Decimal ExtCredits2 { get => _ExtCredits2; set { if (OnPropertyChanging("ExtCredits2", value)) { _ExtCredits2 = value; OnPropertyChanged("ExtCredits2"); } } }
 
         private Decimal _ExtCredits3;
         /// <summary>备用积分3</summary>
@@ -413,7 +416,7 @@ namespace COMCMS.Core
         [Description("备用积分3")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("ExtCredits3", "备用积分3", "")]
-        public Decimal ExtCredits3 { get => _ExtCredits3; set { if (OnPropertyChanging(__.ExtCredits3, value)) { _ExtCredits3 = value; OnPropertyChanged(__.ExtCredits3); } } }
+        public Decimal ExtCredits3 { get => _ExtCredits3; set { if (OnPropertyChanging("ExtCredits3", value)) { _ExtCredits3 = value; OnPropertyChanged("ExtCredits3"); } } }
 
         private Decimal _ExtCredits4;
         /// <summary>备用积分4</summary>
@@ -421,7 +424,7 @@ namespace COMCMS.Core
         [Description("备用积分4")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("ExtCredits4", "备用积分4", "")]
-        public Decimal ExtCredits4 { get => _ExtCredits4; set { if (OnPropertyChanging(__.ExtCredits4, value)) { _ExtCredits4 = value; OnPropertyChanged(__.ExtCredits4); } } }
+        public Decimal ExtCredits4 { get => _ExtCredits4; set { if (OnPropertyChanging("ExtCredits4", value)) { _ExtCredits4 = value; OnPropertyChanged("ExtCredits4"); } } }
 
         private Decimal _ExtCredits5;
         /// <summary>备用积分5</summary>
@@ -429,7 +432,7 @@ namespace COMCMS.Core
         [Description("备用积分5")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("ExtCredits5", "备用积分5", "")]
-        public Decimal ExtCredits5 { get => _ExtCredits5; set { if (OnPropertyChanging(__.ExtCredits5, value)) { _ExtCredits5 = value; OnPropertyChanged(__.ExtCredits5); } } }
+        public Decimal ExtCredits5 { get => _ExtCredits5; set { if (OnPropertyChanging("ExtCredits5", value)) { _ExtCredits5 = value; OnPropertyChanged("ExtCredits5"); } } }
 
         private Decimal _TotalCredits;
         /// <summary>总积分</summary>
@@ -437,7 +440,7 @@ namespace COMCMS.Core
         [Description("总积分")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("TotalCredits", "总积分", "")]
-        public Decimal TotalCredits { get => _TotalCredits; set { if (OnPropertyChanging(__.TotalCredits, value)) { _TotalCredits = value; OnPropertyChanged(__.TotalCredits); } } }
+        public Decimal TotalCredits { get => _TotalCredits; set { if (OnPropertyChanging("TotalCredits", value)) { _TotalCredits = value; OnPropertyChanged("TotalCredits"); } } }
 
         private Int32 _Parent;
         /// <summary>父级用户ID</summary>
@@ -445,7 +448,7 @@ namespace COMCMS.Core
         [Description("父级用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Parent", "父级用户ID", "")]
-        public Int32 Parent { get => _Parent; set { if (OnPropertyChanging(__.Parent, value)) { _Parent = value; OnPropertyChanged(__.Parent); } } }
+        public Int32 Parent { get => _Parent; set { if (OnPropertyChanging("Parent", value)) { _Parent = value; OnPropertyChanged("Parent"); } } }
 
         private Int32 _Grandfather;
         /// <summary>爷级用户ID</summary>
@@ -453,7 +456,7 @@ namespace COMCMS.Core
         [Description("爷级用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Grandfather", "爷级用户ID", "")]
-        public Int32 Grandfather { get => _Grandfather; set { if (OnPropertyChanging(__.Grandfather, value)) { _Grandfather = value; OnPropertyChanged(__.Grandfather); } } }
+        public Int32 Grandfather { get => _Grandfather; set { if (OnPropertyChanging("Grandfather", value)) { _Grandfather = value; OnPropertyChanged("Grandfather"); } } }
 
         private Int32 _IsSellers;
         /// <summary>是否是分销商</summary>
@@ -461,7 +464,7 @@ namespace COMCMS.Core
         [Description("是否是分销商")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsSellers", "是否是分销商", "")]
-        public Int32 IsSellers { get => _IsSellers; set { if (OnPropertyChanging(__.IsSellers, value)) { _IsSellers = value; OnPropertyChanged(__.IsSellers); } } }
+        public Int32 IsSellers { get => _IsSellers; set { if (OnPropertyChanging("IsSellers", value)) { _IsSellers = value; OnPropertyChanged("IsSellers"); } } }
 
         private Int32 _IsVerifySellers;
         /// <summary>是否已经认证的分销商，缴纳费用</summary>
@@ -469,7 +472,7 @@ namespace COMCMS.Core
         [Description("是否已经认证的分销商，缴纳费用")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsVerifySellers", "是否已经认证的分销商，缴纳费用", "")]
-        public Int32 IsVerifySellers { get => _IsVerifySellers; set { if (OnPropertyChanging(__.IsVerifySellers, value)) { _IsVerifySellers = value; OnPropertyChanged(__.IsVerifySellers); } } }
+        public Int32 IsVerifySellers { get => _IsVerifySellers; set { if (OnPropertyChanging("IsVerifySellers", value)) { _IsVerifySellers = value; OnPropertyChanged("IsVerifySellers"); } } }
 
         private String _WeixinOpenId;
         /// <summary>微信公众号OpenId</summary>
@@ -477,7 +480,7 @@ namespace COMCMS.Core
         [Description("微信公众号OpenId")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("WeixinOpenId", "微信公众号OpenId", "")]
-        public String WeixinOpenId { get => _WeixinOpenId; set { if (OnPropertyChanging(__.WeixinOpenId, value)) { _WeixinOpenId = value; OnPropertyChanged(__.WeixinOpenId); } } }
+        public String WeixinOpenId { get => _WeixinOpenId; set { if (OnPropertyChanging("WeixinOpenId", value)) { _WeixinOpenId = value; OnPropertyChanged("WeixinOpenId"); } } }
 
         private String _WeixinAppOpenId;
         /// <summary>微信OpenId</summary>
@@ -485,7 +488,7 @@ namespace COMCMS.Core
         [Description("微信OpenId")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("WeixinAppOpenId", "微信OpenId", "")]
-        public String WeixinAppOpenId { get => _WeixinAppOpenId; set { if (OnPropertyChanging(__.WeixinAppOpenId, value)) { _WeixinAppOpenId = value; OnPropertyChanged(__.WeixinAppOpenId); } } }
+        public String WeixinAppOpenId { get => _WeixinAppOpenId; set { if (OnPropertyChanging("WeixinAppOpenId", value)) { _WeixinAppOpenId = value; OnPropertyChanged("WeixinAppOpenId"); } } }
 
         private String _QQOpenId;
         /// <summary>QQ OpenId</summary>
@@ -493,7 +496,7 @@ namespace COMCMS.Core
         [Description("QQ OpenId")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("QQOpenId", "QQ OpenId", "")]
-        public String QQOpenId { get => _QQOpenId; set { if (OnPropertyChanging(__.QQOpenId, value)) { _QQOpenId = value; OnPropertyChanged(__.QQOpenId); } } }
+        public String QQOpenId { get => _QQOpenId; set { if (OnPropertyChanging("QQOpenId", value)) { _QQOpenId = value; OnPropertyChanged("QQOpenId"); } } }
 
         private String _WeiboOpenId;
         /// <summary>微博OpenId</summary>
@@ -501,7 +504,7 @@ namespace COMCMS.Core
         [Description("微博OpenId")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("WeiboOpenId", "微博OpenId", "")]
-        public String WeiboOpenId { get => _WeiboOpenId; set { if (OnPropertyChanging(__.WeiboOpenId, value)) { _WeiboOpenId = value; OnPropertyChanged(__.WeiboOpenId); } } }
+        public String WeiboOpenId { get => _WeiboOpenId; set { if (OnPropertyChanging("WeiboOpenId", value)) { _WeiboOpenId = value; OnPropertyChanged("WeiboOpenId"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -514,67 +517,67 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.UserName: return _UserName;
-                    case __.PassWord: return _PassWord;
-                    case __.Salt: return _Salt;
-                    case __.RealName: return _RealName;
-                    case __.Tel: return _Tel;
-                    case __.Email: return _Email;
-                    case __.RoleId: return _RoleId;
-                    case __.LastLoginTime: return _LastLoginTime;
-                    case __.LastLoginIP: return _LastLoginIP;
-                    case __.ThisLoginTime: return _ThisLoginTime;
-                    case __.ThisLoginIP: return _ThisLoginIP;
-                    case __.IsLock: return _IsLock;
-                    case __.Nickname: return _Nickname;
-                    case __.UserImg: return _UserImg;
-                    case __.Sex: return _Sex;
-                    case __.Birthday: return _Birthday;
-                    case __.Phone: return _Phone;
-                    case __.Fax: return _Fax;
-                    case __.Qq: return _Qq;
-                    case __.Weixin: return _Weixin;
-                    case __.Alipay: return _Alipay;
-                    case __.Skype: return _Skype;
-                    case __.Homepage: return _Homepage;
-                    case __.Company: return _Company;
-                    case __.Idno: return _Idno;
-                    case __.Country: return _Country;
-                    case __.Province: return _Province;
-                    case __.City: return _City;
-                    case __.District: return _District;
-                    case __.Address: return _Address;
-                    case __.Postcode: return _Postcode;
-                    case __.RegIP: return _RegIP;
-                    case __.RegTime: return _RegTime;
-                    case __.LoginCount: return _LoginCount;
-                    case __.RndNum: return _RndNum;
-                    case __.RePassWordTime: return _RePassWordTime;
-                    case __.Question: return _Question;
-                    case __.Answer: return _Answer;
-                    case __.Balance: return _Balance;
-                    case __.GiftBalance: return _GiftBalance;
-                    case __.Rebate: return _Rebate;
-                    case __.Bank: return _Bank;
-                    case __.BankCardNO: return _BankCardNO;
-                    case __.BankBranch: return _BankBranch;
-                    case __.BankRealname: return _BankRealname;
-                    case __.YearsPerformance: return _YearsPerformance;
-                    case __.ExtCredits1: return _ExtCredits1;
-                    case __.ExtCredits2: return _ExtCredits2;
-                    case __.ExtCredits3: return _ExtCredits3;
-                    case __.ExtCredits4: return _ExtCredits4;
-                    case __.ExtCredits5: return _ExtCredits5;
-                    case __.TotalCredits: return _TotalCredits;
-                    case __.Parent: return _Parent;
-                    case __.Grandfather: return _Grandfather;
-                    case __.IsSellers: return _IsSellers;
-                    case __.IsVerifySellers: return _IsVerifySellers;
-                    case __.WeixinOpenId: return _WeixinOpenId;
-                    case __.WeixinAppOpenId: return _WeixinAppOpenId;
-                    case __.QQOpenId: return _QQOpenId;
-                    case __.WeiboOpenId: return _WeiboOpenId;
+                    case "Id": return _Id;
+                    case "UserName": return _UserName;
+                    case "PassWord": return _PassWord;
+                    case "Salt": return _Salt;
+                    case "RealName": return _RealName;
+                    case "Tel": return _Tel;
+                    case "Email": return _Email;
+                    case "RoleId": return _RoleId;
+                    case "LastLoginTime": return _LastLoginTime;
+                    case "LastLoginIP": return _LastLoginIP;
+                    case "ThisLoginTime": return _ThisLoginTime;
+                    case "ThisLoginIP": return _ThisLoginIP;
+                    case "IsLock": return _IsLock;
+                    case "Nickname": return _Nickname;
+                    case "UserImg": return _UserImg;
+                    case "Sex": return _Sex;
+                    case "Birthday": return _Birthday;
+                    case "Phone": return _Phone;
+                    case "Fax": return _Fax;
+                    case "Qq": return _Qq;
+                    case "Weixin": return _Weixin;
+                    case "Alipay": return _Alipay;
+                    case "Skype": return _Skype;
+                    case "Homepage": return _Homepage;
+                    case "Company": return _Company;
+                    case "Idno": return _Idno;
+                    case "Country": return _Country;
+                    case "Province": return _Province;
+                    case "City": return _City;
+                    case "District": return _District;
+                    case "Address": return _Address;
+                    case "Postcode": return _Postcode;
+                    case "RegIP": return _RegIP;
+                    case "RegTime": return _RegTime;
+                    case "LoginCount": return _LoginCount;
+                    case "RndNum": return _RndNum;
+                    case "RePassWordTime": return _RePassWordTime;
+                    case "Question": return _Question;
+                    case "Answer": return _Answer;
+                    case "Balance": return _Balance;
+                    case "GiftBalance": return _GiftBalance;
+                    case "Rebate": return _Rebate;
+                    case "Bank": return _Bank;
+                    case "BankCardNO": return _BankCardNO;
+                    case "BankBranch": return _BankBranch;
+                    case "BankRealname": return _BankRealname;
+                    case "YearsPerformance": return _YearsPerformance;
+                    case "ExtCredits1": return _ExtCredits1;
+                    case "ExtCredits2": return _ExtCredits2;
+                    case "ExtCredits3": return _ExtCredits3;
+                    case "ExtCredits4": return _ExtCredits4;
+                    case "ExtCredits5": return _ExtCredits5;
+                    case "TotalCredits": return _TotalCredits;
+                    case "Parent": return _Parent;
+                    case "Grandfather": return _Grandfather;
+                    case "IsSellers": return _IsSellers;
+                    case "IsVerifySellers": return _IsVerifySellers;
+                    case "WeixinOpenId": return _WeixinOpenId;
+                    case "WeixinAppOpenId": return _WeixinAppOpenId;
+                    case "QQOpenId": return _QQOpenId;
+                    case "WeiboOpenId": return _WeiboOpenId;
                     default: return base[name];
                 }
             }
@@ -582,67 +585,67 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.UserName: _UserName = Convert.ToString(value); break;
-                    case __.PassWord: _PassWord = Convert.ToString(value); break;
-                    case __.Salt: _Salt = Convert.ToString(value); break;
-                    case __.RealName: _RealName = Convert.ToString(value); break;
-                    case __.Tel: _Tel = Convert.ToString(value); break;
-                    case __.Email: _Email = Convert.ToString(value); break;
-                    case __.RoleId: _RoleId = value.ToInt(); break;
-                    case __.LastLoginTime: _LastLoginTime = value.ToDateTime(); break;
-                    case __.LastLoginIP: _LastLoginIP = Convert.ToString(value); break;
-                    case __.ThisLoginTime: _ThisLoginTime = value.ToDateTime(); break;
-                    case __.ThisLoginIP: _ThisLoginIP = Convert.ToString(value); break;
-                    case __.IsLock: _IsLock = value.ToInt(); break;
-                    case __.Nickname: _Nickname = Convert.ToString(value); break;
-                    case __.UserImg: _UserImg = Convert.ToString(value); break;
-                    case __.Sex: _Sex = value.ToInt(); break;
-                    case __.Birthday: _Birthday = value.ToDateTime(); break;
-                    case __.Phone: _Phone = Convert.ToString(value); break;
-                    case __.Fax: _Fax = Convert.ToString(value); break;
-                    case __.Qq: _Qq = Convert.ToString(value); break;
-                    case __.Weixin: _Weixin = Convert.ToString(value); break;
-                    case __.Alipay: _Alipay = Convert.ToString(value); break;
-                    case __.Skype: _Skype = Convert.ToString(value); break;
-                    case __.Homepage: _Homepage = Convert.ToString(value); break;
-                    case __.Company: _Company = Convert.ToString(value); break;
-                    case __.Idno: _Idno = Convert.ToString(value); break;
-                    case __.Country: _Country = Convert.ToString(value); break;
-                    case __.Province: _Province = Convert.ToString(value); break;
-                    case __.City: _City = Convert.ToString(value); break;
-                    case __.District: _District = Convert.ToString(value); break;
-                    case __.Address: _Address = Convert.ToString(value); break;
-                    case __.Postcode: _Postcode = Convert.ToString(value); break;
-                    case __.RegIP: _RegIP = Convert.ToString(value); break;
-                    case __.RegTime: _RegTime = value.ToDateTime(); break;
-                    case __.LoginCount: _LoginCount = value.ToInt(); break;
-                    case __.RndNum: _RndNum = Convert.ToString(value); break;
-                    case __.RePassWordTime: _RePassWordTime = value.ToDateTime(); break;
-                    case __.Question: _Question = Convert.ToString(value); break;
-                    case __.Answer: _Answer = Convert.ToString(value); break;
-                    case __.Balance: _Balance = Convert.ToDecimal(value); break;
-                    case __.GiftBalance: _GiftBalance = Convert.ToDecimal(value); break;
-                    case __.Rebate: _Rebate = Convert.ToDecimal(value); break;
-                    case __.Bank: _Bank = Convert.ToString(value); break;
-                    case __.BankCardNO: _BankCardNO = Convert.ToString(value); break;
-                    case __.BankBranch: _BankBranch = Convert.ToString(value); break;
-                    case __.BankRealname: _BankRealname = Convert.ToString(value); break;
-                    case __.YearsPerformance: _YearsPerformance = Convert.ToDecimal(value); break;
-                    case __.ExtCredits1: _ExtCredits1 = Convert.ToDecimal(value); break;
-                    case __.ExtCredits2: _ExtCredits2 = Convert.ToDecimal(value); break;
-                    case __.ExtCredits3: _ExtCredits3 = Convert.ToDecimal(value); break;
-                    case __.ExtCredits4: _ExtCredits4 = Convert.ToDecimal(value); break;
-                    case __.ExtCredits5: _ExtCredits5 = Convert.ToDecimal(value); break;
-                    case __.TotalCredits: _TotalCredits = Convert.ToDecimal(value); break;
-                    case __.Parent: _Parent = value.ToInt(); break;
-                    case __.Grandfather: _Grandfather = value.ToInt(); break;
-                    case __.IsSellers: _IsSellers = value.ToInt(); break;
-                    case __.IsVerifySellers: _IsVerifySellers = value.ToInt(); break;
-                    case __.WeixinOpenId: _WeixinOpenId = Convert.ToString(value); break;
-                    case __.WeixinAppOpenId: _WeixinAppOpenId = Convert.ToString(value); break;
-                    case __.QQOpenId: _QQOpenId = Convert.ToString(value); break;
-                    case __.WeiboOpenId: _WeiboOpenId = Convert.ToString(value); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "UserName": _UserName = Convert.ToString(value); break;
+                    case "PassWord": _PassWord = Convert.ToString(value); break;
+                    case "Salt": _Salt = Convert.ToString(value); break;
+                    case "RealName": _RealName = Convert.ToString(value); break;
+                    case "Tel": _Tel = Convert.ToString(value); break;
+                    case "Email": _Email = Convert.ToString(value); break;
+                    case "RoleId": _RoleId = value.ToInt(); break;
+                    case "LastLoginTime": _LastLoginTime = value.ToDateTime(); break;
+                    case "LastLoginIP": _LastLoginIP = Convert.ToString(value); break;
+                    case "ThisLoginTime": _ThisLoginTime = value.ToDateTime(); break;
+                    case "ThisLoginIP": _ThisLoginIP = Convert.ToString(value); break;
+                    case "IsLock": _IsLock = value.ToInt(); break;
+                    case "Nickname": _Nickname = Convert.ToString(value); break;
+                    case "UserImg": _UserImg = Convert.ToString(value); break;
+                    case "Sex": _Sex = value.ToInt(); break;
+                    case "Birthday": _Birthday = value.ToDateTime(); break;
+                    case "Phone": _Phone = Convert.ToString(value); break;
+                    case "Fax": _Fax = Convert.ToString(value); break;
+                    case "Qq": _Qq = Convert.ToString(value); break;
+                    case "Weixin": _Weixin = Convert.ToString(value); break;
+                    case "Alipay": _Alipay = Convert.ToString(value); break;
+                    case "Skype": _Skype = Convert.ToString(value); break;
+                    case "Homepage": _Homepage = Convert.ToString(value); break;
+                    case "Company": _Company = Convert.ToString(value); break;
+                    case "Idno": _Idno = Convert.ToString(value); break;
+                    case "Country": _Country = Convert.ToString(value); break;
+                    case "Province": _Province = Convert.ToString(value); break;
+                    case "City": _City = Convert.ToString(value); break;
+                    case "District": _District = Convert.ToString(value); break;
+                    case "Address": _Address = Convert.ToString(value); break;
+                    case "Postcode": _Postcode = Convert.ToString(value); break;
+                    case "RegIP": _RegIP = Convert.ToString(value); break;
+                    case "RegTime": _RegTime = value.ToDateTime(); break;
+                    case "LoginCount": _LoginCount = value.ToInt(); break;
+                    case "RndNum": _RndNum = Convert.ToString(value); break;
+                    case "RePassWordTime": _RePassWordTime = value.ToDateTime(); break;
+                    case "Question": _Question = Convert.ToString(value); break;
+                    case "Answer": _Answer = Convert.ToString(value); break;
+                    case "Balance": _Balance = Convert.ToDecimal(value); break;
+                    case "GiftBalance": _GiftBalance = Convert.ToDecimal(value); break;
+                    case "Rebate": _Rebate = Convert.ToDecimal(value); break;
+                    case "Bank": _Bank = Convert.ToString(value); break;
+                    case "BankCardNO": _BankCardNO = Convert.ToString(value); break;
+                    case "BankBranch": _BankBranch = Convert.ToString(value); break;
+                    case "BankRealname": _BankRealname = Convert.ToString(value); break;
+                    case "YearsPerformance": _YearsPerformance = Convert.ToDecimal(value); break;
+                    case "ExtCredits1": _ExtCredits1 = Convert.ToDecimal(value); break;
+                    case "ExtCredits2": _ExtCredits2 = Convert.ToDecimal(value); break;
+                    case "ExtCredits3": _ExtCredits3 = Convert.ToDecimal(value); break;
+                    case "ExtCredits4": _ExtCredits4 = Convert.ToDecimal(value); break;
+                    case "ExtCredits5": _ExtCredits5 = Convert.ToDecimal(value); break;
+                    case "TotalCredits": _TotalCredits = Convert.ToDecimal(value); break;
+                    case "Parent": _Parent = value.ToInt(); break;
+                    case "Grandfather": _Grandfather = value.ToInt(); break;
+                    case "IsSellers": _IsSellers = value.ToInt(); break;
+                    case "IsVerifySellers": _IsVerifySellers = value.ToInt(); break;
+                    case "WeixinOpenId": _WeixinOpenId = Convert.ToString(value); break;
+                    case "WeixinAppOpenId": _WeixinAppOpenId = Convert.ToString(value); break;
+                    case "QQOpenId": _QQOpenId = Convert.ToString(value); break;
+                    case "WeiboOpenId": _WeiboOpenId = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -654,187 +657,187 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>用户名</summary>
-            public static readonly Field UserName = FindByName(__.UserName);
+            public static readonly Field UserName = FindByName("UserName");
 
             /// <summary>密码</summary>
-            public static readonly Field PassWord = FindByName(__.PassWord);
+            public static readonly Field PassWord = FindByName("PassWord");
 
             /// <summary>盐值</summary>
-            public static readonly Field Salt = FindByName(__.Salt);
+            public static readonly Field Salt = FindByName("Salt");
 
             /// <summary>姓名</summary>
-            public static readonly Field RealName = FindByName(__.RealName);
+            public static readonly Field RealName = FindByName("RealName");
 
             /// <summary>手机</summary>
-            public static readonly Field Tel = FindByName(__.Tel);
+            public static readonly Field Tel = FindByName("Tel");
 
             /// <summary>邮件</summary>
-            public static readonly Field Email = FindByName(__.Email);
+            public static readonly Field Email = FindByName("Email");
 
             /// <summary>会员组，代理级别</summary>
-            public static readonly Field RoleId = FindByName(__.RoleId);
+            public static readonly Field RoleId = FindByName("RoleId");
 
             /// <summary>最后登录时间</summary>
-            public static readonly Field LastLoginTime = FindByName(__.LastLoginTime);
+            public static readonly Field LastLoginTime = FindByName("LastLoginTime");
 
             /// <summary>上次登录IP</summary>
-            public static readonly Field LastLoginIP = FindByName(__.LastLoginIP);
+            public static readonly Field LastLoginIP = FindByName("LastLoginIP");
 
             /// <summary>本次登录时间</summary>
-            public static readonly Field ThisLoginTime = FindByName(__.ThisLoginTime);
+            public static readonly Field ThisLoginTime = FindByName("ThisLoginTime");
 
             /// <summary>本次登录IP</summary>
-            public static readonly Field ThisLoginIP = FindByName(__.ThisLoginIP);
+            public static readonly Field ThisLoginIP = FindByName("ThisLoginIP");
 
             /// <summary>是否是锁定</summary>
-            public static readonly Field IsLock = FindByName(__.IsLock);
+            public static readonly Field IsLock = FindByName("IsLock");
 
             /// <summary>昵称</summary>
-            public static readonly Field Nickname = FindByName(__.Nickname);
+            public static readonly Field Nickname = FindByName("Nickname");
 
             /// <summary>头像</summary>
-            public static readonly Field UserImg = FindByName(__.UserImg);
+            public static readonly Field UserImg = FindByName("UserImg");
 
             /// <summary>性别 0 保密 1 男 2女</summary>
-            public static readonly Field Sex = FindByName(__.Sex);
+            public static readonly Field Sex = FindByName("Sex");
 
             /// <summary>生日</summary>
-            public static readonly Field Birthday = FindByName(__.Birthday);
+            public static readonly Field Birthday = FindByName("Birthday");
 
             /// <summary>电话</summary>
-            public static readonly Field Phone = FindByName(__.Phone);
+            public static readonly Field Phone = FindByName("Phone");
 
             /// <summary>传真</summary>
-            public static readonly Field Fax = FindByName(__.Fax);
+            public static readonly Field Fax = FindByName("Fax");
 
             /// <summary>QQ</summary>
-            public static readonly Field Qq = FindByName(__.Qq);
+            public static readonly Field Qq = FindByName("Qq");
 
             /// <summary>微信</summary>
-            public static readonly Field Weixin = FindByName(__.Weixin);
+            public static readonly Field Weixin = FindByName("Weixin");
 
             /// <summary>支付宝</summary>
-            public static readonly Field Alipay = FindByName(__.Alipay);
+            public static readonly Field Alipay = FindByName("Alipay");
 
             /// <summary>skype</summary>
-            public static readonly Field Skype = FindByName(__.Skype);
+            public static readonly Field Skype = FindByName("Skype");
 
             /// <summary>主页</summary>
-            public static readonly Field Homepage = FindByName(__.Homepage);
+            public static readonly Field Homepage = FindByName("Homepage");
 
             /// <summary>公司</summary>
-            public static readonly Field Company = FindByName(__.Company);
+            public static readonly Field Company = FindByName("Company");
 
             /// <summary>身份证</summary>
-            public static readonly Field Idno = FindByName(__.Idno);
+            public static readonly Field Idno = FindByName("Idno");
 
             /// <summary>国家</summary>
-            public static readonly Field Country = FindByName(__.Country);
+            public static readonly Field Country = FindByName("Country");
 
             /// <summary>省</summary>
-            public static readonly Field Province = FindByName(__.Province);
+            public static readonly Field Province = FindByName("Province");
 
             /// <summary>市</summary>
-            public static readonly Field City = FindByName(__.City);
+            public static readonly Field City = FindByName("City");
 
             /// <summary>区</summary>
-            public static readonly Field District = FindByName(__.District);
+            public static readonly Field District = FindByName("District");
 
             /// <summary>详细地址</summary>
-            public static readonly Field Address = FindByName(__.Address);
+            public static readonly Field Address = FindByName("Address");
 
             /// <summary>邮政编码</summary>
-            public static readonly Field Postcode = FindByName(__.Postcode);
+            public static readonly Field Postcode = FindByName("Postcode");
 
             /// <summary>注册IP</summary>
-            public static readonly Field RegIP = FindByName(__.RegIP);
+            public static readonly Field RegIP = FindByName("RegIP");
 
             /// <summary>注册时间</summary>
-            public static readonly Field RegTime = FindByName(__.RegTime);
+            public static readonly Field RegTime = FindByName("RegTime");
 
             /// <summary>登录次数</summary>
-            public static readonly Field LoginCount = FindByName(__.LoginCount);
+            public static readonly Field LoginCount = FindByName("LoginCount");
 
             /// <summary>随机字符</summary>
-            public static readonly Field RndNum = FindByName(__.RndNum);
+            public static readonly Field RndNum = FindByName("RndNum");
 
             /// <summary>找回密码时间</summary>
-            public static readonly Field RePassWordTime = FindByName(__.RePassWordTime);
+            public static readonly Field RePassWordTime = FindByName("RePassWordTime");
 
             /// <summary>保密问题</summary>
-            public static readonly Field Question = FindByName(__.Question);
+            public static readonly Field Question = FindByName("Question");
 
             /// <summary>保密答案</summary>
-            public static readonly Field Answer = FindByName(__.Answer);
+            public static readonly Field Answer = FindByName("Answer");
 
             /// <summary>可用余额</summary>
-            public static readonly Field Balance = FindByName(__.Balance);
+            public static readonly Field Balance = FindByName("Balance");
 
             /// <summary>赠送余额</summary>
-            public static readonly Field GiftBalance = FindByName(__.GiftBalance);
+            public static readonly Field GiftBalance = FindByName("GiftBalance");
 
             /// <summary>返利，分销提成</summary>
-            public static readonly Field Rebate = FindByName(__.Rebate);
+            public static readonly Field Rebate = FindByName("Rebate");
 
             /// <summary>银行</summary>
-            public static readonly Field Bank = FindByName(__.Bank);
+            public static readonly Field Bank = FindByName("Bank");
 
             /// <summary>银行卡号</summary>
-            public static readonly Field BankCardNO = FindByName(__.BankCardNO);
+            public static readonly Field BankCardNO = FindByName("BankCardNO");
 
             /// <summary>支行名称</summary>
-            public static readonly Field BankBranch = FindByName(__.BankBranch);
+            public static readonly Field BankBranch = FindByName("BankBranch");
 
             /// <summary>银行卡姓名</summary>
-            public static readonly Field BankRealname = FindByName(__.BankRealname);
+            public static readonly Field BankRealname = FindByName("BankRealname");
 
             /// <summary>年业务量</summary>
-            public static readonly Field YearsPerformance = FindByName(__.YearsPerformance);
+            public static readonly Field YearsPerformance = FindByName("YearsPerformance");
 
             /// <summary>备用积分1</summary>
-            public static readonly Field ExtCredits1 = FindByName(__.ExtCredits1);
+            public static readonly Field ExtCredits1 = FindByName("ExtCredits1");
 
             /// <summary>备用积分2</summary>
-            public static readonly Field ExtCredits2 = FindByName(__.ExtCredits2);
+            public static readonly Field ExtCredits2 = FindByName("ExtCredits2");
 
             /// <summary>备用积分3</summary>
-            public static readonly Field ExtCredits3 = FindByName(__.ExtCredits3);
+            public static readonly Field ExtCredits3 = FindByName("ExtCredits3");
 
             /// <summary>备用积分4</summary>
-            public static readonly Field ExtCredits4 = FindByName(__.ExtCredits4);
+            public static readonly Field ExtCredits4 = FindByName("ExtCredits4");
 
             /// <summary>备用积分5</summary>
-            public static readonly Field ExtCredits5 = FindByName(__.ExtCredits5);
+            public static readonly Field ExtCredits5 = FindByName("ExtCredits5");
 
             /// <summary>总积分</summary>
-            public static readonly Field TotalCredits = FindByName(__.TotalCredits);
+            public static readonly Field TotalCredits = FindByName("TotalCredits");
 
             /// <summary>父级用户ID</summary>
-            public static readonly Field Parent = FindByName(__.Parent);
+            public static readonly Field Parent = FindByName("Parent");
 
             /// <summary>爷级用户ID</summary>
-            public static readonly Field Grandfather = FindByName(__.Grandfather);
+            public static readonly Field Grandfather = FindByName("Grandfather");
 
             /// <summary>是否是分销商</summary>
-            public static readonly Field IsSellers = FindByName(__.IsSellers);
+            public static readonly Field IsSellers = FindByName("IsSellers");
 
             /// <summary>是否已经认证的分销商，缴纳费用</summary>
-            public static readonly Field IsVerifySellers = FindByName(__.IsVerifySellers);
+            public static readonly Field IsVerifySellers = FindByName("IsVerifySellers");
 
             /// <summary>微信公众号OpenId</summary>
-            public static readonly Field WeixinOpenId = FindByName(__.WeixinOpenId);
+            public static readonly Field WeixinOpenId = FindByName("WeixinOpenId");
 
             /// <summary>微信OpenId</summary>
-            public static readonly Field WeixinAppOpenId = FindByName(__.WeixinAppOpenId);
+            public static readonly Field WeixinAppOpenId = FindByName("WeixinAppOpenId");
 
             /// <summary>QQ OpenId</summary>
-            public static readonly Field QQOpenId = FindByName(__.QQOpenId);
+            public static readonly Field QQOpenId = FindByName("QQOpenId");
 
             /// <summary>微博OpenId</summary>
-            public static readonly Field WeiboOpenId = FindByName(__.WeiboOpenId);
+            public static readonly Field WeiboOpenId = FindByName("WeiboOpenId");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -1025,202 +1028,6 @@ namespace COMCMS.Core
             /// <summary>微博OpenId</summary>
             public const String WeiboOpenId = "WeiboOpenId";
         }
-        #endregion
-    }
-
-    /// <summary>用户接口</summary>
-    public partial interface IMember
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>用户名</summary>
-        String UserName { get; set; }
-
-        /// <summary>密码</summary>
-        String PassWord { get; set; }
-
-        /// <summary>盐值</summary>
-        String Salt { get; set; }
-
-        /// <summary>姓名</summary>
-        String RealName { get; set; }
-
-        /// <summary>手机</summary>
-        String Tel { get; set; }
-
-        /// <summary>邮件</summary>
-        String Email { get; set; }
-
-        /// <summary>会员组，代理级别</summary>
-        Int32 RoleId { get; set; }
-
-        /// <summary>最后登录时间</summary>
-        DateTime LastLoginTime { get; set; }
-
-        /// <summary>上次登录IP</summary>
-        String LastLoginIP { get; set; }
-
-        /// <summary>本次登录时间</summary>
-        DateTime ThisLoginTime { get; set; }
-
-        /// <summary>本次登录IP</summary>
-        String ThisLoginIP { get; set; }
-
-        /// <summary>是否是锁定</summary>
-        Int32 IsLock { get; set; }
-
-        /// <summary>昵称</summary>
-        String Nickname { get; set; }
-
-        /// <summary>头像</summary>
-        String UserImg { get; set; }
-
-        /// <summary>性别 0 保密 1 男 2女</summary>
-        Int32 Sex { get; set; }
-
-        /// <summary>生日</summary>
-        DateTime Birthday { get; set; }
-
-        /// <summary>电话</summary>
-        String Phone { get; set; }
-
-        /// <summary>传真</summary>
-        String Fax { get; set; }
-
-        /// <summary>QQ</summary>
-        String Qq { get; set; }
-
-        /// <summary>微信</summary>
-        String Weixin { get; set; }
-
-        /// <summary>支付宝</summary>
-        String Alipay { get; set; }
-
-        /// <summary>skype</summary>
-        String Skype { get; set; }
-
-        /// <summary>主页</summary>
-        String Homepage { get; set; }
-
-        /// <summary>公司</summary>
-        String Company { get; set; }
-
-        /// <summary>身份证</summary>
-        String Idno { get; set; }
-
-        /// <summary>国家</summary>
-        String Country { get; set; }
-
-        /// <summary>省</summary>
-        String Province { get; set; }
-
-        /// <summary>市</summary>
-        String City { get; set; }
-
-        /// <summary>区</summary>
-        String District { get; set; }
-
-        /// <summary>详细地址</summary>
-        String Address { get; set; }
-
-        /// <summary>邮政编码</summary>
-        String Postcode { get; set; }
-
-        /// <summary>注册IP</summary>
-        String RegIP { get; set; }
-
-        /// <summary>注册时间</summary>
-        DateTime RegTime { get; set; }
-
-        /// <summary>登录次数</summary>
-        Int32 LoginCount { get; set; }
-
-        /// <summary>随机字符</summary>
-        String RndNum { get; set; }
-
-        /// <summary>找回密码时间</summary>
-        DateTime RePassWordTime { get; set; }
-
-        /// <summary>保密问题</summary>
-        String Question { get; set; }
-
-        /// <summary>保密答案</summary>
-        String Answer { get; set; }
-
-        /// <summary>可用余额</summary>
-        Decimal Balance { get; set; }
-
-        /// <summary>赠送余额</summary>
-        Decimal GiftBalance { get; set; }
-
-        /// <summary>返利，分销提成</summary>
-        Decimal Rebate { get; set; }
-
-        /// <summary>银行</summary>
-        String Bank { get; set; }
-
-        /// <summary>银行卡号</summary>
-        String BankCardNO { get; set; }
-
-        /// <summary>支行名称</summary>
-        String BankBranch { get; set; }
-
-        /// <summary>银行卡姓名</summary>
-        String BankRealname { get; set; }
-
-        /// <summary>年业务量</summary>
-        Decimal YearsPerformance { get; set; }
-
-        /// <summary>备用积分1</summary>
-        Decimal ExtCredits1 { get; set; }
-
-        /// <summary>备用积分2</summary>
-        Decimal ExtCredits2 { get; set; }
-
-        /// <summary>备用积分3</summary>
-        Decimal ExtCredits3 { get; set; }
-
-        /// <summary>备用积分4</summary>
-        Decimal ExtCredits4 { get; set; }
-
-        /// <summary>备用积分5</summary>
-        Decimal ExtCredits5 { get; set; }
-
-        /// <summary>总积分</summary>
-        Decimal TotalCredits { get; set; }
-
-        /// <summary>父级用户ID</summary>
-        Int32 Parent { get; set; }
-
-        /// <summary>爷级用户ID</summary>
-        Int32 Grandfather { get; set; }
-
-        /// <summary>是否是分销商</summary>
-        Int32 IsSellers { get; set; }
-
-        /// <summary>是否已经认证的分销商，缴纳费用</summary>
-        Int32 IsVerifySellers { get; set; }
-
-        /// <summary>微信公众号OpenId</summary>
-        String WeixinOpenId { get; set; }
-
-        /// <summary>微信OpenId</summary>
-        String WeixinAppOpenId { get; set; }
-
-        /// <summary>QQ OpenId</summary>
-        String QQOpenId { get; set; }
-
-        /// <summary>微博OpenId</summary>
-        String WeiboOpenId { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

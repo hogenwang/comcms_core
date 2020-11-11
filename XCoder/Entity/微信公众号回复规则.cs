@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("微信公众号回复规则")]
     [BindTable("WeixinRequestRule", Description = "微信公众号回复规则", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class WeixinRequestRule : IWeixinRequestRule
+    public partial class WeixinRequestRule
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private String _RuleName;
         /// <summary>规则名称</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("规则名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("RuleName", "规则名称", "")]
-        public String RuleName { get => _RuleName; set { if (OnPropertyChanging(__.RuleName, value)) { _RuleName = value; OnPropertyChanged(__.RuleName); } } }
+        public String RuleName { get => _RuleName; set { if (OnPropertyChanging("RuleName", value)) { _RuleName = value; OnPropertyChanged("RuleName"); } } }
 
         private String _Keywords;
         /// <summary>请求关键词,逗号分隔</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("请求关键词,逗号分隔")]
         [DataObjectField(false, false, true, 200)]
         [BindColumn("Keywords", "请求关键词,逗号分隔", "")]
-        public String Keywords { get => _Keywords; set { if (OnPropertyChanging(__.Keywords, value)) { _Keywords = value; OnPropertyChanged(__.Keywords); } } }
+        public String Keywords { get => _Keywords; set { if (OnPropertyChanging("Keywords", value)) { _Keywords = value; OnPropertyChanged("Keywords"); } } }
 
         private Int32 _RequestType;
         /// <summary>请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("RequestType", "请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）", "")]
-        public Int32 RequestType { get => _RequestType; set { if (OnPropertyChanging(__.RequestType, value)) { _RequestType = value; OnPropertyChanged(__.RequestType); } } }
+        public Int32 RequestType { get => _RequestType; set { if (OnPropertyChanging("RequestType", value)) { _RequestType = value; OnPropertyChanged("RequestType"); } } }
 
         private Int32 _ResponseType;
         /// <summary>回复类型(1文本2图文3语音4视频5第三方接口)</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("回复类型(1文本2图文3语音4视频5第三方接口)")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("ResponseType", "回复类型(1文本2图文3语音4视频5第三方接口)", "")]
-        public Int32 ResponseType { get => _ResponseType; set { if (OnPropertyChanging(__.ResponseType, value)) { _ResponseType = value; OnPropertyChanged(__.ResponseType); } } }
+        public Int32 ResponseType { get => _ResponseType; set { if (OnPropertyChanging("ResponseType", value)) { _ResponseType = value; OnPropertyChanged("ResponseType"); } } }
 
         private Int32 _IsLikeQuery;
         /// <summary>是否模糊查询 0 是完全匹配；1是模糊匹配</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("是否模糊查询 0 是完全匹配；1是模糊匹配")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsLikeQuery", "是否模糊查询 0 是完全匹配；1是模糊匹配", "")]
-        public Int32 IsLikeQuery { get => _IsLikeQuery; set { if (OnPropertyChanging(__.IsLikeQuery, value)) { _IsLikeQuery = value; OnPropertyChanged(__.IsLikeQuery); } } }
+        public Int32 IsLikeQuery { get => _IsLikeQuery; set { if (OnPropertyChanging("IsLikeQuery", value)) { _IsLikeQuery = value; OnPropertyChanged("IsLikeQuery"); } } }
 
         private Int32 _IsDefault;
         /// <summary>是否是默认回复</summary>
@@ -69,7 +72,7 @@ namespace COMCMS.Core
         [Description("是否是默认回复")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsDefault", "是否是默认回复", "")]
-        public Int32 IsDefault { get => _IsDefault; set { if (OnPropertyChanging(__.IsDefault, value)) { _IsDefault = value; OnPropertyChanged(__.IsDefault); } } }
+        public Int32 IsDefault { get => _IsDefault; set { if (OnPropertyChanging("IsDefault", value)) { _IsDefault = value; OnPropertyChanged("IsDefault"); } } }
 
         private Int32 _Rank;
         /// <summary>排序</summary>
@@ -77,7 +80,7 @@ namespace COMCMS.Core
         [Description("排序")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Rank", "排序", "")]
-        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
+        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging("Rank", value)) { _Rank = value; OnPropertyChanged("Rank"); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -85,7 +88,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging("AddTime", value)) { _AddTime = value; OnPropertyChanged("AddTime"); } } }
 
         private DateTime _UpdateTime;
         /// <summary>修改时间</summary>
@@ -93,7 +96,7 @@ namespace COMCMS.Core
         [Description("修改时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("UpdateTime", "修改时间", "")]
-        public DateTime UpdateTime { get => _UpdateTime; set { if (OnPropertyChanging(__.UpdateTime, value)) { _UpdateTime = value; OnPropertyChanged(__.UpdateTime); } } }
+        public DateTime UpdateTime { get => _UpdateTime; set { if (OnPropertyChanging("UpdateTime", value)) { _UpdateTime = value; OnPropertyChanged("UpdateTime"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -106,16 +109,16 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.RuleName: return _RuleName;
-                    case __.Keywords: return _Keywords;
-                    case __.RequestType: return _RequestType;
-                    case __.ResponseType: return _ResponseType;
-                    case __.IsLikeQuery: return _IsLikeQuery;
-                    case __.IsDefault: return _IsDefault;
-                    case __.Rank: return _Rank;
-                    case __.AddTime: return _AddTime;
-                    case __.UpdateTime: return _UpdateTime;
+                    case "Id": return _Id;
+                    case "RuleName": return _RuleName;
+                    case "Keywords": return _Keywords;
+                    case "RequestType": return _RequestType;
+                    case "ResponseType": return _ResponseType;
+                    case "IsLikeQuery": return _IsLikeQuery;
+                    case "IsDefault": return _IsDefault;
+                    case "Rank": return _Rank;
+                    case "AddTime": return _AddTime;
+                    case "UpdateTime": return _UpdateTime;
                     default: return base[name];
                 }
             }
@@ -123,16 +126,16 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.RuleName: _RuleName = Convert.ToString(value); break;
-                    case __.Keywords: _Keywords = Convert.ToString(value); break;
-                    case __.RequestType: _RequestType = value.ToInt(); break;
-                    case __.ResponseType: _ResponseType = value.ToInt(); break;
-                    case __.IsLikeQuery: _IsLikeQuery = value.ToInt(); break;
-                    case __.IsDefault: _IsDefault = value.ToInt(); break;
-                    case __.Rank: _Rank = value.ToInt(); break;
-                    case __.AddTime: _AddTime = value.ToDateTime(); break;
-                    case __.UpdateTime: _UpdateTime = value.ToDateTime(); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "RuleName": _RuleName = Convert.ToString(value); break;
+                    case "Keywords": _Keywords = Convert.ToString(value); break;
+                    case "RequestType": _RequestType = value.ToInt(); break;
+                    case "ResponseType": _ResponseType = value.ToInt(); break;
+                    case "IsLikeQuery": _IsLikeQuery = value.ToInt(); break;
+                    case "IsDefault": _IsDefault = value.ToInt(); break;
+                    case "Rank": _Rank = value.ToInt(); break;
+                    case "AddTime": _AddTime = value.ToDateTime(); break;
+                    case "UpdateTime": _UpdateTime = value.ToDateTime(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -144,34 +147,34 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>规则名称</summary>
-            public static readonly Field RuleName = FindByName(__.RuleName);
+            public static readonly Field RuleName = FindByName("RuleName");
 
             /// <summary>请求关键词,逗号分隔</summary>
-            public static readonly Field Keywords = FindByName(__.Keywords);
+            public static readonly Field Keywords = FindByName("Keywords");
 
             /// <summary>请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）</summary>
-            public static readonly Field RequestType = FindByName(__.RequestType);
+            public static readonly Field RequestType = FindByName("RequestType");
 
             /// <summary>回复类型(1文本2图文3语音4视频5第三方接口)</summary>
-            public static readonly Field ResponseType = FindByName(__.ResponseType);
+            public static readonly Field ResponseType = FindByName("ResponseType");
 
             /// <summary>是否模糊查询 0 是完全匹配；1是模糊匹配</summary>
-            public static readonly Field IsLikeQuery = FindByName(__.IsLikeQuery);
+            public static readonly Field IsLikeQuery = FindByName("IsLikeQuery");
 
             /// <summary>是否是默认回复</summary>
-            public static readonly Field IsDefault = FindByName(__.IsDefault);
+            public static readonly Field IsDefault = FindByName("IsDefault");
 
             /// <summary>排序</summary>
-            public static readonly Field Rank = FindByName(__.Rank);
+            public static readonly Field Rank = FindByName("Rank");
 
             /// <summary>添加时间</summary>
-            public static readonly Field AddTime = FindByName(__.AddTime);
+            public static readonly Field AddTime = FindByName("AddTime");
 
             /// <summary>修改时间</summary>
-            public static readonly Field UpdateTime = FindByName(__.UpdateTime);
+            public static readonly Field UpdateTime = FindByName("UpdateTime");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -209,49 +212,6 @@ namespace COMCMS.Core
             /// <summary>修改时间</summary>
             public const String UpdateTime = "UpdateTime";
         }
-        #endregion
-    }
-
-    /// <summary>微信公众号回复规则接口</summary>
-    public partial interface IWeixinRequestRule
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>规则名称</summary>
-        String RuleName { get; set; }
-
-        /// <summary>请求关键词,逗号分隔</summary>
-        String Keywords { get; set; }
-
-        /// <summary>请求类型(0默认回复1文字2图片3语音4链接5地理位置6关注7取消关注8扫描带参数二维码事件9上报地理位置事件10自定义菜单事件）</summary>
-        Int32 RequestType { get; set; }
-
-        /// <summary>回复类型(1文本2图文3语音4视频5第三方接口)</summary>
-        Int32 ResponseType { get; set; }
-
-        /// <summary>是否模糊查询 0 是完全匹配；1是模糊匹配</summary>
-        Int32 IsLikeQuery { get; set; }
-
-        /// <summary>是否是默认回复</summary>
-        Int32 IsDefault { get; set; }
-
-        /// <summary>排序</summary>
-        Int32 Rank { get; set; }
-
-        /// <summary>添加时间</summary>
-        DateTime AddTime { get; set; }
-
-        /// <summary>修改时间</summary>
-        DateTime UpdateTime { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

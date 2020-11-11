@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("商品栏目")]
     [BindTable("Category", Description = "商品栏目", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class Category : ICategory
+    public partial class Category
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private String _KindName;
         /// <summary>栏目名称</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("栏目名称")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("KindName", "栏目名称", "")]
-        public String KindName { get => _KindName; set { if (OnPropertyChanging(__.KindName, value)) { _KindName = value; OnPropertyChanged(__.KindName); } } }
+        public String KindName { get => _KindName; set { if (OnPropertyChanging("KindName", value)) { _KindName = value; OnPropertyChanged("KindName"); } } }
 
         private String _SubTitle;
         /// <summary>栏目副标题</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("栏目副标题")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("SubTitle", "栏目副标题", "")]
-        public String SubTitle { get => _SubTitle; set { if (OnPropertyChanging(__.SubTitle, value)) { _SubTitle = value; OnPropertyChanged(__.SubTitle); } } }
+        public String SubTitle { get => _SubTitle; set { if (OnPropertyChanging("SubTitle", value)) { _SubTitle = value; OnPropertyChanged("SubTitle"); } } }
 
         private String _KindTitle;
         /// <summary>栏目标题，填写则在浏览器替换此标题</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("栏目标题，填写则在浏览器替换此标题")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("KindTitle", "栏目标题，填写则在浏览器替换此标题", "")]
-        public String KindTitle { get => _KindTitle; set { if (OnPropertyChanging(__.KindTitle, value)) { _KindTitle = value; OnPropertyChanged(__.KindTitle); } } }
+        public String KindTitle { get => _KindTitle; set { if (OnPropertyChanging("KindTitle", value)) { _KindTitle = value; OnPropertyChanged("KindTitle"); } } }
 
         private String _Keyword;
         /// <summary>描述</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("描述")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Keyword", "描述", "")]
-        public String Keyword { get => _Keyword; set { if (OnPropertyChanging(__.Keyword, value)) { _Keyword = value; OnPropertyChanged(__.Keyword); } } }
+        public String Keyword { get => _Keyword; set { if (OnPropertyChanging("Keyword", value)) { _Keyword = value; OnPropertyChanged("Keyword"); } } }
 
         private String _Description;
         /// <summary>介绍</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("介绍")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Description", "介绍", "")]
-        public String Description { get => _Description; set { if (OnPropertyChanging(__.Description, value)) { _Description = value; OnPropertyChanged(__.Description); } } }
+        public String Description { get => _Description; set { if (OnPropertyChanging("Description", value)) { _Description = value; OnPropertyChanged("Description"); } } }
 
         private String _LinkURL;
         /// <summary>跳转链接</summary>
@@ -69,7 +72,7 @@ namespace COMCMS.Core
         [Description("跳转链接")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("LinkURL", "跳转链接", "")]
-        public String LinkURL { get => _LinkURL; set { if (OnPropertyChanging(__.LinkURL, value)) { _LinkURL = value; OnPropertyChanged(__.LinkURL); } } }
+        public String LinkURL { get => _LinkURL; set { if (OnPropertyChanging("LinkURL", value)) { _LinkURL = value; OnPropertyChanged("LinkURL"); } } }
 
         private String _TitleColor;
         /// <summary>类别名称颜色</summary>
@@ -77,7 +80,7 @@ namespace COMCMS.Core
         [Description("类别名称颜色")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("TitleColor", "类别名称颜色", "")]
-        public String TitleColor { get => _TitleColor; set { if (OnPropertyChanging(__.TitleColor, value)) { _TitleColor = value; OnPropertyChanged(__.TitleColor); } } }
+        public String TitleColor { get => _TitleColor; set { if (OnPropertyChanging("TitleColor", value)) { _TitleColor = value; OnPropertyChanged("TitleColor"); } } }
 
         private String _TemplateFile;
         /// <summary>模板</summary>
@@ -85,7 +88,7 @@ namespace COMCMS.Core
         [Description("模板")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("TemplateFile", "模板", "")]
-        public String TemplateFile { get => _TemplateFile; set { if (OnPropertyChanging(__.TemplateFile, value)) { _TemplateFile = value; OnPropertyChanged(__.TemplateFile); } } }
+        public String TemplateFile { get => _TemplateFile; set { if (OnPropertyChanging("TemplateFile", value)) { _TemplateFile = value; OnPropertyChanged("TemplateFile"); } } }
 
         private String _DetailTemplateFile;
         /// <summary>详情模板</summary>
@@ -93,7 +96,7 @@ namespace COMCMS.Core
         [Description("详情模板")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("DetailTemplateFile", "详情模板", "")]
-        public String DetailTemplateFile { get => _DetailTemplateFile; set { if (OnPropertyChanging(__.DetailTemplateFile, value)) { _DetailTemplateFile = value; OnPropertyChanged(__.DetailTemplateFile); } } }
+        public String DetailTemplateFile { get => _DetailTemplateFile; set { if (OnPropertyChanging("DetailTemplateFile", value)) { _DetailTemplateFile = value; OnPropertyChanged("DetailTemplateFile"); } } }
 
         private String _KindDomain;
         /// <summary>类别域名（保留）</summary>
@@ -101,7 +104,7 @@ namespace COMCMS.Core
         [Description("类别域名（保留）")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("KindDomain", "类别域名（保留）", "")]
-        public String KindDomain { get => _KindDomain; set { if (OnPropertyChanging(__.KindDomain, value)) { _KindDomain = value; OnPropertyChanged(__.KindDomain); } } }
+        public String KindDomain { get => _KindDomain; set { if (OnPropertyChanging("KindDomain", value)) { _KindDomain = value; OnPropertyChanged("KindDomain"); } } }
 
         private Int32 _IsList;
         /// <summary>是否为列表页面</summary>
@@ -109,7 +112,7 @@ namespace COMCMS.Core
         [Description("是否为列表页面")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsList", "是否为列表页面", "")]
-        public Int32 IsList { get => _IsList; set { if (OnPropertyChanging(__.IsList, value)) { _IsList = value; OnPropertyChanged(__.IsList); } } }
+        public Int32 IsList { get => _IsList; set { if (OnPropertyChanging("IsList", value)) { _IsList = value; OnPropertyChanged("IsList"); } } }
 
         private Int32 _PageSize;
         /// <summary>每页显示数量</summary>
@@ -117,7 +120,7 @@ namespace COMCMS.Core
         [Description("每页显示数量")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("PageSize", "每页显示数量", "")]
-        public Int32 PageSize { get => _PageSize; set { if (OnPropertyChanging(__.PageSize, value)) { _PageSize = value; OnPropertyChanged(__.PageSize); } } }
+        public Int32 PageSize { get => _PageSize; set { if (OnPropertyChanging("PageSize", value)) { _PageSize = value; OnPropertyChanged("PageSize"); } } }
 
         private Int32 _PId;
         /// <summary>上级ID</summary>
@@ -125,7 +128,7 @@ namespace COMCMS.Core
         [Description("上级ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("PId", "上级ID", "")]
-        public Int32 PId { get => _PId; set { if (OnPropertyChanging(__.PId, value)) { _PId = value; OnPropertyChanged(__.PId); } } }
+        public Int32 PId { get => _PId; set { if (OnPropertyChanging("PId", value)) { _PId = value; OnPropertyChanged("PId"); } } }
 
         private Int32 _Level;
         /// <summary>级别</summary>
@@ -133,7 +136,7 @@ namespace COMCMS.Core
         [Description("级别")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Level", "级别", "")]
-        public Int32 Level { get => _Level; set { if (OnPropertyChanging(__.Level, value)) { _Level = value; OnPropertyChanged(__.Level); } } }
+        public Int32 Level { get => _Level; set { if (OnPropertyChanging("Level", value)) { _Level = value; OnPropertyChanged("Level"); } } }
 
         private String _Location;
         /// <summary>路径</summary>
@@ -141,7 +144,7 @@ namespace COMCMS.Core
         [Description("路径")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Location", "路径", "")]
-        public String Location { get => _Location; set { if (OnPropertyChanging(__.Location, value)) { _Location = value; OnPropertyChanged(__.Location); } } }
+        public String Location { get => _Location; set { if (OnPropertyChanging("Location", value)) { _Location = value; OnPropertyChanged("Location"); } } }
 
         private Int32 _IsHide;
         /// <summary>是否隐藏</summary>
@@ -149,7 +152,7 @@ namespace COMCMS.Core
         [Description("是否隐藏")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsHide", "是否隐藏", "")]
-        public Int32 IsHide { get => _IsHide; set { if (OnPropertyChanging(__.IsHide, value)) { _IsHide = value; OnPropertyChanged(__.IsHide); } } }
+        public Int32 IsHide { get => _IsHide; set { if (OnPropertyChanging("IsHide", value)) { _IsHide = value; OnPropertyChanged("IsHide"); } } }
 
         private Int32 _IsLock;
         /// <summary>是否锁定，不允许删除</summary>
@@ -157,7 +160,7 @@ namespace COMCMS.Core
         [Description("是否锁定，不允许删除")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsLock", "是否锁定，不允许删除", "")]
-        public Int32 IsLock { get => _IsLock; set { if (OnPropertyChanging(__.IsLock, value)) { _IsLock = value; OnPropertyChanged(__.IsLock); } } }
+        public Int32 IsLock { get => _IsLock; set { if (OnPropertyChanging("IsLock", value)) { _IsLock = value; OnPropertyChanged("IsLock"); } } }
 
         private Int32 _IsDel;
         /// <summary>是否删除,已经删除到回收站</summary>
@@ -165,7 +168,7 @@ namespace COMCMS.Core
         [Description("是否删除,已经删除到回收站")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsDel", "是否删除,已经删除到回收站", "")]
-        public Int32 IsDel { get => _IsDel; set { if (OnPropertyChanging(__.IsDel, value)) { _IsDel = value; OnPropertyChanged(__.IsDel); } } }
+        public Int32 IsDel { get => _IsDel; set { if (OnPropertyChanging("IsDel", value)) { _IsDel = value; OnPropertyChanged("IsDel"); } } }
 
         private Int32 _IsComment;
         /// <summary>是否允许评论</summary>
@@ -173,7 +176,7 @@ namespace COMCMS.Core
         [Description("是否允许评论")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsComment", "是否允许评论", "")]
-        public Int32 IsComment { get => _IsComment; set { if (OnPropertyChanging(__.IsComment, value)) { _IsComment = value; OnPropertyChanged(__.IsComment); } } }
+        public Int32 IsComment { get => _IsComment; set { if (OnPropertyChanging("IsComment", value)) { _IsComment = value; OnPropertyChanged("IsComment"); } } }
 
         private Int32 _IsMember;
         /// <summary>是否会员栏目</summary>
@@ -181,7 +184,7 @@ namespace COMCMS.Core
         [Description("是否会员栏目")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsMember", "是否会员栏目", "")]
-        public Int32 IsMember { get => _IsMember; set { if (OnPropertyChanging(__.IsMember, value)) { _IsMember = value; OnPropertyChanged(__.IsMember); } } }
+        public Int32 IsMember { get => _IsMember; set { if (OnPropertyChanging("IsMember", value)) { _IsMember = value; OnPropertyChanged("IsMember"); } } }
 
         private Int32 _IsShowSubDetail;
         /// <summary>是否显示下级栏目内容</summary>
@@ -189,7 +192,7 @@ namespace COMCMS.Core
         [Description("是否显示下级栏目内容")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsShowSubDetail", "是否显示下级栏目内容", "")]
-        public Int32 IsShowSubDetail { get => _IsShowSubDetail; set { if (OnPropertyChanging(__.IsShowSubDetail, value)) { _IsShowSubDetail = value; OnPropertyChanged(__.IsShowSubDetail); } } }
+        public Int32 IsShowSubDetail { get => _IsShowSubDetail; set { if (OnPropertyChanging("IsShowSubDetail", value)) { _IsShowSubDetail = value; OnPropertyChanged("IsShowSubDetail"); } } }
 
         private Int32 _CatalogId;
         /// <summary>模型ID</summary>
@@ -197,7 +200,7 @@ namespace COMCMS.Core
         [Description("模型ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("CatalogId", "模型ID", "")]
-        public Int32 CatalogId { get => _CatalogId; set { if (OnPropertyChanging(__.CatalogId, value)) { _CatalogId = value; OnPropertyChanged(__.CatalogId); } } }
+        public Int32 CatalogId { get => _CatalogId; set { if (OnPropertyChanging("CatalogId", value)) { _CatalogId = value; OnPropertyChanged("CatalogId"); } } }
 
         private Int32 _Counts;
         /// <summary>详情数量，缓存</summary>
@@ -205,7 +208,7 @@ namespace COMCMS.Core
         [Description("详情数量，缓存")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Counts", "详情数量，缓存", "")]
-        public Int32 Counts { get => _Counts; set { if (OnPropertyChanging(__.Counts, value)) { _Counts = value; OnPropertyChanged(__.Counts); } } }
+        public Int32 Counts { get => _Counts; set { if (OnPropertyChanging("Counts", value)) { _Counts = value; OnPropertyChanged("Counts"); } } }
 
         private Int32 _Rank;
         /// <summary>排序</summary>
@@ -213,7 +216,7 @@ namespace COMCMS.Core
         [Description("排序")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Rank", "排序", "")]
-        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
+        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging("Rank", value)) { _Rank = value; OnPropertyChanged("Rank"); } } }
 
         private String _Icon;
         /// <summary>图标</summary>
@@ -221,7 +224,7 @@ namespace COMCMS.Core
         [Description("图标")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Icon", "图标", "")]
-        public String Icon { get => _Icon; set { if (OnPropertyChanging(__.Icon, value)) { _Icon = value; OnPropertyChanged(__.Icon); } } }
+        public String Icon { get => _Icon; set { if (OnPropertyChanging("Icon", value)) { _Icon = value; OnPropertyChanged("Icon"); } } }
 
         private String _ClassName;
         /// <summary>样式名称</summary>
@@ -229,7 +232,7 @@ namespace COMCMS.Core
         [Description("样式名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("ClassName", "样式名称", "")]
-        public String ClassName { get => _ClassName; set { if (OnPropertyChanging(__.ClassName, value)) { _ClassName = value; OnPropertyChanged(__.ClassName); } } }
+        public String ClassName { get => _ClassName; set { if (OnPropertyChanging("ClassName", value)) { _ClassName = value; OnPropertyChanged("ClassName"); } } }
 
         private String _BannerImg;
         /// <summary>banner图片</summary>
@@ -237,7 +240,7 @@ namespace COMCMS.Core
         [Description("banner图片")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("BannerImg", "banner图片", "")]
-        public String BannerImg { get => _BannerImg; set { if (OnPropertyChanging(__.BannerImg, value)) { _BannerImg = value; OnPropertyChanged(__.BannerImg); } } }
+        public String BannerImg { get => _BannerImg; set { if (OnPropertyChanging("BannerImg", value)) { _BannerImg = value; OnPropertyChanged("BannerImg"); } } }
 
         private String _KindInfo;
         /// <summary>栏目详细介绍</summary>
@@ -245,7 +248,7 @@ namespace COMCMS.Core
         [Description("栏目详细介绍")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("KindInfo", "栏目详细介绍", "")]
-        public String KindInfo { get => _KindInfo; set { if (OnPropertyChanging(__.KindInfo, value)) { _KindInfo = value; OnPropertyChanged(__.KindInfo); } } }
+        public String KindInfo { get => _KindInfo; set { if (OnPropertyChanging("KindInfo", value)) { _KindInfo = value; OnPropertyChanged("KindInfo"); } } }
 
         private String _Pic;
         /// <summary>图片</summary>
@@ -253,7 +256,7 @@ namespace COMCMS.Core
         [Description("图片")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Pic", "图片", "")]
-        public String Pic { get => _Pic; set { if (OnPropertyChanging(__.Pic, value)) { _Pic = value; OnPropertyChanged(__.Pic); } } }
+        public String Pic { get => _Pic; set { if (OnPropertyChanging("Pic", value)) { _Pic = value; OnPropertyChanged("Pic"); } } }
 
         private Int32 _AdsId;
         /// <summary>广告ID</summary>
@@ -261,7 +264,7 @@ namespace COMCMS.Core
         [Description("广告ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("AdsId", "广告ID", "")]
-        public Int32 AdsId { get => _AdsId; set { if (OnPropertyChanging(__.AdsId, value)) { _AdsId = value; OnPropertyChanged(__.AdsId); } } }
+        public Int32 AdsId { get => _AdsId; set { if (OnPropertyChanging("AdsId", value)) { _AdsId = value; OnPropertyChanged("AdsId"); } } }
 
         private String _FilePath;
         /// <summary>目录路径</summary>
@@ -269,7 +272,7 @@ namespace COMCMS.Core
         [Description("目录路径")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("FilePath", "目录路径", "")]
-        public String FilePath { get => _FilePath; set { if (OnPropertyChanging(__.FilePath, value)) { _FilePath = value; OnPropertyChanged(__.FilePath); } } }
+        public String FilePath { get => _FilePath; set { if (OnPropertyChanging("FilePath", value)) { _FilePath = value; OnPropertyChanged("FilePath"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -282,38 +285,38 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.KindName: return _KindName;
-                    case __.SubTitle: return _SubTitle;
-                    case __.KindTitle: return _KindTitle;
-                    case __.Keyword: return _Keyword;
-                    case __.Description: return _Description;
-                    case __.LinkURL: return _LinkURL;
-                    case __.TitleColor: return _TitleColor;
-                    case __.TemplateFile: return _TemplateFile;
-                    case __.DetailTemplateFile: return _DetailTemplateFile;
-                    case __.KindDomain: return _KindDomain;
-                    case __.IsList: return _IsList;
-                    case __.PageSize: return _PageSize;
-                    case __.PId: return _PId;
-                    case __.Level: return _Level;
-                    case __.Location: return _Location;
-                    case __.IsHide: return _IsHide;
-                    case __.IsLock: return _IsLock;
-                    case __.IsDel: return _IsDel;
-                    case __.IsComment: return _IsComment;
-                    case __.IsMember: return _IsMember;
-                    case __.IsShowSubDetail: return _IsShowSubDetail;
-                    case __.CatalogId: return _CatalogId;
-                    case __.Counts: return _Counts;
-                    case __.Rank: return _Rank;
-                    case __.Icon: return _Icon;
-                    case __.ClassName: return _ClassName;
-                    case __.BannerImg: return _BannerImg;
-                    case __.KindInfo: return _KindInfo;
-                    case __.Pic: return _Pic;
-                    case __.AdsId: return _AdsId;
-                    case __.FilePath: return _FilePath;
+                    case "Id": return _Id;
+                    case "KindName": return _KindName;
+                    case "SubTitle": return _SubTitle;
+                    case "KindTitle": return _KindTitle;
+                    case "Keyword": return _Keyword;
+                    case "Description": return _Description;
+                    case "LinkURL": return _LinkURL;
+                    case "TitleColor": return _TitleColor;
+                    case "TemplateFile": return _TemplateFile;
+                    case "DetailTemplateFile": return _DetailTemplateFile;
+                    case "KindDomain": return _KindDomain;
+                    case "IsList": return _IsList;
+                    case "PageSize": return _PageSize;
+                    case "PId": return _PId;
+                    case "Level": return _Level;
+                    case "Location": return _Location;
+                    case "IsHide": return _IsHide;
+                    case "IsLock": return _IsLock;
+                    case "IsDel": return _IsDel;
+                    case "IsComment": return _IsComment;
+                    case "IsMember": return _IsMember;
+                    case "IsShowSubDetail": return _IsShowSubDetail;
+                    case "CatalogId": return _CatalogId;
+                    case "Counts": return _Counts;
+                    case "Rank": return _Rank;
+                    case "Icon": return _Icon;
+                    case "ClassName": return _ClassName;
+                    case "BannerImg": return _BannerImg;
+                    case "KindInfo": return _KindInfo;
+                    case "Pic": return _Pic;
+                    case "AdsId": return _AdsId;
+                    case "FilePath": return _FilePath;
                     default: return base[name];
                 }
             }
@@ -321,38 +324,38 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.KindName: _KindName = Convert.ToString(value); break;
-                    case __.SubTitle: _SubTitle = Convert.ToString(value); break;
-                    case __.KindTitle: _KindTitle = Convert.ToString(value); break;
-                    case __.Keyword: _Keyword = Convert.ToString(value); break;
-                    case __.Description: _Description = Convert.ToString(value); break;
-                    case __.LinkURL: _LinkURL = Convert.ToString(value); break;
-                    case __.TitleColor: _TitleColor = Convert.ToString(value); break;
-                    case __.TemplateFile: _TemplateFile = Convert.ToString(value); break;
-                    case __.DetailTemplateFile: _DetailTemplateFile = Convert.ToString(value); break;
-                    case __.KindDomain: _KindDomain = Convert.ToString(value); break;
-                    case __.IsList: _IsList = value.ToInt(); break;
-                    case __.PageSize: _PageSize = value.ToInt(); break;
-                    case __.PId: _PId = value.ToInt(); break;
-                    case __.Level: _Level = value.ToInt(); break;
-                    case __.Location: _Location = Convert.ToString(value); break;
-                    case __.IsHide: _IsHide = value.ToInt(); break;
-                    case __.IsLock: _IsLock = value.ToInt(); break;
-                    case __.IsDel: _IsDel = value.ToInt(); break;
-                    case __.IsComment: _IsComment = value.ToInt(); break;
-                    case __.IsMember: _IsMember = value.ToInt(); break;
-                    case __.IsShowSubDetail: _IsShowSubDetail = value.ToInt(); break;
-                    case __.CatalogId: _CatalogId = value.ToInt(); break;
-                    case __.Counts: _Counts = value.ToInt(); break;
-                    case __.Rank: _Rank = value.ToInt(); break;
-                    case __.Icon: _Icon = Convert.ToString(value); break;
-                    case __.ClassName: _ClassName = Convert.ToString(value); break;
-                    case __.BannerImg: _BannerImg = Convert.ToString(value); break;
-                    case __.KindInfo: _KindInfo = Convert.ToString(value); break;
-                    case __.Pic: _Pic = Convert.ToString(value); break;
-                    case __.AdsId: _AdsId = value.ToInt(); break;
-                    case __.FilePath: _FilePath = Convert.ToString(value); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "KindName": _KindName = Convert.ToString(value); break;
+                    case "SubTitle": _SubTitle = Convert.ToString(value); break;
+                    case "KindTitle": _KindTitle = Convert.ToString(value); break;
+                    case "Keyword": _Keyword = Convert.ToString(value); break;
+                    case "Description": _Description = Convert.ToString(value); break;
+                    case "LinkURL": _LinkURL = Convert.ToString(value); break;
+                    case "TitleColor": _TitleColor = Convert.ToString(value); break;
+                    case "TemplateFile": _TemplateFile = Convert.ToString(value); break;
+                    case "DetailTemplateFile": _DetailTemplateFile = Convert.ToString(value); break;
+                    case "KindDomain": _KindDomain = Convert.ToString(value); break;
+                    case "IsList": _IsList = value.ToInt(); break;
+                    case "PageSize": _PageSize = value.ToInt(); break;
+                    case "PId": _PId = value.ToInt(); break;
+                    case "Level": _Level = value.ToInt(); break;
+                    case "Location": _Location = Convert.ToString(value); break;
+                    case "IsHide": _IsHide = value.ToInt(); break;
+                    case "IsLock": _IsLock = value.ToInt(); break;
+                    case "IsDel": _IsDel = value.ToInt(); break;
+                    case "IsComment": _IsComment = value.ToInt(); break;
+                    case "IsMember": _IsMember = value.ToInt(); break;
+                    case "IsShowSubDetail": _IsShowSubDetail = value.ToInt(); break;
+                    case "CatalogId": _CatalogId = value.ToInt(); break;
+                    case "Counts": _Counts = value.ToInt(); break;
+                    case "Rank": _Rank = value.ToInt(); break;
+                    case "Icon": _Icon = Convert.ToString(value); break;
+                    case "ClassName": _ClassName = Convert.ToString(value); break;
+                    case "BannerImg": _BannerImg = Convert.ToString(value); break;
+                    case "KindInfo": _KindInfo = Convert.ToString(value); break;
+                    case "Pic": _Pic = Convert.ToString(value); break;
+                    case "AdsId": _AdsId = value.ToInt(); break;
+                    case "FilePath": _FilePath = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -364,100 +367,100 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>栏目名称</summary>
-            public static readonly Field KindName = FindByName(__.KindName);
+            public static readonly Field KindName = FindByName("KindName");
 
             /// <summary>栏目副标题</summary>
-            public static readonly Field SubTitle = FindByName(__.SubTitle);
+            public static readonly Field SubTitle = FindByName("SubTitle");
 
             /// <summary>栏目标题，填写则在浏览器替换此标题</summary>
-            public static readonly Field KindTitle = FindByName(__.KindTitle);
+            public static readonly Field KindTitle = FindByName("KindTitle");
 
             /// <summary>描述</summary>
-            public static readonly Field Keyword = FindByName(__.Keyword);
+            public static readonly Field Keyword = FindByName("Keyword");
 
             /// <summary>介绍</summary>
-            public static readonly Field Description = FindByName(__.Description);
+            public static readonly Field Description = FindByName("Description");
 
             /// <summary>跳转链接</summary>
-            public static readonly Field LinkURL = FindByName(__.LinkURL);
+            public static readonly Field LinkURL = FindByName("LinkURL");
 
             /// <summary>类别名称颜色</summary>
-            public static readonly Field TitleColor = FindByName(__.TitleColor);
+            public static readonly Field TitleColor = FindByName("TitleColor");
 
             /// <summary>模板</summary>
-            public static readonly Field TemplateFile = FindByName(__.TemplateFile);
+            public static readonly Field TemplateFile = FindByName("TemplateFile");
 
             /// <summary>详情模板</summary>
-            public static readonly Field DetailTemplateFile = FindByName(__.DetailTemplateFile);
+            public static readonly Field DetailTemplateFile = FindByName("DetailTemplateFile");
 
             /// <summary>类别域名（保留）</summary>
-            public static readonly Field KindDomain = FindByName(__.KindDomain);
+            public static readonly Field KindDomain = FindByName("KindDomain");
 
             /// <summary>是否为列表页面</summary>
-            public static readonly Field IsList = FindByName(__.IsList);
+            public static readonly Field IsList = FindByName("IsList");
 
             /// <summary>每页显示数量</summary>
-            public static readonly Field PageSize = FindByName(__.PageSize);
+            public static readonly Field PageSize = FindByName("PageSize");
 
             /// <summary>上级ID</summary>
-            public static readonly Field PId = FindByName(__.PId);
+            public static readonly Field PId = FindByName("PId");
 
             /// <summary>级别</summary>
-            public static readonly Field Level = FindByName(__.Level);
+            public static readonly Field Level = FindByName("Level");
 
             /// <summary>路径</summary>
-            public static readonly Field Location = FindByName(__.Location);
+            public static readonly Field Location = FindByName("Location");
 
             /// <summary>是否隐藏</summary>
-            public static readonly Field IsHide = FindByName(__.IsHide);
+            public static readonly Field IsHide = FindByName("IsHide");
 
             /// <summary>是否锁定，不允许删除</summary>
-            public static readonly Field IsLock = FindByName(__.IsLock);
+            public static readonly Field IsLock = FindByName("IsLock");
 
             /// <summary>是否删除,已经删除到回收站</summary>
-            public static readonly Field IsDel = FindByName(__.IsDel);
+            public static readonly Field IsDel = FindByName("IsDel");
 
             /// <summary>是否允许评论</summary>
-            public static readonly Field IsComment = FindByName(__.IsComment);
+            public static readonly Field IsComment = FindByName("IsComment");
 
             /// <summary>是否会员栏目</summary>
-            public static readonly Field IsMember = FindByName(__.IsMember);
+            public static readonly Field IsMember = FindByName("IsMember");
 
             /// <summary>是否显示下级栏目内容</summary>
-            public static readonly Field IsShowSubDetail = FindByName(__.IsShowSubDetail);
+            public static readonly Field IsShowSubDetail = FindByName("IsShowSubDetail");
 
             /// <summary>模型ID</summary>
-            public static readonly Field CatalogId = FindByName(__.CatalogId);
+            public static readonly Field CatalogId = FindByName("CatalogId");
 
             /// <summary>详情数量，缓存</summary>
-            public static readonly Field Counts = FindByName(__.Counts);
+            public static readonly Field Counts = FindByName("Counts");
 
             /// <summary>排序</summary>
-            public static readonly Field Rank = FindByName(__.Rank);
+            public static readonly Field Rank = FindByName("Rank");
 
             /// <summary>图标</summary>
-            public static readonly Field Icon = FindByName(__.Icon);
+            public static readonly Field Icon = FindByName("Icon");
 
             /// <summary>样式名称</summary>
-            public static readonly Field ClassName = FindByName(__.ClassName);
+            public static readonly Field ClassName = FindByName("ClassName");
 
             /// <summary>banner图片</summary>
-            public static readonly Field BannerImg = FindByName(__.BannerImg);
+            public static readonly Field BannerImg = FindByName("BannerImg");
 
             /// <summary>栏目详细介绍</summary>
-            public static readonly Field KindInfo = FindByName(__.KindInfo);
+            public static readonly Field KindInfo = FindByName("KindInfo");
 
             /// <summary>图片</summary>
-            public static readonly Field Pic = FindByName(__.Pic);
+            public static readonly Field Pic = FindByName("Pic");
 
             /// <summary>广告ID</summary>
-            public static readonly Field AdsId = FindByName(__.AdsId);
+            public static readonly Field AdsId = FindByName("AdsId");
 
             /// <summary>目录路径</summary>
-            public static readonly Field FilePath = FindByName(__.FilePath);
+            public static readonly Field FilePath = FindByName("FilePath");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -561,115 +564,6 @@ namespace COMCMS.Core
             /// <summary>目录路径</summary>
             public const String FilePath = "FilePath";
         }
-        #endregion
-    }
-
-    /// <summary>商品栏目接口</summary>
-    public partial interface ICategory
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>栏目名称</summary>
-        String KindName { get; set; }
-
-        /// <summary>栏目副标题</summary>
-        String SubTitle { get; set; }
-
-        /// <summary>栏目标题，填写则在浏览器替换此标题</summary>
-        String KindTitle { get; set; }
-
-        /// <summary>描述</summary>
-        String Keyword { get; set; }
-
-        /// <summary>介绍</summary>
-        String Description { get; set; }
-
-        /// <summary>跳转链接</summary>
-        String LinkURL { get; set; }
-
-        /// <summary>类别名称颜色</summary>
-        String TitleColor { get; set; }
-
-        /// <summary>模板</summary>
-        String TemplateFile { get; set; }
-
-        /// <summary>详情模板</summary>
-        String DetailTemplateFile { get; set; }
-
-        /// <summary>类别域名（保留）</summary>
-        String KindDomain { get; set; }
-
-        /// <summary>是否为列表页面</summary>
-        Int32 IsList { get; set; }
-
-        /// <summary>每页显示数量</summary>
-        Int32 PageSize { get; set; }
-
-        /// <summary>上级ID</summary>
-        Int32 PId { get; set; }
-
-        /// <summary>级别</summary>
-        Int32 Level { get; set; }
-
-        /// <summary>路径</summary>
-        String Location { get; set; }
-
-        /// <summary>是否隐藏</summary>
-        Int32 IsHide { get; set; }
-
-        /// <summary>是否锁定，不允许删除</summary>
-        Int32 IsLock { get; set; }
-
-        /// <summary>是否删除,已经删除到回收站</summary>
-        Int32 IsDel { get; set; }
-
-        /// <summary>是否允许评论</summary>
-        Int32 IsComment { get; set; }
-
-        /// <summary>是否会员栏目</summary>
-        Int32 IsMember { get; set; }
-
-        /// <summary>是否显示下级栏目内容</summary>
-        Int32 IsShowSubDetail { get; set; }
-
-        /// <summary>模型ID</summary>
-        Int32 CatalogId { get; set; }
-
-        /// <summary>详情数量，缓存</summary>
-        Int32 Counts { get; set; }
-
-        /// <summary>排序</summary>
-        Int32 Rank { get; set; }
-
-        /// <summary>图标</summary>
-        String Icon { get; set; }
-
-        /// <summary>样式名称</summary>
-        String ClassName { get; set; }
-
-        /// <summary>banner图片</summary>
-        String BannerImg { get; set; }
-
-        /// <summary>栏目详细介绍</summary>
-        String KindInfo { get; set; }
-
-        /// <summary>图片</summary>
-        String Pic { get; set; }
-
-        /// <summary>广告ID</summary>
-        Int32 AdsId { get; set; }
-
-        /// <summary>目录路径</summary>
-        String FilePath { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

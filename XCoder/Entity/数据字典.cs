@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("数据字典")]
     [BindTable("DataDictionary", Description = "数据字典", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class DataDictionary : IDataDictionary
+    public partial class DataDictionary
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private String _Key;
         /// <summary>字典key</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("字典key")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Key", "字典key", "")]
-        public String Key { get => _Key; set { if (OnPropertyChanging(__.Key, value)) { _Key = value; OnPropertyChanged(__.Key); } } }
+        public String Key { get => _Key; set { if (OnPropertyChanging("Key", value)) { _Key = value; OnPropertyChanged("Key"); } } }
 
         private String _Description;
         /// <summary>字典介绍</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("字典介绍")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Description", "字典介绍", "")]
-        public String Description { get => _Description; set { if (OnPropertyChanging(__.Description, value)) { _Description = value; OnPropertyChanged(__.Description); } } }
+        public String Description { get => _Description; set { if (OnPropertyChanging("Description", value)) { _Description = value; OnPropertyChanged("Description"); } } }
 
         private Int32 _Rank;
         /// <summary>排序</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("排序")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Rank", "排序", "")]
-        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
+        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging("Rank", value)) { _Rank = value; OnPropertyChanged("Rank"); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging("AddTime", value)) { _AddTime = value; OnPropertyChanged("AddTime"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -66,11 +69,11 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.Key: return _Key;
-                    case __.Description: return _Description;
-                    case __.Rank: return _Rank;
-                    case __.AddTime: return _AddTime;
+                    case "Id": return _Id;
+                    case "Key": return _Key;
+                    case "Description": return _Description;
+                    case "Rank": return _Rank;
+                    case "AddTime": return _AddTime;
                     default: return base[name];
                 }
             }
@@ -78,11 +81,11 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.Key: _Key = Convert.ToString(value); break;
-                    case __.Description: _Description = Convert.ToString(value); break;
-                    case __.Rank: _Rank = value.ToInt(); break;
-                    case __.AddTime: _AddTime = value.ToDateTime(); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "Key": _Key = Convert.ToString(value); break;
+                    case "Description": _Description = Convert.ToString(value); break;
+                    case "Rank": _Rank = value.ToInt(); break;
+                    case "AddTime": _AddTime = value.ToDateTime(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -94,19 +97,19 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>字典key</summary>
-            public static readonly Field Key = FindByName(__.Key);
+            public static readonly Field Key = FindByName("Key");
 
             /// <summary>字典介绍</summary>
-            public static readonly Field Description = FindByName(__.Description);
+            public static readonly Field Description = FindByName("Description");
 
             /// <summary>排序</summary>
-            public static readonly Field Rank = FindByName(__.Rank);
+            public static readonly Field Rank = FindByName("Rank");
 
             /// <summary>添加时间</summary>
-            public static readonly Field AddTime = FindByName(__.AddTime);
+            public static readonly Field AddTime = FindByName("AddTime");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -129,34 +132,6 @@ namespace COMCMS.Core
             /// <summary>添加时间</summary>
             public const String AddTime = "AddTime";
         }
-        #endregion
-    }
-
-    /// <summary>数据字典接口</summary>
-    public partial interface IDataDictionary
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>字典key</summary>
-        String Key { get; set; }
-
-        /// <summary>字典介绍</summary>
-        String Description { get; set; }
-
-        /// <summary>排序</summary>
-        Int32 Rank { get; set; }
-
-        /// <summary>添加时间</summary>
-        DateTime AddTime { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

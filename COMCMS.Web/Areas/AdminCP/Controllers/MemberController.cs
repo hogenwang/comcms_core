@@ -131,7 +131,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //获取所有的菜单列表
             IList<AdminMenu> list = AdminMenu.GetListTree(0, -1, false, false);
             ViewBag.MenuList = list;
-            Core.Admin.WriteLogActions("查看添加管理页面;");
+            //获取所有文章 商品栏目
+            IList<ArticleCategory> aclist = ArticleCategory.GetListTree(0, -1, true, true);
+            ViewBag.aclist = aclist;
+
+            IList<Category> pclist = Category.GetListTree(0, -1, true, true);
+            ViewBag.pclist = pclist;
+
+            Core.Admin.WriteLogActions("查看添加管理组页面;");
             return View();
         }
         //执行添加管理组
@@ -143,6 +150,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             string RoleDescription = fc["RoleDescription"];
             string IsSuperAdmin = fc["IsSuperAdmin"];
             string NotAllowDel = fc["NotAllowDel"];
+            string OnlyEditMyselfArticle = fc["OnlyEditMyselfArticle"];
+            string OnlyEditMyselfProduct = fc["OnlyEditMyselfProduct"];
+
+            if (string.IsNullOrEmpty(OnlyEditMyselfArticle) || !Utils.IsInt(OnlyEditMyselfProduct)) OnlyEditMyselfProduct = "0";
+            if (string.IsNullOrEmpty(OnlyEditMyselfProduct) || !Utils.IsInt(OnlyEditMyselfProduct)) OnlyEditMyselfProduct = "0";
+
+
             if (string.IsNullOrEmpty(RoleName))
             {
                 tip.Message = "管理组名称不能为空！";
@@ -155,6 +169,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.RoleDescription = RoleDescription;
             entity.IsSuperAdmin = int.Parse(IsSuperAdmin);
             entity.NotAllowDel = !string.IsNullOrEmpty(NotAllowDel) && NotAllowDel == "1" ? 1 : 0;
+            entity.OnlyEditMyselfArticle = int.Parse(OnlyEditMyselfArticle);
+            entity.OnlyEditMyselfProduct = int.Parse(OnlyEditMyselfProduct);
 
             //处理权限
             if (entity.IsSuperAdmin == 1)
@@ -207,6 +223,30 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     }
                 }
             }
+
+            //处理文章和商品栏目权限
+            string[] acpower = Request.Form["acpower"];
+            string[] pcpower = Request.Form["pcpower"];
+
+            List<int> acids = new List<int>();
+            List<int> pcids = new List<int>();
+            foreach (var item in acpower)
+            {
+                if (!string.IsNullOrEmpty(item) && Utils.IsInt(item))
+                {
+                    acids.Add(int.Parse(item));
+                }
+            }
+            foreach (var item in pcpower)
+            {
+                if (!string.IsNullOrEmpty(item) && Utils.IsInt(item))
+                {
+                    pcids.Add(int.Parse(item));
+                }
+            }
+
+            entity.AuthorizedArticleCagegory = JsonConvert.SerializeObject(acids);
+            entity.AuthorizedCagegory = JsonConvert.SerializeObject(pcids);
 
             entity.Insert();
             tip.Status = JsonTip.SUCCESS;
@@ -230,8 +270,20 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 entity.Powers = "[]";
             if (string.IsNullOrEmpty(entity.Menus))
                 entity.Menus = "[]";
+            if (string.IsNullOrEmpty(entity.AuthorizedArticleCagegory))
+                entity.AuthorizedArticleCagegory = "[]";
+            if (string.IsNullOrEmpty(entity.AuthorizedCagegory))
+                entity.AuthorizedCagegory = "[]";
             //获取所有的菜单列表
             IList<AdminMenu> list = AdminMenu.GetListTree(0, -1, false, false);
+
+            //获取所有文章 商品栏目
+            IList<ArticleCategory> aclist = ArticleCategory.GetListTree(0, -1, true, true);
+            ViewBag.aclist = aclist;
+
+            IList<Category> pclist = Category.GetListTree(0, -1, true, true);
+            ViewBag.pclist = pclist;
+
             ViewBag.MenuList = list;
             Core.Admin.WriteLogActions($"查看管理组（{id}）详情;");
             return View(entity);
@@ -246,6 +298,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             string RoleDescription = fc["RoleDescription"];
             string IsSuperAdmin = fc["IsSuperAdmin"];
             string NotAllowDel = fc["NotAllowDel"];
+            string OnlyEditMyselfArticle = fc["OnlyEditMyselfArticle"];
+            string OnlyEditMyselfProduct = fc["OnlyEditMyselfProduct"];
+
+            if (string.IsNullOrEmpty(OnlyEditMyselfArticle) || !Utils.IsInt(OnlyEditMyselfProduct)) OnlyEditMyselfProduct = "0";
+            if (string.IsNullOrEmpty(OnlyEditMyselfProduct) || !Utils.IsInt(OnlyEditMyselfProduct)) OnlyEditMyselfProduct = "0";
+
             if (string.IsNullOrEmpty(Id))
             {
                 tip.Message = "错误参数传递！";
@@ -268,6 +326,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.RoleDescription = RoleDescription;
             entity.IsSuperAdmin = int.Parse(IsSuperAdmin);
             entity.NotAllowDel = !string.IsNullOrEmpty(NotAllowDel) && NotAllowDel == "1" ? 1 : 0;
+            entity.OnlyEditMyselfArticle = int.Parse(OnlyEditMyselfArticle);
+            entity.OnlyEditMyselfProduct = int.Parse(OnlyEditMyselfProduct);
 
             //处理权限
             if (entity.IsSuperAdmin == 1)
@@ -320,6 +380,31 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     }
                 }
             }
+
+            //处理文章和商品栏目权限
+            string[] acpower = Request.Form["acpower"];
+            string[] pcpower = Request.Form["pcpower"];
+
+            List<int> acids = new List<int>();
+            List<int> pcids = new List<int>();
+            foreach (var item in acpower)
+            {
+                if (!string.IsNullOrEmpty(item) && Utils.IsInt(item))
+                {
+                    acids.Add(int.Parse(item));
+                }
+            }
+            foreach (var item in pcpower)
+            {
+                if (!string.IsNullOrEmpty(item) && Utils.IsInt(item))
+                {
+                    pcids.Add(int.Parse(item));
+                }
+            }
+
+            entity.AuthorizedArticleCagegory = JsonConvert.SerializeObject(acids);
+            entity.AuthorizedCagegory = JsonConvert.SerializeObject(pcids);
+
             entity.Update();
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "编辑管理组详情成功";
