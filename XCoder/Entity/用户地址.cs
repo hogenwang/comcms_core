@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("用户地址")]
     [BindTable("MemberAddress", Description = "用户地址", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class MemberAddress : IMemberAddress
+    public partial class MemberAddress
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private Int32 _UId;
         /// <summary>用户ID</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("UId", "用户ID", "", Master = true)]
-        public Int32 UId { get => _UId; set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
+        public Int32 UId { get => _UId; set { if (OnPropertyChanging("UId", value)) { _UId = value; OnPropertyChanged("UId"); } } }
 
         private String _RealName;
         /// <summary>姓名</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("姓名")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("RealName", "姓名", "")]
-        public String RealName { get => _RealName; set { if (OnPropertyChanging(__.RealName, value)) { _RealName = value; OnPropertyChanged(__.RealName); } } }
+        public String RealName { get => _RealName; set { if (OnPropertyChanging("RealName", value)) { _RealName = value; OnPropertyChanged("RealName"); } } }
 
         private String _Tel;
         /// <summary>手机</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("手机")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Tel", "手机", "")]
-        public String Tel { get => _Tel; set { if (OnPropertyChanging(__.Tel, value)) { _Tel = value; OnPropertyChanged(__.Tel); } } }
+        public String Tel { get => _Tel; set { if (OnPropertyChanging("Tel", value)) { _Tel = value; OnPropertyChanged("Tel"); } } }
 
         private String _Email;
         /// <summary>邮件</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("邮件")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Email", "邮件", "")]
-        public String Email { get => _Email; set { if (OnPropertyChanging(__.Email, value)) { _Email = value; OnPropertyChanged(__.Email); } } }
+        public String Email { get => _Email; set { if (OnPropertyChanging("Email", value)) { _Email = value; OnPropertyChanged("Email"); } } }
 
         private Boolean _IsDefault;
         /// <summary>是否是默认</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("是否是默认")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsDefault", "是否是默认", "")]
-        public Boolean IsDefault { get => _IsDefault; set { if (OnPropertyChanging(__.IsDefault, value)) { _IsDefault = value; OnPropertyChanged(__.IsDefault); } } }
+        public Boolean IsDefault { get => _IsDefault; set { if (OnPropertyChanging("IsDefault", value)) { _IsDefault = value; OnPropertyChanged("IsDefault"); } } }
 
         private String _Phone;
         /// <summary>电话</summary>
@@ -69,7 +72,7 @@ namespace COMCMS.Core
         [Description("电话")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Phone", "电话", "")]
-        public String Phone { get => _Phone; set { if (OnPropertyChanging(__.Phone, value)) { _Phone = value; OnPropertyChanged(__.Phone); } } }
+        public String Phone { get => _Phone; set { if (OnPropertyChanging("Phone", value)) { _Phone = value; OnPropertyChanged("Phone"); } } }
 
         private String _Company;
         /// <summary>公司</summary>
@@ -77,7 +80,7 @@ namespace COMCMS.Core
         [Description("公司")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Company", "公司", "")]
-        public String Company { get => _Company; set { if (OnPropertyChanging(__.Company, value)) { _Company = value; OnPropertyChanged(__.Company); } } }
+        public String Company { get => _Company; set { if (OnPropertyChanging("Company", value)) { _Company = value; OnPropertyChanged("Company"); } } }
 
         private String _Country;
         /// <summary>国家</summary>
@@ -85,7 +88,7 @@ namespace COMCMS.Core
         [Description("国家")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Country", "国家", "")]
-        public String Country { get => _Country; set { if (OnPropertyChanging(__.Country, value)) { _Country = value; OnPropertyChanged(__.Country); } } }
+        public String Country { get => _Country; set { if (OnPropertyChanging("Country", value)) { _Country = value; OnPropertyChanged("Country"); } } }
 
         private String _Province;
         /// <summary>省</summary>
@@ -93,7 +96,7 @@ namespace COMCMS.Core
         [Description("省")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Province", "省", "")]
-        public String Province { get => _Province; set { if (OnPropertyChanging(__.Province, value)) { _Province = value; OnPropertyChanged(__.Province); } } }
+        public String Province { get => _Province; set { if (OnPropertyChanging("Province", value)) { _Province = value; OnPropertyChanged("Province"); } } }
 
         private String _City;
         /// <summary>市</summary>
@@ -101,7 +104,7 @@ namespace COMCMS.Core
         [Description("市")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("City", "市", "")]
-        public String City { get => _City; set { if (OnPropertyChanging(__.City, value)) { _City = value; OnPropertyChanged(__.City); } } }
+        public String City { get => _City; set { if (OnPropertyChanging("City", value)) { _City = value; OnPropertyChanged("City"); } } }
 
         private String _District;
         /// <summary>区</summary>
@@ -109,7 +112,7 @@ namespace COMCMS.Core
         [Description("区")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("District", "区", "")]
-        public String District { get => _District; set { if (OnPropertyChanging(__.District, value)) { _District = value; OnPropertyChanged(__.District); } } }
+        public String District { get => _District; set { if (OnPropertyChanging("District", value)) { _District = value; OnPropertyChanged("District"); } } }
 
         private String _Address;
         /// <summary>详细地址</summary>
@@ -117,7 +120,7 @@ namespace COMCMS.Core
         [Description("详细地址")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Address", "详细地址", "")]
-        public String Address { get => _Address; set { if (OnPropertyChanging(__.Address, value)) { _Address = value; OnPropertyChanged(__.Address); } } }
+        public String Address { get => _Address; set { if (OnPropertyChanging("Address", value)) { _Address = value; OnPropertyChanged("Address"); } } }
 
         private String _Postcode;
         /// <summary>邮政编码</summary>
@@ -125,7 +128,7 @@ namespace COMCMS.Core
         [Description("邮政编码")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Postcode", "邮政编码", "")]
-        public String Postcode { get => _Postcode; set { if (OnPropertyChanging(__.Postcode, value)) { _Postcode = value; OnPropertyChanged(__.Postcode); } } }
+        public String Postcode { get => _Postcode; set { if (OnPropertyChanging("Postcode", value)) { _Postcode = value; OnPropertyChanged("Postcode"); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -133,7 +136,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging("AddTime", value)) { _AddTime = value; OnPropertyChanged("AddTime"); } } }
 
         private DateTime _UpdateTime;
         /// <summary>更新时间</summary>
@@ -141,7 +144,7 @@ namespace COMCMS.Core
         [Description("更新时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("UpdateTime", "更新时间", "")]
-        public DateTime UpdateTime { get => _UpdateTime; set { if (OnPropertyChanging(__.UpdateTime, value)) { _UpdateTime = value; OnPropertyChanged(__.UpdateTime); } } }
+        public DateTime UpdateTime { get => _UpdateTime; set { if (OnPropertyChanging("UpdateTime", value)) { _UpdateTime = value; OnPropertyChanged("UpdateTime"); } } }
 
         private Int32 _Rank;
         /// <summary>排序</summary>
@@ -149,7 +152,7 @@ namespace COMCMS.Core
         [Description("排序")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Rank", "排序", "")]
-        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
+        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging("Rank", value)) { _Rank = value; OnPropertyChanged("Rank"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -162,23 +165,23 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.UId: return _UId;
-                    case __.RealName: return _RealName;
-                    case __.Tel: return _Tel;
-                    case __.Email: return _Email;
-                    case __.IsDefault: return _IsDefault;
-                    case __.Phone: return _Phone;
-                    case __.Company: return _Company;
-                    case __.Country: return _Country;
-                    case __.Province: return _Province;
-                    case __.City: return _City;
-                    case __.District: return _District;
-                    case __.Address: return _Address;
-                    case __.Postcode: return _Postcode;
-                    case __.AddTime: return _AddTime;
-                    case __.UpdateTime: return _UpdateTime;
-                    case __.Rank: return _Rank;
+                    case "Id": return _Id;
+                    case "UId": return _UId;
+                    case "RealName": return _RealName;
+                    case "Tel": return _Tel;
+                    case "Email": return _Email;
+                    case "IsDefault": return _IsDefault;
+                    case "Phone": return _Phone;
+                    case "Company": return _Company;
+                    case "Country": return _Country;
+                    case "Province": return _Province;
+                    case "City": return _City;
+                    case "District": return _District;
+                    case "Address": return _Address;
+                    case "Postcode": return _Postcode;
+                    case "AddTime": return _AddTime;
+                    case "UpdateTime": return _UpdateTime;
+                    case "Rank": return _Rank;
                     default: return base[name];
                 }
             }
@@ -186,23 +189,23 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.UId: _UId = value.ToInt(); break;
-                    case __.RealName: _RealName = Convert.ToString(value); break;
-                    case __.Tel: _Tel = Convert.ToString(value); break;
-                    case __.Email: _Email = Convert.ToString(value); break;
-                    case __.IsDefault: _IsDefault = value.ToBoolean(); break;
-                    case __.Phone: _Phone = Convert.ToString(value); break;
-                    case __.Company: _Company = Convert.ToString(value); break;
-                    case __.Country: _Country = Convert.ToString(value); break;
-                    case __.Province: _Province = Convert.ToString(value); break;
-                    case __.City: _City = Convert.ToString(value); break;
-                    case __.District: _District = Convert.ToString(value); break;
-                    case __.Address: _Address = Convert.ToString(value); break;
-                    case __.Postcode: _Postcode = Convert.ToString(value); break;
-                    case __.AddTime: _AddTime = value.ToDateTime(); break;
-                    case __.UpdateTime: _UpdateTime = value.ToDateTime(); break;
-                    case __.Rank: _Rank = value.ToInt(); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "UId": _UId = value.ToInt(); break;
+                    case "RealName": _RealName = Convert.ToString(value); break;
+                    case "Tel": _Tel = Convert.ToString(value); break;
+                    case "Email": _Email = Convert.ToString(value); break;
+                    case "IsDefault": _IsDefault = value.ToBoolean(); break;
+                    case "Phone": _Phone = Convert.ToString(value); break;
+                    case "Company": _Company = Convert.ToString(value); break;
+                    case "Country": _Country = Convert.ToString(value); break;
+                    case "Province": _Province = Convert.ToString(value); break;
+                    case "City": _City = Convert.ToString(value); break;
+                    case "District": _District = Convert.ToString(value); break;
+                    case "Address": _Address = Convert.ToString(value); break;
+                    case "Postcode": _Postcode = Convert.ToString(value); break;
+                    case "AddTime": _AddTime = value.ToDateTime(); break;
+                    case "UpdateTime": _UpdateTime = value.ToDateTime(); break;
+                    case "Rank": _Rank = value.ToInt(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -214,55 +217,55 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>用户ID</summary>
-            public static readonly Field UId = FindByName(__.UId);
+            public static readonly Field UId = FindByName("UId");
 
             /// <summary>姓名</summary>
-            public static readonly Field RealName = FindByName(__.RealName);
+            public static readonly Field RealName = FindByName("RealName");
 
             /// <summary>手机</summary>
-            public static readonly Field Tel = FindByName(__.Tel);
+            public static readonly Field Tel = FindByName("Tel");
 
             /// <summary>邮件</summary>
-            public static readonly Field Email = FindByName(__.Email);
+            public static readonly Field Email = FindByName("Email");
 
             /// <summary>是否是默认</summary>
-            public static readonly Field IsDefault = FindByName(__.IsDefault);
+            public static readonly Field IsDefault = FindByName("IsDefault");
 
             /// <summary>电话</summary>
-            public static readonly Field Phone = FindByName(__.Phone);
+            public static readonly Field Phone = FindByName("Phone");
 
             /// <summary>公司</summary>
-            public static readonly Field Company = FindByName(__.Company);
+            public static readonly Field Company = FindByName("Company");
 
             /// <summary>国家</summary>
-            public static readonly Field Country = FindByName(__.Country);
+            public static readonly Field Country = FindByName("Country");
 
             /// <summary>省</summary>
-            public static readonly Field Province = FindByName(__.Province);
+            public static readonly Field Province = FindByName("Province");
 
             /// <summary>市</summary>
-            public static readonly Field City = FindByName(__.City);
+            public static readonly Field City = FindByName("City");
 
             /// <summary>区</summary>
-            public static readonly Field District = FindByName(__.District);
+            public static readonly Field District = FindByName("District");
 
             /// <summary>详细地址</summary>
-            public static readonly Field Address = FindByName(__.Address);
+            public static readonly Field Address = FindByName("Address");
 
             /// <summary>邮政编码</summary>
-            public static readonly Field Postcode = FindByName(__.Postcode);
+            public static readonly Field Postcode = FindByName("Postcode");
 
             /// <summary>添加时间</summary>
-            public static readonly Field AddTime = FindByName(__.AddTime);
+            public static readonly Field AddTime = FindByName("AddTime");
 
             /// <summary>更新时间</summary>
-            public static readonly Field UpdateTime = FindByName(__.UpdateTime);
+            public static readonly Field UpdateTime = FindByName("UpdateTime");
 
             /// <summary>排序</summary>
-            public static readonly Field Rank = FindByName(__.Rank);
+            public static readonly Field Rank = FindByName("Rank");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -321,70 +324,6 @@ namespace COMCMS.Core
             /// <summary>排序</summary>
             public const String Rank = "Rank";
         }
-        #endregion
-    }
-
-    /// <summary>用户地址接口</summary>
-    public partial interface IMemberAddress
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>用户ID</summary>
-        Int32 UId { get; set; }
-
-        /// <summary>姓名</summary>
-        String RealName { get; set; }
-
-        /// <summary>手机</summary>
-        String Tel { get; set; }
-
-        /// <summary>邮件</summary>
-        String Email { get; set; }
-
-        /// <summary>是否是默认</summary>
-        Boolean IsDefault { get; set; }
-
-        /// <summary>电话</summary>
-        String Phone { get; set; }
-
-        /// <summary>公司</summary>
-        String Company { get; set; }
-
-        /// <summary>国家</summary>
-        String Country { get; set; }
-
-        /// <summary>省</summary>
-        String Province { get; set; }
-
-        /// <summary>市</summary>
-        String City { get; set; }
-
-        /// <summary>区</summary>
-        String District { get; set; }
-
-        /// <summary>详细地址</summary>
-        String Address { get; set; }
-
-        /// <summary>邮政编码</summary>
-        String Postcode { get; set; }
-
-        /// <summary>添加时间</summary>
-        DateTime AddTime { get; set; }
-
-        /// <summary>更新时间</summary>
-        DateTime UpdateTime { get; set; }
-
-        /// <summary>排序</summary>
-        Int32 Rank { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

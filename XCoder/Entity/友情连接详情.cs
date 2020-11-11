@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("友情连接详情")]
     [BindTable("Link", Description = "友情连接详情", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class Link : ILink
+    public partial class Link
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private Int32 _KId;
         /// <summary>分类ID</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("分类ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("KId", "分类ID", "")]
-        public Int32 KId { get => _KId; set { if (OnPropertyChanging(__.KId, value)) { _KId = value; OnPropertyChanged(__.KId); } } }
+        public Int32 KId { get => _KId; set { if (OnPropertyChanging("KId", value)) { _KId = value; OnPropertyChanged("KId"); } } }
 
         private String _Title;
         /// <summary>站点标题</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("站点标题")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Title", "站点标题", "", Master = true)]
-        public String Title { get => _Title; set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
+        public String Title { get => _Title; set { if (OnPropertyChanging("Title", value)) { _Title = value; OnPropertyChanged("Title"); } } }
 
         private String _LinkURL;
         /// <summary>站点连接</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("站点连接")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("LinkURL", "站点连接", "")]
-        public String LinkURL { get => _LinkURL; set { if (OnPropertyChanging(__.LinkURL, value)) { _LinkURL = value; OnPropertyChanged(__.LinkURL); } } }
+        public String LinkURL { get => _LinkURL; set { if (OnPropertyChanging("LinkURL", value)) { _LinkURL = value; OnPropertyChanged("LinkURL"); } } }
 
         private String _Info;
         /// <summary>介绍</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("介绍")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Info", "介绍", "")]
-        public String Info { get => _Info; set { if (OnPropertyChanging(__.Info, value)) { _Info = value; OnPropertyChanged(__.Info); } } }
+        public String Info { get => _Info; set { if (OnPropertyChanging("Info", value)) { _Info = value; OnPropertyChanged("Info"); } } }
 
         private String _Logo;
         /// <summary>站点LOGO</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("站点LOGO")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Logo", "站点LOGO", "")]
-        public String Logo { get => _Logo; set { if (OnPropertyChanging(__.Logo, value)) { _Logo = value; OnPropertyChanged(__.Logo); } } }
+        public String Logo { get => _Logo; set { if (OnPropertyChanging("Logo", value)) { _Logo = value; OnPropertyChanged("Logo"); } } }
 
         private Boolean _IsHide;
         /// <summary>是否隐藏友情链接</summary>
@@ -69,7 +72,7 @@ namespace COMCMS.Core
         [Description("是否隐藏友情链接")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsHide", "是否隐藏友情链接", "")]
-        public Boolean IsHide { get => _IsHide; set { if (OnPropertyChanging(__.IsHide, value)) { _IsHide = value; OnPropertyChanged(__.IsHide); } } }
+        public Boolean IsHide { get => _IsHide; set { if (OnPropertyChanging("IsHide", value)) { _IsHide = value; OnPropertyChanged("IsHide"); } } }
 
         private Int32 _Sequence;
         /// <summary>排序，默认999</summary>
@@ -77,7 +80,7 @@ namespace COMCMS.Core
         [Description("排序，默认999")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Sequence", "排序，默认999", "")]
-        public Int32 Sequence { get => _Sequence; set { if (OnPropertyChanging(__.Sequence, value)) { _Sequence = value; OnPropertyChanged(__.Sequence); } } }
+        public Int32 Sequence { get => _Sequence; set { if (OnPropertyChanging("Sequence", value)) { _Sequence = value; OnPropertyChanged("Sequence"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -90,14 +93,14 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.KId: return _KId;
-                    case __.Title: return _Title;
-                    case __.LinkURL: return _LinkURL;
-                    case __.Info: return _Info;
-                    case __.Logo: return _Logo;
-                    case __.IsHide: return _IsHide;
-                    case __.Sequence: return _Sequence;
+                    case "Id": return _Id;
+                    case "KId": return _KId;
+                    case "Title": return _Title;
+                    case "LinkURL": return _LinkURL;
+                    case "Info": return _Info;
+                    case "Logo": return _Logo;
+                    case "IsHide": return _IsHide;
+                    case "Sequence": return _Sequence;
                     default: return base[name];
                 }
             }
@@ -105,14 +108,14 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.KId: _KId = value.ToInt(); break;
-                    case __.Title: _Title = Convert.ToString(value); break;
-                    case __.LinkURL: _LinkURL = Convert.ToString(value); break;
-                    case __.Info: _Info = Convert.ToString(value); break;
-                    case __.Logo: _Logo = Convert.ToString(value); break;
-                    case __.IsHide: _IsHide = value.ToBoolean(); break;
-                    case __.Sequence: _Sequence = value.ToInt(); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "KId": _KId = value.ToInt(); break;
+                    case "Title": _Title = Convert.ToString(value); break;
+                    case "LinkURL": _LinkURL = Convert.ToString(value); break;
+                    case "Info": _Info = Convert.ToString(value); break;
+                    case "Logo": _Logo = Convert.ToString(value); break;
+                    case "IsHide": _IsHide = value.ToBoolean(); break;
+                    case "Sequence": _Sequence = value.ToInt(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -124,28 +127,28 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>分类ID</summary>
-            public static readonly Field KId = FindByName(__.KId);
+            public static readonly Field KId = FindByName("KId");
 
             /// <summary>站点标题</summary>
-            public static readonly Field Title = FindByName(__.Title);
+            public static readonly Field Title = FindByName("Title");
 
             /// <summary>站点连接</summary>
-            public static readonly Field LinkURL = FindByName(__.LinkURL);
+            public static readonly Field LinkURL = FindByName("LinkURL");
 
             /// <summary>介绍</summary>
-            public static readonly Field Info = FindByName(__.Info);
+            public static readonly Field Info = FindByName("Info");
 
             /// <summary>站点LOGO</summary>
-            public static readonly Field Logo = FindByName(__.Logo);
+            public static readonly Field Logo = FindByName("Logo");
 
             /// <summary>是否隐藏友情链接</summary>
-            public static readonly Field IsHide = FindByName(__.IsHide);
+            public static readonly Field IsHide = FindByName("IsHide");
 
             /// <summary>排序，默认999</summary>
-            public static readonly Field Sequence = FindByName(__.Sequence);
+            public static readonly Field Sequence = FindByName("Sequence");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -177,43 +180,6 @@ namespace COMCMS.Core
             /// <summary>排序，默认999</summary>
             public const String Sequence = "Sequence";
         }
-        #endregion
-    }
-
-    /// <summary>友情连接详情接口</summary>
-    public partial interface ILink
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>分类ID</summary>
-        Int32 KId { get; set; }
-
-        /// <summary>站点标题</summary>
-        String Title { get; set; }
-
-        /// <summary>站点连接</summary>
-        String LinkURL { get; set; }
-
-        /// <summary>介绍</summary>
-        String Info { get; set; }
-
-        /// <summary>站点LOGO</summary>
-        String Logo { get; set; }
-
-        /// <summary>是否隐藏友情链接</summary>
-        Boolean IsHide { get; set; }
-
-        /// <summary>排序，默认999</summary>
-        Int32 Sequence { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

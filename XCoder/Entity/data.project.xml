@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Tables Version="9.16.7398.1901" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:schemaLocation="http://www.newlifex.com https://raw.githubusercontent.com/NewLifeX/X/master/XCode/Model2020.xsd" NameSpace="COMCMS.Core" ConnName="dbconn" Output="" BaseClass="Entity" ChineseFileName="True" IgnoreNameCase="True" xmlns="http://www.newlifex.com/Model2020.xsd">
+<Tables xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:schemaLocation="http://www.newlifex.com https://raw.githubusercontent.com/NewLifeX/X/master/XCode/Model2020.xsd" NameSpace="COMCMS.Core" ConnName="dbconn" Output="" BaseClass="Entity" xmlns="http://www.newlifex.com/Model2020.xsd">
   <Table Name="Admin" Description="管理员" DbType="SqlServer">
     <Columns>
       <Column Name="Id" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
@@ -32,6 +32,10 @@
       <Column Name="Color" DataType="String" Master="True" Length="20" Description="颜色" />
       <Column Name="Menus" DataType="String" Master="True" Length="-1" Description="管理菜单" />
       <Column Name="Powers" DataType="String" Master="True" Length="-1" Description="权限" />
+      <Column Name="AuthorizedArticleCagegory" DataType="String" Master="True" Length="-1" Description="已授权文章栏目" />
+      <Column Name="AuthorizedCagegory" DataType="String" Master="True" Length="-1" Description="已授权商品栏目" />
+      <Column Name="OnlyEditMyselfArticle" DataType="Int32" Description="是否只允许编辑自己的文章" />
+      <Column Name="OnlyEditMyselfProduct" DataType="Int32" Description="是否只允许编辑自己的产品" />
     </Columns>
   </Table>
   <Table Name="AdminLog" Description="管理日志表" DbType="SqlServer">

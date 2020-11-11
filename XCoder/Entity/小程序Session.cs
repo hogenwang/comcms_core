@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("小程序Session")]
     [BindTable("WXAppSession", Description = "小程序Session", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class WXAppSession : IWXAppSession
+    public partial class WXAppSession
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private Int32 _UId;
         /// <summary>用户ID</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("UId", "用户ID", "")]
-        public Int32 UId { get => _UId; set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
+        public Int32 UId { get => _UId; set { if (OnPropertyChanging("UId", value)) { _UId = value; OnPropertyChanged("UId"); } } }
 
         private String _Ip;
         /// <summary>登录IP</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("登录IP")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Ip", "登录IP", "")]
-        public String Ip { get => _Ip; set { if (OnPropertyChanging(__.Ip, value)) { _Ip = value; OnPropertyChanged(__.Ip); } } }
+        public String Ip { get => _Ip; set { if (OnPropertyChanging("Ip", value)) { _Ip = value; OnPropertyChanged("Ip"); } } }
 
         private String _Key;
         /// <summary>系统生成Key</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("系统生成Key")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Key", "系统生成Key", "")]
-        public String Key { get => _Key; set { if (OnPropertyChanging(__.Key, value)) { _Key = value; OnPropertyChanged(__.Key); } } }
+        public String Key { get => _Key; set { if (OnPropertyChanging("Key", value)) { _Key = value; OnPropertyChanged("Key"); } } }
 
         private String _SessionKey;
         /// <summary>微信SessionKey</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("微信SessionKey")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("SessionKey", "微信SessionKey", "")]
-        public String SessionKey { get => _SessionKey; set { if (OnPropertyChanging(__.SessionKey, value)) { _SessionKey = value; OnPropertyChanged(__.SessionKey); } } }
+        public String SessionKey { get => _SessionKey; set { if (OnPropertyChanging("SessionKey", value)) { _SessionKey = value; OnPropertyChanged("SessionKey"); } } }
 
         private String _OpenId;
         /// <summary>微信小程序OpenId</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("微信小程序OpenId")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("OpenId", "微信小程序OpenId", "")]
-        public String OpenId { get => _OpenId; set { if (OnPropertyChanging(__.OpenId, value)) { _OpenId = value; OnPropertyChanged(__.OpenId); } } }
+        public String OpenId { get => _OpenId; set { if (OnPropertyChanging("OpenId", value)) { _OpenId = value; OnPropertyChanged("OpenId"); } } }
 
         private DateTime _AddTime;
         /// <summary>添加时间</summary>
@@ -69,7 +72,7 @@ namespace COMCMS.Core
         [Description("添加时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "添加时间", "")]
-        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging("AddTime", value)) { _AddTime = value; OnPropertyChanged("AddTime"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -82,13 +85,13 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.UId: return _UId;
-                    case __.Ip: return _Ip;
-                    case __.Key: return _Key;
-                    case __.SessionKey: return _SessionKey;
-                    case __.OpenId: return _OpenId;
-                    case __.AddTime: return _AddTime;
+                    case "Id": return _Id;
+                    case "UId": return _UId;
+                    case "Ip": return _Ip;
+                    case "Key": return _Key;
+                    case "SessionKey": return _SessionKey;
+                    case "OpenId": return _OpenId;
+                    case "AddTime": return _AddTime;
                     default: return base[name];
                 }
             }
@@ -96,13 +99,13 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.UId: _UId = value.ToInt(); break;
-                    case __.Ip: _Ip = Convert.ToString(value); break;
-                    case __.Key: _Key = Convert.ToString(value); break;
-                    case __.SessionKey: _SessionKey = Convert.ToString(value); break;
-                    case __.OpenId: _OpenId = Convert.ToString(value); break;
-                    case __.AddTime: _AddTime = value.ToDateTime(); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "UId": _UId = value.ToInt(); break;
+                    case "Ip": _Ip = Convert.ToString(value); break;
+                    case "Key": _Key = Convert.ToString(value); break;
+                    case "SessionKey": _SessionKey = Convert.ToString(value); break;
+                    case "OpenId": _OpenId = Convert.ToString(value); break;
+                    case "AddTime": _AddTime = value.ToDateTime(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -114,25 +117,25 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>用户ID</summary>
-            public static readonly Field UId = FindByName(__.UId);
+            public static readonly Field UId = FindByName("UId");
 
             /// <summary>登录IP</summary>
-            public static readonly Field Ip = FindByName(__.Ip);
+            public static readonly Field Ip = FindByName("Ip");
 
             /// <summary>系统生成Key</summary>
-            public static readonly Field Key = FindByName(__.Key);
+            public static readonly Field Key = FindByName("Key");
 
             /// <summary>微信SessionKey</summary>
-            public static readonly Field SessionKey = FindByName(__.SessionKey);
+            public static readonly Field SessionKey = FindByName("SessionKey");
 
             /// <summary>微信小程序OpenId</summary>
-            public static readonly Field OpenId = FindByName(__.OpenId);
+            public static readonly Field OpenId = FindByName("OpenId");
 
             /// <summary>添加时间</summary>
-            public static readonly Field AddTime = FindByName(__.AddTime);
+            public static readonly Field AddTime = FindByName("AddTime");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -161,40 +164,6 @@ namespace COMCMS.Core
             /// <summary>添加时间</summary>
             public const String AddTime = "AddTime";
         }
-        #endregion
-    }
-
-    /// <summary>小程序Session接口</summary>
-    public partial interface IWXAppSession
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>用户ID</summary>
-        Int32 UId { get; set; }
-
-        /// <summary>登录IP</summary>
-        String Ip { get; set; }
-
-        /// <summary>系统生成Key</summary>
-        String Key { get; set; }
-
-        /// <summary>微信SessionKey</summary>
-        String SessionKey { get; set; }
-
-        /// <summary>微信小程序OpenId</summary>
-        String OpenId { get; set; }
-
-        /// <summary>添加时间</summary>
-        DateTime AddTime { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

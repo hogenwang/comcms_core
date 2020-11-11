@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("用户提现订单")]
     [BindTable("WithdrawOrder", Description = "用户提现订单", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class WithdrawOrder : IWithdrawOrder
+    public partial class WithdrawOrder
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private Int32 _UId;
         /// <summary>用户ID</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("UId", "用户ID", "", Master = true)]
-        public Int32 UId { get => _UId; set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
+        public Int32 UId { get => _UId; set { if (OnPropertyChanging("UId", value)) { _UId = value; OnPropertyChanged("UId"); } } }
 
         private String _OrderNum;
         /// <summary>订单号</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("订单号")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("OrderNum", "订单号", "")]
-        public String OrderNum { get => _OrderNum; set { if (OnPropertyChanging(__.OrderNum, value)) { _OrderNum = value; OnPropertyChanged(__.OrderNum); } } }
+        public String OrderNum { get => _OrderNum; set { if (OnPropertyChanging("OrderNum", value)) { _OrderNum = value; OnPropertyChanged("OrderNum"); } } }
 
         private String _UserName;
         /// <summary>用户名</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("用户名")]
         [DataObjectField(false, false, true, 200)]
         [BindColumn("UserName", "用户名", "")]
-        public String UserName { get => _UserName; set { if (OnPropertyChanging(__.UserName, value)) { _UserName = value; OnPropertyChanged(__.UserName); } } }
+        public String UserName { get => _UserName; set { if (OnPropertyChanging("UserName", value)) { _UserName = value; OnPropertyChanged("UserName"); } } }
 
         private String _Title;
         /// <summary>订单名称</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("订单名称")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Title", "订单名称", "", Master = true)]
-        public String Title { get => _Title; set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
+        public String Title { get => _Title; set { if (OnPropertyChanging("Title", value)) { _Title = value; OnPropertyChanged("Title"); } } }
 
         private DateTime _AddTime;
         /// <summary>时间</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "时间", "")]
-        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging("AddTime", value)) { _AddTime = value; OnPropertyChanged("AddTime"); } } }
 
         private String _Ip;
         /// <summary>登录IP</summary>
@@ -69,7 +72,7 @@ namespace COMCMS.Core
         [Description("登录IP")]
         [DataObjectField(false, false, true, 20)]
         [BindColumn("Ip", "登录IP", "")]
-        public String Ip { get => _Ip; set { if (OnPropertyChanging(__.Ip, value)) { _Ip = value; OnPropertyChanged(__.Ip); } } }
+        public String Ip { get => _Ip; set { if (OnPropertyChanging("Ip", value)) { _Ip = value; OnPropertyChanged("Ip"); } } }
 
         private String _Actions;
         /// <summary>记录详情</summary>
@@ -77,7 +80,7 @@ namespace COMCMS.Core
         [Description("记录详情")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Actions", "记录详情", "", Master = true)]
-        public String Actions { get => _Actions; set { if (OnPropertyChanging(__.Actions, value)) { _Actions = value; OnPropertyChanged(__.Actions); } } }
+        public String Actions { get => _Actions; set { if (OnPropertyChanging("Actions", value)) { _Actions = value; OnPropertyChanged("Actions"); } } }
 
         private Decimal _Price;
         /// <summary>提现金额</summary>
@@ -85,7 +88,7 @@ namespace COMCMS.Core
         [Description("提现金额")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Price", "提现金额", "")]
-        public Decimal Price { get => _Price; set { if (OnPropertyChanging(__.Price, value)) { _Price = value; OnPropertyChanged(__.Price); } } }
+        public Decimal Price { get => _Price; set { if (OnPropertyChanging("Price", value)) { _Price = value; OnPropertyChanged("Price"); } } }
 
         private Int32 _VerifyAdminId;
         /// <summary>审核管理员ID</summary>
@@ -93,7 +96,7 @@ namespace COMCMS.Core
         [Description("审核管理员ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("VerifyAdminId", "审核管理员ID", "")]
-        public Int32 VerifyAdminId { get => _VerifyAdminId; set { if (OnPropertyChanging(__.VerifyAdminId, value)) { _VerifyAdminId = value; OnPropertyChanged(__.VerifyAdminId); } } }
+        public Int32 VerifyAdminId { get => _VerifyAdminId; set { if (OnPropertyChanging("VerifyAdminId", value)) { _VerifyAdminId = value; OnPropertyChanged("VerifyAdminId"); } } }
 
         private Int32 _IsVerify;
         /// <summary>是否通过审核</summary>
@@ -101,7 +104,7 @@ namespace COMCMS.Core
         [Description("是否通过审核")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsVerify", "是否通过审核", "")]
-        public Int32 IsVerify { get => _IsVerify; set { if (OnPropertyChanging(__.IsVerify, value)) { _IsVerify = value; OnPropertyChanged(__.IsVerify); } } }
+        public Int32 IsVerify { get => _IsVerify; set { if (OnPropertyChanging("IsVerify", value)) { _IsVerify = value; OnPropertyChanged("IsVerify"); } } }
 
         private DateTime _VerifyTime;
         /// <summary>审核时间</summary>
@@ -109,7 +112,7 @@ namespace COMCMS.Core
         [Description("审核时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("VerifyTime", "审核时间", "")]
-        public DateTime VerifyTime { get => _VerifyTime; set { if (OnPropertyChanging(__.VerifyTime, value)) { _VerifyTime = value; OnPropertyChanged(__.VerifyTime); } } }
+        public DateTime VerifyTime { get => _VerifyTime; set { if (OnPropertyChanging("VerifyTime", value)) { _VerifyTime = value; OnPropertyChanged("VerifyTime"); } } }
 
         private String _FormId;
         /// <summary>小程序FormId</summary>
@@ -117,7 +120,7 @@ namespace COMCMS.Core
         [Description("小程序FormId")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("FormId", "小程序FormId", "")]
-        public String FormId { get => _FormId; set { if (OnPropertyChanging(__.FormId, value)) { _FormId = value; OnPropertyChanged(__.FormId); } } }
+        public String FormId { get => _FormId; set { if (OnPropertyChanging("FormId", value)) { _FormId = value; OnPropertyChanged("FormId"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -130,19 +133,19 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.UId: return _UId;
-                    case __.OrderNum: return _OrderNum;
-                    case __.UserName: return _UserName;
-                    case __.Title: return _Title;
-                    case __.AddTime: return _AddTime;
-                    case __.Ip: return _Ip;
-                    case __.Actions: return _Actions;
-                    case __.Price: return _Price;
-                    case __.VerifyAdminId: return _VerifyAdminId;
-                    case __.IsVerify: return _IsVerify;
-                    case __.VerifyTime: return _VerifyTime;
-                    case __.FormId: return _FormId;
+                    case "Id": return _Id;
+                    case "UId": return _UId;
+                    case "OrderNum": return _OrderNum;
+                    case "UserName": return _UserName;
+                    case "Title": return _Title;
+                    case "AddTime": return _AddTime;
+                    case "Ip": return _Ip;
+                    case "Actions": return _Actions;
+                    case "Price": return _Price;
+                    case "VerifyAdminId": return _VerifyAdminId;
+                    case "IsVerify": return _IsVerify;
+                    case "VerifyTime": return _VerifyTime;
+                    case "FormId": return _FormId;
                     default: return base[name];
                 }
             }
@@ -150,19 +153,19 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.UId: _UId = value.ToInt(); break;
-                    case __.OrderNum: _OrderNum = Convert.ToString(value); break;
-                    case __.UserName: _UserName = Convert.ToString(value); break;
-                    case __.Title: _Title = Convert.ToString(value); break;
-                    case __.AddTime: _AddTime = value.ToDateTime(); break;
-                    case __.Ip: _Ip = Convert.ToString(value); break;
-                    case __.Actions: _Actions = Convert.ToString(value); break;
-                    case __.Price: _Price = Convert.ToDecimal(value); break;
-                    case __.VerifyAdminId: _VerifyAdminId = value.ToInt(); break;
-                    case __.IsVerify: _IsVerify = value.ToInt(); break;
-                    case __.VerifyTime: _VerifyTime = value.ToDateTime(); break;
-                    case __.FormId: _FormId = Convert.ToString(value); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "UId": _UId = value.ToInt(); break;
+                    case "OrderNum": _OrderNum = Convert.ToString(value); break;
+                    case "UserName": _UserName = Convert.ToString(value); break;
+                    case "Title": _Title = Convert.ToString(value); break;
+                    case "AddTime": _AddTime = value.ToDateTime(); break;
+                    case "Ip": _Ip = Convert.ToString(value); break;
+                    case "Actions": _Actions = Convert.ToString(value); break;
+                    case "Price": _Price = Convert.ToDecimal(value); break;
+                    case "VerifyAdminId": _VerifyAdminId = value.ToInt(); break;
+                    case "IsVerify": _IsVerify = value.ToInt(); break;
+                    case "VerifyTime": _VerifyTime = value.ToDateTime(); break;
+                    case "FormId": _FormId = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -174,43 +177,43 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>用户ID</summary>
-            public static readonly Field UId = FindByName(__.UId);
+            public static readonly Field UId = FindByName("UId");
 
             /// <summary>订单号</summary>
-            public static readonly Field OrderNum = FindByName(__.OrderNum);
+            public static readonly Field OrderNum = FindByName("OrderNum");
 
             /// <summary>用户名</summary>
-            public static readonly Field UserName = FindByName(__.UserName);
+            public static readonly Field UserName = FindByName("UserName");
 
             /// <summary>订单名称</summary>
-            public static readonly Field Title = FindByName(__.Title);
+            public static readonly Field Title = FindByName("Title");
 
             /// <summary>时间</summary>
-            public static readonly Field AddTime = FindByName(__.AddTime);
+            public static readonly Field AddTime = FindByName("AddTime");
 
             /// <summary>登录IP</summary>
-            public static readonly Field Ip = FindByName(__.Ip);
+            public static readonly Field Ip = FindByName("Ip");
 
             /// <summary>记录详情</summary>
-            public static readonly Field Actions = FindByName(__.Actions);
+            public static readonly Field Actions = FindByName("Actions");
 
             /// <summary>提现金额</summary>
-            public static readonly Field Price = FindByName(__.Price);
+            public static readonly Field Price = FindByName("Price");
 
             /// <summary>审核管理员ID</summary>
-            public static readonly Field VerifyAdminId = FindByName(__.VerifyAdminId);
+            public static readonly Field VerifyAdminId = FindByName("VerifyAdminId");
 
             /// <summary>是否通过审核</summary>
-            public static readonly Field IsVerify = FindByName(__.IsVerify);
+            public static readonly Field IsVerify = FindByName("IsVerify");
 
             /// <summary>审核时间</summary>
-            public static readonly Field VerifyTime = FindByName(__.VerifyTime);
+            public static readonly Field VerifyTime = FindByName("VerifyTime");
 
             /// <summary>小程序FormId</summary>
-            public static readonly Field FormId = FindByName(__.FormId);
+            public static readonly Field FormId = FindByName("FormId");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -257,58 +260,6 @@ namespace COMCMS.Core
             /// <summary>小程序FormId</summary>
             public const String FormId = "FormId";
         }
-        #endregion
-    }
-
-    /// <summary>用户提现订单接口</summary>
-    public partial interface IWithdrawOrder
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>用户ID</summary>
-        Int32 UId { get; set; }
-
-        /// <summary>订单号</summary>
-        String OrderNum { get; set; }
-
-        /// <summary>用户名</summary>
-        String UserName { get; set; }
-
-        /// <summary>订单名称</summary>
-        String Title { get; set; }
-
-        /// <summary>时间</summary>
-        DateTime AddTime { get; set; }
-
-        /// <summary>登录IP</summary>
-        String Ip { get; set; }
-
-        /// <summary>记录详情</summary>
-        String Actions { get; set; }
-
-        /// <summary>提现金额</summary>
-        Decimal Price { get; set; }
-
-        /// <summary>审核管理员ID</summary>
-        Int32 VerifyAdminId { get; set; }
-
-        /// <summary>是否通过审核</summary>
-        Int32 IsVerify { get; set; }
-
-        /// <summary>审核时间</summary>
-        DateTime VerifyTime { get; set; }
-
-        /// <summary>小程序FormId</summary>
-        String FormId { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

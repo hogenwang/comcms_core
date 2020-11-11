@@ -1,6 +1,12 @@
 ﻿@model COMCMS.Core.Product
 @{
     ViewBag.title = "编辑商品详情";
+    Admin my = Admin.GetMyInfo();
+    List<int> aclist = new List<int>();
+    if (my.Roles.IsSuperAdmin != 1 && !string.IsNullOrEmpty(my.Roles.AuthorizedCagegory))
+    {
+        aclist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<int>>(my.Roles.AuthorizedCagegory);
+    }
 }
 <div class="wrapper wrapper-content">
     <div class="ibox float-e-margins">
@@ -18,7 +24,17 @@
                         <select class="form-control m-b" asp-for="KId">
                             @foreach (var m in ViewBag.ListKinds)
                             {
-                                <option value="@m.Id">@m.KindName</option>
+                                if (my.Roles.IsSuperAdmin != 1)
+                                {
+                                    if (aclist.FindIndex(x => x == m.Id) > -1)
+                                    {
+                                        <option value="@m.Id">@m.KindName</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="@m.Id">@m.KindName</option>
+                                }
                             }
                         </select>
                     </div>

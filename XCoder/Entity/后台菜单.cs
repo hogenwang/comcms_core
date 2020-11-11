@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("后台菜单")]
     [BindTable("AdminMenu", Description = "后台菜单", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class AdminMenu : IAdminMenu
+    public partial class AdminMenu
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private String _MenuKey;
         /// <summary>标识key</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("标识key")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("MenuKey", "标识key", "", Master = true)]
-        public String MenuKey { get => _MenuKey; set { if (OnPropertyChanging(__.MenuKey, value)) { _MenuKey = value; OnPropertyChanged(__.MenuKey); } } }
+        public String MenuKey { get => _MenuKey; set { if (OnPropertyChanging("MenuKey", value)) { _MenuKey = value; OnPropertyChanged("MenuKey"); } } }
 
         private String _MenuName;
         /// <summary>页面名称</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("页面名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("MenuName", "页面名称", "")]
-        public String MenuName { get => _MenuName; set { if (OnPropertyChanging(__.MenuName, value)) { _MenuName = value; OnPropertyChanged(__.MenuName); } } }
+        public String MenuName { get => _MenuName; set { if (OnPropertyChanging("MenuName", value)) { _MenuName = value; OnPropertyChanged("MenuName"); } } }
 
         private String _PermissionKey;
         /// <summary>页面名称</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("页面名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("PermissionKey", "页面名称", "")]
-        public String PermissionKey { get => _PermissionKey; set { if (OnPropertyChanging(__.PermissionKey, value)) { _PermissionKey = value; OnPropertyChanged(__.PermissionKey); } } }
+        public String PermissionKey { get => _PermissionKey; set { if (OnPropertyChanging("PermissionKey", value)) { _PermissionKey = value; OnPropertyChanged("PermissionKey"); } } }
 
         private String _Description;
         /// <summary>介绍</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("介绍")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Description", "介绍", "")]
-        public String Description { get => _Description; set { if (OnPropertyChanging(__.Description, value)) { _Description = value; OnPropertyChanged(__.Description); } } }
+        public String Description { get => _Description; set { if (OnPropertyChanging("Description", value)) { _Description = value; OnPropertyChanged("Description"); } } }
 
         private String _Link;
         /// <summary>页面连接地址</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("页面连接地址")]
         [DataObjectField(false, false, true, 250)]
         [BindColumn("Link", "页面连接地址", "")]
-        public String Link { get => _Link; set { if (OnPropertyChanging(__.Link, value)) { _Link = value; OnPropertyChanged(__.Link); } } }
+        public String Link { get => _Link; set { if (OnPropertyChanging("Link", value)) { _Link = value; OnPropertyChanged("Link"); } } }
 
         private Int32 _PId;
         /// <summary>上级ID</summary>
@@ -69,7 +72,7 @@ namespace COMCMS.Core
         [Description("上级ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("PId", "上级ID", "")]
-        public Int32 PId { get => _PId; set { if (OnPropertyChanging(__.PId, value)) { _PId = value; OnPropertyChanged(__.PId); } } }
+        public Int32 PId { get => _PId; set { if (OnPropertyChanging("PId", value)) { _PId = value; OnPropertyChanged("PId"); } } }
 
         private Int32 _Level;
         /// <summary>级别</summary>
@@ -77,7 +80,7 @@ namespace COMCMS.Core
         [Description("级别")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Level", "级别", "")]
-        public Int32 Level { get => _Level; set { if (OnPropertyChanging(__.Level, value)) { _Level = value; OnPropertyChanged(__.Level); } } }
+        public Int32 Level { get => _Level; set { if (OnPropertyChanging("Level", value)) { _Level = value; OnPropertyChanged("Level"); } } }
 
         private String _Location;
         /// <summary>路径</summary>
@@ -85,7 +88,7 @@ namespace COMCMS.Core
         [Description("路径")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Location", "路径", "")]
-        public String Location { get => _Location; set { if (OnPropertyChanging(__.Location, value)) { _Location = value; OnPropertyChanged(__.Location); } } }
+        public String Location { get => _Location; set { if (OnPropertyChanging("Location", value)) { _Location = value; OnPropertyChanged("Location"); } } }
 
         private Int32 _IsHide;
         /// <summary>是否隐藏</summary>
@@ -93,7 +96,7 @@ namespace COMCMS.Core
         [Description("是否隐藏")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsHide", "是否隐藏", "")]
-        public Int32 IsHide { get => _IsHide; set { if (OnPropertyChanging(__.IsHide, value)) { _IsHide = value; OnPropertyChanged(__.IsHide); } } }
+        public Int32 IsHide { get => _IsHide; set { if (OnPropertyChanging("IsHide", value)) { _IsHide = value; OnPropertyChanged("IsHide"); } } }
 
         private Int32 _Rank;
         /// <summary>排序</summary>
@@ -101,7 +104,7 @@ namespace COMCMS.Core
         [Description("排序")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Rank", "排序", "")]
-        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging(__.Rank, value)) { _Rank = value; OnPropertyChanged(__.Rank); } } }
+        public Int32 Rank { get => _Rank; set { if (OnPropertyChanging("Rank", value)) { _Rank = value; OnPropertyChanged("Rank"); } } }
 
         private String _Icon;
         /// <summary>图标</summary>
@@ -109,7 +112,7 @@ namespace COMCMS.Core
         [Description("图标")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Icon", "图标", "")]
-        public String Icon { get => _Icon; set { if (OnPropertyChanging(__.Icon, value)) { _Icon = value; OnPropertyChanged(__.Icon); } } }
+        public String Icon { get => _Icon; set { if (OnPropertyChanging("Icon", value)) { _Icon = value; OnPropertyChanged("Icon"); } } }
 
         private String _ClassName;
         /// <summary>样式名称</summary>
@@ -117,7 +120,7 @@ namespace COMCMS.Core
         [Description("样式名称")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("ClassName", "样式名称", "")]
-        public String ClassName { get => _ClassName; set { if (OnPropertyChanging(__.ClassName, value)) { _ClassName = value; OnPropertyChanged(__.ClassName); } } }
+        public String ClassName { get => _ClassName; set { if (OnPropertyChanging("ClassName", value)) { _ClassName = value; OnPropertyChanged("ClassName"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -130,19 +133,19 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.MenuKey: return _MenuKey;
-                    case __.MenuName: return _MenuName;
-                    case __.PermissionKey: return _PermissionKey;
-                    case __.Description: return _Description;
-                    case __.Link: return _Link;
-                    case __.PId: return _PId;
-                    case __.Level: return _Level;
-                    case __.Location: return _Location;
-                    case __.IsHide: return _IsHide;
-                    case __.Rank: return _Rank;
-                    case __.Icon: return _Icon;
-                    case __.ClassName: return _ClassName;
+                    case "Id": return _Id;
+                    case "MenuKey": return _MenuKey;
+                    case "MenuName": return _MenuName;
+                    case "PermissionKey": return _PermissionKey;
+                    case "Description": return _Description;
+                    case "Link": return _Link;
+                    case "PId": return _PId;
+                    case "Level": return _Level;
+                    case "Location": return _Location;
+                    case "IsHide": return _IsHide;
+                    case "Rank": return _Rank;
+                    case "Icon": return _Icon;
+                    case "ClassName": return _ClassName;
                     default: return base[name];
                 }
             }
@@ -150,19 +153,19 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.MenuKey: _MenuKey = Convert.ToString(value); break;
-                    case __.MenuName: _MenuName = Convert.ToString(value); break;
-                    case __.PermissionKey: _PermissionKey = Convert.ToString(value); break;
-                    case __.Description: _Description = Convert.ToString(value); break;
-                    case __.Link: _Link = Convert.ToString(value); break;
-                    case __.PId: _PId = value.ToInt(); break;
-                    case __.Level: _Level = value.ToInt(); break;
-                    case __.Location: _Location = Convert.ToString(value); break;
-                    case __.IsHide: _IsHide = value.ToInt(); break;
-                    case __.Rank: _Rank = value.ToInt(); break;
-                    case __.Icon: _Icon = Convert.ToString(value); break;
-                    case __.ClassName: _ClassName = Convert.ToString(value); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "MenuKey": _MenuKey = Convert.ToString(value); break;
+                    case "MenuName": _MenuName = Convert.ToString(value); break;
+                    case "PermissionKey": _PermissionKey = Convert.ToString(value); break;
+                    case "Description": _Description = Convert.ToString(value); break;
+                    case "Link": _Link = Convert.ToString(value); break;
+                    case "PId": _PId = value.ToInt(); break;
+                    case "Level": _Level = value.ToInt(); break;
+                    case "Location": _Location = Convert.ToString(value); break;
+                    case "IsHide": _IsHide = value.ToInt(); break;
+                    case "Rank": _Rank = value.ToInt(); break;
+                    case "Icon": _Icon = Convert.ToString(value); break;
+                    case "ClassName": _ClassName = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -174,43 +177,43 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>标识key</summary>
-            public static readonly Field MenuKey = FindByName(__.MenuKey);
+            public static readonly Field MenuKey = FindByName("MenuKey");
 
             /// <summary>页面名称</summary>
-            public static readonly Field MenuName = FindByName(__.MenuName);
+            public static readonly Field MenuName = FindByName("MenuName");
 
             /// <summary>页面名称</summary>
-            public static readonly Field PermissionKey = FindByName(__.PermissionKey);
+            public static readonly Field PermissionKey = FindByName("PermissionKey");
 
             /// <summary>介绍</summary>
-            public static readonly Field Description = FindByName(__.Description);
+            public static readonly Field Description = FindByName("Description");
 
             /// <summary>页面连接地址</summary>
-            public static readonly Field Link = FindByName(__.Link);
+            public static readonly Field Link = FindByName("Link");
 
             /// <summary>上级ID</summary>
-            public static readonly Field PId = FindByName(__.PId);
+            public static readonly Field PId = FindByName("PId");
 
             /// <summary>级别</summary>
-            public static readonly Field Level = FindByName(__.Level);
+            public static readonly Field Level = FindByName("Level");
 
             /// <summary>路径</summary>
-            public static readonly Field Location = FindByName(__.Location);
+            public static readonly Field Location = FindByName("Location");
 
             /// <summary>是否隐藏</summary>
-            public static readonly Field IsHide = FindByName(__.IsHide);
+            public static readonly Field IsHide = FindByName("IsHide");
 
             /// <summary>排序</summary>
-            public static readonly Field Rank = FindByName(__.Rank);
+            public static readonly Field Rank = FindByName("Rank");
 
             /// <summary>图标</summary>
-            public static readonly Field Icon = FindByName(__.Icon);
+            public static readonly Field Icon = FindByName("Icon");
 
             /// <summary>样式名称</summary>
-            public static readonly Field ClassName = FindByName(__.ClassName);
+            public static readonly Field ClassName = FindByName("ClassName");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -257,58 +260,6 @@ namespace COMCMS.Core
             /// <summary>样式名称</summary>
             public const String ClassName = "ClassName";
         }
-        #endregion
-    }
-
-    /// <summary>后台菜单接口</summary>
-    public partial interface IAdminMenu
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>标识key</summary>
-        String MenuKey { get; set; }
-
-        /// <summary>页面名称</summary>
-        String MenuName { get; set; }
-
-        /// <summary>页面名称</summary>
-        String PermissionKey { get; set; }
-
-        /// <summary>介绍</summary>
-        String Description { get; set; }
-
-        /// <summary>页面连接地址</summary>
-        String Link { get; set; }
-
-        /// <summary>上级ID</summary>
-        Int32 PId { get; set; }
-
-        /// <summary>级别</summary>
-        Int32 Level { get; set; }
-
-        /// <summary>路径</summary>
-        String Location { get; set; }
-
-        /// <summary>是否隐藏</summary>
-        Int32 IsHide { get; set; }
-
-        /// <summary>排序</summary>
-        Int32 Rank { get; set; }
-
-        /// <summary>图标</summary>
-        String Icon { get; set; }
-
-        /// <summary>样式名称</summary>
-        String ClassName { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

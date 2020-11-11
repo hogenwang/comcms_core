@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("广告详情")]
     [BindTable("Ads", Description = "广告详情", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class Ads : IAds
+    public partial class Ads
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private String _Title;
         /// <summary>广告标题</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("广告标题")]
         [DataObjectField(false, false, true, 100)]
         [BindColumn("Title", "广告标题", "", Master = true)]
-        public String Title { get => _Title; set { if (OnPropertyChanging(__.Title, value)) { _Title = value; OnPropertyChanged(__.Title); } } }
+        public String Title { get => _Title; set { if (OnPropertyChanging("Title", value)) { _Title = value; OnPropertyChanged("Title"); } } }
 
         private String _Content;
         /// <summary>广告详情JSON</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("广告详情JSON")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("Content", "广告详情JSON", "")]
-        public String Content { get => _Content; set { if (OnPropertyChanging(__.Content, value)) { _Content = value; OnPropertyChanged(__.Content); } } }
+        public String Content { get => _Content; set { if (OnPropertyChanging("Content", value)) { _Content = value; OnPropertyChanged("Content"); } } }
 
         private Int32 _KId;
         /// <summary>分类ID</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("分类ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("KId", "分类ID", "")]
-        public Int32 KId { get => _KId; set { if (OnPropertyChanging(__.KId, value)) { _KId = value; OnPropertyChanged(__.KId); } } }
+        public Int32 KId { get => _KId; set { if (OnPropertyChanging("KId", value)) { _KId = value; OnPropertyChanged("KId"); } } }
 
         private Int32 _TId;
         /// <summary>广告代码类型：0代码、1文字广告、2图片广告、3Flash广告、4幻灯片广告、5漂浮广告、6对联浮动图片广告</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("广告代码类型：0代码、1文字广告、2图片广告、3Flash广告、4幻灯片广告、5漂浮广告、6对联浮动图片广告")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("TId", "广告代码类型：0代码、1文字广告、2图片广告、3Flash广告、4幻灯片广告、5漂浮广告、6对联浮动图片广告", "")]
-        public Int32 TId { get => _TId; set { if (OnPropertyChanging(__.TId, value)) { _TId = value; OnPropertyChanged(__.TId); } } }
+        public Int32 TId { get => _TId; set { if (OnPropertyChanging("TId", value)) { _TId = value; OnPropertyChanged("TId"); } } }
 
         private DateTime _StartTime;
         /// <summary>起始时间</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("起始时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("StartTime", "起始时间", "")]
-        public DateTime StartTime { get => _StartTime; set { if (OnPropertyChanging(__.StartTime, value)) { _StartTime = value; OnPropertyChanged(__.StartTime); } } }
+        public DateTime StartTime { get => _StartTime; set { if (OnPropertyChanging("StartTime", value)) { _StartTime = value; OnPropertyChanged("StartTime"); } } }
 
         private DateTime _EndTime;
         /// <summary>结束时间</summary>
@@ -69,7 +72,7 @@ namespace COMCMS.Core
         [Description("结束时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("EndTime", "结束时间", "")]
-        public DateTime EndTime { get => _EndTime; set { if (OnPropertyChanging(__.EndTime, value)) { _EndTime = value; OnPropertyChanged(__.EndTime); } } }
+        public DateTime EndTime { get => _EndTime; set { if (OnPropertyChanging("EndTime", value)) { _EndTime = value; OnPropertyChanged("EndTime"); } } }
 
         private Boolean _IsDisabled;
         /// <summary>是否禁用广告</summary>
@@ -77,7 +80,7 @@ namespace COMCMS.Core
         [Description("是否禁用广告")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("IsDisabled", "是否禁用广告", "")]
-        public Boolean IsDisabled { get => _IsDisabled; set { if (OnPropertyChanging(__.IsDisabled, value)) { _IsDisabled = value; OnPropertyChanged(__.IsDisabled); } } }
+        public Boolean IsDisabled { get => _IsDisabled; set { if (OnPropertyChanging("IsDisabled", value)) { _IsDisabled = value; OnPropertyChanged("IsDisabled"); } } }
 
         private Int32 _Sequence;
         /// <summary>排序，默认999</summary>
@@ -85,7 +88,7 @@ namespace COMCMS.Core
         [Description("排序，默认999")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("Sequence", "排序，默认999", "")]
-        public Int32 Sequence { get => _Sequence; set { if (OnPropertyChanging(__.Sequence, value)) { _Sequence = value; OnPropertyChanged(__.Sequence); } } }
+        public Int32 Sequence { get => _Sequence; set { if (OnPropertyChanging("Sequence", value)) { _Sequence = value; OnPropertyChanged("Sequence"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -98,15 +101,15 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.Title: return _Title;
-                    case __.Content: return _Content;
-                    case __.KId: return _KId;
-                    case __.TId: return _TId;
-                    case __.StartTime: return _StartTime;
-                    case __.EndTime: return _EndTime;
-                    case __.IsDisabled: return _IsDisabled;
-                    case __.Sequence: return _Sequence;
+                    case "Id": return _Id;
+                    case "Title": return _Title;
+                    case "Content": return _Content;
+                    case "KId": return _KId;
+                    case "TId": return _TId;
+                    case "StartTime": return _StartTime;
+                    case "EndTime": return _EndTime;
+                    case "IsDisabled": return _IsDisabled;
+                    case "Sequence": return _Sequence;
                     default: return base[name];
                 }
             }
@@ -114,15 +117,15 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.Title: _Title = Convert.ToString(value); break;
-                    case __.Content: _Content = Convert.ToString(value); break;
-                    case __.KId: _KId = value.ToInt(); break;
-                    case __.TId: _TId = value.ToInt(); break;
-                    case __.StartTime: _StartTime = value.ToDateTime(); break;
-                    case __.EndTime: _EndTime = value.ToDateTime(); break;
-                    case __.IsDisabled: _IsDisabled = value.ToBoolean(); break;
-                    case __.Sequence: _Sequence = value.ToInt(); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "Title": _Title = Convert.ToString(value); break;
+                    case "Content": _Content = Convert.ToString(value); break;
+                    case "KId": _KId = value.ToInt(); break;
+                    case "TId": _TId = value.ToInt(); break;
+                    case "StartTime": _StartTime = value.ToDateTime(); break;
+                    case "EndTime": _EndTime = value.ToDateTime(); break;
+                    case "IsDisabled": _IsDisabled = value.ToBoolean(); break;
+                    case "Sequence": _Sequence = value.ToInt(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -134,31 +137,31 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>广告标题</summary>
-            public static readonly Field Title = FindByName(__.Title);
+            public static readonly Field Title = FindByName("Title");
 
             /// <summary>广告详情JSON</summary>
-            public static readonly Field Content = FindByName(__.Content);
+            public static readonly Field Content = FindByName("Content");
 
             /// <summary>分类ID</summary>
-            public static readonly Field KId = FindByName(__.KId);
+            public static readonly Field KId = FindByName("KId");
 
             /// <summary>广告代码类型：0代码、1文字广告、2图片广告、3Flash广告、4幻灯片广告、5漂浮广告、6对联浮动图片广告</summary>
-            public static readonly Field TId = FindByName(__.TId);
+            public static readonly Field TId = FindByName("TId");
 
             /// <summary>起始时间</summary>
-            public static readonly Field StartTime = FindByName(__.StartTime);
+            public static readonly Field StartTime = FindByName("StartTime");
 
             /// <summary>结束时间</summary>
-            public static readonly Field EndTime = FindByName(__.EndTime);
+            public static readonly Field EndTime = FindByName("EndTime");
 
             /// <summary>是否禁用广告</summary>
-            public static readonly Field IsDisabled = FindByName(__.IsDisabled);
+            public static readonly Field IsDisabled = FindByName("IsDisabled");
 
             /// <summary>排序，默认999</summary>
-            public static readonly Field Sequence = FindByName(__.Sequence);
+            public static readonly Field Sequence = FindByName("Sequence");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -193,46 +196,6 @@ namespace COMCMS.Core
             /// <summary>排序，默认999</summary>
             public const String Sequence = "Sequence";
         }
-        #endregion
-    }
-
-    /// <summary>广告详情接口</summary>
-    public partial interface IAds
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>广告标题</summary>
-        String Title { get; set; }
-
-        /// <summary>广告详情JSON</summary>
-        String Content { get; set; }
-
-        /// <summary>分类ID</summary>
-        Int32 KId { get; set; }
-
-        /// <summary>广告代码类型：0代码、1文字广告、2图片广告、3Flash广告、4幻灯片广告、5漂浮广告、6对联浮动图片广告</summary>
-        Int32 TId { get; set; }
-
-        /// <summary>起始时间</summary>
-        DateTime StartTime { get; set; }
-
-        /// <summary>结束时间</summary>
-        DateTime EndTime { get; set; }
-
-        /// <summary>是否禁用广告</summary>
-        Boolean IsDisabled { get; set; }
-
-        /// <summary>排序，默认999</summary>
-        Int32 Sequence { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }

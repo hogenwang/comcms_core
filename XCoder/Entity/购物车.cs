@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Web.Script.Serialization;
+using System.Xml.Serialization;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
@@ -12,7 +15,7 @@ namespace COMCMS.Core
     [DataObject]
     [Description("购物车")]
     [BindTable("ShoppingCart", Description = "购物车", ConnName = "dbconn", DbType = DatabaseType.SqlServer)]
-    public partial class ShoppingCart : IShoppingCart
+    public partial class ShoppingCart
     {
         #region 属性
         private Int32 _Id;
@@ -21,7 +24,7 @@ namespace COMCMS.Core
         [Description("编号")]
         [DataObjectField(true, true, false, 0)]
         [BindColumn("Id", "编号", "")]
-        public Int32 Id { get => _Id; set { if (OnPropertyChanging(__.Id, value)) { _Id = value; OnPropertyChanged(__.Id); } } }
+        public Int32 Id { get => _Id; set { if (OnPropertyChanging("Id", value)) { _Id = value; OnPropertyChanged("Id"); } } }
 
         private Int32 _UId;
         /// <summary>用户ID</summary>
@@ -29,7 +32,7 @@ namespace COMCMS.Core
         [Description("用户ID")]
         [DataObjectField(false, false, false, 0)]
         [BindColumn("UId", "用户ID", "")]
-        public Int32 UId { get => _UId; set { if (OnPropertyChanging(__.UId, value)) { _UId = value; OnPropertyChanged(__.UId); } } }
+        public Int32 UId { get => _UId; set { if (OnPropertyChanging("UId", value)) { _UId = value; OnPropertyChanged("UId"); } } }
 
         private String _Guid;
         /// <summary>唯一GUID，没登录用户使用</summary>
@@ -37,7 +40,7 @@ namespace COMCMS.Core
         [Description("唯一GUID，没登录用户使用")]
         [DataObjectField(false, false, true, 50)]
         [BindColumn("Guid", "唯一GUID，没登录用户使用", "")]
-        public String Guid { get => _Guid; set { if (OnPropertyChanging(__.Guid, value)) { _Guid = value; OnPropertyChanged(__.Guid); } } }
+        public String Guid { get => _Guid; set { if (OnPropertyChanging("Guid", value)) { _Guid = value; OnPropertyChanged("Guid"); } } }
 
         private String _Details;
         /// <summary>购物车内容，JOSN</summary>
@@ -45,7 +48,7 @@ namespace COMCMS.Core
         [Description("购物车内容，JOSN")]
         [DataObjectField(false, false, true, -1)]
         [BindColumn("Details", "购物车内容，JOSN", "")]
-        public String Details { get => _Details; set { if (OnPropertyChanging(__.Details, value)) { _Details = value; OnPropertyChanged(__.Details); } } }
+        public String Details { get => _Details; set { if (OnPropertyChanging("Details", value)) { _Details = value; OnPropertyChanged("Details"); } } }
 
         private DateTime _AddTime;
         /// <summary>加入购物车时间</summary>
@@ -53,7 +56,7 @@ namespace COMCMS.Core
         [Description("加入购物车时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("AddTime", "加入购物车时间", "")]
-        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging(__.AddTime, value)) { _AddTime = value; OnPropertyChanged(__.AddTime); } } }
+        public DateTime AddTime { get => _AddTime; set { if (OnPropertyChanging("AddTime", value)) { _AddTime = value; OnPropertyChanged("AddTime"); } } }
 
         private DateTime _UpdateTime;
         /// <summary>最后更新时间</summary>
@@ -61,7 +64,7 @@ namespace COMCMS.Core
         [Description("最后更新时间")]
         [DataObjectField(false, false, true, 0)]
         [BindColumn("UpdateTime", "最后更新时间", "")]
-        public DateTime UpdateTime { get => _UpdateTime; set { if (OnPropertyChanging(__.UpdateTime, value)) { _UpdateTime = value; OnPropertyChanged(__.UpdateTime); } } }
+        public DateTime UpdateTime { get => _UpdateTime; set { if (OnPropertyChanging("UpdateTime", value)) { _UpdateTime = value; OnPropertyChanged("UpdateTime"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -74,12 +77,12 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: return _Id;
-                    case __.UId: return _UId;
-                    case __.Guid: return _Guid;
-                    case __.Details: return _Details;
-                    case __.AddTime: return _AddTime;
-                    case __.UpdateTime: return _UpdateTime;
+                    case "Id": return _Id;
+                    case "UId": return _UId;
+                    case "Guid": return _Guid;
+                    case "Details": return _Details;
+                    case "AddTime": return _AddTime;
+                    case "UpdateTime": return _UpdateTime;
                     default: return base[name];
                 }
             }
@@ -87,12 +90,12 @@ namespace COMCMS.Core
             {
                 switch (name)
                 {
-                    case __.Id: _Id = value.ToInt(); break;
-                    case __.UId: _UId = value.ToInt(); break;
-                    case __.Guid: _Guid = Convert.ToString(value); break;
-                    case __.Details: _Details = Convert.ToString(value); break;
-                    case __.AddTime: _AddTime = value.ToDateTime(); break;
-                    case __.UpdateTime: _UpdateTime = value.ToDateTime(); break;
+                    case "Id": _Id = value.ToInt(); break;
+                    case "UId": _UId = value.ToInt(); break;
+                    case "Guid": _Guid = Convert.ToString(value); break;
+                    case "Details": _Details = Convert.ToString(value); break;
+                    case "AddTime": _AddTime = value.ToDateTime(); break;
+                    case "UpdateTime": _UpdateTime = value.ToDateTime(); break;
                     default: base[name] = value; break;
                 }
             }
@@ -104,22 +107,22 @@ namespace COMCMS.Core
         public partial class _
         {
             /// <summary>编号</summary>
-            public static readonly Field Id = FindByName(__.Id);
+            public static readonly Field Id = FindByName("Id");
 
             /// <summary>用户ID</summary>
-            public static readonly Field UId = FindByName(__.UId);
+            public static readonly Field UId = FindByName("UId");
 
             /// <summary>唯一GUID，没登录用户使用</summary>
-            public static readonly Field Guid = FindByName(__.Guid);
+            public static readonly Field Guid = FindByName("Guid");
 
             /// <summary>购物车内容，JOSN</summary>
-            public static readonly Field Details = FindByName(__.Details);
+            public static readonly Field Details = FindByName("Details");
 
             /// <summary>加入购物车时间</summary>
-            public static readonly Field AddTime = FindByName(__.AddTime);
+            public static readonly Field AddTime = FindByName("AddTime");
 
             /// <summary>最后更新时间</summary>
-            public static readonly Field UpdateTime = FindByName(__.UpdateTime);
+            public static readonly Field UpdateTime = FindByName("UpdateTime");
 
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
@@ -145,37 +148,6 @@ namespace COMCMS.Core
             /// <summary>最后更新时间</summary>
             public const String UpdateTime = "UpdateTime";
         }
-        #endregion
-    }
-
-    /// <summary>购物车接口</summary>
-    public partial interface IShoppingCart
-    {
-        #region 属性
-        /// <summary>编号</summary>
-        Int32 Id { get; set; }
-
-        /// <summary>用户ID</summary>
-        Int32 UId { get; set; }
-
-        /// <summary>唯一GUID，没登录用户使用</summary>
-        String Guid { get; set; }
-
-        /// <summary>购物车内容，JOSN</summary>
-        String Details { get; set; }
-
-        /// <summary>加入购物车时间</summary>
-        DateTime AddTime { get; set; }
-
-        /// <summary>最后更新时间</summary>
-        DateTime UpdateTime { get; set; }
-        #endregion
-
-        #region 获取/设置 字段值
-        /// <summary>获取/设置 字段值</summary>
-        /// <param name="name">字段名</param>
-        /// <returns></returns>
-        Object this[String name] { get; set; }
         #endregion
     }
 }
