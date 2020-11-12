@@ -322,8 +322,11 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 aclist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedArticleCagegory)?"[]": my.Roles.AuthorizedArticleCagegory);
                 if (aclist == null) aclist = new List<int>();
-                if (aclist.Count == 0) aclist.Add(0);
-                ex &= Article._.KId.In(aclist);
+                if (aclist.Count > 0)
+                {
+                    ex &= Article._.KId.In(aclist);
+                }
+                
                 //仅显示有权限内容
                 if (my.Roles.OnlyEditMyselfArticle == 1)
                     ex &= Article._.AuthorId == my.Id;
@@ -421,12 +424,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 aclist = JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedArticleCagegory) ? "[]" : my.Roles.AuthorizedArticleCagegory);
                 if (aclist == null) aclist = new List<int>();
-                if (aclist.Count == 0) aclist.Add(0);
-
-                if (aclist.FindIndex(x => x == model.KId) == -1)
+                if (aclist.Count > 0)
                 {
-                    tip.Message = "当前选择栏目不存在，或者您没这个栏目的权限！";
-                    return Json(tip);
+                    if (aclist.FindIndex(x => x == model.KId) == -1)
+                    {
+                        tip.Message = "当前选择栏目不存在，或者您没这个栏目的权限！";
+                        return Json(tip);
+                    }
                 }
             }
 
@@ -526,12 +530,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 aclist = JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedArticleCagegory) ? "[]" : my.Roles.AuthorizedArticleCagegory); 
                 if (aclist == null) aclist = new List<int>();
-                if (aclist.Count == 0) aclist.Add(0);
-
-                if (aclist.FindIndex(x => x == model.KId) == -1)
+                if (aclist.Count > 0)
                 {
-                    tip.Message = "当前选择栏目不存在，或者您没这个栏目的权限！";
-                    return Json(tip);
+                    if (aclist.FindIndex(x => x == model.KId) == -1)
+                    {
+                        tip.Message = "当前选择栏目不存在，或者您没这个栏目的权限！";
+                        return Json(tip);
+                    }
                 }
 
                 if(my.Roles.OnlyEditMyselfArticle ==1 && entity.AuthorId != my.Id)
@@ -638,12 +643,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 aclist = JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedArticleCagegory) ? "[]" : my.Roles.AuthorizedArticleCagegory);
                 if (aclist == null) aclist = new List<int>();
-                if (aclist.Count == 0) aclist.Add(0);
-
-                if (aclist.FindIndex(x => x == entity.KId) == -1)
+                if (aclist.Count > 0)
                 {
-                    tip.Message = "者您没这个栏目的权限，无法删除该栏目文章！";
-                    return Json(tip);
+                    if (aclist.FindIndex(x => x == entity.KId) == -1)
+                    {
+                        tip.Message = "者您没这个栏目的权限，无法删除该栏目文章！";
+                        return Json(tip);
+                    }
                 }
 
                 if (my.Roles.OnlyEditMyselfArticle == 1 && entity.AuthorId != my.Id)

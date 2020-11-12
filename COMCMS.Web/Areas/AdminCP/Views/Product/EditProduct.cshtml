@@ -24,7 +24,7 @@
                         <select class="form-control m-b" asp-for="KId">
                             @foreach (var m in ViewBag.ListKinds)
                             {
-                                if (my.Roles.IsSuperAdmin != 1)
+                                if (my.Roles.IsSuperAdmin != 1 && aclist.Count > 0)
                                 {
                                     if (aclist.FindIndex(x => x == m.Id) > -1)
                                     {

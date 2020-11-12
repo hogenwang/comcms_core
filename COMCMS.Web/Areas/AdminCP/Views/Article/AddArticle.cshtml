@@ -5,7 +5,7 @@
     List<int> aclist = new List<int>();
     if (my.Roles.IsSuperAdmin != 1 && !string.IsNullOrEmpty(my.Roles.AuthorizedArticleCagegory))
     {
-        aclist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<int>>(my.Roles.AuthorizedArticleCagegory);
+        aclist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedArticleCagegory) ? "[]" : my.Roles.AuthorizedArticleCagegory);
     }
 }
 
@@ -24,7 +24,7 @@
                         <select class="form-control m-b" name="KId" id="KId">
                             @foreach (var m in ViewBag.ListKinds)
                             {
-                                if (my.Roles.IsSuperAdmin != 1)
+                                if (my.Roles.IsSuperAdmin != 1 && aclist.Count>0)
                                 {
                                     if (aclist.FindIndex(x => x == m.Id) > -1)
                                     {
