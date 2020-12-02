@@ -186,6 +186,27 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             tip.Message = "删除商品栏目成功";
             return Json(tip);
         }
+
+        #region 修改商品分类排序
+        [HttpPost]
+        [MyAuthorize("edit", "category", "JSON")]
+        public IActionResult DoEditCategoryRank(int id, int rank)
+        {
+            Category entity = Category.Find(Category._.Id == id);
+            if (entity == null)
+            {
+                tip.Message = "系统找不到本记录";
+                return Json(tip);
+            }
+            entity.Rank = rank;
+            entity.Update();
+            Admin.WriteLogActions($"修改商品分类排序(id:{id},排序:{rank});");
+            tip.Message = "修改商品分类排序成功！";
+            tip.Status = JsonTip.SUCCESS;
+            return Json(tip);
+        }
+        #endregion
+
         #endregion
 
         #region 商品列表

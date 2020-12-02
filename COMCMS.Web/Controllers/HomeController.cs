@@ -230,7 +230,7 @@ namespace COMCMS.Web.Controllers
         /// <returns></returns>
         [Route("{path:regex(^(?!swagger\\b)[[a-zA-Z0-9-]]+$)}/index.html")]
         [Route("{path:regex(^(?!swagger\\b)[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
-        [Route("{path:regex(^(?!swagger\\b)[[a-zA-Z0-9-]]+$)}/")]
+        //[Route("{path:regex(^(?!swagger\\b)[[a-zA-Z0-9-]]+$)}/")]
         public IActionResult ShowCategory(string path,int page=1)
         {
             //先判断文章栏目
@@ -258,7 +258,7 @@ namespace COMCMS.Web.Controllers
         /// <returns></returns>
         [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/index.html")]
         [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
-        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/")]
+        //[Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/")]
         public IActionResult ShowCategory(string path, string path2, int page = 1)
         {
             string fullPath = $"/{path}/{path2}";
@@ -286,7 +286,7 @@ namespace COMCMS.Web.Controllers
         /// <returns></returns>
         [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/index.html")]
         [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
-        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/")]
+        //[Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/")]
         public IActionResult ShowCategory(string path, string path2, string path3, int page = 1)
         {
             string fullPath = $"/{path}/{path2}/{path3}";
@@ -314,7 +314,7 @@ namespace COMCMS.Web.Controllers
         /// <returns></returns>
         [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/index.html")]
         [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
-        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/")]
+        //[Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/")]
         public IActionResult ShowCategory(string path, string path2, string path3, string path4, int page = 1)
         {
             string fullPath = $"/{path}/{path2}/{path3}/{path4}";

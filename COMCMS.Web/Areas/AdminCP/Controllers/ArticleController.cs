@@ -290,6 +290,26 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         }
         #endregion
 
+        #region 修改文章栏目排序
+        [HttpPost]
+        [MyAuthorize("edit", "articlecategory", "JSON")]
+        public IActionResult DoEditCategoryRank(int id, int rank)
+        {
+            ArticleCategory entity = ArticleCategory.Find(ArticleCategory._.Id == id);
+            if (entity == null)
+            {
+                tip.Message = "系统找不到本记录";
+                return Json(tip);
+            }
+            entity.Rank = rank;
+            entity.Update();
+            Admin.WriteLogActions($"修改文章栏目排序(id:{id},排序:{rank});");
+            tip.Message = "修改排序成功！";
+            tip.Status = JsonTip.SUCCESS;
+            return Json(tip);
+        }
+        #endregion
+
         #region 文章
         /// <summary>
         /// 文章栏目管理
