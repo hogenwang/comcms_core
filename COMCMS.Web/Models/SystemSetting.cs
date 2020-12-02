@@ -22,5 +22,10 @@ namespace COMCMS.Web.Models
         /// 多媒体允许扩展名
         /// </summary>
         public string MediaAllowedExtensions { get; set; }
+
+        /// <summary>
+        /// JWT验证的密钥
+        /// </summary>
+        public string JwtSecret { get; set; }
     }
 }

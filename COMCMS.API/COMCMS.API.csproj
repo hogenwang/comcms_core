@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NewLife.Core" Version="8.10.2020.1002" />
+    <PackageReference Include="NewLife.Core" Version="8.10.2020.1201" />
     <PackageReference Include="Senparc.Weixin" Version="6.7.600" />
     <PackageReference Include="Senparc.Weixin.MP" Version="16.10.601" />
   </ItemGroup>
