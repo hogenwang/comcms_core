@@ -290,6 +290,26 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         }
         #endregion
 
+        #region 修改商品排序
+        [HttpPost]
+        [MyAuthorize("edit", "product", "JSON")]
+        public IActionResult DoEditProductSequence(int id, int rank)
+        {
+            Product entity = Product.Find(Product._.Id == id);
+            if (entity == null)
+            {
+                tip.Message = "系统找不到本记录";
+                return Json(tip);
+            }
+            entity.Sequence = rank;
+            entity.Update();
+            Admin.WriteLogActions($"修改商品排序(id:{id},排序:{rank});");
+            tip.Message = "修改排序成功！";
+            tip.Status = JsonTip.SUCCESS;
+            return Json(tip);
+        }
+        #endregion
+
         #region 添加商品
         [HttpGet]
         [MyAuthorize("add", "product")]
