@@ -38,3 +38,16 @@ function cancelEdit(id) {
     $("#row_" + id + " .rt-editpanel").show();
     $("#row_" + id + " .rt-savepanel").addClass('hidden');
 }
+
+/*********
+验证是否是数字
+**********/
+function isInt(str) {
+    //如果为空，则通过校验
+    if (str == "")
+        return false;
+    if (/^(\-?)(\d+)$/.test(str))
+        return true;
+    else
+        return false;
+}

@@ -109,6 +109,10 @@ namespace COMCMS.Web.Controllers
             {
                 return AlertAndGoBack("系统找不到本记录！");
             }
+            if (entity.IsHide == 1 && !Admin.IsAdminLogin())
+            {
+                return EchoTip("系统找不到本文章！");
+            }
             ArticleCategory kind = ArticleCategory.FindById(entity.KId);
             if (kind == null)
             {

@@ -98,11 +98,13 @@
             if ($(this).attr("placeholder") && $(this).attr("placeholder") != "") {
                 var tipstr = $(this).attr("placeholder");
                 var id = $(this).attr("id");
-                $(this).on("focusin", function () {
-                    layer.tips(tipstr, '#' + id, {
-                        tips: [1, '#3595CC'] //还可配置颜色
+                if (id) {
+                    $(this).on("focusin", function () {
+                        layer.tips(tipstr, '#' + id, {
+                            tips: [1, '#3595CC'] //还可配置颜色
+                        });
                     });
-                });
+                }
             }
         })
     </script>
