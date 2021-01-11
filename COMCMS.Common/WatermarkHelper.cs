@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.DrawingCore;
-using System.DrawingCore.Imaging;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.Text;
 
 namespace COMCMS.Common
@@ -25,7 +25,7 @@ namespace COMCMS.Common
             //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
             //设置高质量,低速度呈现平滑程度
             //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            System.DrawingCore.Image watermark = new Bitmap(watermarkFilename);
+            System.Drawing.Image watermark = new Bitmap(watermarkFilename);
 
             if (watermark.Height >= img.Height || watermark.Width >= img.Width)
                 return;
@@ -115,7 +115,7 @@ namespace COMCMS.Common
 
             qualityParam[0] = quality;
 
-            EncoderParameter encoderParam = new EncoderParameter(System.DrawingCore.Imaging.Encoder.Quality, qualityParam);
+            EncoderParameter encoderParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, qualityParam);
             encoderParams.Param[0] = encoderParam;
 
             if (ici != null)
@@ -138,7 +138,7 @@ namespace COMCMS.Common
         /// <param name="filename">文件名</param>
         /// <param name="watermarkText">水印文字</param>
         /// <param name="watermarkStatus">图片水印位置</param>
-        public static void AddImageSignText(System.DrawingCore.Image img, string filename, string watermarkText, int watermarkStatus, int quality, string fontname, int fontsize)
+        public static void AddImageSignText(Image img, string filename, string watermarkText, int watermarkStatus, int quality, string fontname, int fontsize)
         {
             Graphics g = Graphics.FromImage(img);
             Font drawFont = new Font(fontname, fontsize, FontStyle.Regular, GraphicsUnit.Pixel);
@@ -205,7 +205,7 @@ namespace COMCMS.Common
 
             qualityParam[0] = quality;
 
-            EncoderParameter encoderParam = new EncoderParameter(System.DrawingCore.Imaging.Encoder.Quality, qualityParam);
+            EncoderParameter encoderParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, qualityParam);
             encoderParams.Param[0] = encoderParam;
 
             if (ici != null)

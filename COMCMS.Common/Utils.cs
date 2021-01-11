@@ -13,6 +13,7 @@ using System.Net.NetworkInformation;
 using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using NewLife.Caching;
 
 namespace COMCMS.Common
 {
@@ -116,6 +117,11 @@ namespace COMCMS.Common
             /// </summary>
             Home=99
         }
+
+        /// <summary>
+        /// 内存缓存
+        /// </summary>
+        public static ICache MemoryCahce { get; set; } = Cache.Default;
         #endregion
 
         #region 验证部分
