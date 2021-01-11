@@ -12,7 +12,7 @@ using COMCMS.Web.Models;
 using Newtonsoft.Json;
 using System.IO;
 using COMCMS.Core.Models;
-using System.DrawingCore;
+using System.Drawing;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;

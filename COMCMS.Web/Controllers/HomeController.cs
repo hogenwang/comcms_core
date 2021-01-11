@@ -219,6 +219,11 @@ namespace COMCMS.Web.Controllers
         //    return ac.Index(1);
         //    //return Content(";ath1:" + path1+";path2:"+path2);
         //}
+        //[HttpGet]
+        //public IActionResult Test()
+        //{
+        //    return View();
+        //}
         #endregion
 
 
