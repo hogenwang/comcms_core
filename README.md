@@ -4,6 +4,7 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 
 ### 更新日志
+- 2021-02-02 升级组件，删除ZKWeb组件，增加文章Tag标签
 - 2020-12-02 升级到.net5;增加文章栏目、商品分类快速修改排序；增加jwt授权登录
 - 2020-11-11 管理组管理增加控制普通管理组的文章和商品权限，文章、商品操作增加权限判断
 - 2020-10-11 更新组件，兼容IE11
@@ -16,7 +17,7 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 - .net 5 (请注意升级本地SDK 或者runtime)
 - 数据库：Mysql 5.7 /Mysql 8.0 / SqlServer 2008+
 - ORM:数据库操作使用XCode，目前支持mysql、sqlserver。详细见：https://github.com/NewLifeX/X
-- 据库驱动使用：MySQL官方驱动，8.0.22
+- 据库驱动使用：MySQL官方驱动，8.0.23
 - 后台模板是H+
 - 编辑器采用CKeditor 支持截图粘贴进去，上传图片采用webuploader
 

@@ -1,0 +1,61 @@
+﻿@model Tags
+@{
+    ViewBag.title = Model.TagName;
+    ViewBag.keywords = Model.Keywords;
+    ViewBag.description = Model.Description;
+
+}
+
+<div class="banner normal sec-banner">
+    <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+</div>
+<!-- mb banner -->
+<div class="banner mobile sec-banner">
+    <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+</div>
+<div class="sec-nav">
+    <div class="cont">
+        <ul class="sec-nav-list">
+            <li class="sec-on">标签：@Model.TagName</li>
+        </ul>
+
+        <script type="text/javascript">
+            function mbSecNav() {
+                var num = $('.sec-nav-list li').length;
+                if (num >= 3) {
+                    $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
+                } else if (num == 2) {
+                    $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
+                } else if (num == 1) {
+                    $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
+                }
+            }
+        </script>
+    </div>
+</div>
+
+
+<div class="content newsC">
+    <div class="news-bg">
+        <div class="cont">
+            <ul class="tag-list">
+                @foreach (TagsDetail a in ViewBag.list)
+                {
+                    <li>
+                        <a href="@ViewsHelper.EchoArticleURL(a.RId)" title="@a.Title">
+                            @a.Title
+                        </a>
+                    </li>
+                }
+                @if (ViewBag.list == null || ViewBag.list.Count < 1)
+                {
+                    <li>暂无相关记录...</li>
+                }
+            </ul>
+            <div class="normal">
+                @Html.Raw(Pages.GetPageStr(ViewBag.pagesize, (int)ViewBag.totalCount, ViewBag.page, "/tag/"+Model.TagName+"/{0}", 3, 10, ""))
+            </div>
+            <!-- 点击加载更多 -->
+        </div>
+    </div>
+</div>
