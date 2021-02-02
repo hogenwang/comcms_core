@@ -479,7 +479,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             ArticleCategory.UpdateDetailCount(model.KId);
             SessionHelper.WriteSession("com_add_article_kid", model.KId);
             //添加TAG
-            //Tag.InsertTags(model.Tags, RTType.RatuoModule.Article, model.Id, model.Title);
+            Tags.InsertTags(model.Tags, Utils.CMSType.Article, model.Id, model.Title);
             Core.Admin.WriteLogActions("添加文章(id:" + model.Id + ");");
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "添加文章成功";
@@ -637,7 +637,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             //model.AuthorId = Core.Admin.GetMyInfo().Id;
             entity.Update();
-            //Tag.ModifyTags(model.Tags, RTType.RatuoModule.Article, model.Id, model.Title);
+            Tags.ModifyTags(model.Tags, Utils.CMSType.Article, model.Id, model.Title);
             Core.Admin.WriteLogActions("编辑文章(id:" + model.Id + ");");
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "编辑文章详情成功";
@@ -681,7 +681,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             int kid = entity.Id;
             //删除TAG
-            //Tag.DeleteTag(RTType.RatuoModule.Article, entity.Id);
+            Tags.DeleteTag(entity.Tags, Utils.CMSType.Article, entity.Id);
             Core.Admin.WriteLogActions("删除文章(id:" + entity.Id + ");");
             entity.Delete();
             ArticleCategory.UpdateDetailCount(kid);

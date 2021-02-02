@@ -1169,4 +1169,34 @@
       <Column Name="AddTime" DataType="DateTime" Description="添加时间" />
     </Columns>
   </Table>
+  <Table Name="Tags" Description="Tag标签" DbType="SqlServer">
+    <Columns>
+      <Column Name="Id" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
+      <Column Name="TagName" DataType="String" Length="100" Description="Tag标签名称" />
+      <Column Name="Keywords" DataType="String" Length="250" Description="标签关键词" />
+      <Column Name="Description" DataType="String" Length="250" Description="标签描述" />
+      <Column Name="Counts" DataType="Int32" Description="数量" />
+      <Column Name="Hits" DataType="Int32" Description="点击量" />
+      <Column Name="IsTop" DataType="Int32" Description="置顶否" />
+      <Column Name="AddTime" DataType="DateTime" Description="添加时间" />
+    </Columns>
+    <Indexes>
+      <Index Columns="TagName" />
+    </Indexes>
+  </Table>
+  <Table Name="TagsDetail" Description="Tag标签详情" DbType="SqlServer">
+    <Columns>
+      <Column Name="Id" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
+      <Column Name="TagsId" DataType="Int32" Description="所属标签ID" />
+      <Column Name="TagName" DataType="String" Length="100" Description="Tag标签名称" />
+      <Column Name="TypeId" DataType="Int32" Description="类型" />
+      <Column Name="Title" DataType="String" Master="True" Length="255" Description="标题" />
+      <Column Name="Hits" DataType="Int32" Description="点击量" />
+      <Column Name="RId" DataType="Int32" Description="目标Id" />
+      <Column Name="AddTime" DataType="DateTime" Description="添加时间" />
+    </Columns>
+    <Indexes>
+      <Index Columns="TypeId" />
+    </Indexes>
+  </Table>
 </Tables>

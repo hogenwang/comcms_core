@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.DrawingCore.Drawing2D;
-using System.DrawingCore.Imaging;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Text;
-using System.DrawingCore;
+using System.Drawing;
 using System.Net;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
@@ -157,7 +157,7 @@ namespace COMCMS.Common
         {
             //设置 原图片 对象的 EncoderParameters 对象
             EncoderParameters parameters = new EncoderParameters(1);
-            parameters.Param[0] = new EncoderParameter(System.DrawingCore.Imaging.Encoder.Quality, ((long)100));
+            parameters.Param[0] = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, ((long)100));
             image.Save(savePath, ici, parameters);
             parameters.Dispose();
         }
