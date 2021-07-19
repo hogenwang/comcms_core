@@ -1,6 +1,11 @@
 ﻿@model COMCMS.Core.AdminLog
 @{ 
     ViewBag.title = "查看管理日志详情";
+    string content = Model.Actions;
+    if (!string.IsNullOrEmpty(content))
+    {
+        content = content.Replace("|||", "<br />");
+    }
 }
 
 <div class="wrapper wrapper-content ">
@@ -53,7 +58,7 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">操作详细日志：</label>
             <div class="col-sm-8">
-                <label class="control-label" style="text-align:left">@Html.Raw(Model.Actions.Replace("|||", "<br />"))</label>
+                <label class="control-label" style="text-align:left">@Html.Raw(content)</label>
             </div>
         </div>
 
