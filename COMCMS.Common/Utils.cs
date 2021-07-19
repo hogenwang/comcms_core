@@ -244,7 +244,7 @@ namespace COMCMS.Common
         {
             if (str.Length != 11)
                 return false;
-            return Regex.IsMatch(str, @"^1[3|4|5|7|8|9][0-9]\d{4,8}$");
+            return Regex.IsMatch(str, @"^1[3|4|5|6|7|8|9][0-9]\d{4,8}$");
         }
         /// <summary>
         /// 是否为ip
@@ -381,6 +381,130 @@ namespace COMCMS.Common
         public static bool IsDate(string StrSource)
         {
             return Regex.IsMatch(StrSource, @"^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-9]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))$");
+        }
+
+        /// <summary>
+        /// 正则手机型号
+        /// </summary>
+        private static readonly Regex RegexMobile =
+            new Regex(@"(iemobile|iphone|ipod|android|nokia|sonyericsson|blackberry|samsung|sec\-|windows ce|motorola|mot\-|up.b|midp\-)",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        /// <summary>
+        /// 通过UserAgent 判断是否是移动端
+        /// </summary>
+        /// <param name="userAgent"></param>
+        /// <returns></returns>
+        public static bool IsMobileRequest(string userAgent)
+        {
+            if (!string.IsNullOrEmpty(userAgent) && RegexMobile.IsMatch(userAgent))
+            {
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// 获取用户浏览器
+        /// </summary>
+        /// <param name="userAgent"></param>
+        /// <returns></returns>
+        public static string GetBrowser(string userAgent)
+        {
+            if (string.IsNullOrEmpty(userAgent))
+            {
+                return "未知";
+            }
+            userAgent = userAgent.ToLower();
+
+            if (userAgent.Contains("opera/ucweb"))
+            { return "UC Opera"; }
+            else if (userAgent.Contains("openwave/ ucweb"))
+            { return "UCOpenwave"; }
+            else if (userAgent.Contains("microMessenger"))
+            { return "微信浏览器"; }
+            else if (userAgent.Contains("ucweb"))
+            { return "UC"; }
+            else if (userAgent.Contains("360se"))
+            { return "360"; }
+            else if (userAgent.Contains("metasr"))
+            { return "搜狗"; }
+            else if (userAgent.Contains("maxthon"))
+            { return "遨游"; }
+            else if (userAgent.Contains("the world"))
+            { return "世界之窗"; }
+            else if (userAgent.Contains("tencenttraveler") || userAgent.Contains("qqbrowser"))
+            { return "腾讯"; }
+            else if (userAgent.Contains("edge"))
+            { return "Edge"; }
+            else if (userAgent.Contains("edg"))
+            { return "Microsoft Edge"; }
+            else if (userAgent.Contains("chrome"))
+            { return "Chrome"; }
+            else if (userAgent.Contains("safari"))
+            { return "safari"; }
+            else if (userAgent.Contains("firefox"))
+            { return "Firefox"; }
+            else if (userAgent.Contains("opera"))
+            { return "Opera"; }
+            else if (userAgent.Contains("msie"))
+            { return "IE"; }
+            else
+            { return "未知"; }
+        }
+
+        /// <summary>
+        /// 获取客户端操作系统版本
+        /// </summary>
+        /// <returns></returns>
+        public static string GetOSName(string userAgent)
+        {
+            if (string.IsNullOrEmpty(userAgent))
+            {
+                return "未知";
+            }
+            userAgent = userAgent.ToLower();
+
+            if (userAgent.Contains("android"))
+            { return "Android"; }
+            else if (userAgent.Contains("mac os x"))
+            { return "ios"; }
+            else if (userAgent.Contains("windows phone"))
+            { return "Windows Phone"; }
+            else if (userAgent.Contains("nt 11.0"))
+            { return "Windows 11"; }
+            else if (userAgent.Contains("nt 10.0"))
+            { return "Windows 10"; }
+            else if (userAgent.Contains("NT 6.3"))
+            { return "Windows8.1"; }
+            else if (userAgent.Contains("NT 6.2"))
+            { return "Windows8"; }
+            else if (userAgent.Contains("nt 6.1"))
+            { return "Windows 7"; }
+            else if (userAgent.Contains("nt 6.0"))
+            { return "Windows Vista/Server 2008"; }
+            else if (userAgent.Contains("nt 5.2"))
+            { return "Windows Server 2003"; }
+            else if (userAgent.Contains("nt 5.1"))
+            { return "Windows XP"; }
+            else if (userAgent.Contains("nt 5"))
+            { return "Windows 2000"; }
+            else if (userAgent.Contains("nt 4"))
+            { return "Windows NT4"; }
+            else if (userAgent.Contains("me"))
+            { return "Windows Me"; }
+            else if (userAgent.Contains("98"))
+            { return "Windows 98"; }
+            else if (userAgent.Contains("95"))
+            { return "Windows 95"; }
+            else if (userAgent.Contains("mac"))
+            { return "Mac"; }
+            else if (userAgent.Contains("unix"))
+            { return "UNIX"; }
+            else if (userAgent.Contains("linux"))
+            { return "Linux"; }
+            else if (userAgent.Contains("sunos"))
+            { return "SunOS"; }
+
+            return "未知";
         }
         #endregion
 
@@ -768,6 +892,14 @@ namespace COMCMS.Common
             string xForwardedForAddress = MyHttpContext.Current.Request.Headers["X-Forwarded-For"];
             if (!string.IsNullOrEmpty(userHostAddress) && !string.IsNullOrEmpty(xForwardedForAddress) && userHostAddress != xForwardedForAddress)
             {
+                if (xForwardedForAddress.IndexOf(",") > -1)
+                {
+                    string[] arrIP = xForwardedForAddress.Split(new string[] { "," }, StringSplitOptions.None);
+                    if (arrIP.Length > 1)
+                    {
+                        return arrIP[0].Trim();
+                    }
+                }
                 return xForwardedForAddress;
             }
             if (!string.IsNullOrEmpty(userHostAddress) && Utils.IsIP(userHostAddress))
