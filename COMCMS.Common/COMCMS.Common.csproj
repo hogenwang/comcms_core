@@ -6,7 +6,7 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="NewLife.Core" Version="8.10.2021.708" />
+    <PackageReference Include="NewLife.Core" Version="8.11.2021.809" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="PinYinConverterCore" Version="1.0.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
