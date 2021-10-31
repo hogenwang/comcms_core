@@ -7,14 +7,14 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="2.15.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.9" />
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="5.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.11" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.11" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="5.0.11" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
-    <PackageReference Include="MimeKit" Version="2.15.0" />
-    <PackageReference Include="MySql.Data" Version="8.0.26" />
-    <PackageReference Include="NewLife.XCode" Version="10.2.2021.809" />
+    <PackageReference Include="MimeKit" Version="2.15.1" />
+    <PackageReference Include="MySql.Data" Version="8.0.27" />
+    <PackageReference Include="NewLife.XCode" Version="10.2.2021.1001" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Senparc.NeuChar" Version="1.4.400" />
     <PackageReference Include="Senparc.Weixin" Version="6.9.600" />
@@ -22,7 +22,7 @@
     <PackageReference Include="Senparc.Weixin.MP.MvcExtension" Version="4.1.1" />
     <PackageReference Include="Senparc.Weixin.TenPay" Version="1.7.501" />
     <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.11.501" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -112,12 +112,43 @@
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\zh-cn.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\a11yhelp\dialogs\lang\zh.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\about\dialogs\about.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\ajax\plugin.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\autocomplete\plugin.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\autocomplete\samples\utils.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\clipboard\dialogs\paste.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\colordialog\dialogs\colordialog.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\copyformatting\cursors\cursor-disabled.svg" />
     <None Include="wwwroot\editor\ckeditor\plugins\copyformatting\cursors\cursor.svg" />
     <None Include="wwwroot\editor\ckeditor\plugins\dialog\dialogDefinition.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\div\dialogs\div.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\emoji\assets\iconsall.svg" />
+    <None Include="wwwroot\editor\ckeditor\plugins\emoji\lang\en.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\emoji\plugin.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\CHANGELOG.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\LICENSE.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\plugindefinition.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\README.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\authentication.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\exportpdf.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\configfilename.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\emptyeditor.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\integration.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\integrations\easyimage.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\notifications.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\notificationsasync.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\paperformat.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\readonly.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\stylesheets.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\tokenfetching.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\tokentwoeditorscorrect.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\tokentwoeditorswrong.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\tokenwithouturl.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\manual\wrongendpoint.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\notification.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\resourcespaths.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\statistics.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\stylesheets.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\exportpdf\tests\_helpers\tools.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\find\dialogs\find.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\flash\dialogs\flash.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\forms\dialogs\button.js" />
@@ -157,7 +188,10 @@
     <None Include="wwwroot\editor\ckeditor\plugins\link\dialogs\anchor.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\link\dialogs\link.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\liststyle\dialogs\liststyle.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\pastefromgdocs\filter\default.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\pastefromword\filter\default.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\pastetools\filter\common.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\pastetools\filter\image.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\scayt\CHANGELOG.md" />
     <None Include="wwwroot\editor\ckeditor\plugins\scayt\dialogs\options.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\scayt\LICENSE.md" />
@@ -212,6 +246,8 @@
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\sk.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\sl.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\sq.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\sr-latn.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\sr.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\sv.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\th.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\specialchar\dialogs\lang\tr.js" />
@@ -226,6 +262,8 @@
     <None Include="wwwroot\editor\ckeditor\plugins\table\dialogs\table.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\templates\dialogs\templates.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\templates\templates\default.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\textmatch\plugin.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\textwatcher\plugin.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\widgetselection\plugin.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\widget\dev\assets\simplebox\dialogs\simplebox.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\widget\dev\assets\simplebox\plugin.js" />
@@ -284,10 +322,15 @@
     <None Include="wwwroot\editor\ckeditor\plugins\wsc\dialogs\wsc_ie.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\wsc\LICENSE.md" />
     <None Include="wwwroot\editor\ckeditor\plugins\wsc\README.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\xml\plugin.js" />
     <None Include="wwwroot\editor\ckeditor\skins\moono-lisa\readme.md" />
+    <None Include="wwwroot\editor\ckeditor\vendor\promise.js" />
     <None Include="wwwroot\install\comcms_for_linux.sql" />
     <None Include="wwwroot\install\comcms_for_windows.sql" />
     <None Include="wwwroot\install\comcms_sqlserver.sql" />
+    <None Include="wwwroot\js\my97\lang\en.js" />
+    <None Include="wwwroot\js\my97\lang\zh-cn.js" />
+    <None Include="wwwroot\js\my97\lang\zh-tw.js" />
   </ItemGroup>
 
   <ItemGroup>
