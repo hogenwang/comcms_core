@@ -31,4 +31,5 @@ CKEDITOR.editorConfig = function( config ) {
         { name: 'others', items: ['-'] },
         { name: 'about', items: ['About'] }
     ];
+    config.removeButtons = 'ExportPdf,Save,NewPage,Templates,Flash,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Form,Language';
 };
