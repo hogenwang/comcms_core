@@ -14,33 +14,34 @@
                 <div id="tab-1" class="tab-pane active">
                     <div class="panel-body">
                         <div class="alert alert-info">
-                            您可以修改密码，请务必设置一个比较复杂的密码，以免被爆破！
+                            您可以修改密码，请务必设置一个比较复杂的密码，以免被爆破！<br />
+                            密码要求：<span class="text-danger">@ViewBag.passwordTip</span>
                         </div>
                         @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editmyinfoForm", @class = "form-horizontal m-t" }))
                         {
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">用户名：</label>
                                 <div class="col-sm-8">
-                                    <input id="UserName" name="UserName" minlength="2" maxlength="20" type="text" class="form-control" required aria-required="true" placeholder="用户名，可以中英文，但不能少于5个字符" value="@Model.UserName">
+                                    <input id="UserName" name="UserName" minlength="2" maxlength="20" type="text" class="form-control" required aria-required="true" placeholder="用户名，可以中英文，但不能少于5个字符" value="@Model.UserName" autocomplete="off">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">旧密码：</label>
                                 <div class="col-sm-8">
-                                    <input id="txtOldPwd" name="txtOldPwd" type="password" class="form-control" placeholder="如果修改密码，则必须填写，否则，请留空" value="">
+                                    <input id="txtOldPwd" name="txtOldPwd" type="password" class="form-control" placeholder="如果修改密码，则必须填写，否则，请留空" value="" autocomplete="off">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">新密码：</label>
                                 <div class="col-sm-8">
-                                    <input id="txtNewPwd" name="txtNewPwd" type="password" class="form-control" placeholder="如果修改登录密码，请填写，否则，请留空" value="">
+                                    <input id="txtNewPwd" name="txtNewPwd" type="password" class="form-control" placeholder="如果修改登录密码，请填写，否则，请留空" value="" autocomplete="off">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-3 control-label">重复新密码：</label>
                                 <div class="col-sm-8">
-                                    <input id="txtreNewPwd" name="txtreNewPwd" type="password" class="form-control" placeholder="如果修改密码，请重复输入一次新密码，否则请流控" value="">
+                                    <input id="txtreNewPwd" name="txtreNewPwd" type="password" class="form-control" placeholder="如果修改密码，请重复输入一次新密码，否则请流控" value="" autocomplete="off">
                                 </div>
                             </div>
 

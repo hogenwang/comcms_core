@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.Web;
+using COMCMS.Web.Models;
+using Microsoft.Extensions.Options;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -23,6 +25,16 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     [DisplayName("管理员")]
     public class MemberController : AdminBaseController
     {
+        private readonly SystemSetting _systemSetting;
+        private IWebHostEnvironment _env;
+        private AttachConfigEntity attach;
+        public MemberController(IWebHostEnvironment env, IOptions<SystemSetting> systemSetting)
+        {
+            attach = Config.GetSystemConfig().AttachConfigEntity;
+            _env = env;
+            _systemSetting = systemSetting.Value;
+        }
+
         #region 修改密码
         //修改个人信息
         [MyAuthorize("view", "editme")]
@@ -30,6 +42,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         {
             Core.Admin my = Core.Admin.GetMyInfo();
             Core.Admin.WriteLogActions("查看/编辑我的信息;");
+            ViewBag.passwordTip = Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength);
             return View(my);
         }
         [HttpPost]
@@ -87,6 +100,15 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 {
                     tip.Message = "新密码不能小于5个字符！";
                     return Json(tip);
+                }
+
+                if (_systemSetting.PasswordStrength > 0)
+                {
+                    if (!Utils.CheckPasswordStrength(newPwd, _systemSetting.PasswordStrength))
+                    {
+                        tip.Message = $"您的密码强度不符合要求:{Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength)}！";
+                        return Json(tip);
+                    }
                 }
                 if (newPwd != renewPwd)
                 {
@@ -491,6 +513,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //加载管理组
             IList<AdminRoles> list = AdminRoles.FindAll(AdminRoles._.Id > 0, AdminRoles._.Rank.Asc(), null, 0, 0);
             ViewBag.RoleList = list;
+            ViewBag.passwordTip = Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength);
             Core.Admin.WriteLogActions("查看添加管理员页面;");
             return View();
         }
@@ -531,11 +554,20 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "密码不能小于5个字符！";
                 return Json(tip);
             }
+            if (_systemSetting.PasswordStrength > 0)
+            {
+                if (!Utils.CheckPasswordStrength(newPwd, _systemSetting.PasswordStrength))
+                {
+                    tip.Message = $"您的密码强度不符合要求:{Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength)}！";
+                    return Json(tip);
+                }
+            }
             if (newPwd != renewPwd)
             {
                 tip.Message = "两次输入密码不一致，请重新输入！";
                 return Json(tip);
             }
+
             //验证用户名
             if (Core.Admin.FindCount(Core.Admin._.UserName == userName, null, null, 0, 0) > 0)
             {
@@ -570,6 +602,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 return EchoTipPage("系统找不到本记录！");
             }
+            ViewBag.passwordTip = Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength);
             Core.Admin.WriteLogActions($"查看/编辑管理员({entity.UserName});");
             return View(entity);
         }
@@ -627,6 +660,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 {
                     tip.Message = "密码不能小于5个字符！";
                     return Json(tip);
+                }
+                if (_systemSetting.PasswordStrength > 0)
+                {
+                    if (!Utils.CheckPasswordStrength(newPwd, _systemSetting.PasswordStrength))
+                    {
+                        tip.Message = $"您的密码强度不符合要求:{Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength)}！";
+                        return Json(tip);
+                    }
                 }
                 if (newPwd != renewPwd)
                 {
@@ -918,7 +959,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             IList<MemberRoles> list = MemberRoles.FindAll(MemberRoles._.Id > 0, MemberRoles._.Rank.Asc(), null, 0, 0);
             ViewBag.RoleList = list;
             ViewBag.allmember = Member.FindAll(Member._.Id > 0 & Member._.IsLock != 1, null, null, 0, 0);
-
+            ViewBag.passwordTip = Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength);
             Core.Admin.WriteLogActions($"查看添加用户页面;");
             Member model = new Member();
             return View(model);
@@ -944,6 +985,15 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "密码必须不小于6个字符";
                 return Json(tip);
             }
+            if (_systemSetting.PasswordStrength > 0)
+            {
+                if (!Utils.CheckPasswordStrength(model.PassWord, _systemSetting.PasswordStrength))
+                {
+                    tip.Message = $"您的密码强度不符合要求:{Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength)}！";
+                    return Json(tip);
+                }
+            }
+
             string PassWord2 = Request.Form["PassWord2"];
             if (model.PassWord != PassWord2)
             {
@@ -1014,7 +1064,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             IList<RebateChangeLog> listrechargebalancelogs = RebateChangeLog.FindAll(RebateChangeLog._.UId == entity.Id, null, null, 0, 0);
             ViewBag.listrechargebalancelogs = listrechargebalancelogs;
 
-
+            ViewBag.passwordTip = Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength);
 
             Core.Admin.WriteLogActions($"查看/编辑用户({entity.UserName});");
             return View(entity);

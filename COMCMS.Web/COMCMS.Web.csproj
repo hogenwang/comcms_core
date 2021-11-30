@@ -14,14 +14,14 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
     <PackageReference Include="MimeKit" Version="2.15.1" />
     <PackageReference Include="MySql.Data" Version="8.0.27" />
-    <PackageReference Include="NewLife.XCode" Version="10.2.2021.1001" />
+    <PackageReference Include="NewLife.XCode" Version="10.3.2021.1109" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Senparc.NeuChar" Version="1.4.400" />
-    <PackageReference Include="Senparc.Weixin" Version="6.9.600" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.12.501.1" />
+    <PackageReference Include="Senparc.NeuChar" Version="2.0.0" />
+    <PackageReference Include="Senparc.Weixin" Version="6.14.0" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.17.1" />
     <PackageReference Include="Senparc.Weixin.MP.MvcExtension" Version="4.1.1" />
-    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.7.501" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.11.501" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.11.0" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.14.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
   </ItemGroup>
 
@@ -189,6 +189,7 @@
     <None Include="wwwroot\editor\ckeditor\plugins\link\dialogs\link.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\liststyle\dialogs\liststyle.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\pastefromgdocs\filter\default.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\pastefromlibreoffice\filter\default.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\pastefromword\filter\default.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\pastetools\filter\common.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\pastetools\filter\image.js" />
@@ -320,7 +321,70 @@
     <None Include="wwwroot\editor\ckeditor\plugins\widget\plugin.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\wsc\dialogs\wsc.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\wsc\dialogs\wsc_ie.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\af.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\ar.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\bg.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\bn.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\bs.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\ca.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\cs.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\cy.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\da.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\de.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\el.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\en-au.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\en-ca.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\en-gb.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\en.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\eo.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\es.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\et.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\eu.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\fa.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\fi.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\fo.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\fr-ca.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\fr.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\gl.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\gu.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\he.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\hi.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\hr.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\hu.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\is.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\it.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\ja.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\ka.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\km.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\ko.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\ku.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\lt.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\lv.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\mk.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\mn.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\ms.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\nb.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\nl.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\no.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\pl.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\pt-br.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\pt.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\ro.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\ru.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\sk.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\sl.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\sr-latn.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\sr.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\sv.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\th.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\tr.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\ug.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\uk.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\vi.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\zh-cn.js" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\lang\zh.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\wsc\LICENSE.md" />
+    <None Include="wwwroot\editor\ckeditor\plugins\wsc\plugin.js" />
     <None Include="wwwroot\editor\ckeditor\plugins\wsc\README.md" />
     <None Include="wwwroot\editor\ckeditor\plugins\xml\plugin.js" />
     <None Include="wwwroot\editor\ckeditor\skins\moono-lisa\readme.md" />

@@ -506,6 +506,71 @@ namespace COMCMS.Common
 
             return "未知";
         }
+
+        /// <summary>
+        /// 验证密码强度
+        /// 0:6位无要求
+        /// 1:至少八个字符，至少一个字母和一个数字
+        /// 2:至少八个字符，至少一个字母，一个数字和一个特殊字符
+        /// 3:最少八个字符，至少一个大写字母，一个小写字母和一个数字
+        /// 4:至少八个字符，至少一个大写字母，一个小写字母，一个数字和一个特殊字符
+        /// </summary>
+        /// <param name="password">密码</param>
+        /// <param name="t">验证强度</param>
+        /// <returns></returns>
+        public static bool CheckPasswordStrength(string password,int t)
+        {
+            if(t == 0)
+            {
+                if (password.Length < 6)
+                    return false;
+                return true;
+            }
+            else if(t== 1) // 至少八个字符，至少一个字母和一个数字
+            {
+                return Regex.IsMatch(password, @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$");
+            }
+            else if(t== 2)//至少八个字符，至少一个字母，一个数字和一个特殊字符
+            {
+                return Regex.IsMatch(password, @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$");
+            }
+            else if (t ==3)//最少八个字符，至少一个大写字母，一个小写字母和一个数字
+            {
+                return Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$");
+            }
+            else //至少八个字符，至少一个大写字母，一个小写字母，一个数字和一个特殊字符
+            {
+                return Regex.IsMatch(password, @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$");
+            }
+        }
+        /// <summary>
+        /// 获取密码强度提示
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static string GetPasswordStrengthTip(int t)
+        {
+            if (t == 0)
+            {
+                return "至少六个字符";
+            }
+            else if (t == 1) // 至少八个字符，至少一个字母和一个数字
+            {
+                return "至少八个字符，至少一个字母和一个数字";
+            }
+            else if (t == 2)//至少八个字符，至少一个字母，一个数字和一个特殊字符
+            {
+                return "至少八个字符，至少一个字母，一个数字和一个特殊字符";
+            }
+            else if (t == 3)//最少八个字符，至少一个大写字母，一个小写字母和一个数字
+            {
+                return "最少八个字符，至少一个大写字母，一个小写字母和一个数字";
+            }
+            else //至少八个字符，至少一个大写字母，一个小写字母，一个数字和一个特殊字符
+            {
+                return "至少八个字符，至少一个大写字母，一个小写字母，一个数字和一个特殊字符";
+            }
+        }
         #endregion
 
         #region 获取部分
