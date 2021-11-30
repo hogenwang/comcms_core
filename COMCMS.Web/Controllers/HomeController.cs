@@ -17,6 +17,7 @@ using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using COMCMS.Web.Common;
 using Microsoft.AspNetCore.Hosting;
+using System.Text.RegularExpressions;
 
 namespace COMCMS.Web.Controllers
 {
@@ -454,7 +455,27 @@ namespace COMCMS.Web.Controllers
             return View();
         }
         #endregion
+        #region 测试
+        public IActionResult Test()
+        {
+            //至少八个字符，至少一个字母和一个数字
+            string rgx1 = @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$";
+            bool t1 = Regex.IsMatch("123456a", rgx1);
+            bool t2 = Regex.IsMatch("123456aA", rgx1);
+            bool t3 = Regex.IsMatch("123458484635438日654646的手法4sd", rgx1);
 
+            //至少八个字符，至少一个字母，一个数字和一个特殊字符
+            string rgx2 = @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$";
+            bool t4 = Regex.IsMatch("123456a", rgx2);
+            bool t5 = Regex.IsMatch("123456aA", rgx2);
+            bool t6 = Regex.IsMatch("123456vW@", rgx2);
+
+
+
+            string result = $"t1:{t1}; t2:{t2}; t3:{t3}; t4:{t4}; t5:{t5}; t6:{t6}";
+            return Content(result);
+        }
+        #endregion
     }
 }
     
