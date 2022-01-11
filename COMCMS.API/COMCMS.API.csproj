@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NewLife.Core" Version="8.11.2021.1109" />
+    <PackageReference Include="NewLife.Core" Version="9.0.2022.101" />
     <PackageReference Include="Senparc.Weixin" Version="6.14.0" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.17.1" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.17.3" />
   </ItemGroup>
 
   <ItemGroup>
