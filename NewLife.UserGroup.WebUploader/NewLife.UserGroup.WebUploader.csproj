@@ -5,7 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+=======
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.13" />
+>>>>>>> ae6ede6fa215b541779198620dc477049eff7172
   </ItemGroup>
 
 </Project>
