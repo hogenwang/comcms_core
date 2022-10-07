@@ -1,0 +1,17 @@
+{
+    "OSName": "Windows 11 企业版",
+    "OSVersion": "6.2.9200.0",
+    "Product": "System Product Name",
+    "Processor": "12th Gen Intel(R) Core(TM) i7-12700K",
+    "CpuID": "BFEBFBFF00090672",
+    "UUID": "45AA16D8-DF2F-3221-350A-04421A983F7F",
+    "Guid": "5f9c0713-29c7-4621-b35e-b35efd70a57b",
+    "DiskID": "0025_38DC_11B1_45AC.",
+    "Memory": 34088443904,
+    "AvailableMemory": 14803206144,
+    "CpuRate": 0.02833942,
+    "UplinkSpeed": 0,
+    "DownlinkSpeed": 0,
+    "Temperature": 0,
+    "Battery": 0
+}

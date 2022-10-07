@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using COMCMS.Web.Common;
 using System.Diagnostics;
+using NewLife.Log;
+using NewLife;
+using System.Runtime.InteropServices;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -75,6 +78,80 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         public IActionResult NotAuthorize()
         {
             return View();
+        }
+        #endregion
+
+        #region 释放进程内存
+        [HttpPost]
+        public IActionResult DoMemoryFree()
+        {
+            Admin my = Admin.GetMyInfo();
+            if (my.Roles.IsSuperAdmin == 1)
+            {
+                try
+                {
+                    GC.Collect();
+
+                    // 释放当前进程所占用的内存
+                    var p = Process.GetCurrentProcess();
+                    SetProcessWorkingSetSize(p.Handle, -1, -1);
+                }
+                catch (Exception ex)
+                {
+                    XTrace.WriteException(ex);
+                    tip.Message = "释放内存执行失败！" + ex.Message;
+                    return Json(tip);
+                }
+
+                tip.Message = "释放内存成功！";
+                tip.Status = JsonTip.SUCCESS;
+                return Json(tip);
+            }
+            else
+            {
+                tip.Message = "您没有权限执行本操作";
+                return Json(tip);
+            }
+        }
+
+        [DllImport("kernel32.dll")]
+        private static extern Boolean SetProcessWorkingSetSize(IntPtr proc, Int32 min, Int32 max);
+        #endregion
+
+        #region 获取CPU内存等参数
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public IActionResult GetMachineInfo()
+        {
+            Admin my = Admin.GetMyInfo();
+            if (my.Roles.IsSuperAdmin == 0)
+            {
+                tip.Message = "您没有权限执行本操作！";
+                return Json(tip);
+            }
+            var mi = MachineInfo.Current ?? new MachineInfo();
+            var process = Process.GetCurrentProcess();
+
+            double CpuRate = Math.Round(mi.CpuRate, 2);
+            string AvailableMemory = (mi.AvailableMemory / 1024 / 1024).ToString("n0") + "M";
+            decimal memoryUsage = Math.Round((decimal)mi.AvailableMemory / (decimal)mi.Memory * 100M, 2);
+            string WorkingSet64 = (process.WorkingSet64 / 1024 / 1024).ToString("n0") + "M";
+            string PrivateMemorySize64 = (process.PrivateMemorySize64 / 1024 / 1024).ToString("n0") + "M";
+            string GCMemory = (GC.GetTotalMemory(false) / 1024 / 1024).ToString("n0") + "M";
+
+            tip.Status = JsonTip.SUCCESS;
+            tip.Detail = new
+            {
+                cpuRate = CpuRate,
+                availableMemory = AvailableMemory,
+                memoryUsage = memoryUsage,
+                workingSet64 = WorkingSet64,
+                privateMemorySize64 = PrivateMemorySize64,
+                gCMemory = GCMemory
+            };
+
+            tip.Message = "获取成功";
+            return Json(tip);
         }
         #endregion
     }

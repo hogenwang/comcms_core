@@ -1,6 +1,6 @@
 /**
  * @author zhixin wen <wenzhixin2010@gmail.com>
- * version: 1.18.0
+ * version: 1.21.1
  * https://github.com/wenzhixin/bootstrap-table/
  */
 .bootstrap-table .fixed-table-toolbar::after {
@@ -49,7 +49,7 @@
   padding: 3px 20px;
   clear: both;
   font-weight: normal;
-  line-height: 1.428571429;
+  line-height: 1.4286;
 }
 
 .bootstrap-table .fixed-table-toolbar .columns-left {
@@ -110,6 +110,11 @@
   padding-right: 30px !important;
 }
 
+.bootstrap-table .fixed-table-container .table thead th .sortable.sortable-center {
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+}
+
 .bootstrap-table .fixed-table-container .table thead th .both {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAATCAQAAADYWf5HAAAAkElEQVQoz7X QMQ5AQBCF4dWQSJxC5wwax1Cq1e7BAdxD5SL+Tq/QCM1oNiJidwox0355mXnG/DrEtIQ6azioNZQxI0ykPhTQIwhCR+BmBYtlK7kLJYwWCcJA9M4qdrZrd8pPjZWPtOqdRQy320YSV17OatFC4euts6z39GYMKRPCTKY9UnPQ6P+GtMRfGtPnBCiqhAeJPmkqAAAAAElFTkSuQmCC");
 }
@@ -138,6 +143,12 @@
   font-weight: bold;
   display: inline-block;
   min-width: 30%;
+  width: auto !important;
+  text-align: left !important;
+}
+
+.bootstrap-table .fixed-table-container .table tbody tr .card-view .card-view-value {
+  width: 100% !important;
   text-align: left !important;
 }
 
@@ -198,6 +209,7 @@
   position: absolute;
   bottom: 0;
   width: 100%;
+  max-width: 100%;
   z-index: 1000;
   transition: visibility 0s, opacity 0.15s ease-in-out;
   opacity: 0;
@@ -231,7 +243,7 @@
   content: "";
   animation-duration: 1.5s;
   animation-iteration-count: infinite;
-  animation-name: LOADING;
+  animation-name: loading;
   background: #212529;
   border-radius: 50%;
   display: block;
@@ -298,21 +310,16 @@
   margin: 0;
 }
 
-.bootstrap-table .fixed-table-pagination > .pagination ul.pagination a {
-  padding: 6px 12px;
-  line-height: 1.428571429;
-}
-
 .bootstrap-table .fixed-table-pagination > .pagination ul.pagination li.page-intermediate a {
   color: #c8c8c8;
 }
 
 .bootstrap-table .fixed-table-pagination > .pagination ul.pagination li.page-intermediate a::before {
-  content: '\2B05';
+  content: "\2B05";
 }
 
 .bootstrap-table .fixed-table-pagination > .pagination ul.pagination li.page-intermediate a::after {
-  content: '\27A1';
+  content: "\27A1";
 }
 
 .bootstrap-table .fixed-table-pagination > .pagination ul.pagination li.disabled a {
@@ -331,6 +338,18 @@
   overflow-y: scroll;
 }
 
+.bootstrap-table.bootstrap4 .pagination-lg .page-link, .bootstrap-table.bootstrap5 .pagination-lg .page-link {
+  padding: .5rem 1rem;
+}
+
+.bootstrap-table.bootstrap5 .float-left {
+  float: left;
+}
+
+.bootstrap-table.bootstrap5 .float-right {
+  float: right;
+}
+
 /* calculate scrollbar width */
 div.fixed-table-scroll-inner {
   width: 100%;
@@ -346,7 +365,7 @@ div.fixed-table-scroll-outer {
   overflow: hidden;
 }
 
-@keyframes LOADING {
+@keyframes loading {
   0% {
     opacity: 0;
   }
