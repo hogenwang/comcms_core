@@ -6,17 +6,10 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-<<<<<<< HEAD
     <PackageReference Include="NewLife.Core" Version="10.0.2022.1001" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="PinYinConverterCore" Version="1.0.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.1" />
-=======
-    <PackageReference Include="NewLife.Core" Version="9.0.2022.101" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="PinYinConverterCore" Version="1.0.2" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
->>>>>>> ae6ede6fa215b541779198620dc477049eff7172
   </ItemGroup>
 
   <ItemGroup>

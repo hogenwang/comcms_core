@@ -5,11 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
     <PackageReference Include="NewLife.XCode" Version="11.3.2022.1001" />
-=======
-    <PackageReference Include="NewLife.XCode" Version="11.0.2022.101" />
->>>>>>> ae6ede6fa215b541779198620dc477049eff7172
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
