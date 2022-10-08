@@ -1,11 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-<<<<<<< HEAD
 VisualStudioVersion = 17.3.32922.545
-=======
-VisualStudioVersion = 17.0.32014.148
->>>>>>> ae6ede6fa215b541779198620dc477049eff7172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "COMCMS.Web", "COMCMS.Web\COMCMS.Web.csproj", "{BEE79494-B5B8-49D0-8040-818AE601C800}"
 EndProject
@@ -19,11 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.Core", "Lib.Core\Lib.Co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewLife.UserGroup.WebUploader", "NewLife.UserGroup.WebUploader\NewLife.UserGroup.WebUploader.csproj", "{F8D6AE11-1436-44CA-BDD9-4AFD7B489DD0}"
 EndProject
-<<<<<<< HEAD
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XCoder", "XCoder\XCoder.csproj", "{86B0BF33-E564-4B8F-A1A7-54C079B38457}"
-=======
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XCoder", "XCoder\XCoder.csproj", "{F8095FB4-08DC-4DEF-9882-54850706DBC4}"
->>>>>>> ae6ede6fa215b541779198620dc477049eff7172
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,17 +47,10 @@ Global
 		{F8D6AE11-1436-44CA-BDD9-4AFD7B489DD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8D6AE11-1436-44CA-BDD9-4AFD7B489DD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8D6AE11-1436-44CA-BDD9-4AFD7B489DD0}.Release|Any CPU.Build.0 = Release|Any CPU
-<<<<<<< HEAD
 		{86B0BF33-E564-4B8F-A1A7-54C079B38457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{86B0BF33-E564-4B8F-A1A7-54C079B38457}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86B0BF33-E564-4B8F-A1A7-54C079B38457}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86B0BF33-E564-4B8F-A1A7-54C079B38457}.Release|Any CPU.Build.0 = Release|Any CPU
-=======
-		{F8095FB4-08DC-4DEF-9882-54850706DBC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F8095FB4-08DC-4DEF-9882-54850706DBC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F8095FB4-08DC-4DEF-9882-54850706DBC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F8095FB4-08DC-4DEF-9882-54850706DBC4}.Release|Any CPU.Build.0 = Release|Any CPU
->>>>>>> ae6ede6fa215b541779198620dc477049eff7172
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

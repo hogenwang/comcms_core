@@ -5,15 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
     <PackageReference Include="NewLife.Core" Version="10.0.2022.1001" />
     <PackageReference Include="Senparc.Weixin" Version="6.15.5" />
     <PackageReference Include="Senparc.Weixin.MP" Version="16.18.7" />
-=======
-    <PackageReference Include="NewLife.Core" Version="9.0.2022.101" />
-    <PackageReference Include="Senparc.Weixin" Version="6.14.0" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.17.3" />
->>>>>>> ae6ede6fa215b541779198620dc477049eff7172
   </ItemGroup>
 
   <ItemGroup>
