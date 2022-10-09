@@ -41,6 +41,51 @@ namespace COMCMS.Web.Controllers
             }
             if (page < 1) page = 1;
 
+            //判断是否是限制了IP地址
+            if (!string.IsNullOrEmpty(model.AllowIp) && !Admin.IsAdminLogin()) //2019-04-16 增加如果超级管理员登录。不判断
+            {
+                long myIP = Utils.GetLongIP(Utils.GetIP());
+
+                string[] strRows = model.AllowIp.Split(new string[] { "\n" }, StringSplitOptions.None);
+                if (strRows != null && strRows.Length > 0)
+                {
+                    bool isAddressOK = false;
+                    foreach (var row in strRows)
+                    {
+                        if (!string.IsNullOrEmpty(row))
+                        {
+                            if (row.IndexOf("-") > -1)
+                            {
+                                string[] arrIps = row.Split(new string[] { "-" }, StringSplitOptions.None);
+                                if (arrIps != null && arrIps.Length == 2)
+                                {
+                                    long ip1 = Utils.GetLongIP(arrIps[0]);
+                                    long ip2 = Utils.GetLongIP(arrIps[1]);
+                                    if (ip1 <= myIP && myIP <= ip2)
+                                    {
+                                        isAddressOK = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                long iplong = Utils.GetLongIP(row);
+                                if (myIP == iplong)
+                                {
+                                    isAddressOK = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (!isAddressOK)
+                    {
+                        return EchoTip("您的IP不在允许范围内！");
+                    }
+                }
+            }
+
             if (model.IsList == 1)
             {
                 IList<Article> list = new List<Article>();
@@ -117,6 +162,50 @@ namespace COMCMS.Web.Controllers
             if (kind == null)
             {
                 return AlertAndGoBack("系统找不到本文章栏目！");
+            }
+            //判断是否是限制了IP地址
+            if (!string.IsNullOrEmpty(kind.AllowIp) && !Admin.IsAdminLogin()) //2019-04-16 增加如果超级管理员登录。不判断
+            {
+                long myIP = Utils.GetLongIP(Utils.GetIP());
+
+                string[] strRows = kind.AllowIp.Split(new string[] { "\n" }, StringSplitOptions.None);
+                if (strRows != null && strRows.Length > 0)
+                {
+                    bool isAddressOK = false;
+                    foreach (var row in strRows)
+                    {
+                        if (!string.IsNullOrEmpty(row))
+                        {
+                            if (row.IndexOf("-") > -1)
+                            {
+                                string[] arrIps = row.Split(new string[] { "-" }, StringSplitOptions.None);
+                                if (arrIps != null && arrIps.Length == 2)
+                                {
+                                    long ip1 = Utils.GetLongIP(arrIps[0]);
+                                    long ip2 = Utils.GetLongIP(arrIps[1]);
+                                    if (ip1 <= myIP && myIP <= ip2)
+                                    {
+                                        isAddressOK = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                long iplong = Utils.GetLongIP(row);
+                                if (myIP == iplong)
+                                {
+                                    isAddressOK = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (!isAddressOK)
+                    {
+                        return EchoTip("您的IP不在允许范围内！");
+                    }
+                }
             }
             //增加点击
             entity.Hits++;

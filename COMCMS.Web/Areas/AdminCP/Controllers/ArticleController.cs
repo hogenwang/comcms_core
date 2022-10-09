@@ -95,6 +95,56 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "栏目路径不可用，请重新填写！";
                 return Json(tip);
             }
+            //判断过滤IP地址
+            if (!string.IsNullOrEmpty(model.AllowIp))
+            {
+                string[] strRows = model.AllowIp.Split(new string[] { "\n" }, StringSplitOptions.None);
+                if (strRows != null && strRows.Length > 0)
+                {
+                    foreach (var row in strRows)
+                    {
+                        if (!string.IsNullOrEmpty(row))
+                        {
+                            if (row.IndexOf("-") > -1)
+                            {
+                                string[] arrIps = row.Split(new string[] { "-" }, StringSplitOptions.None);
+                                if (arrIps != null && arrIps.Length > 0)
+                                {
+                                    if (arrIps.Length != 2)
+                                    {
+                                        tip.Message = "每一行只能有一个“-”，如果需要限制多个ip段，请换行再输入！";
+                                        return Json(tip);
+                                    }
+                                    //判断ip是否符合规则
+                                    foreach (var ip in arrIps)
+                                    {
+                                        if (!Utils.IsIP(ip))
+                                        {
+                                            tip.Message = "您输入的IP地址有误：" + ip;
+                                            return Json(tip);
+                                        }
+                                    }
+                                    long ip1 = Utils.GetLongIP(arrIps[0]);
+                                    long ip2 = Utils.GetLongIP(arrIps[1]);
+                                    if (ip1 > ip2)
+                                    {
+                                        tip.Message = "您输入的IP地址段有误，请按小到大输入";
+                                        return Json(tip);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!Utils.IsIP(row))
+                                {
+                                    tip.Message = "您输入的IP地址有误：" + row;
+                                    return Json(tip);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             model.Insert();
             Core.Admin.WriteLogActions("添加文章栏目(id:" + model.Id + ");");
@@ -237,6 +287,61 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.Pic = model.Pic;
             entity.FilePath = model.FilePath;
 
+            //判断过滤IP地址
+            if (!string.IsNullOrEmpty(model.AllowIp))
+            {
+                string[] strRows = model.AllowIp.Split(new string[] { "\n" }, StringSplitOptions.None);
+                if (strRows != null && strRows.Length > 0)
+                {
+                    foreach (var row in strRows)
+                    {
+                        if (!string.IsNullOrEmpty(row))
+                        {
+                            if (row.IndexOf("-") > -1)
+                            {
+                                string[] arrIps = row.Split(new string[] { "-" }, StringSplitOptions.None);
+                                if (arrIps != null && arrIps.Length > 0)
+                                {
+                                    if (arrIps.Length != 2)
+                                    {
+                                        tip.Message = "每一行只能有一个“-”，如果需要限制多个ip段，请换行再输入！";
+                                        return Json(tip);
+                                    }
+                                    //判断ip是否符合规则
+                                    foreach (var ip in arrIps)
+                                    {
+                                        if (!Utils.IsIP(ip))
+                                        {
+                                            tip.Message = "您输入的IP地址有误1：" + ip;
+                                            return Json(tip);
+                                        }
+                                    }
+                                    long ip1 = Utils.GetLongIP(arrIps[0]);
+                                    long ip2 = Utils.GetLongIP(arrIps[1]);
+                                    if (ip1 > ip2)
+                                    {
+                                        tip.Message = "您输入的IP地址段有误，请按小到大输入";
+                                        return Json(tip);
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (!Utils.IsIP(row))
+                                {
+                                    tip.Message = "您输入的IP地址有误2：" + row;
+                                    return Json(tip);
+                                }
+                            }
+                        }
+                    }
+                }
+                entity.AllowIp = model.AllowIp;
+            }
+            else
+            {
+                entity.AllowIp = "";
+            }
 
             entity.Save();
             //修改所有文章的路径

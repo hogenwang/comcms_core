@@ -273,6 +273,14 @@ namespace COMCMS.Core
         [DataObjectField(false, false, true, 100)]
         [BindColumn("FilePath", "目录路径", "")]
         public String FilePath { get => _FilePath; set { if (OnPropertyChanging("FilePath", value)) { _FilePath = value; OnPropertyChanged("FilePath"); } } }
+
+        private String _AllowIp;
+        /// <summary>IP地址限制。每一行一条记录，可以用“-”分割</summary>
+        [DisplayName("IP地址限制")]
+        [Description("IP地址限制。每一行一条记录，可以用“-”分割")]
+        [DataObjectField(false, false, true, -1)]
+        [BindColumn("AllowIp", "IP地址限制。每一行一条记录，可以用“-”分割", "")]
+        public String AllowIp { get => _AllowIp; set { if (OnPropertyChanging("AllowIp", value)) { _AllowIp = value; OnPropertyChanged("AllowIp"); } } }
         #endregion
 
         #region 获取/设置 字段值
@@ -317,6 +325,7 @@ namespace COMCMS.Core
                     case "Pic": return _Pic;
                     case "AdsId": return _AdsId;
                     case "FilePath": return _FilePath;
+                    case "AllowIp": return _AllowIp;
                     default: return base[name];
                 }
             }
@@ -356,6 +365,7 @@ namespace COMCMS.Core
                     case "Pic": _Pic = Convert.ToString(value); break;
                     case "AdsId": _AdsId = value.ToInt(); break;
                     case "FilePath": _FilePath = Convert.ToString(value); break;
+                    case "AllowIp": _AllowIp = Convert.ToString(value); break;
                     default: base[name] = value; break;
                 }
             }
@@ -462,6 +472,9 @@ namespace COMCMS.Core
             /// <summary>目录路径</summary>
             public static readonly Field FilePath = FindByName("FilePath");
 
+            /// <summary>IP地址限制。每一行一条记录，可以用“-”分割</summary>
+            public static readonly Field AllowIp = FindByName("AllowIp");
+
             static Field FindByName(String name) => Meta.Table.FindByName(name);
         }
 
@@ -563,6 +576,9 @@ namespace COMCMS.Core
 
             /// <summary>目录路径</summary>
             public const String FilePath = "FilePath";
+
+            /// <summary>IP地址限制。每一行一条记录，可以用“-”分割</summary>
+            public const String AllowIp = "AllowIp";
         }
         #endregion
     }

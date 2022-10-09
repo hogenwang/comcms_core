@@ -12,11 +12,7 @@
 
     // 加载模型文件，得到数据表
     var option = new BuilderOption();
-<<<<<<< HEAD
-    var tables = ClassBuilder.LoadModels("data.project.xml", option, out var atts);
-=======
     var tables = ClassBuilder.LoadModels("comcmsdata.xml", option, out var atts);
->>>>>>> ae6ede6fa215b541779198620dc477049eff7172
     EntityBuilder.FixModelFile(null, option, atts, tables);
 
 
