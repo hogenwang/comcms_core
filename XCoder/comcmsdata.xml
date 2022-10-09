@@ -208,6 +208,7 @@
       <Column Name="Pic" DataType="String" Length="250" Description="图片" />
       <Column Name="AdsId" DataType="Int32" Description="广告ID" />
       <Column Name="FilePath" DataType="String" Length="100" Description="目录路径" />
+      <Column Name="AllowIp" DataType="String" Length="-1" Description="IP地址限制。每一行一条记录，可以用“-”分割" />
     </Columns>
   </Table>
   <Table Name="Article" Description="文章" DbType="SqlServer">

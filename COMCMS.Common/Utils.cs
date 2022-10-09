@@ -1081,6 +1081,26 @@ namespace COMCMS.Common
             return osPlatform;
         }
 
+        /// <summary>
+        /// IP转换成为long的地址
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        public static long GetLongIP(string ip)
+        {
+            if (!IsIP(ip))
+            {
+                return 0;
+            }
+            string[] s = ip.Split('.');
+            long l0 = long.Parse(s[0]) << 24;
+            long l1 = long.Parse(s[1]) << 16;
+            long l2 = long.Parse(s[2]) << 8;
+            long l3 = long.Parse(s[3]);
+
+            return l0 + l1 + l2 + l3;
+        }
+
         #endregion
 
         #region 处理部分

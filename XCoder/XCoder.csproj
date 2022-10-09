@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="comcms\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Entity\Membership\*.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Model.log">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
