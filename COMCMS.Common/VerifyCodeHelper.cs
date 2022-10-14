@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Text;
 using NewLife.Log;
+using SkiaSharp;
 
 namespace COMCMS.Common
 {
@@ -156,108 +157,162 @@ namespace COMCMS.Common
         #endregion
 
         #region 验证码图片
+        ///// <summary>
+        ///// 验证码图片 => Bitmap
+        ///// </summary>
+        ///// <param name="verifyCode">验证码</param>
+        ///// <param name="width">宽</param>
+        ///// <param name="height">高</param>
+        ///// <returns>Bitmap</returns>
+        //public Bitmap CreateBitmapByImgVerifyCode(string verifyCode, int width, int height)
+        //{
+        //    Font font = new Font("Arial", 14, (FontStyle.Bold | FontStyle.Italic));
+        //    Brush brush;
+        //    Bitmap bitmap = new Bitmap(width, height);
+        //    Graphics g = Graphics.FromImage(bitmap);
+        //    SizeF totalSizeF = g.MeasureString(verifyCode, font);
+        //    SizeF curCharSizeF;
+        //    PointF startPointF = new PointF(0, (height - totalSizeF.Height) / 2);
+        //    Random random = new Random(); //随机数产生器
+        //    g.Clear(Color.White); //清空图片背景色  
+        //    for (int i = 0; i < verifyCode.Length; i++)
+        //    {
+        //        brush = new LinearGradientBrush(new Point(0, 0), new Point(1, 1), Color.FromArgb(random.Next(255), random.Next(255), random.Next(255)), Color.FromArgb(random.Next(255), random.Next(255), random.Next(255)));
+        //        g.DrawString(verifyCode[i].ToString(), font, brush, startPointF);
+        //        curCharSizeF = g.MeasureString(verifyCode[i].ToString(), font);
+        //        startPointF.X += curCharSizeF.Width;
+        //    }
+
+        //    //画图片的干扰线  
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        int x1 = random.Next(bitmap.Width);
+        //        int x2 = random.Next(bitmap.Width);
+        //        int y1 = random.Next(bitmap.Height);
+        //        int y2 = random.Next(bitmap.Height);
+        //        g.DrawLine(new Pen(Color.Silver), x1, y1, x2, y2);
+        //    }
+
+        //    //画图片的前景干扰点  
+        //    for (int i = 0; i < 100; i++)
+        //    {
+        //        int x = random.Next(bitmap.Width);
+        //        int y = random.Next(bitmap.Height);
+        //        bitmap.SetPixel(x, y, Color.FromArgb(random.Next()));
+        //    }
+
+        //    g.DrawRectangle(new Pen(Color.Silver), 0, 0, bitmap.Width - 1, bitmap.Height - 1); //画图片的边框线  
+        //    g.Dispose();
+        //    return bitmap;
+        //}
+
+        ///// <summary>
+        ///// 验证码图片 => byte[]
+        ///// </summary>
+        ///// <param name="verifyCode">验证码</param>
+        ///// <param name="width">宽</param>
+        ///// <param name="height">高</param>
+        ///// <returns>byte[]</returns>
+        //public byte[] CreateByteByImgVerifyCode(string verifyCode, int width, int height)
+        //{
+        //    Font font = new Font("Arial", 14, (FontStyle.Bold | FontStyle.Italic));
+        //    Brush brush;
+        //    Bitmap bitmap = new Bitmap(width, height);
+        //    Graphics g = Graphics.FromImage(bitmap);
+        //    SizeF totalSizeF = g.MeasureString(verifyCode, font);
+        //    SizeF curCharSizeF;
+        //    PointF startPointF = new PointF(0, (height - totalSizeF.Height) / 2);
+        //    Random random = new Random(); //随机数产生器
+        //    g.Clear(Color.White); //清空图片背景色  
+        //    for (int i = 0; i < verifyCode.Length; i++)
+        //    {
+        //        brush = new LinearGradientBrush(new Point(0, 0), new Point(1, 1), Color.FromArgb(random.Next(255), random.Next(255), random.Next(255)), Color.FromArgb(random.Next(255), random.Next(255), random.Next(255)));
+        //        g.DrawString(verifyCode[i].ToString(), font, brush, startPointF);
+        //        curCharSizeF = g.MeasureString(verifyCode[i].ToString(), font);
+        //        startPointF.X += curCharSizeF.Width;
+        //    }
+
+        //    //画图片的干扰线  
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        int x1 = random.Next(bitmap.Width);
+        //        int x2 = random.Next(bitmap.Width);
+        //        int y1 = random.Next(bitmap.Height);
+        //        int y2 = random.Next(bitmap.Height);
+        //        g.DrawLine(new Pen(Color.Silver), x1, y1, x2, y2);
+        //    }
+
+        //    //画图片的前景干扰点  
+        //    for (int i = 0; i < 100; i++)
+        //    {
+        //        int x = random.Next(bitmap.Width);
+        //        int y = random.Next(bitmap.Height);
+        //        bitmap.SetPixel(x, y, Color.FromArgb(random.Next()));
+        //    }
+
+        //    g.DrawRectangle(new Pen(Color.Silver), 0, 0, bitmap.Width - 1, bitmap.Height - 1); //画图片的边框线  
+        //    g.Dispose();
+
+        //    //保存图片数据  
+        //    MemoryStream stream = new MemoryStream();
+        //    bitmap.Save(stream, ImageFormat.Jpeg);
+        //    //输出图片流  
+        //    return stream.ToArray();
+
+        //}
+        #endregion
+
+        #region 图片验证码
         /// <summary>
-        /// 验证码图片 => Bitmap
+        /// 
         /// </summary>
-        /// <param name="verifyCode">验证码</param>
-        /// <param name="width">宽</param>
-        /// <param name="height">高</param>
-        /// <returns>Bitmap</returns>
-        public Bitmap CreateBitmapByImgVerifyCode(string verifyCode, int width, int height)
+        /// <param name="text"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public byte[] GetVerifyCode(string text, int width, int height)
         {
-            Font font = new Font("Arial", 14, (FontStyle.Bold | FontStyle.Italic));
-            Brush brush;
-            Bitmap bitmap = new Bitmap(width, height);
-            Graphics g = Graphics.FromImage(bitmap);
-            SizeF totalSizeF = g.MeasureString(verifyCode, font);
-            SizeF curCharSizeF;
-            PointF startPointF = new PointF(0, (height - totalSizeF.Height) / 2);
-            Random random = new Random(); //随机数产生器
-            g.Clear(Color.White); //清空图片背景色  
-            for (int i = 0; i < verifyCode.Length; i++)
+
+            Random random = new();
+
+            //创建bitmap位图
+            using SKBitmap image = new(width, height, SKColorType.Bgra8888, SKAlphaType.Premul);
+            //创建画笔
+            using SKCanvas canvas = new(image);
+            //填充背景颜色为白色
+            canvas.DrawColor(SKColors.White);
+
+            //画图片的背景噪音线
+            for (int i = 0; i < (width * height * 0.015); i++)
             {
-                brush = new LinearGradientBrush(new Point(0, 0), new Point(1, 1), Color.FromArgb(random.Next(255), random.Next(255), random.Next(255)), Color.FromArgb(random.Next(255), random.Next(255), random.Next(255)));
-                g.DrawString(verifyCode[i].ToString(), font, brush, startPointF);
-                curCharSizeF = g.MeasureString(verifyCode[i].ToString(), font);
-                startPointF.X += curCharSizeF.Width;
+                using SKPaint drawStyle = new();
+                drawStyle.Color = new(Convert.ToUInt32(random.Next(Int32.MaxValue)));
+
+                canvas.DrawLine(random.Next(0, width), random.Next(0, height), random.Next(0, width), random.Next(0, height), drawStyle);
             }
 
-            //画图片的干扰线  
-            for (int i = 0; i < 10; i++)
+            //将文字写到画布上
+            using (SKPaint drawStyle = new())
             {
-                int x1 = random.Next(bitmap.Width);
-                int x2 = random.Next(bitmap.Width);
-                int y1 = random.Next(bitmap.Height);
-                int y2 = random.Next(bitmap.Height);
-                g.DrawLine(new Pen(Color.Silver), x1, y1, x2, y2);
+                drawStyle.Color = SKColors.Red;
+                drawStyle.TextSize = height;
+                drawStyle.StrokeWidth = 1;
+
+                float emHeight = height - (float)height * (float)0.14;
+                float emWidth = ((float)width / text.Length) - ((float)width * (float)0.13);
+
+                canvas.DrawText(text, emWidth, emHeight, drawStyle);
             }
 
-            //画图片的前景干扰点  
-            for (int i = 0; i < 100; i++)
+            //画图片的前景噪音点
+            for (int i = 0; i < (width * height * 0.6); i++)
             {
-                int x = random.Next(bitmap.Width);
-                int y = random.Next(bitmap.Height);
-                bitmap.SetPixel(x, y, Color.FromArgb(random.Next()));
+                image.SetPixel(random.Next(0, width), random.Next(0, height), new SKColor(Convert.ToUInt32(random.Next(Int32.MaxValue))));
             }
 
-            g.DrawRectangle(new Pen(Color.Silver), 0, 0, bitmap.Width - 1, bitmap.Height - 1); //画图片的边框线  
-            g.Dispose();
-            return bitmap;
-        }
-
-        /// <summary>
-        /// 验证码图片 => byte[]
-        /// </summary>
-        /// <param name="verifyCode">验证码</param>
-        /// <param name="width">宽</param>
-        /// <param name="height">高</param>
-        /// <returns>byte[]</returns>
-        public byte[] CreateByteByImgVerifyCode(string verifyCode, int width, int height)
-        {
-            Font font = new Font("Arial", 14, (FontStyle.Bold | FontStyle.Italic));
-            Brush brush;
-            Bitmap bitmap = new Bitmap(width, height);
-            Graphics g = Graphics.FromImage(bitmap);
-            SizeF totalSizeF = g.MeasureString(verifyCode, font);
-            SizeF curCharSizeF;
-            PointF startPointF = new PointF(0, (height - totalSizeF.Height) / 2);
-            Random random = new Random(); //随机数产生器
-            g.Clear(Color.White); //清空图片背景色  
-            for (int i = 0; i < verifyCode.Length; i++)
-            {
-                brush = new LinearGradientBrush(new Point(0, 0), new Point(1, 1), Color.FromArgb(random.Next(255), random.Next(255), random.Next(255)), Color.FromArgb(random.Next(255), random.Next(255), random.Next(255)));
-                g.DrawString(verifyCode[i].ToString(), font, brush, startPointF);
-                curCharSizeF = g.MeasureString(verifyCode[i].ToString(), font);
-                startPointF.X += curCharSizeF.Width;
-            }
-
-            //画图片的干扰线  
-            for (int i = 0; i < 10; i++)
-            {
-                int x1 = random.Next(bitmap.Width);
-                int x2 = random.Next(bitmap.Width);
-                int y1 = random.Next(bitmap.Height);
-                int y2 = random.Next(bitmap.Height);
-                g.DrawLine(new Pen(Color.Silver), x1, y1, x2, y2);
-            }
-
-            //画图片的前景干扰点  
-            for (int i = 0; i < 100; i++)
-            {
-                int x = random.Next(bitmap.Width);
-                int y = random.Next(bitmap.Height);
-                bitmap.SetPixel(x, y, Color.FromArgb(random.Next()));
-            }
-
-            g.DrawRectangle(new Pen(Color.Silver), 0, 0, bitmap.Width - 1, bitmap.Height - 1); //画图片的边框线  
-            g.Dispose();
-
-            //保存图片数据  
-            MemoryStream stream = new MemoryStream();
-            bitmap.Save(stream, ImageFormat.Jpeg);
-            //输出图片流  
-            return stream.ToArray();
-
+            using var img = SKImage.FromBitmap(image);
+            using SKData p = img.Encode(SKEncodedImageFormat.Png, 100);
+            return p.ToArray();
         }
         #endregion
 

@@ -21,7 +21,7 @@ namespace COMCMS.Web.Controllers
             string code = VerifyCodeHelper.GetSingleObj().CreateVerifyCode(VerifyCodeHelper.VerifyCodeType.NumberVerifyCode);
             //写入Session
             SessionHelper.WriteSession(VerifyCodeHelper.GetSingleObj().SESSION_KEY, code);
-            byte[] codeImage = VerifyCodeHelper.GetSingleObj().CreateByteByImgVerifyCode(code, 100, 32);
+            byte[] codeImage = VerifyCodeHelper.GetSingleObj().GetVerifyCode(code, 120, 32);
             return File(codeImage, @"image/jpeg");
         }
 
@@ -34,10 +34,10 @@ namespace COMCMS.Web.Controllers
             string code = VerifyCodeHelper.GetSingleObj().CreateVerifyCode(VerifyCodeHelper.VerifyCodeType.AbcVerifyCode);
             //写入Session
             SessionHelper.WriteSession(VerifyCodeHelper.GetSingleObj().SESSION_KEY, code);
-            var bitmap = VerifyCodeHelper.GetSingleObj().CreateBitmapByImgVerifyCode(code, 100, 32);
-            MemoryStream stream = new MemoryStream();
-            bitmap.Save(stream, ImageFormat.Png);
-            return File(stream.ToArray(), "image/png");
+            var bitmap = VerifyCodeHelper.GetSingleObj().GetVerifyCode(code, 120, 32);
+            //MemoryStream stream = new MemoryStream();
+            //bitmap.Save(stream, ImageFormat.Png);
+            return File(bitmap, "image/png");
         }
 
         /// <summary>
@@ -48,10 +48,10 @@ namespace COMCMS.Web.Controllers
         {
             string code = VerifyCodeHelper.GetSingleObj().CreateVerifyCode(VerifyCodeHelper.VerifyCodeType.MixVerifyCode);
             SessionHelper.WriteSession(VerifyCodeHelper.GetSingleObj().SESSION_KEY, code);
-            var bitmap = VerifyCodeHelper.GetSingleObj().CreateBitmapByImgVerifyCode(code, 100, 32);
-            MemoryStream stream = new MemoryStream();
-            bitmap.Save(stream, ImageFormat.Gif);
-            return File(stream.ToArray(), "image/gif");
+            var bitmap = VerifyCodeHelper.GetSingleObj().GetVerifyCode(code, 120, 32);
+            //MemoryStream stream = new MemoryStream();
+            //bitmap.Save(stream, ImageFormat.Gif);
+            return File(bitmap, "image/gif");
         }
     }
 }
