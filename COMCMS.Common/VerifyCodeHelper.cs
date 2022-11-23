@@ -8,6 +8,8 @@ using System.IO;
 using System.Text;
 using NewLife.Log;
 using SkiaSharp;
+using NewLife.Security;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace COMCMS.Common
 {
@@ -290,25 +292,44 @@ namespace COMCMS.Common
 
                 canvas.DrawLine(random.Next(0, width), random.Next(0, height), random.Next(0, width), random.Next(0, height), drawStyle);
             }
+            // 在图片上写验证码
+            SKPaint textPaint = new SKPaint
+            {
+                IsAntialias = true,
+                TextAlign = SKTextAlign.Left,
+                Shader = SKShader.CreateLinearGradient(new SKPoint(0, 0), new SKPoint(width, height), new SKColor[] { SKColors.Blue, SKColors.DarkRed }, SKShaderTileMode.Clamp),
+                TextSize = 22
+            };
+            canvas.DrawText(text, 4, 24, textPaint);
 
             //将文字写到画布上
-            using (SKPaint drawStyle = new())
+            //using (SKPaint drawStyle = new())
+            //{
+            //    drawStyle.Color = SKColors.Red;
+            //    drawStyle.TextSize = height;
+            //    drawStyle.StrokeWidth = 1;
+
+            //    float emHeight = height - (float)height * (float)0.14;
+            //    float emWidth = ((float)width / text.Length) - ((float)width * (float)0.13);
+
+            //    canvas.DrawText(text, emWidth, emHeight, drawStyle);
+            //}
+            for (int i = 0; i < 5; i++)
             {
-                drawStyle.Color = SKColors.Red;
-                drawStyle.TextSize = height;
-                drawStyle.StrokeWidth = 1;
+                canvas.DrawLine(new SKPoint(random.Next(width), random.Next(height)), new SKPoint(random.Next(width), random.Next(height)), new SKPaint() { Color = SKColor.FromHsv(random.Next(0, 256), random.Next(0, 256), random.Next(0, 256)) });
+            }
 
-                float emHeight = height - (float)height * (float)0.14;
-                float emWidth = ((float)width / text.Length) - ((float)width * (float)0.13);
-
-                canvas.DrawText(text, emWidth, emHeight, drawStyle);
+            // 在图片上随机画100个随机颜色点
+            for (int i = 0; i < 100; i++)
+            {
+                canvas.DrawPoint(new SKPoint(random.Next(width), random.Next(height)), SKColor.FromHsv(random.Next(0, 256), random.Next(0, 256), random.Next(0, 256)));
             }
 
             //画图片的前景噪音点
-            for (int i = 0; i < (width * height * 0.6); i++)
-            {
-                image.SetPixel(random.Next(0, width), random.Next(0, height), new SKColor(Convert.ToUInt32(random.Next(Int32.MaxValue))));
-            }
+            //for (int i = 0; i < (width * height * 0.6); i++)
+            //{
+            //    image.SetPixel(random.Next(0, width), random.Next(0, height), new SKColor(Convert.ToUInt32(random.Next(Int32.MaxValue))));
+            //}
 
             using var img = SKImage.FromBitmap(image);
             using SKData p = img.Encode(SKEncodedImageFormat.Png, 100);
@@ -335,13 +356,12 @@ namespace COMCMS.Common
                 vc = Utils.MemoryCahce.Get<string>("code_" + code);// ic.Get<string>("code_" + code);
                 //XTrace.WriteLine($"从缓存中获取验证码：code_{code}:{vc}");
             }
-
             if (!string.IsNullOrEmpty(vc) && !string.IsNullOrEmpty(code))
             {
                 if (vc.ToUpper() == code.ToUpper())
                     return true;
             }
-            
+
 
             return false;
         }
