@@ -17,6 +17,7 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using NewLife.UserGroup.WebUploader;
+using SkiaSharp;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -81,7 +82,11 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 return Json(errorJson);
                 //return Content(string.Format(tpl, "", callback, "请上传一张图片！"), "text/html");
             }
-
+            if (!Utils.IsImgFilename(upload.FileName))
+            {
+                errorJson.error.message = "请选择一张图片!";
+                return Json(errorJson);
+            }
             var data = Request.Form.Files["upload"];
             string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
             string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
@@ -155,15 +160,15 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                             string copyfullpath = fullpath.Replace(sFullExtension, "_copy" + sFullExtension);
                             System.IO.File.Copy(fullpath, copyfullpath);
 
-                            Image waterpic = new Bitmap(watermarkimg);
-                            Image srcPic = new Bitmap(copyfullpath);
+                            var waterpic = SKBitmap.Decode(watermarkimg);
+                            var srcPic = SKBitmap.Decode(copyfullpath);
                             if (waterpic.Width < srcPic.Width && waterpic.Height < srcPic.Height)
                             {
                                 waterpic.Dispose();
                                 //srcPic.Dispose();
                                 try
                                 {
-                                    WatermarkHelper.AddImageSignPic(srcPic, fullpath, watermarkimg, attach.WaterMarkPlace, attach.WaterMarkQty, attach.WaterMarkDiaphaneity);
+                                    WatermarkHelper.AddImageSignPic(copyfullpath, fullpath, watermarkimg, attach.WaterMarkPlace, attach.WaterMarkQty, attach.WaterMarkDiaphaneity);
                                     srcPic.Dispose();
                                     System.IO.File.Delete(copyfullpath);
                                 }
@@ -318,15 +323,15 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                             string copyfullpath = fullpath.Replace(sFullExtension, "_copy" + sFullExtension);
                             System.IO.File.Copy(fullpath, copyfullpath);
 
-                            Image waterpic = new Bitmap(watermarkimg);
-                            Image srcPic = new Bitmap(copyfullpath);
+                            var waterpic = SKBitmap.Decode(watermarkimg);
+                            var srcPic = SKBitmap.Decode(copyfullpath);
                             if (waterpic.Width < srcPic.Width && waterpic.Height < srcPic.Height)
                             {
                                 waterpic.Dispose();
                                 //srcPic.Dispose();
                                 try
                                 {
-                                    WatermarkHelper.AddImageSignPic(srcPic, fullpath, watermarkimg, attach.WaterMarkPlace, attach.WaterMarkQty, attach.WaterMarkDiaphaneity);
+                                    WatermarkHelper.AddImageSignPic(copyfullpath, fullpath, watermarkimg, attach.WaterMarkPlace, attach.WaterMarkQty, attach.WaterMarkDiaphaneity);
                                     srcPic.Dispose();
                                     System.IO.File.Delete(copyfullpath);
                                 }
@@ -383,161 +388,161 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         //    }
         //}
 
-        #region 二进制上传图片
-        /// <summary>
-        /// 二进制上传图片（未实现）
-        /// </summary>
-        /// <returns></returns>
-        public IActionResult DoWebuploaderImageByBinary()
-        {
-            var fileinfo = "";
-            var msg = "上传失败!";
-            var status = 0;
-            var name = "";
-            var path = "";
-            var thumb = "";
-            var size = "";
-            var ext = "";
-            try
-            {
-                string upname = Request.Query["name"];
-                //判断是否是允许文件扩展名
-                string sAllowedExtensions = _attachsetting.ImageAllowedExtensions;
-                List<string> listAllowedExtensions = new List<string>();
-                string[] arrAllowedExtensions = sAllowedExtensions.Split(new string[] { "," }, StringSplitOptions.None);
+        //#region 二进制上传图片
+        ///// <summary>
+        ///// 二进制上传图片（未实现）
+        ///// </summary>
+        ///// <returns></returns>
+        //public IActionResult DoWebuploaderImageByBinary()
+        //{
+        //    var fileinfo = "";
+        //    var msg = "上传失败!";
+        //    var status = 0;
+        //    var name = "";
+        //    var path = "";
+        //    var thumb = "";
+        //    var size = "";
+        //    var ext = "";
+        //    try
+        //    {
+        //        string upname = Request.Query["name"];
+        //        //判断是否是允许文件扩展名
+        //        string sAllowedExtensions = _attachsetting.ImageAllowedExtensions;
+        //        List<string> listAllowedExtensions = new List<string>();
+        //        string[] arrAllowedExtensions = sAllowedExtensions.Split(new string[] { "," }, StringSplitOptions.None);
 
-                string sFileNameNoExt = Utils.GetFileNameWithoutExtension(upname);//文件名字，不带扩展名
-                string sFullExtension = Utils.GetFileExtName(upname);//扩展名
+        //        string sFileNameNoExt = Utils.GetFileNameWithoutExtension(upname);//文件名字，不带扩展名
+        //        string sFullExtension = Utils.GetFileExtName(upname);//扩展名
 
-                if (arrAllowedExtensions != null && arrAllowedExtensions.Length > 0)
-                {
-                    foreach (var s in arrAllowedExtensions)
-                    {
-                        listAllowedExtensions.Add(s);
-                    }
-                }
-                if (listAllowedExtensions.Find(x => x == sFullExtension.ToLower().Replace(".", "")) == null)
-                {
-                    return Json(new { status = status, msg = $"{sFullExtension}的文件类型，不允许上传，请上传一张图片！", name = name, path = path, thumb = thumb, size = size, ext = ext });
-                }
-                var req = HttpContext.Request;
-                var f = Request.Form.Files[0];
+        //        if (arrAllowedExtensions != null && arrAllowedExtensions.Length > 0)
+        //        {
+        //            foreach (var s in arrAllowedExtensions)
+        //            {
+        //                listAllowedExtensions.Add(s);
+        //            }
+        //        }
+        //        if (listAllowedExtensions.Find(x => x == sFullExtension.ToLower().Replace(".", "")) == null)
+        //        {
+        //            return Json(new { status = status, msg = $"{sFullExtension}的文件类型，不允许上传，请上传一张图片！", name = name, path = path, thumb = thumb, size = size, ext = ext });
+        //        }
+        //        var req = HttpContext.Request;
+        //        var f = Request.Form.Files[0];
 
-                //Request.EnableRewind();
-                Image image = null;
-                using (StreamReader reader = new StreamReader(req.Body, Encoding.UTF8, true, 1024, true))
-                {
-                    var bytes = ConvertToBinary(reader.BaseStream);
-                    image = ReturnPic(bytes);
-                    size = bytes.Length.ToString();
-                }
+        //        //Request.EnableRewind();
+        //        Image image = null;
+        //        using (StreamReader reader = new StreamReader(req.Body, Encoding.UTF8, true, 1024, true))
+        //        {
+        //            var bytes = ConvertToBinary(reader.BaseStream);
+        //            image = ReturnPic(bytes);
+        //            size = bytes.Length.ToString();
+        //        }
 
-                string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
-                string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
-                //根据附件配置，设置上传图片目录
-                string imgPath = DateTime.Now.Year.ToString();//默认按年
-                switch (attach.SaveType)
-                {
-                    case 1://按月份
-                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
-                        break;
-                    case 2:
-                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
-                        break;
-                }
-                filepath += imgPath;//存放路径
-                thumbsFilePath += imgPath;//缩略图路径
-                //图片名字
-                string imgname = Utils.GetOrderNum() + Utils.GetFileExtName(upname);
-                switch (attach.IsRandomFileName)
-                {
-                    case 0://不随机
-                        imgname = upname;
-                        //判断是否存在
-                        if (System.IO.File.Exists(Path.Combine(filepath, imgname)))
-                        {
-                            imgname = sFileNameNoExt + "(1)" + sFullExtension;
-                        }
-                        break;
-                    case 1://随机字符串
-                        imgname = Utils.GetShortGUId() + sFullExtension;
-                        break;
-                    case 2://时间
-                        imgname = Utils.GetOrderNum() + sFullExtension;
-                        break;
-                }
-                string fullpath = Path.Combine(filepath, imgname);//图片
-                string fullThumbPath = Path.Combine(thumbsFilePath, imgname);//缩略图
+        //        string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
+        //        string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
+        //        //根据附件配置，设置上传图片目录
+        //        string imgPath = DateTime.Now.Year.ToString();//默认按年
+        //        switch (attach.SaveType)
+        //        {
+        //            case 1://按月份
+        //                imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
+        //                break;
+        //            case 2:
+        //                imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
+        //                break;
+        //        }
+        //        filepath += imgPath;//存放路径
+        //        thumbsFilePath += imgPath;//缩略图路径
+        //        //图片名字
+        //        string imgname = Utils.GetOrderNum() + Utils.GetFileExtName(upname);
+        //        switch (attach.IsRandomFileName)
+        //        {
+        //            case 0://不随机
+        //                imgname = upname;
+        //                //判断是否存在
+        //                if (System.IO.File.Exists(Path.Combine(filepath, imgname)))
+        //                {
+        //                    imgname = sFileNameNoExt + "(1)" + sFullExtension;
+        //                }
+        //                break;
+        //            case 1://随机字符串
+        //                imgname = Utils.GetShortGUId() + sFullExtension;
+        //                break;
+        //            case 2://时间
+        //                imgname = Utils.GetOrderNum() + sFullExtension;
+        //                break;
+        //        }
+        //        string fullpath = Path.Combine(filepath, imgname);//图片
+        //        string fullThumbPath = Path.Combine(thumbsFilePath, imgname);//缩略图
 
-                //判断路径
-                if (!Directory.Exists(filepath))
-                    Directory.CreateDirectory(filepath);
-                //缩略图路径
-                if (!Directory.Exists(thumbsFilePath))
-                    Directory.CreateDirectory(thumbsFilePath);
+        //        //判断路径
+        //        if (!Directory.Exists(filepath))
+        //            Directory.CreateDirectory(filepath);
+        //        //缩略图路径
+        //        if (!Directory.Exists(thumbsFilePath))
+        //            Directory.CreateDirectory(thumbsFilePath);
 
-                //保存图片
-                image.Save(filepath);
-                //生成缩略图
-                if (attach.IsCreateThum == 1)
-                {
-                    ThumbnailHelper.MakeThumbnailImage(fullpath, fullThumbPath, attach.ThumMaxWidth, attach.ThumMaxHeight, ThumbnailHelper.CutMode.Cut);
-                }
-                //添加水印
-                if (attach.IsWaterMark == 1 && !string.IsNullOrEmpty(attach.WaterMarkImg))
-                {
-                    string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", Path.DirectorySeparatorChar.ToString());
-                    if (System.IO.File.Exists(watermarkimg))
-                    {
-                        //先复制一张图片出来
-                        string copyfullpath = fullpath.Replace(sFullExtension, "_copy" + sFullExtension);
-                        System.IO.File.Copy(fullpath, copyfullpath);
+        //        //保存图片
+        //        image.Save(filepath);
+        //        //生成缩略图
+        //        if (attach.IsCreateThum == 1)
+        //        {
+        //            ThumbnailHelper.MakeThumbnailImage(fullpath, fullThumbPath, attach.ThumMaxWidth, attach.ThumMaxHeight, ThumbnailHelper.CutMode.Cut);
+        //        }
+        //        //添加水印
+        //        if (attach.IsWaterMark == 1 && !string.IsNullOrEmpty(attach.WaterMarkImg))
+        //        {
+        //            string watermarkimg = _env.WebRootPath + attach.WaterMarkImg.Replace("/", Path.DirectorySeparatorChar.ToString());
+        //            if (System.IO.File.Exists(watermarkimg))
+        //            {
+        //                //先复制一张图片出来
+        //                string copyfullpath = fullpath.Replace(sFullExtension, "_copy" + sFullExtension);
+        //                System.IO.File.Copy(fullpath, copyfullpath);
 
-                        Image waterpic = new Bitmap(watermarkimg);
-                        Image srcPic = new Bitmap(copyfullpath);
-                        if (waterpic.Width < srcPic.Width && waterpic.Height < srcPic.Height)
-                        {
-                            waterpic.Dispose();
-                            //srcPic.Dispose();
-                            try
-                            {
-                                WatermarkHelper.AddImageSignPic(srcPic, fullpath, watermarkimg, attach.WaterMarkPlace, attach.WaterMarkQty, attach.WaterMarkDiaphaneity);
-                                srcPic.Dispose();
-                                System.IO.File.Delete(copyfullpath);
-                            }
-                            catch
-                            {
-                                if (System.IO.File.Exists(copyfullpath))
-                                {
-                                    System.IO.File.Delete(copyfullpath);
-                                }
-                            }
+        //                var waterpic = SKBitmap.Decode(watermarkimg);
+        //                var srcPic = SKBitmap.Decode(copyfullpath);
+        //                if (waterpic.Width < srcPic.Width && waterpic.Height < srcPic.Height)
+        //                {
+        //                    waterpic.Dispose();
+        //                    //srcPic.Dispose();
+        //                    try
+        //                    {
+        //                        WatermarkHelper.AddImageSignPic(copyfullpath, fullpath, watermarkimg, attach.WaterMarkPlace, attach.WaterMarkQty, attach.WaterMarkDiaphaneity);
+        //                        srcPic.Dispose();
+        //                        System.IO.File.Delete(copyfullpath);
+        //                    }
+        //                    catch
+        //                    {
+        //                        if (System.IO.File.Exists(copyfullpath))
+        //                        {
+        //                            System.IO.File.Delete(copyfullpath);
+        //                        }
+        //                    }
 
-                        }
-                        else
-                        {
-                            waterpic.Dispose();
-                            srcPic.Dispose();
-                        }
-                    }
-                }
-                image.Dispose();
-                status = 1;
-                name = imgname;
-                path = $"/{attach.AttachPatch}/images/{imgPath.Replace("\\", "/")}/" + imgname;
-                thumb = $"/{attach.AttachPatch}/_thumbs/images/{imgPath.Replace("\\", "/")}/" + imgname;
-                ext = sFullExtension;
-                fileinfo = $"/{attach.AttachPatch}/images/{imgPath.Replace("\\", "/")}/" + imgname;
-                msg = "上传成功!";
-            }
-            catch (Exception ex)
-            {
-                msg = ex.Message;
-            }
+        //                }
+        //                else
+        //                {
+        //                    waterpic.Dispose();
+        //                    srcPic.Dispose();
+        //                }
+        //            }
+        //        }
+        //        image.Dispose();
+        //        status = 1;
+        //        name = imgname;
+        //        path = $"/{attach.AttachPatch}/images/{imgPath.Replace("\\", "/")}/" + imgname;
+        //        thumb = $"/{attach.AttachPatch}/_thumbs/images/{imgPath.Replace("\\", "/")}/" + imgname;
+        //        ext = sFullExtension;
+        //        fileinfo = $"/{attach.AttachPatch}/images/{imgPath.Replace("\\", "/")}/" + imgname;
+        //        msg = "上传成功!";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        msg = ex.Message;
+        //    }
 
-            return Json(new { status = status, msg = msg, name = name, path = path, thumb = thumb, size = size, ext = ext });
-        }
-        #endregion
+        //    return Json(new { status = status, msg = msg, name = name, path = path, thumb = thumb, size = size, ext = ext });
+        //}
+        //#endregion
 
         /// <summary>
         /// 上传图片
@@ -558,6 +563,11 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 //判断是否是图片类型
                 List<string> imgtypelist = new List<string> { "image/jpg", "image/png", "image/x-png", "image/gif", "image/bmp", "image/jpeg" };
                 if (imgtypelist.FindIndex(x => x == data.ContentType) == -1)
+                {
+                    msg = "只能上传一张图片格式文件！";
+                    return Content(JsonConvert.SerializeObject(new { status = status, msg = msg, name = name, path = path, thumb = thumb, size = size, ext = ext }), "text/plain");
+                }
+                if (!Utils.IsImgFilename(data.FileName))
                 {
                     msg = "只能上传一张图片格式文件！";
                     return Content(JsonConvert.SerializeObject(new { status = status, msg = msg, name = name, path = path, thumb = thumb, size = size, ext = ext }), "text/plain");
@@ -635,15 +645,15 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                                 string copyfullpath = fullpath.Replace(sFullExtension, "_copy" + sFullExtension);
                                 System.IO.File.Copy(fullpath, copyfullpath);
 
-                                Image waterpic = new Bitmap(watermarkimg);
-                                Image srcPic = new Bitmap(copyfullpath);
+                                var waterpic = SKBitmap.Decode(watermarkimg);
+                                var srcPic = SKBitmap.Decode(copyfullpath);
                                 if (waterpic.Width < srcPic.Width && waterpic.Height < srcPic.Height)
                                 {
                                     waterpic.Dispose();
                                     //srcPic.Dispose();
                                     try
                                     {
-                                        WatermarkHelper.AddImageSignPic(srcPic, fullpath, watermarkimg, attach.WaterMarkPlace, attach.WaterMarkQty, attach.WaterMarkDiaphaneity);
+                                        WatermarkHelper.AddImageSignPic(copyfullpath, fullpath, watermarkimg, attach.WaterMarkPlace, attach.WaterMarkQty, attach.WaterMarkDiaphaneity);
                                         srcPic.Dispose();
                                         System.IO.File.Delete(copyfullpath);
                                     }
@@ -839,7 +849,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             var tempDir = "UploadTemp";
             var targetDir = "UploadFile";
 
-            var (res,msg) = tempDir.Merge(targetDir, fileName, md5, chunks);
+            var (res, msg) = tempDir.Merge(targetDir, fileName, md5, chunks);
 
             if (!res)
             {
@@ -849,7 +859,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     Result = false
                 });
             }
-            
+
             return Json(new
             {
                 Data = new { md5 = md5, url = Path.Combine("/", targetDir, fileName) },
@@ -886,7 +896,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             return Json(new
             {
-                Data = fileName!=null && exists ? (object)new { md5 = md5, url = Path.Combine("/", targetDir, fileName) } : null,
+                Data = fileName != null && exists ? (object)new { md5 = md5, url = Path.Combine("/", targetDir, fileName) } : null,
                 Result = exists
             });
         }
@@ -908,12 +918,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         /// </summary>
         /// <param name="streamByte"></param>
         /// <returns></returns>
-        public Image ReturnPic(byte[] streamByte)
-        {
-            MemoryStream ms = new MemoryStream(streamByte);
-            Image img = Image.FromStream(ms);
-            return img;
-        }
+        //public Image ReturnPic(byte[] streamByte)
+        //{
+        //    MemoryStream ms = new MemoryStream(streamByte);
+        //    Image img = Image.FromStream(ms);
+        //    return img;
+        //}
         #endregion
     }
 }
