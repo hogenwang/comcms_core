@@ -15,7 +15,7 @@
     <PackageReference Include="MimeKit" Version="3.4.2" />
     <PackageReference Include="MySql.Data" Version="8.0.31" />
     <PackageReference Include="NewLife.XCode" Version="11.3.2022.1101" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="Senparc.NeuChar" Version="2.1.2" />
     <PackageReference Include="Senparc.Weixin" Version="6.15.7" />
     <PackageReference Include="Senparc.Weixin.MP" Version="16.18.9" />
