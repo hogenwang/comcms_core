@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -23,15 +25,18 @@ namespace COMCMS.Common
             encryptKey = GetSubString(encryptKey, 0, 32, "");
             encryptKey = encryptKey.PadRight(32, ' ');
 
-            RijndaelManaged rijndaelProvider = new RijndaelManaged();
-            rijndaelProvider.Key = Encoding.UTF8.GetBytes(encryptKey.Substring(0, 32));
-            rijndaelProvider.IV = Keys;
-            ICryptoTransform rijndaelEncrypt = rijndaelProvider.CreateEncryptor();
-
             byte[] inputData = Encoding.UTF8.GetBytes(encryptString);
-            byte[] encryptedData = rijndaelEncrypt.TransformFinalBlock(inputData, 0, inputData.Length);
 
-            return Convert.ToBase64String(encryptedData);
+            using Aes aes = Aes.Create();
+            aes.Key = Encoding.UTF8.GetBytes(encryptKey.Substring(0, 32));
+            aes.IV = Keys;
+
+            using MemoryStream ms = new MemoryStream();
+            using CryptoStream cs = new CryptoStream(ms, aes.CreateEncryptor(), CryptoStreamMode.Write);
+
+            cs.Write(inputData, 0, inputData.Length);
+            cs.FlushFinalBlock();
+            return Convert.ToBase64String(ms.ToArray());
         }
         /// <summary>
         /// 解密
@@ -46,15 +51,20 @@ namespace COMCMS.Common
                 decryptKey = GetSubString(decryptKey, 0, 32, "");
                 decryptKey = decryptKey.PadRight(32, ' ');
 
-                RijndaelManaged rijndaelProvider = new RijndaelManaged();
-                rijndaelProvider.Key = Encoding.UTF8.GetBytes(decryptKey);
-                rijndaelProvider.IV = Keys;
-                ICryptoTransform rijndaelDecrypt = rijndaelProvider.CreateDecryptor();
-
                 byte[] inputData = Convert.FromBase64String(decryptString);
-                byte[] decryptedData = rijndaelDecrypt.TransformFinalBlock(inputData, 0, inputData.Length);
 
-                return Encoding.UTF8.GetString(decryptedData);
+                using Aes aes = Aes.Create();
+                aes.Key = Encoding.UTF8.GetBytes(decryptKey);
+                aes.IV = Keys;
+
+                using MemoryStream ms = new MemoryStream();
+                using CryptoStream cs = new CryptoStream(ms, aes.CreateDecryptor(), CryptoStreamMode.Write);
+
+                cs.Write(inputData, 0, inputData.Length);
+                cs.FlushFinalBlock();
+
+
+                return Encoding.UTF8.GetString(ms.ToArray());
             }
             catch
             {
