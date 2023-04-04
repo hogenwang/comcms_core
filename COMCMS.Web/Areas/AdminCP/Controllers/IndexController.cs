@@ -24,6 +24,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         public IndexController(IWebHostEnvironment env)
         {
             _env = env;
+            MachineInfo.RegisterAsync();
         }
         #region 后台首页
         [AllowAnonymous]
