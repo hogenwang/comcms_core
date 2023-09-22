@@ -9,8 +9,8 @@
     <PackageReference Include="NewLife.Core" Version="10.5.2023.801" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PinYinConverterCore" Version="1.0.2" />
-    <PackageReference Include="SkiaSharp" Version="2.88.5" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.5" />
+    <PackageReference Include="SkiaSharp" Version="2.88.6" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.6" />
     <PackageReference Include="SkiaSharp.QrCode" Version="0.6.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="7.0.0" />
   </ItemGroup>
