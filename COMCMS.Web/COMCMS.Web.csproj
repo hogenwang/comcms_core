@@ -14,23 +14,23 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.0" />
     <PackageReference Include="MimeKit" Version="4.3.0" />
     <PackageReference Include="MySql.Data" Version="8.2.0" />
-    <PackageReference Include="NewLife.XCode" Version="11.10.2023.1201" />
+    <PackageReference Include="NewLife.XCode" Version="11.10.2024.101" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Senparc.NeuChar" Version="2.4.0" />
-    <PackageReference Include="Senparc.Weixin" Version="6.17.0" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.20.3" />
+    <PackageReference Include="Senparc.Weixin" Version="6.17.1" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.20.4" />
     <PackageReference Include="Senparc.Weixin.MP.MvcExtension" Version="4.1.1" />
-    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.13.0" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.17.2" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.13.1" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.17.4" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\铭汉服务端3.0\NewLife.UserGroup.WebUploader\NewLife.UserGroup.WebUploader.csproj" />
     <ProjectReference Include="..\COMCMS.API\COMCMS.API.csproj" />
     <ProjectReference Include="..\COMCMS.Common\COMCMS.Common.csproj" />
     <ProjectReference Include="..\COMCMS.Core\COMCMS.Core.csproj" />
     <ProjectReference Include="..\Lib.Core\Lib.Core.csproj" />
+    <ProjectReference Include="..\NewLife.UserGroup.WebUploader\NewLife.UserGroup.WebUploader.csproj" />
   </ItemGroup>
 
   <ItemGroup>
