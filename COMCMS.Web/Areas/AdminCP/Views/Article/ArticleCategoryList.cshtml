@@ -38,7 +38,7 @@
                 @foreach (var m in Model)
                 {
             <tr class="treegrid-@m.Id @(m.PId !=0?"treegrid-parent-"+m.PId:"") ">
-                <td>@m.KindName</td>
+                        <td><a href="@ViewsHelper.EchoURL(m)" target="_blank" title="新窗口打开栏目">@m.KindName</a></td>
                 <td>
                     @m.Id
                 </td>
