@@ -50,6 +50,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         {
             string strUserName = Request.Form["username"];
             string strPassWord = Request.Form["password"];
+            string code = Request.Form["code"];
 
             if (strUserName.Length % 8 != 0)
             {
@@ -69,6 +70,21 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Other = "reload";
                 return Json(tip);
             }
+
+            if (Utils.GetSetting("SystemSetting:AdminLoginWithCode") == "1")
+            {
+                if (string.IsNullOrEmpty(code))
+                {
+                    tip.Message = "请输入验证码！";
+                    return Json(tip);
+                }
+                if (!VerifyCodeHelper.GetSingleObj().VerifyCodeIsOK(code))
+                {
+                    tip.Message = "验证码错误！";
+                    return Json(tip);
+                }
+            }
+
             //解密
             string username = "";
             string password = "";
