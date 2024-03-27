@@ -309,10 +309,20 @@ function DoAdminLogin(formId, rules, messages) {
             password = encMe(password, encrypt_key, 1, 0);
             username = encMe(username, encrypt_key, 1, 0);
             var queryString = $myform.formSerialize();
+            var code = "";
+            if ($("#code").length > 0) {
+                code = $("#code").val();
+            }
+            var postData = {
+                username: username,
+                password: password,
+                __RequestVerificationToken: rvtoken,
+                code: code
+            }
             $.ajax({
                 type: "POST",
                 url: url,
-                data: "username=" + username + "&password=" + password + "&__RequestVerificationToken=" + rvtoken,
+                data: postData,
                 dataType: "JSON",
                 success: function (data) {
                     if (data.status == "success") {
