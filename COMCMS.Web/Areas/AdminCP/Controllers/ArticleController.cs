@@ -251,7 +251,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 entity.Location = ArticleCategory.GetNewLocation(model.PId);
                 entity.Level = ArticleCategory.GetNewLevel(model.PId);
                 //修改文章的location
-                IList<Article> alist = Article.FindAll(Article._.KId == model.Id, null, null, 0, 0);
+                IList<Article> alist = Article.FindAll(Article._.KId == model.Id, Article._.Id.Desc(), null, 0, 0);
                 if (alist != null && alist.Count > 0)
                 {
                     foreach (var a in alist)
@@ -347,7 +347,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //修改所有文章的路径
             if (idNeedUpdateAllArticleFilePath)
             {
-                IList<Article> listArticles = Article.FindAll(Article._.KId == entity.Id, null, null, 0, 0);
+                IList<Article> listArticles = Article.FindAll(Article._.KId == entity.Id, Article._.Id.Desc(), null, 0, 0);
                 if(listArticles !=null && listArticles.Count > 0)
                 {
                     foreach (var item in listArticles)

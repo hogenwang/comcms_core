@@ -326,7 +326,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 }
             }
 
-            IList<WeixinRequestRule> list = WeixinRequestRule.FindAll(ex, null, null, startRowIndex, numPerPage);
+            IList<WeixinRequestRule> list = WeixinRequestRule.FindAll(ex, WeixinRequestRule._.Id.Desc(), null, startRowIndex, numPerPage);
             long totalCount = WeixinRequestRule.FindCount(ex, null, null, startRowIndex, numPerPage);
             Admin.WriteLogActions($"查看公众号自定义回复规则({page});");
             return Content(JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
@@ -670,7 +670,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     ex &= WeixinRequestRule._.Keywords.Contains(keyword);
                 }
             }
-            IList<WeixinRequestRule> list = WeixinRequestRule.FindAll(ex, null, null, startRowIndex, numPerPage);
+            IList<WeixinRequestRule> list = WeixinRequestRule.FindAll(ex, WeixinRequestRule._.Id.Desc(), null, startRowIndex, numPerPage);
             long totalCount = WeixinRequestRule.FindCount(ex, null, null, startRowIndex, numPerPage);
             Admin.WriteLogActions($"查看公众号点击事件自定义回复规则({page});");
             return Content(JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");

@@ -502,7 +502,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             if (!string.IsNullOrWhiteSpace(keyword))
                 ex &= Core.Admin._.UserName.Contains(keyword);
 
-            IList<Core.Admin> list = Core.Admin.FindAll(ex, null, null, startRowIndex, numPerPage);
+            IList<Core.Admin> list = Core.Admin.FindAll(ex, Admin._.Id.Desc(), null, startRowIndex, numPerPage);
             totalCount = Core.Admin.FindCount(ex, null, null, startRowIndex, numPerPage);
             return Content(JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
         }
@@ -948,7 +948,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 }
             }
 
-            IList<Member> list = Member.FindAll(ex, null, null, startRowIndex, numPerPage);
+            IList<Member> list = Member.FindAll(ex, Member._.Id.Desc(), null, startRowIndex, numPerPage);
             totalCount = Member.FindCount(ex, null, null, startRowIndex, numPerPage);
             return Content(JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
         }
