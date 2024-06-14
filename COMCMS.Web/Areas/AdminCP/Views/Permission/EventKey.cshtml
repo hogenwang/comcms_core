@@ -1,25 +1,24 @@
 ﻿<div class="wrapper wrapper-content">
-    <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5>权限事件管理</h5>
-        </div>
-        <div class="ibox-content">
-            <div class="panel panel-default">
-                <div class="panel-heading">查询条件</div>
-                <div class="panel-body">
-                    <form id="formSearch" class="form-horizontal">
-                        <div class="form-group" style="margin-top:15px">
-                            <label class="control-label col-sm-1" for="txt_search_departmentname">权限名称</label>
-                            <div class="col-sm-3">
-                                <input type="text" class="form-control" id="keyword">
-                            </div>
-                            <div class="col-sm-4" style="text-align:left;">
-                                <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary">查询</button>
-                            </div>
-                        </div>
-                    </form>
+    <div class="row">
+        <div class="search-collapse">
+            <form id="formSearch" onsubmit="return doSearch(); return false;">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            关键字：
+                            <input type="text" placeholder="标题关键字" name="keyword" id="keyword">
+                        </li>
+                        <li>
+                            <button type="button" id="btn_query" class="btn btn-primary btn-sm" onclick="doSearch();">查询</button>
+                        </li>
+                    </ul>
                 </div>
-            </div>
+            </form>
+        </div>
+    </div>
+    <div class="ibox float-e-margins">
+
+        <div class="ibox-content">
             <div id="toolbar" class="btn-group">
                 <button id="btn_add" type="button" class="btn btn-outline btn-default" onclick="top.showDialog('addventkey','添加权限','/AdminCP/Permission/AddEventKey',0,0)">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增

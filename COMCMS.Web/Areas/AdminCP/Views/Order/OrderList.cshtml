@@ -4,38 +4,43 @@
 }
 
 <div class="wrapper wrapper-content">
-    <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5>@ViewBag.Title</h5>
-            <div class="ibox-tools">
-            </div>
-        </div>
-        <div class="ibox-content">
-            <div class="panel panel-default">
-                <div class="panel-heading">筛选条件</div>
-                <div class="panel-body">
-                    <form id="formSearch" class="form-horizontal form-inline" onsubmit="return doSearch();">
-                        <div>
-                            <label class="control-label">订单状态：</label>
-                            <select class="form-control" name="status" id="status">
+    <div class="row">
+        <div class="search-collapse">
+            <form id="formSearch" onsubmit="return doSearch(); return false;">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            订单状态：
+                            <select name="status" id="status">
                                 <option value="">不限状态</option>
                                 <option value="未确认">未确认</option>
                                 <option value="已确认">已确认</option>
                                 <option value="已完成">已完成</option>
                             </select>
-                            <label class="control-label">支付状态：</label>
-                            <select class="form-control" name="paystatus" id="paystatus">
+                        </li>
+                        <li>
+                            支付状态：
+                            <select name="paystatus" id="paystatus">
                                 <option value="">不限状态</option>
                                 <option value="未支付">未支付</option>
                                 <option value="已支付">已支付</option>
                             </select>
-                            <label class="control-label">关键字：</label>
-                            <input type="text" placeholder="标题关键字" name="keyword" id="keyword" class="form-control">
-                            <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary" onclick="doSearch();">查询</button>
-                        </div>
-                    </form>
+                        </li>
+                        <li>
+                            关键字：
+                            <input type="text" placeholder="标题关键字" name="keyword" id="keyword">
+                        </li>
+                        <li>
+                            <button type="button" id="btn_query" class="btn btn-primary btn-sm" onclick="doSearch();">查询</button>
+                        </li>
+                    </ul>
                 </div>
-            </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
             <table id="tb_departments"></table>
 
             <script>

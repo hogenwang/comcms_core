@@ -3,34 +3,36 @@
     ViewBag.title = "友情链接管理";
 }
 <div class="wrapper wrapper-content">
-    <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5>@ViewBag.title</h5>
-            <div class="ibox-tools">
-            </div>
-        </div>
-        <div class="ibox-content">
-            <div class="panel panel-default">
-                <div class="panel-heading">筛选条件</div>
-                <div class="panel-body">
-                    <form id="formSearch" class="form-horizontal form-inline">
-                        <div>
-                            <label class="control-label">友情链接分类：</label>
-
-                            <select class="form-control" name="kid" id="kid">
+    <div class="row">
+        <div class="search-collapse">
+            <form id="formSearch" onsubmit="return doSearch(); return false;">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            友情链接分类：
+                            <select name="kid" id="kid">
                                 <option value="0">所有分类</option>
                                 @foreach (var m in ViewBag.ListKinds)
                                 {
                                     <option value="@m.Id">@m.KindName</option>
                                 }
                             </select>
-                            <label class="control-label">关键字：</label>
-                            <input type="text" placeholder="标题关键字" name="keyword" id="keyword" class="form-control">
-                            <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary" onclick="doSearch();">查询</button>
-                        </div>
-                    </form>
+                        </li>
+                        <li>
+                            关键字：
+                            <input type="text" placeholder="标题关键字" name="keyword" id="keyword">
+                        </li>
+                        <li>
+                            <button type="button" id="btn_query" class="btn btn-primary btn-sm" onclick="doSearch();">查询</button>
+                        </li>
+                    </ul>
                 </div>
-            </div>
+            </form>
+        </div>
+    </div>
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+
             <div id="toolbar" class="btn-group">
                 <button id="btn_add" type="button" class="btn btn-outline btn-default" onclick="top.showDialog('addads', '添加友情链接', '/AdminCP/Other/AddLink', 0, 0)">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
