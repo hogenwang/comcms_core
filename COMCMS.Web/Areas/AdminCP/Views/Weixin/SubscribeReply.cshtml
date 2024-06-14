@@ -5,11 +5,6 @@
     <script src="~/js/vue/vue.min.js"></script>
     <div class="wrapper wrapper-content">
         <div class="ibox float-e-margins" id="app">
-            <div class="ibox-title">
-                <h5>@ViewBag.Title</h5>
-                <div class="ibox-tools">
-                </div>
-            </div>
             <div class="ibox-content">
                 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editSubscribeReplyForm", @class = "form-horizontal m-t" }))
                 {

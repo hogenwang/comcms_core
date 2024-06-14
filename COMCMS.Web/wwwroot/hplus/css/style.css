@@ -211,13 +211,17 @@ body.body-small .navbar-top-links li:last-child {
     transition: all 0.5s;
 }
 
-.nav > li.active {
+.nav > li.mm-active {
     border-left: 4px solid #19aa8d;
     background: #293846;
 }
+.nav-second-level > li.mm-active a{
+        color: #FFF;
+}
 
-.nav.nav-second-level > li.active {
+.nav.nav-second-level > li.mm-active {
     border: none;
+    background: #293846;
 }
 
 .nav.nav-second-level.collapse[style] {
@@ -281,7 +285,7 @@ body.body-small .navbar-top-links li:last-child {
     content: "\f104";
 }
 
-.active > a > .fa.arrow:before {
+.mm-active > a > .fa.arrow:before {
     content: "\f107";
 }
 
@@ -3522,7 +3526,7 @@ video {
 }
 
 .wrapper-content {
-    padding: 20px;
+    padding: 15px;
 }
 
 #page-wrapper {
@@ -4040,7 +4044,7 @@ code {
 .ibox-content {
     background-color: #ffffff;
     color: inherit;
-    padding: 15px 20px 20px 20px;
+    padding: 15px;
     border-color: #e7eaec;
     -webkit-border-image: none;
     -o-border-image: none;
@@ -4084,6 +4088,7 @@ table.table-mail tr td {
 
 .ibox-content {
     clear: both;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.2);
 }
 
 .ibox-heading {
@@ -7900,3 +7905,79 @@ body.skin-3 {
         font-size: 12px
     }
 }
+.search-collapse {
+    position: relative;
+}
+.search-collapse, .select-table {
+    background: #fff;
+    margin: 0px 15px 10px 15px;
+    padding-top: 5px;
+    padding-bottom: 10px;
+    box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+}
+.select-list{overflow:hidden; padding:0 15px}
+.select-list ul {
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.select-list li {
+    list-style: none
+}
+
+.select-time .time-input {
+    display: block;
+    width: 100%;
+    padding-left: 10px
+}
+.select-list li {
+    color: #333;
+    margin: 5px 15px 5px 0
+}
+
+    .select-list li p, .select-list li label:not(.radio-box) {
+        float: left;
+        margin: 5px 0 0 0;
+        text-align: right;
+        font-weight:400
+    }
+
+    .select-list li input {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: transparent;
+        outline: 0;
+        height: 30px;
+        width: 200px;
+        padding-left: 5px
+    }
+        .select-list li input[type=checkbox] {
+            outline: 0;
+            height: 30px;
+            width: auto;
+            padding-left: 5px
+        }
+    .select-list li .submit-btn {
+        border: 0;
+        border-radius: 4px;
+        background: transparent;
+        outline: 0;
+        width: 40px;
+        height: 23px
+    }
+
+    .select-list li select {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        background: transparent;
+        outline: 0;
+        height: 30px;
+        width: 200px
+    }
+@media(min-width : 768px) {
+    .select-list li {
+        float: left
+    }
+}
+.common-panel{ margin:0 15px;}
