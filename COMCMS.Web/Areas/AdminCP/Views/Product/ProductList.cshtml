@@ -146,7 +146,7 @@
                                     title: '排序',
                                     width: 130,
                                     formatter: function (value, row, index) {
-                                        return '<div class="input-group"><input type="number" class="form-control" id="ac_rank_' + row["Id"] + '" name="ac_rank_' + row["Id"] + '" value="' + value + '" placeholder="请输入一个数字，越小排越前"><a class="input-group-addon btn btn-primary" title="修改保存" href="javascript:;" onclick="doSaveSequence(' + row["Id"] + ')"><i class="fa fa-save"></i></a></div>'
+                                    return '<div class="input-group"><input type="number" class="form-control input-sm" id="ac_rank_' + row["Id"] + '" name="ac_rank_' + row["Id"] + '" value="' + value + '" placeholder="请输入一个数字，越小排越前"><a class="input-group-addon btn btn-primary" title="修改保存" href="javascript:;" onclick="doSaveSequence(' + row["Id"] + ')"><i class="fa fa-save"></i></a></div>'
                                     }
                                 }, {
                                     field: 'AddTime',
