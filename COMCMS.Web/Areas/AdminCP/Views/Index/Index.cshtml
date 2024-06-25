@@ -78,7 +78,7 @@
                         {
                             var l2 = Model.FindAll(s => s.PId == m1.Id && s.IsHide != 1);
                             <li>
-                                <a href="/AdminCP/@(m1.Link)" id="@m1.MenuKey" @(m1.Link != "#" ? "class=J_menuItem" : "") >
+                                <a href="@(m1.Link=="#"?"javascript:;":"/AdminCP/"+m1.Link)" id="@m1.MenuKey" @(m1.Link != "#" ? "class=J_menuItem" : "")>
                                     @if (!string.IsNullOrWhiteSpace(m1.ClassName))
                                 {
                                     <i class="fa @m1.ClassName"></i>
