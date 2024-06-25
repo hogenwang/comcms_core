@@ -115,6 +115,85 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             return Json(tip);
         }
+
+        #region 编辑事件详情
+        [HttpGet]
+        [MyAuthorize("add", "eventkey")]
+        public IActionResult EditEventKey(int id)
+        {
+            TargetEvent entity = TargetEvent.Find(TargetEvent._.Id == id);
+            if (entity == null)
+            {
+                return EchoTipPage("系统找不到本记录！");
+            }
+            Admin.WriteLogActions("查看/编辑事件详情(id:" + entity.Id + ")；");
+            return View(entity);
+        }
+
+        [HttpPost]
+        [MyAuthorize("add", "eventkey","JSON")]
+        public IActionResult EditEventKey(TargetEvent model)
+        {
+            if (string.IsNullOrWhiteSpace(model.EventKey))
+            {
+                tip.Message = "请填写事件KEY";
+                return Json(tip);
+            }
+            if (string.IsNullOrWhiteSpace(model.EventName))
+            {
+                tip.Message = "请填写事件名称";
+                return Json(tip);
+            }
+            TargetEvent entity = TargetEvent.Find(TargetEvent._.Id == model.Id);
+            if (entity == null)
+            {
+                tip.Message = "系统找不到本记录！";
+                return Json(tip);
+            }
+            if (entity.EventKey != model.EventKey)
+            {
+                if (TargetEvent.FindCount(TargetEvent._.EventKey == model.EventKey, null, null, 0, 0) > 0)
+                {
+                    tip.Message = "事件key已经存在，请重新填写一个";
+                    return Json(tip);
+                }
+            }
+            entity.EventKey = model.EventKey;
+            entity.EventName = model.EventName;
+            entity.Rank = model.Rank;
+            if (string.IsNullOrWhiteSpace(Request.Form["IsDisable"]) || Request.Form["IsDisable"] != "1")
+                entity.IsDisable = 0;
+            else
+                entity.IsDisable = 1;
+            entity.Update();
+            Admin.WriteLogActions("编辑事件详情(id:" + entity.Id + ")；");
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "编辑事件权限详情成功";
+            tip.ReturnUrl = "close";
+            return Json(tip);
+        }
+        #endregion
+
+        #region 删除事件权限
+        [HttpPost]
+        [MyAuthorize("del", "eventkey", "JSON")]
+        public JsonResult DelEventKey(int id)
+        {
+            TargetEvent entity = TargetEvent.Find(TargetEvent._.Id == id);
+            if (entity == null)
+            {
+                tip.Message = "系统找不到本记录！";
+                return Json(tip);
+            }
+            Admin.WriteLogActions("删除事件详情(" + JsonConvert.SerializeObject(entity) + ")；");
+            entity.Delete();
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "删除事件权限详情成功";
+            return Json(tip);
+        }
+
+        #endregion
+
         #endregion
 
         #region 后台栏目管理
