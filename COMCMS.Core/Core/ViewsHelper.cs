@@ -75,7 +75,22 @@ namespace COMCMS.Core
         /// <returns></returns>
         public static string EchoURL(Product model)
         {
-            return $"/product/detail/{model.Id}";
+            if (model == null)
+                return "javascript:;";
+
+            Category categoty = Category.FindById(model.KId);
+
+            if (categoty != null && !string.IsNullOrEmpty(categoty.FilePath))
+            {
+                string url = $"{categoty.FilePath}/{model.Id}.html";
+                if (!string.IsNullOrEmpty(model.FileName))
+                {
+                    url = $"{categoty.FilePath}/{model.FileName}";
+                }
+                return url;
+            }
+            else
+                return $"/product/detail/{model.Id}";
         }
 
         /// <summary>
@@ -146,6 +161,29 @@ namespace COMCMS.Core
         {
             Article model = Article.FindById(id);
             return EchoArticleURL(model);
+        }
+        #endregion
+
+        #region 生成商品地址
+        /// <summary>
+        /// 生成商品分类地址
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string EchoCategoryURL(int id)
+        {
+            Category model = Category.FindById(id);
+            return EchoURL(model);
+        }
+        /// <summary>
+        /// 生成商品详情地址
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string EchoProductURL(int id)
+        {
+            Product model = Product.FindById(id);
+            return EchoURL(model);
         }
         #endregion
 
