@@ -43,7 +43,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             foreach (var asmItem in asms)
             {
                 string fullName = asmItem.GetName().ToString();
-                if (fullName.IndexOf("COMCMS.Web.Views") > -1)
+                if (fullName.IndexOf("COMCMS.Web") > -1)
                 {
                     var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
                     if (types.Count == 0) continue;
@@ -174,7 +174,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             foreach (var asmItem in asms)
             {
                 string fullName = asmItem.GetName().ToString();
-                if (fullName.IndexOf("COMCMS.Web.Views") > -1)
+                if (fullName.IndexOf("COMCMS.Web") > -1)
                 {
                     var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
                     if (types.Count == 0) continue;

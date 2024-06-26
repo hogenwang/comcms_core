@@ -8,6 +8,7 @@ using COMCMS.Core;
 using COMCMS.Core.Models;
 using COMCMS.Web.Common;
 using XCode;
+using static Google.Protobuf.WellKnownTypes.Field.Types;
 
 namespace COMCMS.Web.Controllers
 {
@@ -60,7 +61,14 @@ namespace COMCMS.Web.Controllers
             ViewBag.cfg = cfg;
             ViewBag.list = list;
 
-            return View(entity);
+            string templatesname = "Index.cshtml";//模板名称
+            if (!string.IsNullOrEmpty(entity.TemplateFile))
+            {
+                templatesname = entity.TemplateFile;
+                //return Content(templatesname);
+            }
+
+            return View("~/Views/Product/" + templatesname, entity);
         }
         #endregion
 
@@ -72,6 +80,11 @@ namespace COMCMS.Web.Controllers
             if (entity == null || entity.IsHide == 1)
             {
                 return EchoTip("系统找不到本记录！");
+            }
+            Category kind = Category.FindById(entity.KId);
+            if (kind == null)
+            {
+                return AlertAndGoBack("系统找不到本文章栏目！");
             }
             //文章更多图片列表
             if (!string.IsNullOrEmpty(entity.ItemImg))
@@ -92,7 +105,16 @@ namespace COMCMS.Web.Controllers
             ViewBag.cfg = cfg;
             ViewBag.category = entity.Category;
 
-            return View(entity);
+            string templatesname = "";//模板名称
+            if (!string.IsNullOrEmpty(kind.TemplateFile))
+            {
+                templatesname = kind.DetailTemplateFile;//.Replace(".cshtml", "").Replace(".aspx", "");
+                return View("~/Views/Product/" + templatesname, entity);
+            }
+            else
+            {
+                return View("~/Views/Product/Detail.cshtml", entity);
+            }
         }
         #endregion
     }

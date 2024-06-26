@@ -36,6 +36,24 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //获取上级栏目
             IList<Category> list = Category.GetListTree(0, -1, true, false);
             ViewBag.ListTree = list;
+            //获取模板 模板规则，以Index_开头的，为栏目列表，以Detial_开头的为文章详情
+            List<string> listTpls = new List<string>();
+            var asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var asmItem in asms)
+            {
+                string fullName = asmItem.GetName().ToString();
+                if (fullName.IndexOf("COMCMS.Web") > -1)
+                {
+                    var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Product")).ToList();
+                    if (types.Count == 0) continue;
+                    foreach (var type in types)
+                    {
+                        string viewName = type.Name.Replace("Views_Product_", "") + ".cshtml";
+                        listTpls.Add(viewName);
+                    }
+                }
+            }
+            ViewBag.ListTpl = listTpls;
             //获取模板
             //List<string> listtpl = COMCMS.Common.IOHelper.GetDirFiles(new DirectoryInfo(Server.MapPath("~/Views/article")));
             //ViewBag.ListTpl = listtpl;
@@ -53,6 +71,33 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "商品栏目标题不能为空！";
                 return Json(tip);
             }
+
+            if (!string.IsNullOrEmpty(model.FilePath))
+            {
+                if (!model.FilePath.StartsWith("/"))
+                {
+                    tip.Message = "栏目路径请以/开头！";
+                    return Json(tip);
+                }
+                if (model.FilePath.EndsWith("/"))
+                {
+                    tip.Message = "栏目路径结尾不用加上/";
+                    return Json(tip);
+                }
+
+                if (model.FilePath.Count(x => x == '/') > 4)
+                {
+                    tip.Message = "最多只能四级路径！";
+                    return Json(tip);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(model.FilePath) && !AdminUtils.CheckFilePathIsOK(model.FilePath, 0, 1))
+            {
+                tip.Message = "栏目路径不可用，请重新填写！";
+                return Json(tip);
+            }
+
             model.Insert();
             Core.Admin.WriteLogActions("添加商品栏目(id:" + model.Id + ");");
             tip.Status = JsonTip.SUCCESS;
@@ -74,9 +119,25 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //获取上级栏目
             IList<Category> list = Category.GetListTree(0, -1, true, false);
             ViewBag.ListTree = list;
-            //获取模板
-            //List<string> listtpl = COMCMS.Common.IOHelper.GetDirFiles(new DirectoryInfo(Server.MapPath("~/Views/article")));
-            //ViewBag.ListTpl = listtpl;
+            //获取模板 模板规则，以Index_开头的，为栏目列表，以Detial_开头的为文章详情
+            List<string> listTpls = new List<string>();
+            var asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var asmItem in asms)
+            {
+                string fullName = asmItem.GetName().ToString();
+                if (fullName.IndexOf("COMCMS.Web") > -1)
+                {
+                    var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Product")).ToList();
+                    if (types.Count == 0) continue;
+                    foreach (var type in types)
+                    {
+                        string viewName = type.Name.Replace("Views_Product_", "") + ".cshtml";
+                        listTpls.Add(viewName);
+                    }
+                }
+            }
+            ViewBag.ListTpl = listTpls;
+
             Core.Admin.WriteLogActions("查看/编辑商品栏目（id:" + id + "）页面；");
             return View(entity);
         }
@@ -101,6 +162,30 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 tip.Message = "系统找不到本记录！";
                 Json(tip);
+            }
+            if (!string.IsNullOrEmpty(model.FilePath))
+            {
+                if (!model.FilePath.StartsWith("/"))
+                {
+                    tip.Message = "栏目路径请以/开头！";
+                    return Json(tip);
+                }
+                if (model.FilePath.EndsWith("/"))
+                {
+                    tip.Message = "栏目路径结尾不用加上/";
+                    return Json(tip);
+                }
+
+                if (model.FilePath.Count(x => x == '/') > 4)
+                {
+                    tip.Message = "最多只能四级路径！";
+                    return Json(tip);
+                }
+            }
+            if (!string.IsNullOrEmpty(model.FilePath) && !AdminUtils.CheckFilePathIsOK(model.FilePath, entity.Id, 1))
+            {
+                tip.Message = "栏目路径不可用，请重新填写！";
+                return Json(tip);
             }
 
             if (entity.PId != model.PId)
@@ -147,6 +232,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.KindDomain = model.KindDomain;
             entity.Rank = model.Rank;
             entity.Pic = model.Pic;
+            entity.FilePath = model.FilePath;
 
 
             entity.Save();

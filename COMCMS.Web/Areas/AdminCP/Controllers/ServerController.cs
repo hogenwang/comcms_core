@@ -28,6 +28,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     pinyin = pcategory.FilePath+"/";
                 }
             }
+            else if(t == "category" && pid > 0)
+            {
+                Category pcategory = Category.FindById(pid);
+                if (pcategory != null && !string.IsNullOrEmpty(pcategory.FilePath))
+                {
+                    pinyin = pcategory.FilePath + "/";
+                }
+            }
 
             if (!string.IsNullOrEmpty(name))
             {

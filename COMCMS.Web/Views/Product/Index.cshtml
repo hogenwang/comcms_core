@@ -33,7 +33,7 @@
             <ul class="sec-nav-list">
                 @foreach (var k in sameList)
                 {
-                    <li class="@(k.Id == Model.Id?"sec-on":"")"><a asp-controller="Product" asp-action="Index" asp-route-id="@(k.Id)" title="@k.KindName">@k.KindName</a></li>
+                    <li class="@(k.Id == Model.Id?"sec-on":"")"><a href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a></li>
                 }
             </ul>
 
@@ -61,7 +61,7 @@
                     @foreach (Product p in ViewBag.list)
                     {
                         <li>
-                            <a  asp-controller="Product" asp-action="Detail" asp-route-id="@(p.Id)" title="@p.Title">
+                            <a href="@ViewsHelper.EchoURL(p)" title="@p.Title">
                                 <div class="pro-pic">
                                     <div class="pic-box">
                                         <img src="@p.Pic" alt="@p.Title">

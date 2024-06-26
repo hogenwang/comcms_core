@@ -135,7 +135,10 @@
                                     title: '所属分类'
                                 }, {
                                     field: 'Title',
-                                        title: '商品标题',
+                                    title: '商品标题',
+                                    formatter: function (value, row, index) {
+                                        return '<a href="/Product/Detail/' + row["id"] + '" target="_blank" title="新窗口打开预览商品">' + value + '</a>'
+                                    }
 
                                 }, {
                                     field: 'Price',
