@@ -18,16 +18,19 @@ using Newtonsoft.Json;
 using COMCMS.Web.Common;
 using Microsoft.AspNetCore.Hosting;
 using System.Text.RegularExpressions;
+using NewLife.Caching;
 
 namespace COMCMS.Web.Controllers
 {
     public class HomeController : HomeBaseController
     {
         private IWebHostEnvironment _env;
+        private readonly ICacheProvider _cacheProvider;
 
-        public HomeController(IWebHostEnvironment env)
+        public HomeController(IWebHostEnvironment env,ICacheProvider cacheProvider)
         {
             _env = env;
+            _cacheProvider = cacheProvider;
         }
 
         #region 首页
@@ -455,6 +458,7 @@ namespace COMCMS.Web.Controllers
             return View();
         }
         #endregion
+
         #region 测试
         public IActionResult Test()
         {
@@ -473,7 +477,13 @@ namespace COMCMS.Web.Controllers
 
 
             string result = $"t1:{t1}; t2:{t2}; t3:{t3}; t4:{t4}; t5:{t5}; t6:{t6}";
-            return Content(result);
+
+
+            _cacheProvider.Cache.Add("test", "test", 60);
+
+            string a = _cacheProvider.Cache.Get<string>("test");
+
+            return Content(result+";cache:"+ a);
         }
         #endregion
     }

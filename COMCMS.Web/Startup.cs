@@ -23,6 +23,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.WebEncoders;
 using Microsoft.IdentityModel.Tokens;
+using NewLife.Caching;
+using NewLife.Caching.Services;
 using Newtonsoft.Json.Serialization;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Cache;
@@ -65,6 +67,7 @@ namespace COMCMS.Web
                 options.Cookie.HttpOnly = true;
 
             });
+            services.AddSingleton<ICacheProvider, RedisCacheProvider>();
             //部分系统配置
             services.Configure<SystemSetting>(Configuration.GetSection("SystemSetting"));
 
