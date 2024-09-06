@@ -7,22 +7,22 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.7.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.7" />
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.7" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.8" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.4" />
     <PackageReference Include="MimeKit" Version="4.7.1" />
     <PackageReference Include="MySql.Data" Version="9.0.0" />
     <PackageReference Include="NewLife.Redis" Version="5.7.2024.801" />
-    <PackageReference Include="NewLife.XCode" Version="11.15.2024.806" />
+    <PackageReference Include="NewLife.XCode" Version="11.15.2024.902" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Senparc.NeuChar" Version="2.4.3" />
     <PackageReference Include="Senparc.Weixin" Version="6.19.1" />
     <PackageReference Include="Senparc.Weixin.MP" Version="16.22.1" />
     <PackageReference Include="Senparc.Weixin.MP.MvcExtension" Version="4.1.1" />
     <PackageReference Include="Senparc.Weixin.TenPay" Version="1.16.1" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.20.1" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.20.2" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 
