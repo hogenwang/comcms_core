@@ -198,6 +198,34 @@ namespace COMCMS.Core
         #endregion
 
         #region 业务操作
+        /// <summary>
+        /// 获取前几条数据
+        /// </summary>
+        /// <param name="kid">栏目id</param>
+        /// <param name="records">条数</param>
+        /// <returns></returns>
+        public static IList<Product> FindTopList(int kid, int records, bool isShowSub = false)
+        {
+            if (!isShowSub)
+                return FindAll(_.KId == kid & _.IsHide == 0, _.Id.Desc(), null, 0, records);
+            else
+            {
+                Expression ex = _.IsHide == 0;
+                List<int> kids = new List<int>();
+                kids.Add(kid);
+                IList<Category> subkinds = Category.FindByParentID(kid);
+                if (subkinds != null && subkinds.Count > 0)
+                {
+                    foreach (var item in subkinds)
+                    {
+                        kids.Add(item.Id);
+                    }
+                }
+                ex &= _.KId.In(kids);
+
+                return FindAll(ex, _.Id.Desc(), null, 0, records);
+            }
+        }
         #endregion
     }
 }
