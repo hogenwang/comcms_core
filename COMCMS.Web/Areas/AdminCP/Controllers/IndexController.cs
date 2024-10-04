@@ -56,7 +56,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         #region 后台主界面
         public IActionResult Main()
         {
-            string remoteip = Request.HttpContext.Connection.RemoteIpAddress.ToString();
+            string remoteip = Utils.GetIP();
             string host = Request.HttpContext.Request.Host.Host;
             string port = Request.HttpContext.Connection.RemotePort.ToString();
 
