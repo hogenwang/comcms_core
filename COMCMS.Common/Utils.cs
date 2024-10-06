@@ -209,6 +209,10 @@ namespace COMCMS.Common
             {
                 http = "https://";
             }
+            if (MyHttpContext.Current.Request.Headers["X-Scheme"].ToString() == "https")//增加判断反向代理
+            {
+                http = "https://";
+            }
             string port = MyHttpContext.Current.Request.Host.Port.ToString();
             if (string.IsNullOrEmpty(port) || port == "80" || port == "443")
                 return http + MyHttpContext.Current.Request.Host.Host;
