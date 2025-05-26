@@ -6,24 +6,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MailKit" Version="4.8.0" />
+    <PackageReference Include="MailKit" Version="4.12.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="8.0.8" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
-    <PackageReference Include="MimeKit" Version="4.8.0" />
-    <PackageReference Include="MySql.Data" Version="9.0.0" />
-    <PackageReference Include="NewLife.Redis" Version="5.7.2024.801" />
-    <PackageReference Include="NewLife.XCode" Version="11.15.2024.902" />
+    <PackageReference Include="MimeKit" Version="4.12.0" />
+    <PackageReference Include="MySql.Data" Version="9.3.0" />
+    <PackageReference Include="NewLife.Redis" Version="6.2.2025.503" />
+    <PackageReference Include="NewLife.XCode" Version="11.19.2025.501" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="Senparc.NeuChar" Version="2.4.3" />
-    <PackageReference Include="Senparc.Weixin" Version="6.20.0" />
-    <PackageReference Include="Senparc.Weixin.MP" Version="16.22.3" />
+    <PackageReference Include="Senparc.NeuChar" Version="2.5.2" />
+    <PackageReference Include="Senparc.Weixin" Version="6.22.0" />
+    <PackageReference Include="Senparc.Weixin.MP" Version="16.23.8" />
     <PackageReference Include="Senparc.Weixin.MP.MvcExtension" Version="4.1.1" />
-    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.16.3" />
-    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.20.4" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
+    <PackageReference Include="Senparc.Weixin.TenPay" Version="1.17.8" />
+    <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.23.4" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
   </ItemGroup>
 
   <ItemGroup>

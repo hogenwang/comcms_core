@@ -4,6 +4,7 @@ using System.ComponentModel;
 using XCode;
 using XCode.Configuration;
 using XCode.DataAccessLayer;
+using NewLife;
 
 namespace COMCMS.Core
 {

@@ -40,59 +40,21 @@ namespace COMCMS.Web.Controllers.api
             _appSettings = setting.Value;
         }
 
-        #region 用户授权信息同步
-        /// <summary>
-        /// 同步微信信息
-        /// </summary>
-        /// <returns></returns>
+        #region 判断授权信息
         [HttpGet]
-        public ReJson SyncWeixinInfo(string sessionkey, string userInfo, int inviteid = 0)
+        public object CheckIdentity()
         {
-            if (string.IsNullOrEmpty(sessionkey))
+            var user = User;
+            //string name = user.Identity.Name;
+            if (user == null || string.IsNullOrEmpty(user.Identity.Name))
             {
-                return new ReJson(5003,"登录状态失败");
+                reJson.code = 401;//401 为授权错误，需要重新登录
+                reJson.message = "授权失败或者过期";
+                return reJson;
             }
-            WXAppSession entity = WXAppSession.Find(WXAppSession._.Key == sessionkey);
-            if (entity == null)
-            {
-                return new ReJson("未找到登录状态！");
-            }
-            if (string.IsNullOrEmpty(userInfo))
-            {
-                return new ReJson("用户信息错误！");
-            }
-            WXAppUserInfo info = JsonConvert.DeserializeObject<WXAppUserInfo>(userInfo);
-            if (string.IsNullOrEmpty(info.avatarUrl))
-            {
-                return new ReJson("微信用户信息错误！");
-            }
-            //获取用户
-            Member my = Member.FindById(entity.UId);
-            if (my == null)
-            {
-                return new ReJson(40000, "系统找不到本用户！");
-            }
-            //同步用户信息
-            my.Country = info.country;
-            my.UserImg = info.avatarUrl;
-            my.City = info.city;
-            my.Province = info.province;
-            my.Sex = info.gender;
-            my.Nickname = info.nickName;
-            my.LastLoginTime = DateTime.Now;
-            if (inviteid > 0 & my.Parent == 0)
-            {
-                Member inviter = Member.Find(Member._.Id == inviteid);
-                if (inviter != null)
-                {
-                    my.Parent = inviter.Id;
-                    my.Grandfather = inviter.Parent;
-                }
-            }
-            my.Update();
-
-            var detail = new { sessionkey = entity.Key, username = info.nickName, userimg = info.avatarUrl };
-            return new ReJson(0, "同步信息成功！", detail);
+            reJson.code = 0;
+            reJson.message = "授权失败或者过期";
+            return reJson;
         }
         #endregion
 
