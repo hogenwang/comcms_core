@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Serialization;
+using COMCMS.Common;
 using NewLife;
 using NewLife.Data;
 using NewLife.Log;
@@ -359,7 +360,7 @@ namespace COMCMS.Core
             }
             else
             {
-                re += " &gt; " + string.Format(tpl, "/article/index/" + model.Id, model.KindName);
+                re += " &gt; " + string.Format(tpl, ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, kid), model.KindName);
                 if (model.PId != 0)
                 {
                     re = GetNav(model.PId) + re;

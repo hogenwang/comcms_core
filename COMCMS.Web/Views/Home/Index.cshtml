@@ -177,7 +177,7 @@
             <div class="i-au-cont">
                 <div class="i-au-left">
                     <div class="pic-box">
-                        <a href="/Article/detail/1" title="关于我们">
+                        <a href="@(ViewsHelper.EchoArticleURL(1))" title="关于我们">
                             <img src="@(about?.Pic)" alt="关于我们">
                         </a>
                     </div>
@@ -186,7 +186,7 @@
                     <p>
                         @(Utils.CutString(Utils.NoHTML(about?.Content), 700))
                     </p>
-                    <a href="/Article/detail/1" title="查看详情" class="read-d">查看详情</a>
+                    <a href="@(ViewsHelper.EchoArticleURL(1))" title="查看详情" class="read-d">查看详情</a>
                 </div>
             </div>
         </div>
@@ -210,7 +210,7 @@
                         @foreach(var p in listPorducts)
                         {
                         <li>
-                            <a asp-controller="Product" asp-action="Detail" asp-route-id="@(p.Id)" title="@(p.Title)">
+                            <a href="@ViewsHelper.EchoURL(p)" title="@(p.Title)">
                                 <div class="i-pro-top">
                                     <div class="i-pro-pic">
                                         <div class="pic-box">
@@ -259,7 +259,7 @@
                     }
                 </script>
 
-                <a asp-controller="Product" asp-action="Index" asp-route-id="1" title="查看更多" class="read-d">查看更多<i></i></a>
+                <a href="@ViewsHelper.EchoCategoryURL(1)" title="查看更多" class="read-d">查看更多<i></i></a>
         </div>
     </div>
 
@@ -289,7 +289,7 @@
                             @if (listNews1.Count > 0)
                             {
                             <div class="i-news-left">
-                                <a href="/article/detail/@listNews1[0].Id" title="@listNews1[0].Title">
+                                <a href="@(ViewsHelper.EchoURL(listNews1[0]))" title="@listNews1[0].Title">
                                     <div class="i-news-pic">
                                         <div class="pic-box">
                                             <img src="@listNews1[0].Pic" alt="@listNews1[0].Title">
@@ -312,7 +312,7 @@
                                 {
                                 <ul class="i-news-list">
                                     @for(int i=1; i < listNews1.Count; i++) { <li>
-                                        <a href="/article/detail/@listNews1[i].Id" title="@listNews1[i].Title">
+                                            <a href="@(ViewsHelper.EchoURL(listNews1[i]))" title="@listNews1[i].Title">
                                             <div class="i-news-time">
                                                 <div class="pic-box">
                                                     <p>
@@ -343,7 +343,7 @@
                                 @if (listNews2.Count > 0)
                                 {
                                 <div class="i-news-left">
-                                    <a href="/article/detail/@listNews2[0].Id" title="@listNews2[0].Title">
+                                <a href="@(ViewsHelper.EchoURL(listNews2[0]))" title="@listNews2[0].Title">
                                         <div class="i-news-pic">
                                             <div class="pic-box">
                                                 <img src="@listNews2[0].Pic" alt="@listNews2[0].Title">
@@ -367,7 +367,7 @@
                                     {
                                     <ul class="i-news-list">
                                         @for (int i = 1; i < listNews2.Count; i++) { <li>
-                                            <a href="/article/detail/@listNews2[i].Id" title="@listNews2[i].Title">
+                                            <a href="@(ViewsHelper.EchoURL(listNews2[i]))" title="@listNews2[i].Title">
                                                 <div class="i-news-time">
                                                     <div class="pic-box">
                                                         <p>

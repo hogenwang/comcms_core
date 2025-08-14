@@ -35,6 +35,15 @@
                 <div class="form-group">
                     <input type="password" name="password" id="password" class="form-control" placeholder="密码" required="">
                 </div>
+                @if (Utils.GetSetting("SystemSetting:AdminLoginWithCode") == "1")
+                {
+                    <div class="form-group input-group">
+                        <input type="text" name="code" id="code" class="form-control" placeholder="验证码" required="">
+                        <span class="input-group-addon" style="padding:0px;">
+                            <img src="~/VerifyCode/MixVerifyCode" onclick="this.src='/VerifyCode/MixVerifyCode?'+Math.random()" style="cursor:pointer;" />
+                        </span>
+                    </div>
+                }
                 <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
                 <p class="text-muted text-center">
                     COMCMS © 2014-@DateTime.Now.Year

@@ -6,7 +6,8 @@
 CKEDITOR.editorConfig = function( config ) {
 	// Define changes to default configuration here. For example:
 	//config.language = 'zh-cn';
-	// config.uiColor = '#AADC6E';
+    // config.uiColor = '#AADC6E';
+    config.versionCheck = false;
     config.baseHref = "http://" + location.host;
     config.filebrowserImageUploadUrl = '/AdminCP/Upload/CKUploadImage?action=uploadimg';
     config.filebrowserUploadUrl = '/AdminCP/Upload/CKUploadFile?action=uploadfile';
@@ -31,4 +32,5 @@ CKEDITOR.editorConfig = function( config ) {
         { name: 'others', items: ['-'] },
         { name: 'about', items: ['About'] }
     ];
+    config.removeButtons = 'ExportPdf,Save,NewPage,Templates,Flash,HiddenField,ImageButton,Button,Select,Textarea,TextField,Radio,Checkbox,Form,Language';
 };

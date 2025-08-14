@@ -34,7 +34,7 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">栏目路径：</label>
                     <div class="col-sm-8">
-                        <input id="FilePath" name="FilePath" maxlength="100" type="text" class="form-control" required aria-required="true" placeholder="填写栏目路径，SEO优化使用，最多支持4级目录，可以输入字母、数字和-">
+                        <input id="FilePath" name="FilePath" maxlength="100" type="text" class="form-control" aria-required="true" placeholder="填写栏目路径，SEO优化使用，最多支持4级目录，可以输入字母、数字和-">
                     </div>
                 </div>
                 <div class="form-group">
@@ -47,6 +47,9 @@
                     <label class="col-sm-3 control-label">Banner图片：</label>
                     <div class="col-sm-8">
                         <div class="input-group">
+                            <span class="input-group-btn my-preview">
+                                    <button type="button" class="btn btn-primary"><i class="fa fa-search-plus"></i></button>
+                            </span>
                             <input id="BannerImg" name="BannerImg" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个Banner图片" value="">
                             <span class="input-group-addon my-upload-span upload-img"></span>
                         </div>
@@ -134,13 +137,19 @@
                 <div class="form-group">
                     <label class="col-sm-3 control-label">跳转链接：</label>
                     <div class="col-sm-8">
-                        <input id="LinkURL" type="text" class="form-control" name="LinkURL" value="" maxlength="200" placeholder="填写则点击该类别自动跳转到该地址" aria-required="true">
+                        <input id="LinkURL" type="text" class="form-control" name="LinkURL" value="" maxlength="200" placeholder="填写则点击该类别自动跳转到该地址，如果填写数字，则跳转到改id的文章详情" aria-required="true">
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-3 control-label">栏目介绍：</label>
                     <div class="col-sm-8">
                         <textarea id="KindInfo" name="KindInfo" class="form-control" placeholder="可以输入栏目的详细介绍"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">IP限制：</label>
+                    <div class="col-sm-8">
+                        <textarea id="AllowIp" name="AllowIp" class="form-control" placeholder="您可以输入IP限制，每一行一个IP段，请妥当设置。留空不限制" rows="4"></textarea>
                     </div>
                 </div>
                 <div class="hr-line-dashed"></div>
@@ -163,11 +172,12 @@
     function aoutoTransform() {
         var title = $("#KindName").val();
         var filePath = $("#FilePath").val();
+        var pid = $("#PId").val();
         if (!filePath) {
             $.ajax({
             type: "POST",
-            url: "/AdminCP/Server/Hanzi2Pinyin",
-            data: { name: title},
+                url: "/AdminCP/Server/Hanzi2Pinyin",
+                data: { name: title, pid: pid,t:"articlecategory" },
             dataType: "JSON",
             success: function (data) {
                 if (data.status == "success") {

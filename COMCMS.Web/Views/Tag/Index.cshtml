@@ -1,0 +1,61 @@
+﻿@model IList<Tags>
+@{
+    ViewBag.title = "TAG标签";
+    ViewBag.keywords = "TAG标签";
+    ViewBag.description = "TAG标签";
+
+}
+
+<div class="banner normal sec-banner">
+    <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+</div>
+<!-- mb banner -->
+<div class="banner mobile sec-banner">
+    <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+</div>
+<div class="sec-nav">
+    <div class="cont">
+        <ul class="sec-nav-list">
+            <li class="sec-on">TAG标签</li>
+        </ul>
+
+        <script type="text/javascript">
+                function mbSecNav() {
+                    var num = $('.sec-nav-list li').length;
+                    if (num >= 3) {
+                        $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
+                    } else if (num == 2) {
+                        $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
+                    } else if (num == 1) {
+                        $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
+                    }
+                }
+        </script>
+    </div>
+</div>
+
+
+<div class="content newsC">
+    <div class="news-bg">
+        <div class="cont">
+            <ul class="tag-list">
+                @foreach (Tags a in Model)
+                {
+                    <li>
+                        <a href="/tag/@a.TagName" title="@a.TagName">
+                            @a.TagName（@a.Counts）
+                        </a>
+                    </li>
+                }
+                @if (Model == null || Model.Count < 1)
+                {
+                    <li>暂无相关记录...</li>
+                }
+            </ul>
+            <div class="normal">
+                @Html.Raw(Pages.GetPageStr(ViewBag.pagesize, (int)ViewBag.totalCount, ViewBag.page, "/Tag?page={0}", 3, 10, ""))
+            </div>
+            <!-- 点击加载更多 -->
+        </div>
+    </div>
+</div>

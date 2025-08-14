@@ -35,7 +35,7 @@
             <ul class="sec-nav-list">
                 @foreach (var k in sameList)
                 {
-                    <li class="@(k.Id == Model.Id?"sec-on":"")"><a asp-controller="Article" asp-action="Index" asp-route-id="@(k.Id)" title="@k.KindName">@k.KindName</a></li>
+                    <li class="@(k.Id == Model.Id?"sec-on":"")"><a  href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a></li>
                 }
             </ul>
 
@@ -68,6 +68,9 @@
                     <p><label class="normal">姓       名：</label><input type="text" name="name_txt" id="name_txt" value="" placeholder="姓       名："></p>
                     <p><label class="normal">联系电话：</label><input type="text" name="tel_txt" id="tel_txt" value="" placeholder="联系电话："></p>
                     <p class="msg-ta"><label class="normal">留言内容：</label><textarea name="content_txt" id="content_txt" rows="8" cols="80" placeholder="留言内容："></textarea></p>
+                    <p><label class="normal">验证码：</label><input type="text" name="tel_code" id="tel_code" value="" placeholder="验证码" style="width:240px">
+                        <img src="/VerifyCode/MixVerifyCode" alt="验证码" style="cursor:pointer" onclick="getNewCode()" id="codeimg" />
+                    </p>
                     <p><button type="submit">提交留言</button></p>
                 </form>
             </div>
@@ -77,6 +80,9 @@
 
 
 <script>
+    function getNewCode(){
+        $("#codeimg").attr("src", '/VerifyCode/MixVerifyCode?rnd='+Math.random())
+    }
     $(function () {
         $("#nav_@(topkid)").addClass("nav-on");
     })

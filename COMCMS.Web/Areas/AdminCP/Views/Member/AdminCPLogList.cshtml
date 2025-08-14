@@ -3,30 +3,25 @@
     ViewBag.title = "后台管理日志";
 }
 <div class="wrapper wrapper-content ">
-    <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5>@ViewBag.title</h5>
-            <div class="ibox-tools">
-            </div>
-        </div>
-        <div class="ibox-content">
-            <div class="panel panel-default">
-                <div class="panel-heading">筛选条件</div>
-                <div class="panel-body">
-                    <form id="formSearch" class="form-horizontal form-inline" onsubmit="doSearch(); return false; ">
-                        <div>
-                            @*<label class="control-label">留言分类：</label>
-
-                            <select class="form-control" name="kid" id="kid">
-                                <option value="0">所有分类</option>
-                              </select>*@
-                            <label class="control-label">关键字：</label>
-                            <input type="text" placeholder="标题关键字" name="keyword" id="keyword" class="form-control">
-                            <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary" onclick="doSearch();">查询</button>
-                        </div>
-                    </form>
+    <div class="row">
+        <div class="search-collapse">
+            <form id="formSearch" onsubmit="return doSearch(); return false;">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            关键字：
+                            <input type="text" placeholder="标题关键字" name="keyword" id="keyword">
+                        </li>
+                        <li>
+                            <button type="button" id="btn_query" class="btn btn-primary btn-sm" onclick="doSearch();">查询</button>
+                        </li>
+                    </ul>
                 </div>
-            </div>
+            </form>
+        </div>
+    </div>
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
             <table id="tb_departments"></table>
 
             <script>

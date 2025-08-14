@@ -36,7 +36,7 @@
             <ul class="sec-nav-list">
                 @foreach (var k in sameList)
                 {
-                    <li class="@(k.Id == Model.Id?"sec-on":"")"><a asp-controller="Article" asp-action="Index" asp-route-id="@(k.Id)" title="@k.KindName">@k.KindName</a></li>
+                    <li class="@(k.Id == Model.Id?"sec-on":"")"><a href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a></li>
                 }
             </ul>
 
@@ -63,7 +63,7 @@
                 @foreach (Article a in ViewBag.list)
                 {
                     <li>
-                        <a asp-controller="Article" asp-action="Detail" asp-route-id="@(a.Id)" title="@a.Title">
+                        <a href="@ViewsHelper.EchoArticleURL(a)" title="@a.Title">
                             @if (!string.IsNullOrEmpty(a.Pic))
                             {
                                 <div class="news-pic">
@@ -88,9 +88,9 @@
                     <li>暂无相关记录...</li>
                 }
             </ul>
-            <!-- 分页按钮 -->
+            <!-- 分页按钮 $"/Article/Index/{Model.Id}" + "?page={0}"-->
             <div class="normal">
-                @Html.Raw(Pages.GetPageStr(ViewBag.pagesize, (int)ViewBag.totalCount, ViewBag.page, $"/Article/Index/{Model.Id}" + "?page={0}", 99, 10, ""))
+                @Html.Raw(Pages.GetPageStr(ViewBag.pagesize, (int)ViewBag.totalCount, ViewBag.page, ViewsHelper.EchoURL(Model), 3, 10, ""))
             </div>
             <!-- 点击加载更多 -->
         </div>

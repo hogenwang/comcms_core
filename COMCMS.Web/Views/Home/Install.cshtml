@@ -1,0 +1,99 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMCMS 初始化</title>
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/hplus/css/style.css" rel="stylesheet" />
+    <link href="~/hplus/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/hplus/css/animate.min.css" rel="stylesheet" />
+    <link href="~/hplus/css/login.css" rel="stylesheet" />
+
+    <!--[if lt IE 8]>
+    <meta http-equiv="refresh" content="0;Ie" />
+    <![endif]-->
+    <script>if (window.top !== window.self) { window.top.location = window.location; }</script>
+    <script src="~/js/des.js"></script>
+    <script>var encrypt_key = '@ViewBag.key';</script>
+</head>
+<body class="gray-bg">
+    <div class="middle-box text-center loginscreen  animated fadeInDown">
+        <div>
+            <div class="text-center m-b-md" style="font-size:64px">
+                COMCMS
+            </div>
+            <h3>初始化系统数据</h3>
+            <form asp-controller="Home" asp-action="DoInstall" id="installForm" class="m-t" role="form" method="post" asp-antiforgery="true">
+                <div class="form-group">
+                    <input type="text" name="sitename" id="sitename" class="form-control" placeholder="网站名称" required="" value="comcms">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="siteurl" id="siteurl" class="form-control" placeholder="网站URL地址" required="" value="@Utils.GetServerUrl()">
+                </div>
+                @if (ViewBag.sqltype == "mysql")
+                {
+                    <div class="form-group">
+                        <select class="form-control" name="mysqltype" id="mysqltype">
+                            <option value="windows">Windows 下 Mysql(数据库表不区分大小写)</option>
+                            <option value="linux">Linux 下 Mysql(数据库表区分大小写)</option>
+                        </select>
+                    </div>
+                }
+                <div class="form-group">
+                    <input type="text" name="username" id="username" class="form-control" placeholder="超级管理员登录账号" required="">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" id="password" class="form-control" placeholder="超级管理员登录密码" required="">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password2" id="password2" class="form-control" placeholder="确认登录密码" required="">
+                </div>
+                <button type="submit" class="btn btn-primary block full-width m-b">确认安装</button>
+                <p class="text-muted text-center">
+                    COMCMS © 2014-@DateTime.Now.Year
+                </p>
+            </form>
+        </div>
+    </div>
+    <!-- 全局js -->
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/validation/jquery.validate.js"></script>
+        <script src="~/js/validation/messages_zh.js"></script>
+        <script src="~/js/layer/layer.js"></script>
+        <script src="~/js/jquery.form.js"></script>
+        <script src="~/js/rtpost.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/js/validation/jquery.validate.min.js"></script>
+        <script src="~/js/validation/messages_zh.min.js"></script>
+        <script src="~/js/layer/layer.js"></script>
+        <script src="~/js/jquery.form.min.js"></script>
+        <script src="~/js/rtpost.js"></script>
+    </environment>
+    <script>
+        $(function () {
+            var rules = {
+                username: {
+                    required: true,
+                    minlength: 5
+                },
+                password: {
+                    required: true,
+                    minlength: 5
+                }
+            };
+            DoPost("installForm", rules,"提交初始化安装");
+        });
+    </script>
+
+</body>
+</html>

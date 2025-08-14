@@ -45,7 +45,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             if (!string.IsNullOrWhiteSpace(keyword))
                 ex &= (Order._.Title.Contains(keyword) | Order._.OrderNum.Contains(keyword) | Order._.RealName.Contains(keyword) | Order._.Address.Contains(keyword));
 
-            IList<Order> list = Order.FindAll(ex, null, null, startRowIndex, numPerPage);
+            IList<Order> list = Order.FindAll(ex, Order._.Id.Desc(), null, startRowIndex, numPerPage);
             long totalCount = Order.FindCount(ex, null, null, startRowIndex, numPerPage);
             return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
             //return Json(new { total = totalCount, rows = list }, JsonRequestBehavior.AllowGet);
@@ -327,7 +327,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             if (!string.IsNullOrWhiteSpace(keyword))
                 ex &= OnlinePayOrder._.Title.Contains(keyword);
 
-            IList<OnlinePayOrder> list = OnlinePayOrder.FindAll(ex, null, null, startRowIndex, numPerPage);
+            IList<OnlinePayOrder> list = OnlinePayOrder.FindAll(ex, OnlinePayOrder._.Id.Desc(), null, startRowIndex, numPerPage);
             long totalCount = OnlinePayOrder.FindCount(ex, null, null, startRowIndex, numPerPage);
             return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
             //return Json(new { total = totalCount, rows = list }, JsonRequestBehavior.AllowGet);

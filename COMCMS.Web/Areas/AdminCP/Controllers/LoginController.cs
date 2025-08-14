@@ -21,6 +21,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 return Redirect("/AdminCP");
             }
+
+            bool hasData = AdminMenu.FindCount(null, null, null, 0, 0) > 0;
+            if (!hasData)
+            {
+                return Redirect("/Home/Install");
+            }
+
             string key = Utils.GetRandomChar(12);
             SessionHelper.WriteSession("des_key", key);
             ViewBag.key = key;
@@ -43,6 +50,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         {
             string strUserName = Request.Form["username"];
             string strPassWord = Request.Form["password"];
+            string code = Request.Form["code"];
 
             if (strUserName.Length % 8 != 0)
             {
@@ -62,6 +70,21 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Other = "reload";
                 return Json(tip);
             }
+
+            if (Utils.GetSetting("SystemSetting:AdminLoginWithCode") == "1")
+            {
+                if (string.IsNullOrEmpty(code))
+                {
+                    tip.Message = "请输入验证码！";
+                    return Json(tip);
+                }
+                if (!VerifyCodeHelper.GetSingleObj().VerifyCodeIsOK(code))
+                {
+                    tip.Message = "验证码错误！";
+                    return Json(tip);
+                }
+            }
+
             //解密
             string username = "";
             string password = "";

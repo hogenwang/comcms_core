@@ -1,5 +1,19 @@
-﻿@{
+﻿@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment env
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@using NewLife
+@using System.Runtime;
+@using System.Diagnostics;
+@{
     Layout = null;
+    Admin my = ViewBag.admin;
+    var mi = MachineInfo.Current ?? new MachineInfo();
+    var process = Process.GetCurrentProcess();
+}
+@functions {
+    public string GetAntiXsrfRequestToken()
+    {
+        return Xsrf.GetAndStoreTokens(Context).RequestToken;
+    }
 }
 <!DOCTYPE html>
 <html>
@@ -16,6 +30,11 @@
     <link href="~/hplus/css/login.css" rel="stylesheet" />
     <link href="~/js/treegrid/jquery.treegrid.css" rel="stylesheet" />
     <script src="~/js/jquery2.min.js"></script>
+    <script src="~/js/layer/layer.js"></script>
+    <script src="~/js/vue/vue.min.js"></script>
+    <script>
+        var csrfToken = '@GetAntiXsrfRequestToken()';
+    </script>
 </head>
 
 <body class="gray-bg">
@@ -28,7 +47,7 @@
                         <h5>网站文章数量</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">0</h1>
+                        <h1 class="no-margins">@(Article.FindCount(null,null,null,0,0))</h1>
                         <div class="stat-percent font-bold text-success">
                             <span id="resultspan"></span> <i class="fa fa-bolt"></i>
                         </div>
@@ -40,159 +59,250 @@
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
                         <span class="label label-info pull-right">全部</span>
-                        <h5>网站留言</h5>
+                        <h5>总产品数量</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins">0</h1>
-                        <div class="stat-percent font-bold text-info">
-                            0 <i class="fa fa-level-up"></i>
-                        </div>
-                        <small>新留言</small>
+                        <h1 class="no-margins">@(Product.FindCount(null,null,null,0,0))</h1>
+                        <small>系统总产品数量</small>
                     </div>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <span class="label label-primary pull-right">计划任务</span>
-                        <h5>生成sitemap.xml</h5>
+                        <h5>总会员数量</h5>
                     </div>
                     <div class="ibox-content">
-                        <h1 class="no-margins"><button type="button" class="btn btn-success" onclick="doCreateSitemap();">执行生成</button></h1>
-                        <div class="stat-percent font-bold text-success">
-                            <span id="resultsitemapspan"></span> <i class="fa fa-bolt"></i>
-                        </div>
-                        <small>如果有更新内容，请执行</small>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-title">
-                        <span class="label label-danger pull-right">最近一个月</span>
-                        <h5>活跃用户</h5>
-                    </div>
-                    <div class="ibox-content">
-                        <h1 class="no-margins">0</h1>
+                        <h1 class="no-margins">@(Member.FindCount(null,null,null,0,0))</h1>
                         <div class="stat-percent font-bold text-danger">
                             <i class="fa fa-level-up"></i>
                         </div>
-                        <small>@(DateTime.Now.Month)月</small>
+                        <small>系统总会员数量</small>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                        <h5>留言</h5>
-                        <div class="ibox-tools">
-                            <a class="collapse-link">
-                                <i class="fa fa-chevron-up"></i>
-                            </a>
-                            <a class="close-link">
-                                <i class="fa fa-times"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="ibox-content ibox-heading">
-                        <h3><i class="fa fa-envelope-o"></i> 最新留言</h3>
-                        <small><i class="fa fa-tim"></i> 您有0条未读消息</small>
+                        <h5>未读留言</h5>
                     </div>
                     <div class="ibox-content">
-                        <div class="feed-activity-list">
-                            @*@foreach (Guestbook item in ViewBag.listguestbook)
-                                {
-                                    <div class="feed-element">
-                                        <div>
-                                            <small class="pull-right text-navy"></small>
-                                            <strong>@item.UserName</strong>
-                                            <div>@item.Title</div>
-                                            <small class="text-muted">@item.AddTime.ToString("yyyy-MM-dd HH:mm")</small>
-                                        </div>
-                                    </div>
-                                }*@
-
-                        </div>
+                        <h1 class="no-margins" id="smsCount">@(Guestbook.FindCount(Guestbook._.IsRead==0, null,null,0,0))</h1>
+                        <small>未读留言数量</small>
                     </div>
                 </div>
             </div>
-
-            <div class="col-sm-8">
-
-                <div class="row">
-                    <div class="col-sm-12">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-title">
-                                <h5>服务器信息</h5>
-                                <div class="ibox-tools">
-                                    <a class="collapse-link">
-                                        <i class="fa fa-chevron-up"></i>
-                                    </a>
-                                    <a class="close-link">
-                                        <i class="fa fa-times"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="ibox-content">
-
-                                <div class="row">
-                                    <div class="col-sm-12">
-                                        <table class="table table-hover margin bottom">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center">项目名称</th>
-                                                    <th>详细信息</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="text-center small">本程序绝对路径</td>
-                                                    <td>
-                                                        @ViewBag.contentPath
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center small">站点物理路径</td>
-                                                    <td>
-                                                        @ViewBag.rootPath
-
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center small">服务器地址</td>
-                                                    <td>
-                                                        @Utils.GetServerUrl()
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center small">程序端口</td>
-                                                    <td>
-                                                        @ViewBag.port
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center small">本地IP地址</td>
-                                                    <td>
-                                                        @Utils.GetIP()
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-
         </div>
+
+        @if(my.Roles.IsSuperAdmin == 1)
+        {
+            <div class="row" id="app">
+                <div class="col-sm-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>服务器信息</h5>
+                        </div>
+                        <div class="ibox-content">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-hover table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center small">服务器名称</td>
+                                                <td>
+                                                    @Environment.MachineName
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center small">操作系统</td>
+                                                <td>
+                                                    @mi.OSName @mi.OSVersion @System.Runtime.InteropServices.RuntimeInformation.OSArchitecture
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="text-center small">处理器/核心数</td>
+                                                <td>
+                                                    @mi.Processor / @Environment.ProcessorCount 核 (占用：{{info.cpuRate}}%)
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="text-center small">服务器内存</td>
+                                                <td>
+
+                                                    {{info.availableMemory}} (可用) / @((mi.Memory / 1024 / 1024).ToString("n0"))M (总) （<span v-bind:class="info.memoryUsage<10?'text-danger':''">{{info.memoryUsage}}% 空闲</span>）
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>应用程序信息</h5>
+                        </div>
+                        <div class="ibox-content">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-hover table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center small">本程序绝对路径</td>
+                                                <td>
+                                                    @ViewBag.contentPath
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center small">站点物理路径</td>
+                                                <td>
+                                                    @ViewBag.rootPath
+
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center small">服务器地址</td>
+                                                <td>
+                                                    @Utils.GetServerUrl():@(ViewBag.port)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center small">客户端IP地址</td>
+                                                <td>
+                                                    @(Utils.GetIP())
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="ibox float-e-margins">
+                        <div class="ibox-title">
+                            <h5>.NET Core 信息</h5>
+                        </div>
+                        <div class="ibox-content">
+
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table table-hover table-bordered">
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center small">.NET 版本</td>
+                                                <td>
+                                                    @Environment.Version
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center small">环境变量</td>
+                                                <td>
+                                                    @Html.Raw(env.EnvironmentName)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center small">内存</td>
+                                                <td>
+                                                    工作/提交:{{info.workingSet64}}/{{info.privateMemorySize64}}
+                                                    GC: {{info.gCMemory}} <a href="javascript:;" onclick="doMemoryFree()" title="点击释放进程内存">释放内存</a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-center small">启动时间</td>
+                                                <td>
+                                                    @System.Diagnostics.Process.GetCurrentProcess().StartTime.ToString("yyyy-MM-dd HH:mm:ss")
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <script>
+                                function doMemoryFree() {
+                                    var loading = layer.load(0, {
+                                        shade: [0.2, '#000'] //0.1透明度的背景
+                                    });
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/AdminCP/Index/DoMemoryFree",
+                                        dataType: "JSON",
+                                        success: function (data) {
+                                            if (data.status == "success") {
+                                                layer.close(loading);
+                                                layer.msg(data.message, {
+                                                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                                                }, function () {
+                                                    window.location.href = window.location.href;
+                                                });
+                                            } else {
+                                                layer.close(loading);
+                                                layer.alert(data.message, { icon: 2 });
+                                            }
+                                        },
+                                        error: function () {
+                                            layer.close(loading);
+                                            layer.alert('执行错误，请联系管理员！', { icon: 2 });
+                                        }
+                                    });
+                                }
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: function () {
+                return {
+                    info: {
+                        cpuRate: 0,
+                        availableMemory: '',
+                        memoryUsage: 0,
+                        workingSet64: '',
+                        privateMemorySize64: '',
+                        gCMemory: ''
+                    }
+                }
+            },
+            created: function () {
+                this.getMachineInfo();
+            },
+            methods: {
+                getMachineInfo: function () {
+                    var that = this;
+                    $.ajax({
+                        type: "POST",
+                        url: '/AdminCP/Index/GetMachineInfo?rnd=' + Math.random(),
+                        data: { __RequestVerificationToken: csrfToken },
+                        success: function (data) {
+                            if (data.status == "success") {
+                                that.info = data.detail;
+                                setTimeout(function () {
+                                    that.getMachineInfo();
+                                }, 10000)
+                            }
+                        },
+                        error: function () {
+                            //layer.alert('执行错误，请联系管理员！', { icon: 2 });
+                        }
+                    });
+                }
+            }
+        })
+    </script>
     <script src="~/js/treegrid/jquery.treegrid.min.js"></script>
     <script src="~/js/treegrid/jquery.treegrid.bootstrap3.js"></script>
     <script src="~/hplus/js/common.js"></script>

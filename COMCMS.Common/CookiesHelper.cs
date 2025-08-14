@@ -43,7 +43,8 @@ namespace COMCMS.Common
             {
                 Expires = DateTime.Now.AddMinutes(expires),
                 Path = "/",
-                HttpOnly = true
+                HttpOnly = true,
+                SameSite = SameSiteMode.Lax
             };
             MyHttpContext.Current.Response.Cookies.Append(strName, strValue, op);//用户名
         }
@@ -56,7 +57,14 @@ namespace COMCMS.Common
         /// <param name="strKey"></param>
         public static void ClearCookies(string strKey)
         {
-            MyHttpContext.Current.Response.Cookies.Delete(strKey);
+            CookieOptions op = new CookieOptions
+            {
+                Expires = DateTime.Now.AddMinutes(-1),
+                Path = "/",
+                HttpOnly = true,
+                SameSite = SameSiteMode.Lax
+            };
+            MyHttpContext.Current.Response.Cookies.Delete(strKey, op);
         }
         #endregion
     }

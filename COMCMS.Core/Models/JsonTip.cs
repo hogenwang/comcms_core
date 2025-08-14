@@ -45,6 +45,10 @@ namespace COMCMS.Core
         /// 返回URL
         /// </summary>
         public string ReturnUrl { get; set; }
+        /// <summary>
+        /// 其他详情
+        /// </summary>
+        public object Detail { get; set; }
 
         /// <summary>
         /// 获取JSON字符串

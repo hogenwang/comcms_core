@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Http;
 using System.Web;
+using COMCMS.Web.Models;
+using Microsoft.Extensions.Options;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -23,6 +25,16 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     [DisplayName("管理员")]
     public class MemberController : AdminBaseController
     {
+        private readonly SystemSetting _systemSetting;
+        private IWebHostEnvironment _env;
+        private AttachConfigEntity attach;
+        public MemberController(IWebHostEnvironment env, IOptions<SystemSetting> systemSetting)
+        {
+            attach = Config.GetSystemConfig().AttachConfigEntity;
+            _env = env;
+            _systemSetting = systemSetting.Value;
+        }
+
         #region 修改密码
         //修改个人信息
         [MyAuthorize("view", "editme")]
@@ -30,6 +42,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         {
             Core.Admin my = Core.Admin.GetMyInfo();
             Core.Admin.WriteLogActions("查看/编辑我的信息;");
+            ViewBag.passwordTip = Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength);
             return View(my);
         }
         [HttpPost]
@@ -88,6 +101,15 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     tip.Message = "新密码不能小于5个字符！";
                     return Json(tip);
                 }
+
+                if (_systemSetting.PasswordStrength > 0)
+                {
+                    if (!Utils.CheckPasswordStrength(newPwd, _systemSetting.PasswordStrength))
+                    {
+                        tip.Message = $"您的密码强度不符合要求:{Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength)}！";
+                        return Json(tip);
+                    }
+                }
                 if (newPwd != renewPwd)
                 {
                     tip.Message = "您输入的两次密码不一样！";
@@ -131,7 +153,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //获取所有的菜单列表
             IList<AdminMenu> list = AdminMenu.GetListTree(0, -1, false, false);
             ViewBag.MenuList = list;
-            Core.Admin.WriteLogActions("查看添加管理页面;");
+            //获取所有文章 商品栏目
+            IList<ArticleCategory> aclist = ArticleCategory.GetListTree(0, -1, true, true);
+            ViewBag.aclist = aclist;
+
+            IList<Category> pclist = Category.GetListTree(0, -1, true, true);
+            ViewBag.pclist = pclist;
+
+            Core.Admin.WriteLogActions("查看添加管理组页面;");
             return View();
         }
         //执行添加管理组
@@ -143,6 +172,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             string RoleDescription = fc["RoleDescription"];
             string IsSuperAdmin = fc["IsSuperAdmin"];
             string NotAllowDel = fc["NotAllowDel"];
+            string OnlyEditMyselfArticle = fc["OnlyEditMyselfArticle"];
+            string OnlyEditMyselfProduct = fc["OnlyEditMyselfProduct"];
+
+            if (string.IsNullOrEmpty(OnlyEditMyselfArticle) || !Utils.IsInt(OnlyEditMyselfProduct)) OnlyEditMyselfProduct = "0";
+            if (string.IsNullOrEmpty(OnlyEditMyselfProduct) || !Utils.IsInt(OnlyEditMyselfProduct)) OnlyEditMyselfProduct = "0";
+
+
             if (string.IsNullOrEmpty(RoleName))
             {
                 tip.Message = "管理组名称不能为空！";
@@ -155,6 +191,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.RoleDescription = RoleDescription;
             entity.IsSuperAdmin = int.Parse(IsSuperAdmin);
             entity.NotAllowDel = !string.IsNullOrEmpty(NotAllowDel) && NotAllowDel == "1" ? 1 : 0;
+            entity.OnlyEditMyselfArticle = int.Parse(OnlyEditMyselfArticle);
+            entity.OnlyEditMyselfProduct = int.Parse(OnlyEditMyselfProduct);
 
             //处理权限
             if (entity.IsSuperAdmin == 1)
@@ -207,6 +245,30 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     }
                 }
             }
+
+            //处理文章和商品栏目权限
+            string[] acpower = Request.Form["acpower"];
+            string[] pcpower = Request.Form["pcpower"];
+
+            List<int> acids = new List<int>();
+            List<int> pcids = new List<int>();
+            foreach (var item in acpower)
+            {
+                if (!string.IsNullOrEmpty(item) && Utils.IsInt(item))
+                {
+                    acids.Add(int.Parse(item));
+                }
+            }
+            foreach (var item in pcpower)
+            {
+                if (!string.IsNullOrEmpty(item) && Utils.IsInt(item))
+                {
+                    pcids.Add(int.Parse(item));
+                }
+            }
+
+            entity.AuthorizedArticleCagegory = JsonConvert.SerializeObject(acids);
+            entity.AuthorizedCagegory = JsonConvert.SerializeObject(pcids);
 
             entity.Insert();
             tip.Status = JsonTip.SUCCESS;
@@ -230,8 +292,20 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 entity.Powers = "[]";
             if (string.IsNullOrEmpty(entity.Menus))
                 entity.Menus = "[]";
+            if (string.IsNullOrEmpty(entity.AuthorizedArticleCagegory))
+                entity.AuthorizedArticleCagegory = "[]";
+            if (string.IsNullOrEmpty(entity.AuthorizedCagegory))
+                entity.AuthorizedCagegory = "[]";
             //获取所有的菜单列表
             IList<AdminMenu> list = AdminMenu.GetListTree(0, -1, false, false);
+
+            //获取所有文章 商品栏目
+            IList<ArticleCategory> aclist = ArticleCategory.GetListTree(0, -1, true, true);
+            ViewBag.aclist = aclist;
+
+            IList<Category> pclist = Category.GetListTree(0, -1, true, true);
+            ViewBag.pclist = pclist;
+
             ViewBag.MenuList = list;
             Core.Admin.WriteLogActions($"查看管理组（{id}）详情;");
             return View(entity);
@@ -246,6 +320,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             string RoleDescription = fc["RoleDescription"];
             string IsSuperAdmin = fc["IsSuperAdmin"];
             string NotAllowDel = fc["NotAllowDel"];
+            string OnlyEditMyselfArticle = fc["OnlyEditMyselfArticle"];
+            string OnlyEditMyselfProduct = fc["OnlyEditMyselfProduct"];
+
+            if (string.IsNullOrEmpty(OnlyEditMyselfArticle) || !Utils.IsInt(OnlyEditMyselfProduct)) OnlyEditMyselfProduct = "0";
+            if (string.IsNullOrEmpty(OnlyEditMyselfProduct) || !Utils.IsInt(OnlyEditMyselfProduct)) OnlyEditMyselfProduct = "0";
+
             if (string.IsNullOrEmpty(Id))
             {
                 tip.Message = "错误参数传递！";
@@ -268,6 +348,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.RoleDescription = RoleDescription;
             entity.IsSuperAdmin = int.Parse(IsSuperAdmin);
             entity.NotAllowDel = !string.IsNullOrEmpty(NotAllowDel) && NotAllowDel == "1" ? 1 : 0;
+            entity.OnlyEditMyselfArticle = int.Parse(OnlyEditMyselfArticle);
+            entity.OnlyEditMyselfProduct = int.Parse(OnlyEditMyselfProduct);
 
             //处理权限
             if (entity.IsSuperAdmin == 1)
@@ -320,6 +402,31 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     }
                 }
             }
+
+            //处理文章和商品栏目权限
+            string[] acpower = Request.Form["acpower"];
+            string[] pcpower = Request.Form["pcpower"];
+
+            List<int> acids = new List<int>();
+            List<int> pcids = new List<int>();
+            foreach (var item in acpower)
+            {
+                if (!string.IsNullOrEmpty(item) && Utils.IsInt(item))
+                {
+                    acids.Add(int.Parse(item));
+                }
+            }
+            foreach (var item in pcpower)
+            {
+                if (!string.IsNullOrEmpty(item) && Utils.IsInt(item))
+                {
+                    pcids.Add(int.Parse(item));
+                }
+            }
+
+            entity.AuthorizedArticleCagegory = JsonConvert.SerializeObject(acids);
+            entity.AuthorizedCagegory = JsonConvert.SerializeObject(pcids);
+
             entity.Update();
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "编辑管理组详情成功";
@@ -395,7 +502,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             if (!string.IsNullOrWhiteSpace(keyword))
                 ex &= Core.Admin._.UserName.Contains(keyword);
 
-            IList<Core.Admin> list = Core.Admin.FindAll(ex, null, null, startRowIndex, numPerPage);
+            IList<Core.Admin> list = Core.Admin.FindAll(ex, Admin._.Id.Desc(), null, startRowIndex, numPerPage);
             totalCount = Core.Admin.FindCount(ex, null, null, startRowIndex, numPerPage);
             return Content(JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
         }
@@ -406,6 +513,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //加载管理组
             IList<AdminRoles> list = AdminRoles.FindAll(AdminRoles._.Id > 0, AdminRoles._.Rank.Asc(), null, 0, 0);
             ViewBag.RoleList = list;
+            ViewBag.passwordTip = Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength);
             Core.Admin.WriteLogActions("查看添加管理员页面;");
             return View();
         }
@@ -446,11 +554,20 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "密码不能小于5个字符！";
                 return Json(tip);
             }
+            if (_systemSetting.PasswordStrength > 0)
+            {
+                if (!Utils.CheckPasswordStrength(newPwd, _systemSetting.PasswordStrength))
+                {
+                    tip.Message = $"您的密码强度不符合要求:{Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength)}！";
+                    return Json(tip);
+                }
+            }
             if (newPwd != renewPwd)
             {
                 tip.Message = "两次输入密码不一致，请重新输入！";
                 return Json(tip);
             }
+
             //验证用户名
             if (Core.Admin.FindCount(Core.Admin._.UserName == userName, null, null, 0, 0) > 0)
             {
@@ -485,6 +602,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 return EchoTipPage("系统找不到本记录！");
             }
+            ViewBag.passwordTip = Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength);
             Core.Admin.WriteLogActions($"查看/编辑管理员({entity.UserName});");
             return View(entity);
         }
@@ -542,6 +660,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 {
                     tip.Message = "密码不能小于5个字符！";
                     return Json(tip);
+                }
+                if (_systemSetting.PasswordStrength > 0)
+                {
+                    if (!Utils.CheckPasswordStrength(newPwd, _systemSetting.PasswordStrength))
+                    {
+                        tip.Message = $"您的密码强度不符合要求:{Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength)}！";
+                        return Json(tip);
+                    }
                 }
                 if (newPwd != renewPwd)
                 {
@@ -822,7 +948,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 }
             }
 
-            IList<Member> list = Member.FindAll(ex, null, null, startRowIndex, numPerPage);
+            IList<Member> list = Member.FindAll(ex, Member._.Id.Desc(), null, startRowIndex, numPerPage);
             totalCount = Member.FindCount(ex, null, null, startRowIndex, numPerPage);
             return Content(JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
         }
@@ -833,7 +959,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             IList<MemberRoles> list = MemberRoles.FindAll(MemberRoles._.Id > 0, MemberRoles._.Rank.Asc(), null, 0, 0);
             ViewBag.RoleList = list;
             ViewBag.allmember = Member.FindAll(Member._.Id > 0 & Member._.IsLock != 1, null, null, 0, 0);
-
+            ViewBag.passwordTip = Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength);
             Core.Admin.WriteLogActions($"查看添加用户页面;");
             Member model = new Member();
             return View(model);
@@ -859,6 +985,15 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "密码必须不小于6个字符";
                 return Json(tip);
             }
+            if (_systemSetting.PasswordStrength > 0)
+            {
+                if (!Utils.CheckPasswordStrength(model.PassWord, _systemSetting.PasswordStrength))
+                {
+                    tip.Message = $"您的密码强度不符合要求:{Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength)}！";
+                    return Json(tip);
+                }
+            }
+
             string PassWord2 = Request.Form["PassWord2"];
             if (model.PassWord != PassWord2)
             {
@@ -929,7 +1064,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             IList<RebateChangeLog> listrechargebalancelogs = RebateChangeLog.FindAll(RebateChangeLog._.UId == entity.Id, null, null, 0, 0);
             ViewBag.listrechargebalancelogs = listrechargebalancelogs;
 
-
+            ViewBag.passwordTip = Utils.GetPasswordStrengthTip(_systemSetting.PasswordStrength);
 
             Core.Admin.WriteLogActions($"查看/编辑用户({entity.UserName});");
             return View(entity);
