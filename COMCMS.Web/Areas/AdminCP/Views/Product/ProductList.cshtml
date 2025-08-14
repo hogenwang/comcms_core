@@ -1,39 +1,59 @@
 ﻿
 @{
     ViewBag.title = "商品管理";
+    Admin my = Admin.GetMyInfo();
+    List<int> aclist = new List<int>();
+    if (my.Roles.IsSuperAdmin != 1 && !string.IsNullOrEmpty(my.Roles.AuthorizedCagegory))
+    {
+        aclist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<int>>(my.Roles.AuthorizedCagegory);
+    }
 }
 <div class="wrapper wrapper-content">
-    <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5>@ViewBag.title</h5>
-            <div class="ibox-tools">
-            </div>
-        </div>
-        <div class="ibox-content">
-            <div class="panel panel-default">
-                <div class="panel-heading">筛选条件</div>
-                <div class="panel-body">
-                    <form id="formSearch" class="form-horizontal form-inline" onsubmit="return doSearch(); return false;">
-                        <div>
-                            <label class="control-label">商品分类：</label>
-
-                            <select class="form-control" name="kid" id="kid">
+    <div class="row">
+        <div class="search-collapse">
+            <form id="formSearch" onsubmit="return doSearch(); return false;">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            商品分类：
+                            <select name="kid" id="kid">
                                 <option value="0">所有分类</option>
                                 @foreach (var m in ViewBag.ListKinds)
                                 {
-                                    <option value="@m.Id">@m.KindName</option>
+
+                                    if (my.Roles.IsSuperAdmin != 1 && aclist.Count > 0)
+                                    {
+                                        if (aclist.FindIndex(x => x == m.Id) > -1)
+                                        {
+                                            <option value="@m.Id">@m.KindName</option>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <option value="@m.Id">@m.KindName</option>
+                                    }
                                 }
                             </select>
-                            <label class="checkbox-inline i-checks">
+                        </li>
+                        <li>
+                            <label class="checkbox-inline i-checks" for="isshowsub">
                                 <input type="checkbox" value="1" name="isshowsub" id="isshowsub" /> 显示下级栏目商品
                             </label>
-                            <label class="control-label">关键字：</label>
-                            <input type="text" placeholder="标题关键字" name="keyword" id="keyword" class="form-control">
-                            <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary" onclick="doSearch();">查询</button>
-                        </div>
-                    </form>
+                        </li>
+                        <li>
+                            关键字：
+                            <input type="text" placeholder="标题关键字" name="keyword" id="keyword">
+                        </li>
+                        <li>
+                            <button type="button" id="btn_query" class="btn btn-primary btn-sm" onclick="doSearch();">查询</button>
+                        </li>
+                    </ul>
                 </div>
-            </div>
+            </form>
+        </div>
+    </div>
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
             <div id="toolbar" class="btn-group">
                 <button id="btn_add" type="button" class="btn btn-outline btn-default" onclick="top.showDialog('addarticle','添加商品','/AdminCP/Product/AddProduct',0,0)">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
@@ -94,7 +114,7 @@
                                 pageNumber: 1,                       //初始化加载第一页，默认第一页
                                 pageSize: 25,                       //每页的记录行数（*）
                                 pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
-                                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                                search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
                                 strictSearch: true,
                                 showColumns: true,                  //是否显示所有的列
                                 showRefresh: true,                  //是否显示刷新按钮
@@ -115,37 +135,50 @@
                                     title: '所属分类'
                                 }, {
                                     field: 'Title',
-                                    title: '商品标题'
+                                    title: '商品标题',
+                                    formatter: function (value, row, index) {
+                                        return '<a href="/Product/Detail/' + row["id"] + '" target="_blank" title="新窗口打开预览商品">' + value + '</a>'
+                                    }
+
                                 }, {
                                     field: 'Price',
                                     title: '商品价格'
                                 },
                                 {
                                     field: 'Sequence',
-                                    title: '排序'
+                                    title: '排序',
+                                    width: 130,
+                                    formatter: function (value, row, index) {
+                                    return '<div class="input-group"><input type="number" class="form-control input-sm" id="ac_rank_' + row["Id"] + '" name="ac_rank_' + row["Id"] + '" value="' + value + '" placeholder="请输入一个数字，越小排越前"><a class="input-group-addon btn btn-primary" title="修改保存" href="javascript:;" onclick="doSaveSequence(' + row["Id"] + ')"><i class="fa fa-save"></i></a></div>'
+                                    }
                                 }, {
                                     field: 'AddTime',
-                                    title: '添加时间'
+                                    title: '添加时间',
+                                    width: 150
                                 }, {
                                     field: 'IsNew',
                                     title: '最新',
                                     align: 'center',
-                                    formatter: 'newFormatter'
+                                    formatter: 'newFormatter',
+                                    width: 65
                                 }, {
                                     field: 'IsRecommend',
                                     title: '推荐',
                                     align: 'center',
-                                    formatter: 'recommendFormatter'
+                                    formatter: 'recommendFormatter',
+                                    width: 65
                                 }, {
                                     field: 'IsHide',
                                     title: '隐藏',
                                     align: 'center',
-                                    formatter: 'hideFormatter'
+                                    formatter: 'hideFormatter',
+                                    width: 65
                                 },
                                 {
                                     field: 'Id',
                                     title: '操作',
-                                    formatter: 'actionFormatter'
+                                    formatter: 'actionFormatter',
+                                    width: 140
                                 }
                                 ]
                             });
@@ -156,8 +189,9 @@
                             var temp = {   //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
                                 limit: params.limit,   //页面大小
                                 page: (params.offset / params.limit)+1,  //页码
-                                kid:$("#kid").val(),
-                                departmentname: $("#keyword").val()
+                                kid: $("#kid").val(),
+                                keyword: $("#keyword").val(),
+                                isshowsub: $("#isshowsub").prop("checked") ? 1 : 0
                             };
                             return temp;
                         };
@@ -205,7 +239,45 @@
                         };
 
                         return oInit;
-                    };
+                };
+                function doSaveSequence(id) {
+                    var rank = $("#ac_rank_" + id).val();
+                    if (rank == '') {
+                        layer.alert("请输入排序！", { icon: 2 });
+                        return false;
+                    }
+                    //console.log(rank);
+                    if (!isInt(rank)) {
+                        layer.alert("排序只能是数字！", { icon: 2 });
+                        return false;
+                    }
+                    var loading = layer.load(0, {
+                        shade: [0.2, '#000'] //0.1透明度的背景
+                    });
+                    $.ajax({
+                        type: "POST",
+                        url: "/AdminCP/Product/DoEditProductSequence",
+                        data: { id: id, rank: rank },
+                        dataType: "JSON",
+                        success: function (data) {
+                            if (data.status == "success") {
+                                layer.close(loading);
+                                layer.msg(data.message, {
+                                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                    //window.location.href = window.location.href;
+                                });
+                            } else {
+                                layer.close(loading);
+                                layer.alert(data.message, { icon: 2 });
+                            }
+                        },
+                        error: function () {
+                            layer.close(loading);
+                            layer.alert('执行错误，请联系管理员！', { icon: 2 });
+                        }
+                    });
+                }
             </script>
         </div>
     </div>

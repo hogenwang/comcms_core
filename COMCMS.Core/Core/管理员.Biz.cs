@@ -412,19 +412,22 @@ namespace COMCMS.Core
         {
             if (IsAdminLogin())
             {
-                //string adminLogId = SessionHelper.GetSession(sessionAdminLogIDKey).ToString();
-                string adminLogId = AuthenticationHelper.GetClaim(sessionAdminLogIDKey);
+                string adminLogId = SessionHelper.GetSession(sessionAdminLogIDKey).ToString();
+                //string adminLogId = AuthenticationHelper.GetClaim(sessionAdminLogIDKey);
                 if (string.IsNullOrEmpty(adminLogId))
                 {
-                    //adminLogId = CookiesHelper.GetCookie(cookiesAdminLogIDKey);//日志GUID
-                    adminLogId = AuthenticationHelper.GetClaim(cookiesAdminLogIDKey);//日志GUID
+                    adminLogId = CookiesHelper.GetCookie(cookiesAdminLogIDKey);//日志GUID
+                    //adminLogId = AuthenticationHelper.GetClaim(cookiesAdminLogIDKey);//日志GUID
                 }
                 if (!string.IsNullOrEmpty(adminLogId))
                 {
                     AdminLog log = AdminLog.FindByGUID(adminLogId);
                     if (log != null)
                     {
-                        log.Actions = log.Actions + $"|||{DateTime.Now.ToString("yyyy-MM-dd HH:mm")}: {action}";
+                        if (string.IsNullOrEmpty(log.Actions))
+                            log.Actions = $"{DateTime.Now:yyyy-MM-dd HH:mm}: {action}";
+                        else
+                            log.Actions = log.Actions + $"|||{DateTime.Now:yyyy-MM-dd HH:mm}: {action}";
                         log.LastUpdateTime = DateTime.Now;
                         log.Update();
 

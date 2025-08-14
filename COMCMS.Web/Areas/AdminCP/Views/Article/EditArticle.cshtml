@@ -1,6 +1,12 @@
 ﻿@model COMCMS.Core.Article
 @{
     ViewBag.title = "查看/编辑文章详情";
+    Admin my = Admin.GetMyInfo();
+    List<int> aclist = new List<int>();
+    if (my.Roles.IsSuperAdmin != 1 && !string.IsNullOrEmpty(my.Roles.AuthorizedArticleCagegory))
+    {
+        aclist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedArticleCagegory) ? "[]" : my.Roles.AuthorizedArticleCagegory);
+    }
 }
 <div class="wrapper wrapper-content ">
     <div class="ibox float-e-margins">
@@ -18,7 +24,17 @@
                         <select class="form-control m-b" asp-for="KId">
                             @foreach (var m in ViewBag.ListKinds)
                             {
-                                <option value="@m.Id">@m.KindName</option>
+                                if (my.Roles.IsSuperAdmin != 1 && aclist.Count > 0)
+                                {
+                                    if (aclist.FindIndex(x => x == m.Id) > -1)
+                                    {
+                                        <option value="@m.Id">@m.KindName</option>
+                                    }
+                                }
+                                else
+                                {
+                                    <option value="@m.Id">@m.KindName</option>
+                                }
                             }
                         </select>
                     </div>
@@ -27,6 +43,12 @@
                     <label class="col-sm-3 control-label">文章标题：</label>
                     <div class="col-sm-8">
                         <input id="Title" name="Title" maxlength="200" type="text" class="form-control" required aria-required="true" placeholder="填写文章标题" value="@Model.Title">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">静态化文件名：</label>
+                    <div class="col-sm-8">
+                        <input id="FileName" name="FileName" maxlength="200" type="text" class="form-control" aria-required="true" placeholder="填写静态化文件名，大小写字母、数字和-，如：about.html，不能是index.html" value="@Model.FileName">
                     </div>
                 </div>
                 <div class="form-group">
@@ -110,7 +132,14 @@
                     <div class="col-sm-8">
                         <div class="input-group">
                             <span class="input-group-btn my-preview">
-                                <button type="button" class="btn btn-primary"><i class="fa fa-search-plus"></i></button>
+                                @if (!string.IsNullOrEmpty(Model.Pic))
+                                {
+                                    <img src="@Model.Pic" />
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-primary"><i class="fa fa-search-plus"></i></button>
+                                }
                             </span>
                             <input id="Pic" name="Pic" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个图片" value="@Model.Pic">
                             <span class="input-group-addon my-upload-span upload-img"></span>
@@ -145,9 +174,19 @@
 
 
                                 <div class="form-group" id="ImgRow@(i)">
-                                    <label class="col-sm-3 control-label"><button type="button" class="btn btn-danger btn-sm" onclick="delmyImgRow('ImgRow@(i)')"> <i class="fa fa-close"></i> 删除</button></label>
+                                    <div class="col-sm-3 text-right"><button type="button" class="btn btn-danger btn-sm" onclick="delmyImgRow('ImgRow@(i)')"> <i class="fa fa-close"></i> 删除</button></div>
                                     <div class="col-sm-8">
                                         <div class="input-group">
+                                            <span class="input-group-btn my-preview">
+                                                @if (!string.IsNullOrEmpty(s))
+                                                {
+                                                    <img src="@s" />
+                                                }
+                                                else
+                                                {
+                                                    <button type="button" class="btn btn-primary"><i class="fa fa-search-plus"></i></button>
+                                                }
+                                            </span>
                                             <input id="ImgUrlnImgRow@(i)" name="nImgUrl" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个图片" value="@s">
                                             <span class="input-group-addon my-upload-span upload-img"></span>
                                         </div>
@@ -190,9 +229,10 @@
 
     })
     var htmlText = '<div class="form-group" id="nImgRow{0}">';
-    htmlText += '<label class="col-sm-3 control-label"><button type="button" class="btn btn-danger btn-sm" onclick="delmyImgRow(\'nImgRow{0}\')"> <i class="fa fa-close"></i> 删除</button></label>';
+    htmlText += '<div class="col-sm-3 text-right"><button type="button" class="btn btn-danger btn-sm" onclick="delmyImgRow(\'nImgRow{0}\')"> <i class="fa fa-close"></i> 删除</button></div>';
     htmlText += '<div class="col-sm-8">';
     htmlText += '<div class="input-group">';
+    htmlText += '<span class="input-group-btn my-preview"><button type="button" class="btn btn-primary"><i class="fa fa-search-plus"></i></button></span>';
     htmlText += '<input id="nImgUrlnImgRow{0}" name="nImgUrl" maxlength="250" type="text" class="form-control upload-path" placeholder="请选择或上传一个图片" value="">';
     htmlText += '<span class="input-group-addon my-upload-span upload-img" id="newimg_{0}"></span>';
     htmlText += '</div></div></div>';

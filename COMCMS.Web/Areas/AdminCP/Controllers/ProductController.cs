@@ -36,6 +36,24 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //获取上级栏目
             IList<Category> list = Category.GetListTree(0, -1, true, false);
             ViewBag.ListTree = list;
+            //获取模板 模板规则，以Index_开头的，为栏目列表，以Detial_开头的为文章详情
+            List<string> listTpls = new List<string>();
+            var asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var asmItem in asms)
+            {
+                string fullName = asmItem.GetName().ToString();
+                if (fullName.IndexOf("COMCMS.Web") > -1)
+                {
+                    var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Product")).ToList();
+                    if (types.Count == 0) continue;
+                    foreach (var type in types)
+                    {
+                        string viewName = type.Name.Replace("Views_Product_", "") + ".cshtml";
+                        listTpls.Add(viewName);
+                    }
+                }
+            }
+            ViewBag.ListTpl = listTpls;
             //获取模板
             //List<string> listtpl = COMCMS.Common.IOHelper.GetDirFiles(new DirectoryInfo(Server.MapPath("~/Views/article")));
             //ViewBag.ListTpl = listtpl;
@@ -53,6 +71,33 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "商品栏目标题不能为空！";
                 return Json(tip);
             }
+
+            if (!string.IsNullOrEmpty(model.FilePath))
+            {
+                if (!model.FilePath.StartsWith("/"))
+                {
+                    tip.Message = "栏目路径请以/开头！";
+                    return Json(tip);
+                }
+                if (model.FilePath.EndsWith("/"))
+                {
+                    tip.Message = "栏目路径结尾不用加上/";
+                    return Json(tip);
+                }
+
+                if (model.FilePath.Count(x => x == '/') > 4)
+                {
+                    tip.Message = "最多只能四级路径！";
+                    return Json(tip);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(model.FilePath) && !AdminUtils.CheckFilePathIsOK(model.FilePath, 0, 1))
+            {
+                tip.Message = "栏目路径不可用，请重新填写！";
+                return Json(tip);
+            }
+
             model.Insert();
             Core.Admin.WriteLogActions("添加商品栏目(id:" + model.Id + ");");
             tip.Status = JsonTip.SUCCESS;
@@ -74,9 +119,25 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //获取上级栏目
             IList<Category> list = Category.GetListTree(0, -1, true, false);
             ViewBag.ListTree = list;
-            //获取模板
-            //List<string> listtpl = COMCMS.Common.IOHelper.GetDirFiles(new DirectoryInfo(Server.MapPath("~/Views/article")));
-            //ViewBag.ListTpl = listtpl;
+            //获取模板 模板规则，以Index_开头的，为栏目列表，以Detial_开头的为文章详情
+            List<string> listTpls = new List<string>();
+            var asms = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var asmItem in asms)
+            {
+                string fullName = asmItem.GetName().ToString();
+                if (fullName.IndexOf("COMCMS.Web") > -1)
+                {
+                    var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Product")).ToList();
+                    if (types.Count == 0) continue;
+                    foreach (var type in types)
+                    {
+                        string viewName = type.Name.Replace("Views_Product_", "") + ".cshtml";
+                        listTpls.Add(viewName);
+                    }
+                }
+            }
+            ViewBag.ListTpl = listTpls;
+
             Core.Admin.WriteLogActions("查看/编辑商品栏目（id:" + id + "）页面；");
             return View(entity);
         }
@@ -101,6 +162,30 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 tip.Message = "系统找不到本记录！";
                 Json(tip);
+            }
+            if (!string.IsNullOrEmpty(model.FilePath))
+            {
+                if (!model.FilePath.StartsWith("/"))
+                {
+                    tip.Message = "栏目路径请以/开头！";
+                    return Json(tip);
+                }
+                if (model.FilePath.EndsWith("/"))
+                {
+                    tip.Message = "栏目路径结尾不用加上/";
+                    return Json(tip);
+                }
+
+                if (model.FilePath.Count(x => x == '/') > 4)
+                {
+                    tip.Message = "最多只能四级路径！";
+                    return Json(tip);
+                }
+            }
+            if (!string.IsNullOrEmpty(model.FilePath) && !AdminUtils.CheckFilePathIsOK(model.FilePath, entity.Id, 1))
+            {
+                tip.Message = "栏目路径不可用，请重新填写！";
+                return Json(tip);
             }
 
             if (entity.PId != model.PId)
@@ -147,6 +232,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.KindDomain = model.KindDomain;
             entity.Rank = model.Rank;
             entity.Pic = model.Pic;
+            entity.FilePath = model.FilePath;
 
 
             entity.Save();
@@ -186,6 +272,27 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             tip.Message = "删除商品栏目成功";
             return Json(tip);
         }
+
+        #region 修改商品分类排序
+        [HttpPost]
+        [MyAuthorize("edit", "category", "JSON")]
+        public IActionResult DoEditCategoryRank(int id, int rank)
+        {
+            Category entity = Category.Find(Category._.Id == id);
+            if (entity == null)
+            {
+                tip.Message = "系统找不到本记录";
+                return Json(tip);
+            }
+            entity.Rank = rank;
+            entity.Update();
+            Admin.WriteLogActions($"修改商品分类排序(id:{id},排序:{rank});");
+            tip.Message = "修改商品分类排序成功！";
+            tip.Status = JsonTip.SUCCESS;
+            return Json(tip);
+        }
+        #endregion
+
         #endregion
 
         #region 商品列表
@@ -208,7 +315,23 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             numPerPage = limit;
             currentPage = page;
             startRowIndex = (currentPage - 1) * numPerPage;
-            Expression ex = Product._.Id > 0;
+            Expression ex = new Expression();
+
+            Admin my = Admin.GetMyInfo();
+            List<int> aclist = new List<int>();
+            if (my.Roles.IsSuperAdmin != 1)
+            {
+                aclist = JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedCagegory) ? "[]" : my.Roles.AuthorizedCagegory);
+                if (aclist == null) aclist = new List<int>();
+                if (aclist.Count > 0)
+                {
+                    ex &= Product._.KId.In(aclist);
+                }
+
+                //仅显示有权限内容
+                if (my.Roles.OnlyEditMyselfProduct == 1)
+                    ex &= Product._.AuthorId == my.Id;
+            }
 
             if (!string.IsNullOrWhiteSpace(keyword))
             {
@@ -253,6 +376,26 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         }
         #endregion
 
+        #region 修改商品排序
+        [HttpPost]
+        [MyAuthorize("edit", "product", "JSON")]
+        public IActionResult DoEditProductSequence(int id, int rank)
+        {
+            Product entity = Product.Find(Product._.Id == id);
+            if (entity == null)
+            {
+                tip.Message = "系统找不到本记录";
+                return Json(tip);
+            }
+            entity.Sequence = rank;
+            entity.Update();
+            Admin.WriteLogActions($"修改商品排序(id:{id},排序:{rank});");
+            tip.Message = "修改排序成功！";
+            tip.Status = JsonTip.SUCCESS;
+            return Json(tip);
+        }
+        #endregion
+
         #region 添加商品
         [HttpGet]
         [MyAuthorize("add", "product")]
@@ -292,6 +435,24 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "商品图片填写的不是图片格式！";
                 return Json(tip);
             }
+
+            Admin my = Admin.GetMyInfo();
+            List<int> aclist = new List<int>();
+            if (my.Roles.IsSuperAdmin != 1)
+            {
+                aclist = JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedCagegory)?"[]": my.Roles.AuthorizedCagegory);
+                if (aclist == null) aclist = new List<int>();
+                if (aclist.Count > 0)
+                {
+                    if (aclist.FindIndex(x => x == model.KId) == -1)
+                    {
+                        tip.Message = "当前选择栏目不存在，或者您没这个栏目的权限！";
+                        return Json(tip);
+                    }
+                }
+
+            }
+
             //处理商品更多图片
             string[] moreImgSrc = Request.Form["nImgUrl"];
             string morIMG = string.Empty;//更多图片的时候用到
@@ -312,7 +473,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 model.Content = content;
             }
             model.ItemImg = morIMG;
-            model.AuthorId = Core.Admin.GetMyInfo().Id;
+            model.AuthorId = my.Id;
             model.Insert();
             Category.UpdateDetailCount(model.KId);
             //添加TAG
@@ -381,6 +542,29 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "商品图片填写的不是图片格式！";
                 return Json(tip);
             }
+
+            Admin my = Admin.GetMyInfo();
+            List<int> aclist = new List<int>();
+            if (my.Roles.IsSuperAdmin != 1)
+            {
+                aclist = JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedCagegory) ? "[]" : my.Roles.AuthorizedCagegory);
+                if (aclist == null) aclist = new List<int>();
+                if (aclist.Count > 0)
+                {
+                    if (aclist.FindIndex(x => x == model.KId) == -1)
+                    {
+                        tip.Message = "当前选择栏目不存在，或者您没这个栏目的权限！";
+                        return Json(tip);
+                    }
+                }
+
+                if (my.Roles.OnlyEditMyselfProduct == 1 && entity.AuthorId != my.Id)
+                {
+                    tip.Message = "系统限制，您无法编辑非自己添加的商品！";
+                    return Json(tip);
+                }
+            }
+
             //处理商品更多图片
             string[] moreImgSrc = Request.Form["nImgUrl"];
             string morIMG = string.Empty;//更多图片的时候用到
@@ -415,8 +599,65 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 content = ThumbnailHelper.SaveRemoteImgForContent(content);
                 model.Content = content;
             }
-            //model.AuthorId = Core.Admin.GetMyInfo().Id;
-            model.Save();
+            entity.SupportId = model.SupportId;
+            entity.BannerImg = model.BannerImg;
+            entity.BId = model.BId;
+            entity.Color = model.Color;
+            entity.Content = model.Content;
+            entity.Credits = model.Credits;
+            entity.Description = model.Description;
+            entity.Discount = model.Discount;
+            entity.Fare = model.Fare;
+            entity.FilePath = model.FilePath;
+            entity.Front = model.Front;
+            entity.Hits = model.Hits;
+            entity.Icon = model.Icon;
+            entity.IsBest = model.IsBest;
+            entity.IsBreakup = model.IsBreakup;
+            entity.IsComment = model.IsComment;
+            entity.IsGift = model.IsGift;
+            entity.IsHide = model.IsHide;
+            entity.IsHotSales = model.IsHotSales;
+            entity.IsLock = model.IsLock;
+            entity.IsMember = model.IsMember;
+            entity.IsNew = model.IsNew;
+            entity.IsPart = model.IsPart;
+            entity.IsPromote = model.IsPromote;
+            entity.IsRecommend = model.IsRecommend;
+            entity.IsShelves = model.IsShelves;
+            entity.IsSpecial = model.IsSpecial;
+            entity.IsSubProduct = model.IsSubProduct;
+            entity.IsTop = model.IsTop;
+            entity.ItemImg = model.ItemImg;
+            entity.ItemNO = model.ItemNO;
+            entity.Keyword = model.Keyword;
+            entity.KId = model.KId;
+            entity.LinkURL = model.LinkURL;
+            entity.MarketPrice = model.MarketPrice;
+            entity.Material = model.Material;
+            entity.Parameters = model.Parameters;
+            entity.Pic = model.Pic;
+            entity.PPId = model.PPId;
+            entity.Price = model.Price;
+            entity.Sequence = model.Sequence;
+            entity.Service = model.Service;
+            entity.ShopId = model.ShopId;
+            entity.Spec = model.Spec;
+            entity.SpecialPrice = model.SpecialPrice;
+            entity.Stock = model.Stock;
+            entity.SubTitle = model.SubTitle;
+            entity.SupportId = model.SupportId;
+            entity.Tags = model.Tags;
+            entity.TemplateFile = model.TemplateFile;
+            entity.Title = model.Title;
+            entity.TitleColor = model.TitleColor;
+            entity.Unit = model.Unit;
+            entity.UpdateTime = DateTime.Now;
+            entity.WarnStock = model.WarnStock;
+            entity.Weight = model.Weight;
+
+            entity.Update();
+
             //添加TAG
             //Tag.InsertTags(model.Tags, RTType.RatuoModule.Product, model.Id, model.Title);
             Core.Admin.WriteLogActions("编辑商品(id:" + model.Id + ");");
@@ -439,6 +680,29 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "系统找不到本商品！";
                 return Json(tip);
             }
+
+            Admin my = Admin.GetMyInfo();
+            List<int> aclist = new List<int>();
+            if (my.Roles.IsSuperAdmin != 1)
+            {
+                aclist = JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedCagegory) ? "[]" : my.Roles.AuthorizedCagegory);
+                if (aclist == null) aclist = new List<int>();
+
+                if (aclist.Count > 0)
+                {
+                    if (aclist.FindIndex(x => x == entity.KId) == -1)
+                    {
+                        tip.Message = "者您没这个栏目的权限，无法删除该栏目商品！";
+                        return Json(tip);
+                    }
+                }
+                if (my.Roles.OnlyEditMyselfArticle == 1 && entity.AuthorId != my.Id)
+                {
+                    tip.Message = "系统限制，您无法删除非自己添加的商品！";
+                    return Json(tip);
+                }
+            }
+
             int kid = entity.KId;
             //删除TAG
             //Tag.DeleteTag(RTType.RatuoModule.Article, entity.Id);

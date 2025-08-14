@@ -1766,6 +1766,27 @@ img {
     width: 100%;
     height: 100%;
 }
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction:row;
+    order:2;
+    justify-content:space-around;
+    align-content:flex-start;
+}
+.tag-list li {
+    border-bottom: 1px dashed #dedede;
+    height: 60px;
+    height: 0.6rem;
+    line-height: 0.6rem;
+    width:48%;
+    margin-bottom:0.08rem;
+}
+    /*.tag-list::after {
+        content: '';
+        flex: auto;*/ /* 或者flex: 1 */
+    /*}*/
+
 
 .news-pic {
     width: 220px;

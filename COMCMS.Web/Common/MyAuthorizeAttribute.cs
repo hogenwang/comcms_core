@@ -14,7 +14,7 @@ namespace COMCMS.Web.Common
     /// <summary>
     /// 后台授权过滤器
     /// </summary>
-    public class MyAuthorizeAttribute : ResultFilterAttribute
+    public class MyAuthorizeAttribute : Attribute, IAuthorizationFilter
     {
         /// <summary>
         /// 菜单key
@@ -35,7 +35,7 @@ namespace COMCMS.Web.Common
             _returnType = !string.IsNullOrWhiteSpace(returnType) && returnType.ToLower() == "json" ? "JSON" : "HTML";
         }
 
-        public override void OnResultExecuting(ResultExecutingContext context)
+        public void OnAuthorization(AuthorizationFilterContext context)
         {
             bool isOK = false;
             if (Admin.IsAdminLogin())
@@ -89,7 +89,7 @@ namespace COMCMS.Web.Common
                     }
                 }
             }
-            base.OnResultExecuting(context);
+            //base.OnResultExecuting(context);
         }
     }
 }

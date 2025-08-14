@@ -67,12 +67,8 @@
                             <label class="col-sm-3 control-label">语音：</label>
                             <div class="col-sm-8">
                                 <div class="input-group">
-                                    <input id="txtSoundUrl" name="txtSoundUrl" maxlength="250" type="text" class="form-control" placeholder="选择一个语音" value="@(ViewBag.txtSoundUrl)">
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" onclick="BrowseServer('txtSoundUrl')">
-                                            选择一个语音
-                                        </button>
-                                    </span>
+                                    <input id="txtSoundUrl" name="txtSoundUrl" maxlength="250" type="text" class="form-control upload-path" placeholder="选择一个语音" value="@(ViewBag.txtSoundUrl)">
+                                    <span class="input-group-addon my-upload-span upload-mp3"></span>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +89,7 @@
                                     </thead>
                                     <tbody id="SildeImgs">
                                         <tr>
-                                            <td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_0" name="item_imgurl" value="" placeholder="请输入图片地址"><span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="BrowseServer('slide_Img_0')"><i class="fa fa-search"></i></button></span></div></td>
+                                            <td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_0" name="item_imgurl" value="" placeholder="请输入图片地址"><span class="input-group-addon my-upload-span upload-img"></span></div></td>
                                             <td><input type="text" class="form-control" id="" name="item_linkurl" value="" placeholder="请输入链接地址"></td>
                                             <td><input type="text" class="form-control" id="" name="item_title" value="" placeholder="请输入图片标题"></td>
                                             <td><textarea class="form-control" name="item_imginfo" placeholder="请输入图片说明" rows="2"></textarea></td>
@@ -114,12 +110,8 @@
                             <label class="col-sm-3 control-label">图片详情：</label>
                             <div class="col-sm-8">
                                 <div class="input-group">
-                                    <input id="txtSingleImage" name="txtSingleImage" maxlength="250" type="text" class="form-control" placeholder="选择一张图片（图片不能大于1M，否则微信显示不了！）" value="@(ViewBag.txtSingleImage)">
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" onclick="BrowseServer('txtSingleImage')">
-                                            选择一张图片
-                                        </button>
-                                    </span>
+                                    <input id="txtSingleImage" name="txtSingleImage" maxlength="250" type="text" class="form-control upload-path" placeholder="选择一张图片（图片不能大于1M，否则微信显示不了！）" value="@(ViewBag.txtSingleImage)">
+                                    <span class="input-group-addon my-upload-span upload-img"></span>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +138,7 @@
             parent.layer.close(index);
         }
         var htmlText = '<tr id="slideTR_{0}">';
-        htmlText += '<td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_{0}" name="item_imgurl" value="" placeholder="请输入图片地址"><span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="BrowseServer(\'slide_Img_{0}\')"><i class="fa fa-search"></i></button></span></div></td>';
+        htmlText += '<td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_{0}" name="item_imgurl" value="" placeholder="请输入图片地址"><span class="input-group-addon my-upload-span upload-img"></span></div></td>';
         htmlText += '<td><input type="text" class="form-control" id="slide_Link_{0}" name="item_linkurl" value="" placeholder="请输入链接地址"></td>';
         htmlText += '<td><input type="text" class="form-control" id="slide_Alt_{0}" name="item_title" value="" placeholder="请输入图片标题"></td>';
         htmlText += '<td><textarea class="form-control" name="item_imginfo" placeholder="请输入图片说明" rows="2"></textarea></td>';
@@ -158,11 +150,15 @@
             var newHtmlTr = htmlText.replace(/\{0\}/g, items);
             $('#SildeImgs').append(newHtmlTr);
             items += 1;
+            $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
         }
         function delmySlideRow(id) {
             $("#slideTR_" + id).remove();
         }
         $(function () {
+            //初始化上传控件
+            $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
+            $(".upload-mp3").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderFile", swf: "/js/webuploader/uploader.swf", filetypes: "mp3", notwater: true });
             $('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',

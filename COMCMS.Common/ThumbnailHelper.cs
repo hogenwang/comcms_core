@@ -1,14 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.DrawingCore.Drawing2D;
-using System.DrawingCore.Imaging;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Text;
-using System.DrawingCore;
+using System.Drawing;
 using System.Net;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using NewLife.Log;
+using SkiaSharp;
+using static System.Net.Mime.MediaTypeNames;
+using System.Net.Http;
+using System.Security.Policy;
 
 namespace COMCMS.Common
 {
@@ -22,11 +26,11 @@ namespace COMCMS.Common
         /// <summary>
         /// 程序绝对目录
         /// </summary>
-        private static string _ContentRootPath = DI.ServiceProvider.GetService<IWebHostEnvironment>().ContentRootPath;
+        private static string _ContentRootPath = Environment.CurrentDirectory;
         /// <summary>
         /// 静态文件
         /// </summary>
-        private static string _WebRootPath = DI.ServiceProvider.GetService<IWebHostEnvironment>().WebRootPath;
+        private static string _WebRootPath = _ContentRootPath + DirectorySeparatorChar + "wwwroot" + DirectorySeparatorChar;
 
         #region 方式
         public enum CutMode
@@ -61,7 +65,8 @@ namespace COMCMS.Common
         /// <param name="mode">生成缩略图的方式</param>    
         public static void MakeThumbnailImage(string fileName, string newFileName, int width, int height, CutMode mode)
         {
-            Image originalImage = Image.FromFile(fileName);
+            //Image originalImage = Image.FromFile(fileName);
+            var originalImage = SKBitmap.Decode(fileName);
             int towidth = width;
             int toheight = height;
 
@@ -114,91 +119,70 @@ namespace COMCMS.Common
                     break;
             }
 
-            //新建一个bmp图片
-            Bitmap b = new Bitmap(towidth, toheight);
-            try
-            {
-                //新建一个画板
-                Graphics g = Graphics.FromImage(b);
-                //设置高质量插值法
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                //设置高质量,低速度呈现平滑程度
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-                //清空画布并以透明背景色填充
-                g.Clear(Color.White);
-                //g.Clear(Color.Transparent);
-                //在指定位置并且按指定大小绘制原图片的指定部分
-                g.DrawImage(originalImage, new Rectangle(0, 0, towidth, toheight), new Rectangle(x, y, ow, oh), GraphicsUnit.Pixel);
 
-                SaveImage(b, newFileName, GetCodecInfo("image/" + GetFormat(newFileName).ToString().ToLower()));
-            }
-            catch (System.Exception e)
+            var newImg = originalImage.Resize(new SKSizeI(towidth, toheight), SKFilterQuality.Medium);
+            using var fs = new FileStream(newFileName, FileMode.Create);
+            //判断类型
+            SKEncodedImageFormat imgType = new SKEncodedImageFormat();
+            string sFullExtension = Utils.GetFileExtName(fileName).ToLower();//扩展名
+            switch (sFullExtension)
             {
-                throw e;
+                case ".jpg":
+                case ".jpeg":
+                    imgType = SKEncodedImageFormat.Jpeg;
+                    break;
+                case ".png":
+                    imgType = SKEncodedImageFormat.Png;
+                    break;
+                case ".gif":
+                    imgType = SKEncodedImageFormat.Gif;
+                    break;
+                case ".webp":
+                    imgType = SKEncodedImageFormat.Webp;
+                    break;
+                case ".bmp":
+                    imgType = SKEncodedImageFormat.Bmp;
+                    break;
+                default:
+                    imgType = SKEncodedImageFormat.Png;
+                    break;
             }
-            finally
-            {
-                originalImage.Dispose();
-                b.Dispose();
-            }
+            newImg.Encode(fs, imgType, 100);
+            fs.Flush();
+
+            //新建一个bmp图片
+            //Bitmap b = new Bitmap(towidth, toheight);
+            //try
+            //{
+            //    //新建一个画板
+            //    Graphics g = Graphics.FromImage(b);
+            //    //设置高质量插值法
+            //    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            //    //设置高质量,低速度呈现平滑程度
+            //    g.SmoothingMode = SmoothingMode.AntiAlias;
+            //    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            //    //清空画布并以透明背景色填充
+            //    g.Clear(Color.White);
+            //    //g.Clear(Color.Transparent);
+            //    //在指定位置并且按指定大小绘制原图片的指定部分
+            //    g.DrawImage(originalImage, new Rectangle(0, 0, towidth, toheight), new Rectangle(x, y, ow, oh), GraphicsUnit.Pixel);
+
+            //    SaveImage(b, newFileName, GetCodecInfo("image/" + GetFormat(newFileName).ToString().ToLower()));
+            //}
+            //catch (System.Exception e)
+            //{
+            //    throw e;
+            //}
+            //finally
+            //{
+            //    originalImage.Dispose();
+            //    b.Dispose();
+            //}
         }
         #endregion
 
 
         #region 帮助方法
-        /// <summary>
-        /// 保存图片
-        /// </summary>
-        /// <param name="image">Image 对象</param>
-        /// <param name="savePath">保存路径</param>
-        /// <param name="ici">指定格式的编解码参数</param>
-        private static void SaveImage(Image image, string savePath, ImageCodecInfo ici)
-        {
-            //设置 原图片 对象的 EncoderParameters 对象
-            EncoderParameters parameters = new EncoderParameters(1);
-            parameters.Param[0] = new EncoderParameter(System.DrawingCore.Imaging.Encoder.Quality, ((long)100));
-            image.Save(savePath, ici, parameters);
-            parameters.Dispose();
-        }
-        /// <summary>
-        /// 获取图像编码解码器的所有相关信息
-        /// </summary>
-        /// <param name="mimeType">包含编码解码器的多用途网际邮件扩充协议 (MIME) 类型的字符串</param>
-        /// <returns>返回图像编码解码器的所有相关信息</returns>
-        private static ImageCodecInfo GetCodecInfo(string mimeType)
-        {
-            ImageCodecInfo[] CodecInfo = ImageCodecInfo.GetImageEncoders();
-            foreach (ImageCodecInfo ici in CodecInfo)
-            {
-                if (ici.MimeType == mimeType)
-                    return ici;
-            }
-            return null;
-        }
-        /// <summary>
-        /// 得到图片格式
-        /// </summary>
-        /// <param name="name">文件名称</param>
-        /// <returns></returns>
-        public static ImageFormat GetFormat(string name)
-        {
-            string ext = name.Substring(name.LastIndexOf(".") + 1);
-            switch (ext.ToLower())
-            {
-                case "jpg":
-                case "jpeg":
-                    return ImageFormat.Jpeg;
-                case "bmp":
-                    return ImageFormat.Bmp;
-                case "png":
-                    return ImageFormat.Png;
-                case "gif":
-                    return ImageFormat.Gif;
-                default:
-                    return ImageFormat.Jpeg;
-            }
-        }
         #endregion
 
         #region 内容远程保存图片
@@ -212,8 +196,8 @@ namespace COMCMS.Common
             string recontent = content;
             if (string.IsNullOrEmpty(content))
                 return "";
-            WebClient client = new WebClient();
-
+            //WebClient client = new WebClient();
+            var _httpClient = new HttpClient();
             Regex reg = new Regex("IMG[^>]*?src\\s*=\\s*(?:\"(?<1>[^\"]*)\"|'(?<1>[^\']*)')", RegexOptions.IgnoreCase);
             MatchCollection m = reg.Matches(content);
             foreach (Match math in m)
@@ -231,7 +215,7 @@ namespace COMCMS.Common
                     else if (imgsrc.EndsWith("jpeg")) ext = "jpeg";
                     else if (imgsrc.EndsWith("bmp")) ext = "bmp";
                     string strNewImgName = Utils.GetOrderNum() + "." + ext;
-                    string savepath = $"{_WebRootPath}\\userfiles\\images\\auto\\{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";// 
+                    string savepath = $"{_WebRootPath}{DirectorySeparatorChar}userfiles{DirectorySeparatorChar}images{DirectorySeparatorChar}auto{DirectorySeparatorChar}{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";// 
                     string imgNewSrc = $"/userfiles/images/auto/{DateTime.Now.Year.ToString()}/{DateTime.Now.ToString("MM")}/{strNewImgName}";//保存后路径
                     //判断路径
                     if (!Directory.Exists(savepath))
@@ -239,8 +223,13 @@ namespace COMCMS.Common
                     string fullpath = Path.Combine(savepath, strNewImgName);//图片
                     try
                     {
+                        System.IO.FileStream fs;
+                        byte[] urlContents = _httpClient.GetByteArrayAsync(imgUrl).Result;
+                        fs = new System.IO.FileStream(fullpath, FileMode.CreateNew);
+                        fs.Write(urlContents, 0, urlContents.Length);
                         //保存图片
-                        client.DownloadFile(imgUrl, fullpath);
+                        //client.DownloadFile(imgUrl, fullpath);
+                        //_httpClient
                         recontent = recontent.Replace(imgUrl, imgNewSrc);
                     }
                     catch (Exception ex)

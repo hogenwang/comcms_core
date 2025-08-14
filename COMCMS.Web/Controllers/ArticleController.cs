@@ -29,8 +29,9 @@ namespace COMCMS.Web.Controllers
             {
                 if (Utils.IsInt(model.LinkURL))//如果是数字，则跳转到详情
                 {
-                    //Redirect($"/aritcle/{model.LinkURL}.html");
-                    return Redirect($"/Article/Detail/{model.LinkURL}");
+                    //return Redirect($"/Article/Detail/{model.LinkURL}");
+                    string linkUrl = ViewsHelper.EchoArticleURL(int.Parse(model.LinkURL));
+                    return Redirect(linkUrl);
                 }
                 else
                 {
@@ -39,6 +40,51 @@ namespace COMCMS.Web.Controllers
 
             }
             if (page < 1) page = 1;
+
+            //判断是否是限制了IP地址
+            if (!string.IsNullOrEmpty(model.AllowIp) && !Admin.IsAdminLogin()) //2019-04-16 增加如果超级管理员登录。不判断
+            {
+                long myIP = Utils.GetLongIP(Utils.GetIP());
+
+                string[] strRows = model.AllowIp.Split(new string[] { "\n" }, StringSplitOptions.None);
+                if (strRows != null && strRows.Length > 0)
+                {
+                    bool isAddressOK = false;
+                    foreach (var row in strRows)
+                    {
+                        if (!string.IsNullOrEmpty(row))
+                        {
+                            if (row.IndexOf("-") > -1)
+                            {
+                                string[] arrIps = row.Split(new string[] { "-" }, StringSplitOptions.None);
+                                if (arrIps != null && arrIps.Length == 2)
+                                {
+                                    long ip1 = Utils.GetLongIP(arrIps[0]);
+                                    long ip2 = Utils.GetLongIP(arrIps[1]);
+                                    if (ip1 <= myIP && myIP <= ip2)
+                                    {
+                                        isAddressOK = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                long iplong = Utils.GetLongIP(row);
+                                if (myIP == iplong)
+                                {
+                                    isAddressOK = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (!isAddressOK)
+                    {
+                        return EchoTip("您的IP不在允许范围内！");
+                    }
+                }
+            }
 
             if (model.IsList == 1)
             {
@@ -108,10 +154,58 @@ namespace COMCMS.Web.Controllers
             {
                 return AlertAndGoBack("系统找不到本记录！");
             }
+            if (entity.IsHide == 1 && !Admin.IsAdminLogin())
+            {
+                return EchoTip("系统找不到本文章！");
+            }
             ArticleCategory kind = ArticleCategory.FindById(entity.KId);
             if (kind == null)
             {
                 return AlertAndGoBack("系统找不到本文章栏目！");
+            }
+            //判断是否是限制了IP地址
+            if (!string.IsNullOrEmpty(kind.AllowIp) && !Admin.IsAdminLogin()) //2019-04-16 增加如果超级管理员登录。不判断
+            {
+                long myIP = Utils.GetLongIP(Utils.GetIP());
+
+                string[] strRows = kind.AllowIp.Split(new string[] { "\n" }, StringSplitOptions.None);
+                if (strRows != null && strRows.Length > 0)
+                {
+                    bool isAddressOK = false;
+                    foreach (var row in strRows)
+                    {
+                        if (!string.IsNullOrEmpty(row))
+                        {
+                            if (row.IndexOf("-") > -1)
+                            {
+                                string[] arrIps = row.Split(new string[] { "-" }, StringSplitOptions.None);
+                                if (arrIps != null && arrIps.Length == 2)
+                                {
+                                    long ip1 = Utils.GetLongIP(arrIps[0]);
+                                    long ip2 = Utils.GetLongIP(arrIps[1]);
+                                    if (ip1 <= myIP && myIP <= ip2)
+                                    {
+                                        isAddressOK = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                long iplong = Utils.GetLongIP(row);
+                                if (myIP == iplong)
+                                {
+                                    isAddressOK = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (!isAddressOK)
+                    {
+                        return EchoTip("您的IP不在允许范围内！");
+                    }
+                }
             }
             //增加点击
             entity.Hits++;
@@ -139,9 +233,9 @@ namespace COMCMS.Web.Controllers
             }
             string templatesname = "";//模板名称
             if (!string.IsNullOrEmpty(kind.TemplateFile))
-            { 
-                templatesname = kind.DetailTemplateFile.Replace(".cshtml", "").Replace(".aspx", "");
-                return View(templatesname, entity);
+            {
+                templatesname = kind.DetailTemplateFile;//.Replace(".cshtml", "").Replace(".aspx", "");
+                return View("~/Views/Article/" + templatesname, entity);
             }
             else
             {

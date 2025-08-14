@@ -12,6 +12,9 @@ using Microsoft.Extensions.Configuration.Json;
 using System.Net.NetworkInformation;
 using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
+using NewLife.Caching;
+using System.Net.Http;
 
 namespace COMCMS.Common
 {
@@ -63,7 +66,18 @@ namespace COMCMS.Common
         /// <summary>
         /// 与小程序验签的盐值
         /// </summary>
-        public static readonly string SIGNSALT = "comcms";// ConfigurationManager.AppSettings["SignSalt"];
+        public static string SIGNSALT
+        {
+            get
+            {
+                string strPrefixKey = Configuration["SystemSetting:SignSalt"];
+                if (string.IsNullOrEmpty(strPrefixKey))
+                {
+                    strPrefixKey = "comcms";
+                }
+                return strPrefixKey;
+            }
+        }
 
 
         /// <summary>
@@ -104,6 +118,11 @@ namespace COMCMS.Common
             /// </summary>
             Home=99
         }
+
+        /// <summary>
+        /// 内存缓存
+        /// </summary>
+        public static ICache MemoryCahce { get; set; } = Cache.Default;
         #endregion
 
         #region 验证部分
@@ -137,6 +156,15 @@ namespace COMCMS.Common
         {
             //A-Z, a-z, 0-9, -, /, =
             return Regex.IsMatch(str, @"[A-Za-z0-9-\/]");
+        }
+        /// <summary>
+        /// 判断静态化文件名是否正确
+        /// </summary>
+        /// <param name="filename"></param>
+        /// <returns></returns>
+        public static bool ChekHTMLFileNameIsOK(string filename)
+        {
+            return Regex.IsMatch(filename, @"^(?!index\b)[a-zA-Z0-9-]+(\.html)$");
         }
 
         /// <summary>
@@ -181,6 +209,10 @@ namespace COMCMS.Common
             {
                 http = "https://";
             }
+            if (MyHttpContext.Current.Request.Headers["X-Scheme"].ToString() == "https")//增加判断反向代理
+            {
+                http = "https://";
+            }
             string port = MyHttpContext.Current.Request.Host.Port.ToString();
             if (string.IsNullOrEmpty(port) || port == "80" || port == "443")
                 return http + MyHttpContext.Current.Request.Host.Host;
@@ -217,7 +249,7 @@ namespace COMCMS.Common
         {
             if (str.Length != 11)
                 return false;
-            return Regex.IsMatch(str, @"^1[3|4|5|7|8|9][0-9]\d{4,8}$");
+            return Regex.IsMatch(str, @"^1[3|4|5|6|7|8|9][0-9]\d{4,8}$");
         }
         /// <summary>
         /// 是否为ip
@@ -343,6 +375,213 @@ namespace COMCMS.Common
             else
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// 是否为日期型字符串
+        /// </summary>
+        /// <param name="StrSource">日期字符串(2008-05-08)</param>
+        /// <returns></returns>
+        public static bool IsDate(string StrSource)
+        {
+            return Regex.IsMatch(StrSource, @"^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-9]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))$");
+        }
+        /// <summary>
+        /// 是否为日期+时间型字符串
+        /// </summary>
+        /// <param name="source"></param>
+        /// <returns></returns>
+        public static bool IsDateTime(string StrSource)
+        {
+            return Regex.IsMatch(StrSource, @"^((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\s([0-1][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$");
+        }
+        /// <summary>
+        /// 正则手机型号
+        /// </summary>
+        private static readonly Regex RegexMobile =
+            new Regex(@"(iemobile|iphone|ipod|android|nokia|sonyericsson|blackberry|samsung|sec\-|windows ce|motorola|mot\-|up.b|midp\-)",
+                RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        /// <summary>
+        /// 通过UserAgent 判断是否是移动端
+        /// </summary>
+        /// <param name="userAgent"></param>
+        /// <returns></returns>
+        public static bool IsMobileRequest(string userAgent)
+        {
+            if (!string.IsNullOrEmpty(userAgent) && RegexMobile.IsMatch(userAgent))
+            {
+                return true;
+            }
+            return false;
+        }
+        /// <summary>
+        /// 获取用户浏览器
+        /// </summary>
+        /// <param name="userAgent"></param>
+        /// <returns></returns>
+        public static string GetBrowser(string userAgent)
+        {
+            if (string.IsNullOrEmpty(userAgent))
+            {
+                return "未知";
+            }
+            userAgent = userAgent.ToLower();
+
+            if (userAgent.Contains("opera/ucweb"))
+            { return "UC Opera"; }
+            else if (userAgent.Contains("openwave/ ucweb"))
+            { return "UCOpenwave"; }
+            else if (userAgent.Contains("microMessenger"))
+            { return "微信浏览器"; }
+            else if (userAgent.Contains("ucweb"))
+            { return "UC"; }
+            else if (userAgent.Contains("360se"))
+            { return "360"; }
+            else if (userAgent.Contains("metasr"))
+            { return "搜狗"; }
+            else if (userAgent.Contains("maxthon"))
+            { return "遨游"; }
+            else if (userAgent.Contains("the world"))
+            { return "世界之窗"; }
+            else if (userAgent.Contains("tencenttraveler") || userAgent.Contains("qqbrowser"))
+            { return "腾讯"; }
+            else if (userAgent.Contains("edge"))
+            { return "Edge"; }
+            else if (userAgent.Contains("edg"))
+            { return "Microsoft Edge"; }
+            else if (userAgent.Contains("chrome"))
+            { return "Chrome"; }
+            else if (userAgent.Contains("safari"))
+            { return "safari"; }
+            else if (userAgent.Contains("firefox"))
+            { return "Firefox"; }
+            else if (userAgent.Contains("opera"))
+            { return "Opera"; }
+            else if (userAgent.Contains("msie"))
+            { return "IE"; }
+            else
+            { return "未知"; }
+        }
+
+        /// <summary>
+        /// 获取客户端操作系统版本
+        /// </summary>
+        /// <returns></returns>
+        public static string GetOSName(string userAgent)
+        {
+            if (string.IsNullOrEmpty(userAgent))
+            {
+                return "未知";
+            }
+            userAgent = userAgent.ToLower();
+
+            if (userAgent.Contains("android"))
+            { return "Android"; }
+            else if (userAgent.Contains("mac os x"))
+            { return "ios"; }
+            else if (userAgent.Contains("windows phone"))
+            { return "Windows Phone"; }
+            else if (userAgent.Contains("nt 11.0"))
+            { return "Windows 11"; }
+            else if (userAgent.Contains("nt 10.0"))
+            { return "Windows 10"; }
+            else if (userAgent.Contains("NT 6.3"))
+            { return "Windows8.1"; }
+            else if (userAgent.Contains("NT 6.2"))
+            { return "Windows8"; }
+            else if (userAgent.Contains("nt 6.1"))
+            { return "Windows 7"; }
+            else if (userAgent.Contains("nt 6.0"))
+            { return "Windows Vista/Server 2008"; }
+            else if (userAgent.Contains("nt 5.2"))
+            { return "Windows Server 2003"; }
+            else if (userAgent.Contains("nt 5.1"))
+            { return "Windows XP"; }
+            else if (userAgent.Contains("nt 5"))
+            { return "Windows 2000"; }
+            else if (userAgent.Contains("nt 4"))
+            { return "Windows NT4"; }
+            else if (userAgent.Contains("me"))
+            { return "Windows Me"; }
+            else if (userAgent.Contains("98"))
+            { return "Windows 98"; }
+            else if (userAgent.Contains("95"))
+            { return "Windows 95"; }
+            else if (userAgent.Contains("mac"))
+            { return "Mac"; }
+            else if (userAgent.Contains("unix"))
+            { return "UNIX"; }
+            else if (userAgent.Contains("linux"))
+            { return "Linux"; }
+            else if (userAgent.Contains("sunos"))
+            { return "SunOS"; }
+
+            return "未知";
+        }
+
+        /// <summary>
+        /// 验证密码强度
+        /// 0:6位无要求
+        /// 1:至少八个字符，至少一个字母和一个数字
+        /// 2:至少八个字符，至少一个字母，一个数字和一个特殊字符
+        /// 3:最少八个字符，至少一个大写字母，一个小写字母和一个数字
+        /// 4:至少八个字符，至少一个大写字母，一个小写字母，一个数字和一个特殊字符
+        /// </summary>
+        /// <param name="password">密码</param>
+        /// <param name="t">验证强度</param>
+        /// <returns></returns>
+        public static bool CheckPasswordStrength(string password,int t)
+        {
+            if(t == 0)
+            {
+                if (password.Length < 6)
+                    return false;
+                return true;
+            }
+            else if(t== 1) // 至少八个字符，至少一个字母和一个数字
+            {
+                return Regex.IsMatch(password, @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$");
+            }
+            else if(t== 2)//至少八个字符，至少一个字母，一个数字和一个特殊字符
+            {
+                return Regex.IsMatch(password, @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$");
+            }
+            else if (t ==3)//最少八个字符，至少一个大写字母，一个小写字母和一个数字
+            {
+                return Regex.IsMatch(password, @"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,20}$");
+            }
+            else //至少八个字符，至少一个大写字母，一个小写字母，一个数字和一个特殊字符
+            {
+                return Regex.IsMatch(password, @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$");
+            }
+        }
+        /// <summary>
+        /// 获取密码强度提示
+        /// </summary>
+        /// <param name="t"></param>
+        /// <returns></returns>
+        public static string GetPasswordStrengthTip(int t)
+        {
+            if (t == 0)
+            {
+                return "至少六个字符";
+            }
+            else if (t == 1) // 至少八个字符，至少一个字母和一个数字
+            {
+                return "至少八个字符，至少一个字母和一个数字";
+            }
+            else if (t == 2)//至少八个字符，至少一个字母，一个数字和一个特殊字符
+            {
+                return "至少八个字符，至少一个字母，一个数字和一个特殊字符";
+            }
+            else if (t == 3)//最少八个字符，至少一个大写字母，一个小写字母和一个数字
+            {
+                return "最少八个字符，至少一个大写字母，一个小写字母和一个数字";
+            }
+            else //至少八个字符，至少一个大写字母，一个小写字母，一个数字和一个特殊字符
+            {
+                return "至少八个字符，至少一个大写字母，一个小写字母，一个数字和一个特殊字符";
             }
         }
         #endregion
@@ -731,6 +970,14 @@ namespace COMCMS.Common
             string xForwardedForAddress = MyHttpContext.Current.Request.Headers["X-Forwarded-For"];
             if (!string.IsNullOrEmpty(userHostAddress) && !string.IsNullOrEmpty(xForwardedForAddress) && userHostAddress != xForwardedForAddress)
             {
+                if (xForwardedForAddress.IndexOf(",") > -1)
+                {
+                    string[] arrIP = xForwardedForAddress.Split(new string[] { "," }, StringSplitOptions.None);
+                    if (arrIP.Length > 1)
+                    {
+                        return arrIP[0].Trim();
+                    }
+                }
                 return xForwardedForAddress;
             }
             if (!string.IsNullOrEmpty(userHostAddress) && Utils.IsIP(userHostAddress))
@@ -818,6 +1065,53 @@ namespace COMCMS.Common
             if (!IsDecimal(v) && decimal.Parse(v) < 0) v = "0";
             price = decimal.Parse(v);
             return price;
+        }
+
+        /// <summary>
+        /// 获取当前系统运行平台
+        /// </summary>
+        /// <returns></returns>
+        public static string GetOSPlatform()
+        {
+            string osPlatform = "Unknown";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                osPlatform = "Windows";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                osPlatform = "Linux";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                osPlatform = "OSX";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
+            {
+                osPlatform = "FreeBSD";
+            }
+
+            return osPlatform;
+        }
+
+        /// <summary>
+        /// IP转换成为long的地址
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <returns></returns>
+        public static long GetLongIP(string ip)
+        {
+            if (!IsIP(ip))
+            {
+                return 0;
+            }
+            string[] s = ip.Split('.');
+            long l0 = long.Parse(s[0]) << 24;
+            long l1 = long.Parse(s[1]) << 16;
+            long l2 = long.Parse(s[2]) << 8;
+            long l3 = long.Parse(s[3]);
+
+            return l0 + l1 + l2 + l3;
         }
 
         #endregion
@@ -933,125 +1227,17 @@ namespace COMCMS.Common
         /// <returns></returns>
         public static string HttpGet(string url)
         {
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
-            request.Method = "GET";
-            //request.ContentType = "application/x-www-form-urlencoded";
-            request.Accept = "*/*";
-            request.Proxy = null;
-            request.Timeout = 15000;
-            request.AllowAutoRedirect = false;
-
-            WebResponse response = null;
+            //使用webclient http get
             string responseStr = null;
-
-            try
+            using (HttpClient client = new HttpClient())
             {
-                response = request.GetResponse();
-
-                if (response != null)
+                var re = client.GetAsync(url).Result;
+                if (re.IsSuccessStatusCode)
                 {
-                    StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
-                    responseStr = reader.ReadToEnd();
-                    reader.Close();
+                    responseStr = re.Content.ReadAsStringAsync().Result;
                 }
             }
-            catch (Exception ex)
-            {
-                NewLife.Log.XTrace.WriteException(ex);
-                throw;
-            }
-            finally
-            {
-                request = null;
-                response = null;
-            }
-
             return responseStr;
-        }
-
-        /// <summary>
-        /// 后台发送POST请求
-        /// </summary>
-        /// <param name="url">服务器地址</param>
-        /// <param name="data">发送的数据</param>
-        /// <returns></returns>
-        public static Stream HttpPost(string url, string data)
-        {
-            try
-            {
-                //创建post请求
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                request.ContentType = "application/json;charset=UTF-8";
-                byte[] payload = Encoding.UTF8.GetBytes(data);
-                request.ContentLength = payload.Length;
-
-
-                //发送post的请求
-                Stream writer = request.GetRequestStream();
-                writer.Write(payload, 0, payload.Length);
-                writer.Close();
-
-                //接受返回来的数据
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Stream stream = response.GetResponseStream();
-                return stream;
-                //StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                //string value = reader.ReadToEnd();
-
-                //reader.Close();
-                //stream.Close();
-                //response.Close();
-
-                //return value;
-            }
-            catch (Exception ex)
-            {
-                NewLife.Log.XTrace.WriteException(ex);
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// 后台发送POST请求
-        /// </summary>
-        /// <param name="url">服务器地址</param>
-        /// <param name="data">发送的数据</param>
-        /// <returns></returns>
-        public static string HttpPostAndReturnString(string url, string data)
-        {
-            try
-            {
-                //创建post请求
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                request.Method = "POST";
-                request.ContentType = "application/json;charset=UTF-8";
-                byte[] payload = Encoding.UTF8.GetBytes(data);
-                request.ContentLength = payload.Length;
-
-
-                //发送post的请求
-                Stream writer = request.GetRequestStream();
-                writer.Write(payload, 0, payload.Length);
-                writer.Close();
-
-                //接受返回来的数据
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Stream stream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-                string value = reader.ReadToEnd();
-
-                reader.Close();
-                stream.Close();
-                response.Close();
-
-                return value;
-            }
-            catch (Exception ex)
-            {
-                NewLife.Log.XTrace.WriteException(ex);
-                return "";
-            }
         }
 
         /// <summary>

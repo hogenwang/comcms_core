@@ -3,34 +3,36 @@
     ViewBag.title = "广告管理";
 }
 <div class="wrapper wrapper-content ">
-    <div class="ibox float-e-margins">
-        <div class="ibox-title">
-            <h5>@ViewBag.title</h5>
-            <div class="ibox-tools">
-            </div>
-        </div>
-        <div class="ibox-content">
-            <div class="panel panel-default">
-                <div class="panel-heading">筛选条件</div>
-                <div class="panel-body">
-                    <form id="formSearch" class="form-horizontal form-inline">
-                        <div>
-                            <label class="control-label">广告分类：</label>
-
-                            <select class="form-control" name="kid" id="kid">
+    <div class="row">
+        <div class="search-collapse">
+            <form id="formSearch" onsubmit="return doSearch(); return false;">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            广告分类：
+                            <select name="kid" id="kid">
                                 <option value="0">所有栏目</option>
                                 @foreach (var m in ViewBag.ListKinds)
                                 {
                                     <option value="@m.Id">@m.KindName</option>
                                 }
                             </select>
-                            <label class="control-label">关键字：</label>
-                            <input type="text" placeholder="标题关键字" name="keyword" id="keyword" class="form-control">
-                            <button type="button" style="margin-left:50px" id="btn_query" class="btn btn-primary" onclick="doSearch();">查询</button>
-                        </div>
-                    </form>
+                        </li>
+                        <li>
+                            关键字：
+                            <input type="text" placeholder="标题关键字" name="keyword" id="keyword">
+                        </li>
+                        <li>
+                            <button type="button" id="btn_query" class="btn btn-primary btn-sm" onclick="doSearch();">查询</button>
+                        </li>
+                    </ul>
                 </div>
-            </div>
+            </form>
+        </div>
+    </div>
+    <div class="ibox float-e-margins">
+        <div class="ibox-content">
+
             <div id="toolbar" class="btn-group">
                 <button id="btn_add" type="button" class="btn btn-outline btn-default" onclick="top.showDialog('addads','添加广告','/AdminCP/Other/AddAds',0,0)">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
@@ -83,7 +85,7 @@
                                 pageNumber: 1,                       //初始化加载第一页，默认第一页
                                 pageSize: 25,                       //每页的记录行数（*）
                                 pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
-                                search: true,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                                search: false,                       //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
                                 strictSearch: true,
                                 showColumns: true,                  //是否显示所有的列
                                 showRefresh: true,                  //是否显示刷新按钮

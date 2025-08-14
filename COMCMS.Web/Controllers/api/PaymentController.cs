@@ -17,12 +17,12 @@ namespace COMCMS.Web.Controllers.api
     /// <summary>
     /// 支付API
     /// </summary>
-    public class PaymentController : Controller
+    public class PaymentController : APIBaseController
     {
         #region 微信小程序订单支付
         [HttpGet]
         [CheckFilter]
-        public ReJson DoPayOrder(string ordernum)
+        public ReJson DoWXAppPayOrder(string ordernum)
         {
             //获取订单
             Order entity = Order.Find(Order._.OrderNum == ordernum);
@@ -137,7 +137,7 @@ namespace COMCMS.Web.Controllers.api
                 //reJson.message = "下单成功！";
                 //reJson.detail = detail;
                 //return reJson;
-                return new ReJson(40000, "下单成功！", detail);
+                return new ReJson(0, "下单成功！", detail);
             }
             catch (Exception ex)
             {

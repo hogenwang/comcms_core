@@ -32,7 +32,7 @@
         <ul class="sec-nav-list">
             @foreach (Article a in alist)
             {
-                <li class="@(a.Id == Model.Id?"sec-on":"")"><a asp-controller="Article" asp-action="Detail" asp-route-id="@(a.Id)" title="@a.Title">@a.Title</a></li>
+                <li class="@(a.Id == Model.Id?"sec-on":"")"><a  href="@ViewsHelper.EchoURL(a)" title="@a.Title">@a.Title</a></li>
             }
         </ul>
 

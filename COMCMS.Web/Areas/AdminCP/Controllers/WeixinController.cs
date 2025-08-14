@@ -16,6 +16,8 @@ using Senparc.Weixin.MP.Containers;
 using Senparc.Weixin.MP.Entities.Menu;
 using System.IO;
 using System.Text;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -73,7 +75,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         //修改菜单
         [HttpPost]
         [MyAuthorize("edit", "wxmenu", "JSON")]
-        public IActionResult DoPostMenuData(string allmenu)
+        public async Task<IActionResult> DoPostMenuData(string allmenu)
         {
 
             Config cfg = Config.GetSystemConfig();
@@ -102,13 +104,18 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             //Senparc.Weixin.MP.CommonAPIs.CommonApi.CreateMenu()
             string posturl = $"https://api.weixin.qq.com/cgi-bin/menu/create?access_token={accessToken}";
 
-            Stream retunStream = Utils.HttpPost(posturl, allmenu);
-
-            StreamReader reader = new StreamReader(retunStream, Encoding.UTF8);
-            string value = reader.ReadToEnd();
-
-            reader.Close();
-
+            HttpContent content = new StringContent(allmenu);
+            string value = string.Empty;
+            using (HttpClient client = new HttpClient())
+            {
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                var re = await client.PostAsync(posturl, content);
+                string responseString = re.Content.ReadAsStringAsync().Result;
+                if (!string.IsNullOrEmpty(responseString))
+                {
+                    value = responseString;
+                }
+            }
             XTrace.WriteLine("创建公众号菜单回传：" + value);
 
             dynamic rejson = Newtonsoft.Json.Linq.JToken.Parse(value) as dynamic;
@@ -319,7 +326,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 }
             }
 
-            IList<WeixinRequestRule> list = WeixinRequestRule.FindAll(ex, null, null, startRowIndex, numPerPage);
+            IList<WeixinRequestRule> list = WeixinRequestRule.FindAll(ex, WeixinRequestRule._.Id.Desc(), null, startRowIndex, numPerPage);
             long totalCount = WeixinRequestRule.FindCount(ex, null, null, startRowIndex, numPerPage);
             Admin.WriteLogActions($"查看公众号自定义回复规则({page});");
             return Content(JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
@@ -663,7 +670,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     ex &= WeixinRequestRule._.Keywords.Contains(keyword);
                 }
             }
-            IList<WeixinRequestRule> list = WeixinRequestRule.FindAll(ex, null, null, startRowIndex, numPerPage);
+            IList<WeixinRequestRule> list = WeixinRequestRule.FindAll(ex, WeixinRequestRule._.Id.Desc(), null, startRowIndex, numPerPage);
             long totalCount = WeixinRequestRule.FindCount(ex, null, null, startRowIndex, numPerPage);
             Admin.WriteLogActions($"查看公众号点击事件自定义回复规则({page});");
             return Content(JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");

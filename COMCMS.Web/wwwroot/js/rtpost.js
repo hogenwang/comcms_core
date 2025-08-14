@@ -1,4 +1,4 @@
-//所有异步提交 formId 不需要加上#  last:2015-11-12  by Hogen Wang
+//所有异步提交 formId 不需要加上#  last:2020-07-15  by Hogen Wang
 //依赖jquery jquery.form jquery.validate jquery.metadata
 function DoPost(formId, rules, messages) {
     //提交地址
@@ -114,12 +114,13 @@ function DoPost(formId, rules, messages) {
 }
 //后台异步删除
 function doDel(url, id) {
-    layer.confirm('确认要删除当前记录？此操作不可恢复！', {
+    //console.log('找到记录：' + $("#tb_departments").length, window.location.href);
+    top.layer.confirm('确认要删除当前记录？此操作不可恢复！', {
         icon: 3,
         title: '系统提示',
         btn: ['确定', '取消 '] //按钮
     }, function () {
-        var loading = layer.load(0, {
+        var loading = top.layer.load(0, {
             shade: [0.2, '#000'] //0.1透明度的背景
         });
         $.ajax({
@@ -129,36 +130,36 @@ function doDel(url, id) {
             dataType: "JSON",
             success: function (data) {
                 if (data.status == "success") {
-                    layer.close(loading);
-                    layer.msg(data.message, {
+                    top.layer.close(loading);
+                    top.layer.msg(data.message, {
                         time: 1000 //2秒关闭（如果不配置，默认是3秒）
                     }, function () {
-                        if ($("#row_" + id).length > 0) {
-                            $("#row_" + id).fadeOut(300).remove();
+                        if ($("#tb_departments").length > 0) {
+                            $("#tb_departments").bootstrapTable('refresh');
                         } else {
-                            //window.location.href = window.location.href;
-                            var dindex = parent.layer.getFrameIndex(window.name);
-                            if (dindex) {
-                                layer.close(dindex);
-                                return;
-                            }
-                            if (top.toplayerindex) {
-                                //window.location.href = window.location.href;
-                            } else {
-                                top.refreshCurrentTab();//刷新本tab
-                            }
+                            window.location.href = window.location.href;
+                            //var dindex = parent.layer.getFrameIndex(window.name);
+                            //if (dindex) {
+                            //    layer.close(dindex);
+                            //    return;
+                            //}
+                            //if (top.toplayerindex) {
+                            //    //window.location.href = window.location.href;
+                            //} else {
+                            //    top.refreshCurrentTab();//刷新本tab
+                            //}
                         }
 
                     });
                 } else {
-                    layer.close(loading);
-                    layer.alert(data.message, { icon: 2 });
+                    top.layer.close(loading);
+                    top.layer.alert(data.message, { icon: 2 });
 
                 }
             },
             error: function () {
-                layer.close(loading);
-                layer.alert('执行错误，请联系管理员！', { icon: 2 });
+                top.layer.close(loading);
+                top.layer.alert('执行错误，请联系管理员！', { icon: 2 });
             }
         });
     }, function () {
@@ -308,10 +309,20 @@ function DoAdminLogin(formId, rules, messages) {
             password = encMe(password, encrypt_key, 1, 0);
             username = encMe(username, encrypt_key, 1, 0);
             var queryString = $myform.formSerialize();
+            var code = "";
+            if ($("#code").length > 0) {
+                code = $("#code").val();
+            }
+            var postData = {
+                username: username,
+                password: password,
+                __RequestVerificationToken: rvtoken,
+                code: code
+            }
             $.ajax({
                 type: "POST",
                 url: url,
-                data: "username=" + username + "&password=" + password + "&__RequestVerificationToken=" + rvtoken,
+                data: postData,
                 dataType: "JSON",
                 success: function (data) {
                     if (data.status == "success") {
@@ -348,4 +359,63 @@ function DoAdminLogin(formId, rules, messages) {
         }
     });
     return false;
+}
+
+
+//后台列表执行批量操作
+function doBatchAction(url, title) {
+    var list = $('#tb_departments').bootstrapTable('getSelections');
+    var ids = [];
+    if (!list || list.length < 1) {
+        layer.alert("请至少选择一条记录！", { icon: 2 });
+        return false;
+    }
+    list.map(function (item, index) {
+        if (item.id) {
+            ids.push(item.id);
+        }
+        if (item.Id) {
+            ids.push(item.Id);
+        }
+    })
+
+    layer.confirm('确认要执行批量' + title + '吗？', {
+        icon: 3,
+        title: '系统提示',
+        btn: ['确定', '取消 '] //按钮
+    }, function () {
+        var loading = layer.load(0, {
+            shade: [0.2, '#000'] //0.1透明度的背景
+        });
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: { ids: JSON.stringify(ids) },
+            dataType: "JSON",
+            success: function (data) {
+                if (data.status == "success") {
+                    layer.close(loading);
+                    layer.msg(data.message, {
+                        time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                    }, function () {
+                        //执行重新载入
+                        if (doSearch) {
+                            doSearch();
+                        } else {
+                            refreshCurrentTab();
+                        }
+                    });
+                } else {
+                    layer.close(loading);
+                    layer.alert(data.message, { icon: 2 });
+
+                }
+            },
+            error: function () {
+                layer.close(loading);
+                layer.alert('执行错误，请联系管理员！', { icon: 2 });
+            }
+        });
+    }, function () {
+    });
 }

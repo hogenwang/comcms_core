@@ -20,6 +20,9 @@
                         <li class="">
                             <a data-toggle="tab" href="#tab-2" aria-expanded="false"> 管理组权限设置</a>
                         </li>
+                        <li class="">
+                            <a data-toggle="tab" href="#tab-3" aria-expanded="false"> 授权文章、商品权限</a>
+                        </li>
                     </ul>
                     <div class="tab-content">
                         <div id="tab-1" class="tab-pane active">
@@ -99,10 +102,58 @@
                                     }
                                 </table>
                                 <script type="text/javascript">
-                                        $(document).ready(function() {
-                                            $('.tree').treegrid();
-                                        });
+                                    $(document).ready(function () {
+                                        $('.tree').treegrid();
+                                    });
                                 </script>
+                            </div>
+                        </div>
+
+                        <div id="tab-3" class="tab-pane">
+                            <div class="panel-body">
+                                <div class="alert alert-info">
+                                    温馨提示：如果选择『超级管理员』级别，则默认拥有所有权限，不需要选择。普通管理员需要赋予菜单权限方可生效。按ctrl或者shift多选。不选则拥有所有栏目权限
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">限制文章权限：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="OnlyEditMyselfArticle" name="OnlyEditMyselfArticle">
+                                            <option value="0">可以操作所有授权栏目文章</option>
+                                            <option value="1">仅能操作所有授权栏目自己添加的文章</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">文章权限：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="acpower" name="acpower" multiple style="height:260px">
+                                            @foreach (ArticleCategory m in ViewBag.aclist)
+                                            {
+                                                <option value="@m.Id">@m.KindName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">限制商品权限：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="OnlyEditMyselfProduct" name="OnlyEditMyselfProduct">
+                                            <option value="0">可以操作所有授权栏目商品</option>
+                                            <option value="1">仅能操作所有授权栏目自己添加的商品</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">商品权限：</label>
+                                    <div class="col-sm-8">
+                                        <select class="form-control" id="pcpower" name="pcpower" multiple style="height:260px">
+                                            @foreach (Category m in ViewBag.pclist)
+                                            {
+                                                <option value="@m.Id">@m.KindName</option>
+                                            }
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

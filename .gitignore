@@ -308,3 +308,8 @@ COMCMS.Web/wwwroot/userfiles/
 /COMCMS.Web/UploadFile
 /COMCMS.Web/UploadTemp
 /WebTest/wwwroot
+COMCMS.Web/wwwroot/install.lock
+
+
+# others
+.cursorrules

@@ -81,13 +81,13 @@ namespace COMCMS.Web.Common
                     return false;
                 }
             }
-            else if(typeid == 1)
+            else if(typeid == 1)//商品
             {
-                if (ArticleCategory.FindCount(ArticleCategory._.FilePath == pathname , null, null, 0, 0) > 0)
+                if (Category.FindCount(Category._.FilePath == pathname & Category._.Id != kid, null, null, 0, 0) > 0)
                 {
                     return false;
                 }
-                if (Category.FindCount(Category._.FilePath == pathname & Category._.Id != kid, null, null, 0, 0) > 0)
+                if (ArticleCategory.FindCount(ArticleCategory._.FilePath == pathname, null, null, 0, 0) > 0)
                 {
                     return false;
                 }
