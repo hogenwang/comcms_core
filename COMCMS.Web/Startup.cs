@@ -9,6 +9,7 @@ using COMCMS.Common;
 using COMCMS.Web.Common;
 using COMCMS.Web.ExceptionHandler;
 using COMCMS.Web.Models;
+using COMCMS.Web.Services;
 using Lib.Core.MiddlewareExtension.Extension;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -67,7 +68,13 @@ namespace COMCMS.Web
                 options.Cookie.HttpOnly = true;
 
             });
+            // 绑定缓存设置
+            services.Configure<CacheSettings>(Configuration.GetSection("CacheSettings"));
+            // 响应缓存
+            services.AddResponseCaching();
             services.AddSingleton<ICacheProvider, RedisCacheProvider>();
+            // 缓存服务封装
+            services.AddSingleton<ICacheService, CacheService>();
             //部分系统配置
             services.Configure<SystemSetting>(Configuration.GetSection("SystemSetting"));
 
@@ -137,7 +144,7 @@ namespace COMCMS.Web
                 context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
                 await next();
             });
-            
+
             if (env.IsDevelopment())
             {
 
@@ -161,6 +168,8 @@ namespace COMCMS.Web
             app.UseStaticHttpContext();
             app.UseRouting();
 
+            // 启用响应缓存
+            app.UseResponseCaching();
 
             app.UseAuthentication();
             app.UseAuthorization();
