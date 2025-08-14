@@ -1,9 +1,10 @@
 # COMCMS_NETCORE
+
 COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 主要是演示了.net 8 一个系统后台如何搭建。前台如何使用。可以简单的完成一个企业站。通过二次开发，可以支持商城系统、小程序、app服务器端等...
 
-
 ### 更新日志
+
 - 2024-06-26 升级到.net 8 调整后台UI，精简js插件
 - 2022-11-23 升级到.net 7 和使用SkiaSharp 替换掉System.Drawing
 - 2021-02-02 升级组件，删除ZKWeb组件，增加文章Tag标签
@@ -53,12 +54,15 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 ```
 
 ### 技术交流群
- **1600800** 
+
+**1600800**
 
 ### 贡献者
+
 漫遊者(hogenwang)、笑笑(xxred)、一只萌新(HTR)
 
 ### 捐赠
+
 - 如果您觉得本源码对您有所帮助，可以给我捐赠一杯咖啡
 
 ![捐赠微信码](https://images.gitee.com/uploads/images/2018/1202/202616_4bcf10db_390643.jpeg "")       ![捐赠支付宝码](https://images.gitee.com/uploads/images/2018/1202/202707_fd6b1cb4_390643.jpeg "")
