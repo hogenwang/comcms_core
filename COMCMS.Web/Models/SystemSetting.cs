@@ -23,6 +23,10 @@ namespace COMCMS.Web.Models
         /// </summary>
         public string MediaAllowedExtensions { get; set; }
         /// <summary>
+        /// 图片文件扩展名（用于判断是否为图片）
+        /// </summary>
+        public string ImageExtensions { get; set; }
+        /// <summary>
         /// JWT验证的密钥
         /// </summary>
         public string JwtSecret { get; set; }
