@@ -765,7 +765,18 @@ namespace COMCMS.Common
                 return false;
 
             string extname = filename.Substring(filename.LastIndexOf(".") + 1).ToLower();
-            return (extname == "jpg" || extname == "jpeg" || extname == "png" || extname == "bmp" || extname == "gif");
+            
+            // 从配置中获取图片扩展名列表
+            string imageExtensions = Configuration["SystemSetting:ImageExtensions"];
+            if (string.IsNullOrEmpty(imageExtensions))
+            {
+                // 如果配置中没有设置，则使用默认值
+                imageExtensions = "jpg,jpeg,png,bmp,gif";
+            }
+            
+            // 将扩展名列表分割成数组并检查
+            string[] extensions = imageExtensions.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+            return extensions.Contains(extname);
         }
 
         /// <summary>
