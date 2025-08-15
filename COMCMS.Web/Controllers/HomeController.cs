@@ -27,13 +27,14 @@ namespace COMCMS.Web.Controllers
         private IWebHostEnvironment _env;
         private readonly ICacheProvider _cacheProvider;
 
-        public HomeController(IWebHostEnvironment env,ICacheProvider cacheProvider)
+        public HomeController(IWebHostEnvironment env, ICacheProvider cacheProvider)
         {
             _env = env;
             _cacheProvider = cacheProvider;
         }
 
         #region 首页
+
         public IActionResult Index()
         {
             bool hasData = AdminMenu.FindCount(null, null, null, 0, 0) > 0;
@@ -41,21 +42,26 @@ namespace COMCMS.Web.Controllers
             {
                 return Redirect("/Home/Install");
             }
+
             ViewBag.cfg = cfg;
-            ViewBag.about = Article.FindById(1);//关于我们
+            ViewBag.about = Article.FindById(1); //关于我们
             return View("~/Views/Home/Index.cshtml");
         }
+
         #endregion
 
 
         #region 显示默认错误页面
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
         #endregion
 
         #region 初始化安装
+
         [HttpGet]
         public IActionResult Install()
         {
@@ -64,6 +70,7 @@ namespace COMCMS.Web.Controllers
             {
                 return EchoTip("COMCMS系统已经安装过，如果需要重新安装，请删除程序wwwroot目录下的install.lock文件！", false, "/");
             }
+
             //判断数据库类型 mysql mssql 暂时只支持这两种
             string sqltype = "mysql";
             string sqlProviderName = Utils.GetSetting("connectionStrings:dbconn:providerName");
@@ -71,14 +78,17 @@ namespace COMCMS.Web.Controllers
             {
                 sqltype = "mssql";
             }
+
             bool hasData = AdminMenu.FindCount(null, null, null, 0, 0) > 0;
             ViewBag.hasData = hasData;
             ViewBag.sqltype = sqltype;
             return View();
         }
+
         #endregion
 
         #region 执行初始化数据库数据
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult DoInstall()
@@ -101,7 +111,8 @@ namespace COMCMS.Web.Controllers
                 tip.Message = "请输入用户名！";
                 return Json(tip);
             }
-            if (username.Trim().Length<5)
+
+            if (username.Trim().Length < 5)
             {
                 tip.Message = "用户名不能小于4个字符！";
                 return Json(tip);
@@ -112,11 +123,13 @@ namespace COMCMS.Web.Controllers
                 tip.Message = "登录密码不能为空或者长度小于5！";
                 return Json(tip);
             }
-            if(password != password2)
+
+            if (password != password2)
             {
                 tip.Message = "两次输入密码不一致，请重新输入！";
                 return Json(tip);
             }
+
             string sqltype = "mysql";
             string sqlProviderName = Utils.GetSetting("connectionStrings:dbconn:providerName");
             if (sqlProviderName == "System.Data.SqlClient")
@@ -124,7 +137,7 @@ namespace COMCMS.Web.Controllers
                 sqltype = "mssql";
             }
 
-            if(sqltype =="mysql" && string.IsNullOrEmpty(mysqltype))
+            if (sqltype == "mysql" && string.IsNullOrEmpty(mysqltype))
             {
                 tip.Message = "请选择系统Mysql服务器类型！";
                 return Json(tip);
@@ -139,7 +152,7 @@ namespace COMCMS.Web.Controllers
 
             //判断需要的sql文件
             string sqlname = "comcms_sqlserver.sql";
-            if(sqltype == "mysql")
+            if (sqltype == "mysql")
             {
                 if (mysqltype == "linux")
                     sqlname = "comcms_for_linux.sql";
@@ -155,45 +168,95 @@ namespace COMCMS.Web.Controllers
                 tip.Message = "缺少初始化SQL文件！";
                 return Json(tip);
             }
-            string fullsql = System.IO.File.ReadAllText(sqlFullPath);
+
+            string fullsql = "";
+            try
+            {
+                fullsql = System.IO.File.ReadAllText(sqlFullPath);
+            }
+            catch (Exception ex)
+            {
+                NewLife.Log.XTrace.WriteException(ex);
+                tip.Message = "读取SQL文件时发生错误：" + ex.Message;
+                return Json(tip);
+            }
+
             //如果是mssql 需要替换一下 GO不能在程序中直接执行
             if (sqltype == "mssql")
             {
                 fullsql = fullsql.Replace("GO", ";");
             }
 
-            Admin.FindAll(fullsql);//执行
+            try
+            {
+                Admin.FindAll(fullsql); //执行
+            }
+            catch (Exception ex)
+            {
+                NewLife.Log.XTrace.WriteException(ex);
+                tip.Message = "执行SQL时发生错误：" + ex.Message;
+                return Json(tip);
+            }
 
             //初始化
             Config cfg = Config.FindById(1);
-            if(cfg != null)
+            if (cfg != null)
             {
-                cfg.SiteName = sitename;
-                cfg.SiteUrl = siteurl;
-                cfg.Update();
+                try
+                {
+                    cfg.SiteName = sitename;
+                    cfg.SiteUrl = siteurl;
+                    cfg.Update();
+                }
+                catch (Exception ex)
+                {
+                    NewLife.Log.XTrace.WriteException(ex);
+                    tip.Message = "初始化配置时发生错误：" + ex.Message;
+                    return Json(tip);
+                }
             }
 
             Admin admin = Admin.Find(Admin._.Id == 1);
-            if(admin != null)
+            if (admin != null)
             {
-                admin.UserName = username;
-                admin.Salt = Utils.GetRandomChar(10);
-                admin.PassWord = Utils.MD5(admin.Salt + password);
-                admin.Update();
+                try
+                {
+                    admin.UserName = username;
+                    admin.Salt = Utils.GetRandomChar(10);
+                    admin.PassWord = Utils.MD5(admin.Salt + password);
+                    admin.Update();
+                }
+                catch (Exception ex)
+                {
+                    NewLife.Log.XTrace.WriteException(ex);
+                    tip.Message = "创建管理员账户时发生错误：" + ex.Message;
+                    return Json(tip);
+                }
             }
 
 
             //写入Lock文件
-            System.IO.File.WriteAllText(lockPath, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            try
+            {
+                System.IO.File.WriteAllText(lockPath, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
+            catch (Exception ex)
+            {
+                NewLife.Log.XTrace.WriteException(ex);
+                tip.Message = "创建安装锁文件时发生错误：" + ex.Message;
+                return Json(tip);
+            }
 
             tip.Message = "导入数据成功！";
             tip.Status = JsonTip.SUCCESS;
             tip.ReturnUrl = "/";
             return Json(tip);
         }
+
         #endregion
 
         #region 测试
+
         //[Route("c/{*path}/index2.html")]
         //public IActionResult Test(string path = "")
         //{
@@ -228,10 +291,12 @@ namespace COMCMS.Web.Controllers
         //{
         //    return View();
         //}
+
         #endregion
 
 
         #region 系统文章栏目、商品栏目路由
+
         /// <summary>
         /// 一级路径栏目
         /// </summary>
@@ -240,24 +305,26 @@ namespace COMCMS.Web.Controllers
         [Route("{path:regex(^(?!swagger\\b)[[a-zA-Z0-9-]]+$)}/index.html")]
         [Route("{path:regex(^(?!swagger\\b)[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
         //[Route("{path:regex(^(?!swagger\\b)[[a-zA-Z0-9-]]+$)}/")]
-        public IActionResult ShowCategory(string path,int page=1)
+        public IActionResult ShowCategory(string path, int page = 1)
         {
             //先判断文章栏目
             ArticleCategory articleCategory = ArticleCategory.FindByFilePath("/" + path);
-            if(articleCategory != null)
+            if (articleCategory != null)
             {
                 //return Content(articleCategory.Id.ToString());
                 ArticleController ac = new ArticleController();
                 return ac.Index(articleCategory.Id, page);
             }
+
             //再判断商品
             Category category = Category.FindByFilePath("/" + path);
-            if(category != null)
+            if (category != null)
             {
                 ProductController pc = new ProductController();
-                return pc.Index(category.Id,page);
+                return pc.Index(category.Id, page);
             }
-            return EchoTip("系统找不到本栏目！"+"/"+path);
+
+            return EchoTip("系统找不到本栏目！" + "/" + path);
         }
 
         /// <summary>
@@ -279,6 +346,7 @@ namespace COMCMS.Web.Controllers
                 ArticleController ac = new ArticleController();
                 return ac.Index(articleCategory.Id, page);
             }
+
             //再判断商品
             Category category = Category.FindByFilePath(fullPath);
             if (category != null)
@@ -286,15 +354,19 @@ namespace COMCMS.Web.Controllers
                 ProductController pc = new ProductController();
                 return pc.Index(category.Id, page);
             }
+
             return EchoTip("系统找不到本栏目！" + path + "|" + path2);
         }
+
         /// <summary>
         /// 三级路径栏目
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/index.html")]
-        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
+        [Route(
+            "{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/index.html")]
+        [Route(
+            "{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
         //[Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/")]
         public IActionResult ShowCategory(string path, string path2, string path3, int page = 1)
         {
@@ -307,6 +379,7 @@ namespace COMCMS.Web.Controllers
                 ArticleController ac = new ArticleController();
                 return ac.Index(articleCategory.Id, page);
             }
+
             //再判断商品
             Category category = Category.FindByFilePath(fullPath);
             if (category != null)
@@ -314,15 +387,19 @@ namespace COMCMS.Web.Controllers
                 ProductController pc = new ProductController();
                 return pc.Index(category.Id, page);
             }
+
             return EchoTip("系统找不到本栏目！" + fullPath);
         }
+
         /// <summary>
         /// 四级路径栏目
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/index.html")]
-        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
+        [Route(
+            "{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/index.html")]
+        [Route(
+            "{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/index-{page:int}.html")]
         //[Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/")]
         public IActionResult ShowCategory(string path, string path2, string path3, string path4, int page = 1)
         {
@@ -333,8 +410,9 @@ namespace COMCMS.Web.Controllers
             {
                 //return Content(articleCategory.Id.ToString());
                 ArticleController ac = new ArticleController();
-                return ac.Index(articleCategory.Id,page);
+                return ac.Index(articleCategory.Id, page);
             }
+
             //再判断商品
             Category category = Category.FindByFilePath(fullPath);
             if (category != null)
@@ -342,11 +420,14 @@ namespace COMCMS.Web.Controllers
                 ProductController pc = new ProductController();
                 return pc.Index(category.Id, page);
             }
+
             return EchoTip("系统找不到本栏目！" + fullPath);
         }
+
         #endregion
 
         #region 文章详情、商品详情
+
         /// <summary>
         /// 
         /// </summary>
@@ -368,17 +449,20 @@ namespace COMCMS.Web.Controllers
                 {
                     article = Article.FindById(int.Parse(filename));
                 }
+
                 if (article == null)
                 {
                     filename = filename + ".html";
                     article = Article.FindByFileName(filename, articleCategory.Id);
                 }
-                if(article != null)
+
+                if (article != null)
                 {
                     ArticleController ac = new ArticleController();
                     return ac.Detail(article.Id);
                 }
             }
+
             //再判断商品
             Category category = Category.FindByFilePath(fullPath);
             if (category != null)
@@ -389,11 +473,13 @@ namespace COMCMS.Web.Controllers
                 {
                     product = Product.FindById(int.Parse(filename));
                 }
+
                 if (product == null)
                 {
                     filename = filename + ".html";
                     product = Product.FindByFileName(filename, articleCategory.Id);
                 }
+
                 if (product != null)
                 {
                     ProductController pc = new ProductController();
@@ -403,6 +489,7 @@ namespace COMCMS.Web.Controllers
 
             return EchoTip("系统找不到本详情！" + "/" + path + "/" + filename);
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -410,12 +497,14 @@ namespace COMCMS.Web.Controllers
         /// <param name="filename"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{filename:regex(^(?!index\\b)[[a-zA-Z0-9-]]+$)}.html")]
+        [Route(
+            "{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{filename:regex(^(?!index\\b)[[a-zA-Z0-9-]]+$)}.html")]
         public IActionResult ShowDetail(string path, string path2, string filename)
         {
             string fullPath = $"{path}/{path2}";
             return ShowDetail(fullPath, filename);
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -423,23 +512,28 @@ namespace COMCMS.Web.Controllers
         /// <param name="filename"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{filename:regex(^(?!index\\b)[[a-zA-Z0-9-]]+$)}.html")]
+        [Route(
+            "{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{filename:regex(^(?!index\\b)[[a-zA-Z0-9-]]+$)}.html")]
         public IActionResult ShowDetail(string path, string path2, string path3, string filename)
         {
             string fullPath = $"{path}/{path2}/{path3}";
             return ShowDetail(fullPath, filename);
         }
+
         //四级
         [HttpGet]
-        [Route("{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/{filename:regex(^(?!index\\b)[[a-zA-Z0-9-]]+$)}.html")]
+        [Route(
+            "{path:regex(^[[a-zA-Z0-9-]]+$)}/{path2:regex(^[[a-zA-Z0-9-]]+$)}/{path3:regex(^[[a-zA-Z0-9-]]+$)}/{path4:regex(^[[a-zA-Z0-9-]]+$)}/{filename:regex(^(?!index\\b)[[a-zA-Z0-9-]]+$)}.html")]
         public IActionResult ShowDetail(string path, string path2, string path3, string path4, string filename)
         {
             string fullPath = $"{path}/{path2}/{path3}/{path4}";
             return ShowDetail(fullPath, filename);
         }
+
         #endregion
 
         #region sitemap html
+
         [Route("sitemap.html")]
         [HttpGet]
         public IActionResult SitemapHTML()
@@ -447,9 +541,11 @@ namespace COMCMS.Web.Controllers
             ViewBag.cfg = cfg;
             return View();
         }
+
         #endregion
 
         #region sitemap xml
+
         [HttpGet]
         [Route("sitemap.xml")]
         public IActionResult SitemapXML()
@@ -457,9 +553,11 @@ namespace COMCMS.Web.Controllers
             Response.ContentType = "text/xml";
             return View();
         }
+
         #endregion
 
         #region 测试
+
         public IActionResult Test()
         {
             //至少八个字符，至少一个字母和一个数字
@@ -475,7 +573,6 @@ namespace COMCMS.Web.Controllers
             bool t6 = Regex.IsMatch("123456vW@", rgx2);
 
 
-
             string result = $"t1:{t1}; t2:{t2}; t3:{t3}; t4:{t4}; t5:{t5}; t6:{t6}";
 
 
@@ -483,9 +580,9 @@ namespace COMCMS.Web.Controllers
 
             string a = _cacheProvider.Cache.Get<string>("test");
 
-            return Content(result+";cache:"+ a);
+            return Content(result + ";cache:" + a);
         }
+
         #endregion
     }
 }
-    
