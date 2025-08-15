@@ -222,7 +222,15 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             string content = "";
             if (System.IO.File.Exists(file))
             {
-                content = System.IO.File.ReadAllText(file);
+                try
+                {
+                    content = System.IO.File.ReadAllText(file);
+                }
+                catch (Exception ex)
+                {
+                    NewLife.Log.XTrace.WriteException(ex);
+                    // 如果读取文件失败，继续使用空内容
+                }
             }
             ViewBag.content = content;
             Admin.WriteLogActions("查看Robots.txt;");
@@ -233,15 +241,18 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         public IActionResult Robots(string content)
         {
             string file = Path.Combine(_env.WebRootPath, "robots.txt");
-            if (System.IO.File.Exists(file))
+            try
             {
                 //写入覆盖
                 System.IO.File.WriteAllText(file, content);
             }
-            else
+            catch (Exception ex)
             {
-                System.IO.File.WriteAllText(file, content);
+                NewLife.Log.XTrace.WriteException(ex);
+                tip.Message = "修改Robots.txt失败：" + ex.Message;
+                return Json(tip);
             }
+            
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "修改Robots.txt成功";
             Admin.WriteLogActions("修改Robots.txt成功;");
