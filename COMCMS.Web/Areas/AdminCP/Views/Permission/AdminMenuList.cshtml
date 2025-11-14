@@ -16,7 +16,7 @@
                     <span class="fa fa-refresh" aria-hidden="true"></span>刷新
                 </button>
             </div>
-            <table class="tree table table-striped table-bordered">
+            <table class="tree table table-striped table-bordered table-hover">
                 <thead>
                     <tr>
                         <th>菜单名称</th>
@@ -48,7 +48,11 @@
                         <td class="text-center">
                             @if (m.IsHide == 1)
                             {
-                                <i class="fa fa-eye-slash"></i>
+                                <i class="fa fa-eye-slash text-danger" style="cursor:pointer" onclick="doChangeHide(@(m.Id))" title="点击取消隐藏该菜单"></i>
+                            }
+                            else
+                            {
+                                <i class="fa fa-eye text-success" style="cursor:pointer" onclick="doChangeHide(@(m.Id))" title="点击隐藏该菜单"></i>
                             }
                     </td>
                     <td>
@@ -69,6 +73,30 @@
                 $(document).ready(function () {
                     $('.tree').treegrid();
                 });
+                function doChangeHide(id) {
+                    var loading = layer.load(0, {
+                        shade: [0.2, '#000'] //0.1透明度的背景
+                    });
+                    $.ajax({
+                        type: "POST",
+                        url: "/AdminCP/Permission/DoChangeAdminMenuHide",
+                        data: { id: id },
+                        dataType: "JSON",
+                        success: function (data) {
+                            if (data.status == "success") {
+                                layer.close(loading);
+                                window.location.href = window.location.href;
+                            } else {
+                                layer.close(loading);
+                                layer.alert(data.message, { icon: 2 });
+                            }
+                        },
+                        error: function () {
+                            layer.close(loading);
+                            layer.alert('执行错误，请联系管理员！', { icon: 2 });
+                        }
+                    });
+                }
             </script>
         </div>
     </div>

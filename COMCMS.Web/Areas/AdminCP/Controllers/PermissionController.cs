@@ -418,6 +418,27 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             tip.Message = "删除后台菜单成功";
             return Json(tip);
         }
+
+        //修改栏目是否隐藏
+        [HttpPost]
+        [MyAuthorize("edit", "adminmenu", "JSON")]
+        public IActionResult DoChangeAdminMenuHide(int id)
+        {
+            AdminMenu entity = AdminMenu.Find(AdminMenu._.Id == id);
+            if (entity == null)
+            {
+                tip.Message = "系统找不到本记录！";
+                return Json(tip);
+            }
+            if (entity.IsHide == 1)
+                entity.IsHide = 0;
+            else
+                entity.IsHide = 1;
+            entity.Update();
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "修改菜单隐藏状态成功";
+            return Json(tip);
+        }
         #endregion
 
         #region 系统运行日志
