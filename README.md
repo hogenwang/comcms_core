@@ -1,10 +1,10 @@
 # COMCMS_NETCORE
 
 COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
-主要是演示了.net 8 一个系统后台如何搭建。前台如何使用。可以简单的完成一个企业站。通过二次开发，可以支持商城系统、小程序、app服务器端等...
+主要是演示了.net 10 一个系统后台如何搭建。前台如何使用。可以简单的完成一个企业站。通过二次开发，可以支持商城系统、小程序、app服务器端等...
 
 ### 更新日志
-
+- 2025-11-13 升级到.net 10
 - 2024-06-26 升级到.net 8 调整后台UI，精简js插件
 - 2022-11-23 升级到.net 7 和使用SkiaSharp 替换掉System.Drawing
 - 2021-02-02 升级组件，删除ZKWeb组件，增加文章Tag标签
@@ -17,10 +17,10 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 ### 技术简要
 
-- .net 7 (请注意升级本地SDK 或者runtime)
+- .net 10 (请注意升级本地SDK 或者runtime)
 - 数据库：Mysql 5.7 /Mysql 8.0 / SqlServer 2008+
 - ORM:数据库操作使用XCode，目前支持mysql、sqlserver。详细见：https://github.com/NewLifeX/X
-- 据库驱动使用：MySQL官方驱动，8.0.23
+- 据库驱动使用：MySQL官方驱动，9.5
 - 后台模板是H+
 - 编辑器采用CKeditor 支持截图粘贴进去，上传图片采用webuploader
 
@@ -32,7 +32,7 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 - COMCMS.Core 数据库操作核心业务逻辑和实体 采用XCode
 
-- COMCMS.Web .net 7 的MVC网站。
+- COMCMS.Web .net 10 的MVC网站。
 
 - XCoder 代码生成器，跟上述的没任何关系，只是为了生成数据库操作业务逻辑和实体而已。
 
