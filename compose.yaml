@@ -1,0 +1,84 @@
+services:
+  # MySQL 数据库服务
+  mysql:
+    image: mysql:8.4.7
+    container_name: comcms_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-comcms}
+      MYSQL_USER: ${MYSQL_USER:-comcms}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-comcms123}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./data:/docker-entrypoint-initdb.d:ro
+    networks:
+      - comcms_network
+    command: --default-authentication-plugin=mysql_native_password
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+
+  # Redis 缓存服务
+  redis:
+    image: redis:7-alpine
+    container_name: comcms_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - comcms_network
+    command: redis-server --requirepass ${REDIS_PASSWORD:-}
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # COMCMS Web 服务
+  web:
+    build:
+      context: ./COMCMS.Web
+      dockerfile: Dockerfile
+    container_name: comcms_web
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
+      - ConnectionStrings__dbconn__ConnectionString=Server=mysql;Port=3306;Database=${MYSQL_DATABASE:-comcms};Uid=${MYSQL_USER:-comcms};Pwd=${MYSQL_PASSWORD:-comcms123};charset=utf8mb4;
+      - ConnectionStrings__dbconn__providerName=MySql.Data.MySqlClient
+      - RedisCache__ConnectionString=server=redis;password=${REDIS_PASSWORD:-};db=2;
+      - RedisCache__InstanceName=COMCMS:
+      - RedisCache__DefaultDatabase=2
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - uploads_data:/app/wwwroot/userfiles
+      - logs_data:/app/logs
+    networks:
+      - comcms_network
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:80/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  uploads_data:
+    driver: local
+  logs_data:
+    driver: local
+
+networks:
+  comcms_network:
+    driver: bridge
