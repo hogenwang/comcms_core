@@ -60,7 +60,10 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 ### 贡献者
 
-漫遊者(hogenwang)、笑笑(xxred)、一只萌新(HTR)
+- 漫遊者(hogenwang)
+- 笑笑(xxred)
+- 一只萌新(HTR)
+- 兼哲（ferock）
 
 ### 捐赠
 
