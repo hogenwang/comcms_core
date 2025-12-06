@@ -1,22 +1,21 @@
 services:
   # MySQL 数据库服务
   mysql:
-    image: mysql:8.4.7
+    image: mysql:8.0
     container_name: comcms_mysql
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-comcms}
-      MYSQL_USER: ${MYSQL_USER:-comcms}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-comcms123}
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: comcms
+      MYSQL_USER: comcms
+      MYSQL_PASSWORD: comcms123
     volumes:
       - mysql_data:/var/lib/mysql
       - ./data:/docker-entrypoint-initdb.d:ro
     networks:
       - comcms_network
-    command: --mysql-native-password=ON
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root}" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 20s
       retries: 10
 
@@ -29,23 +28,8 @@ services:
       - redis_data:/data
     networks:
       - comcms_network
-    command: >
-      sh -c "
-        if [ -n \"${REDIS_PASSWORD}\" ]; then
-          redis-server --requirepass \"${REDIS_PASSWORD}\"
-        else
-          redis-server
-        fi
-      "
     healthcheck:
-      test: >
-        CMD sh -c "
-          if [ -n \"${REDIS_PASSWORD}\" ]; then
-            redis-cli -a \"${REDIS_PASSWORD}\" ping
-          else
-            redis-cli ping
-          fi
-        "
+      test: [ "CMD", "redis-cli", "ping" ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -60,10 +44,10 @@ services:
     ports:
       - "8080:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
-      - ConnectionStrings__dbconn__ConnectionString=Server=mysql;Port=3306;Database=${MYSQL_DATABASE:-comcms};Uid=${MYSQL_USER:-comcms};Pwd=${MYSQL_PASSWORD:-comcms123};charset=utf8mb4;
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__dbconn__ConnectionString=Server=mysql;Port=3306;Database=comcms;Uid=comcms;Pwd=comcms123;charset=utf8mb4;
       - ConnectionStrings__dbconn__providerName=MySql.Data.MySqlClient
-      - RedisCache__ConnectionString=server=redis;password=${REDIS_PASSWORD:-};db=2;
+      - RedisCache__ConnectionString=server=redis;db=2;
       - RedisCache__InstanceName=COMCMS
       - RedisCache__DefaultDatabase=2
     depends_on:
