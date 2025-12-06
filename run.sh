@@ -4,12 +4,14 @@ set -e
 # 检查运行模式
 MODE="${1:-dev}"
 
-# 加载 .env 文件
-if [ -f .env ]; then
-    echo "正在加载 .env 配置..."
-    export $(cat .env | grep -v '^#' | grep -v '^$' | xargs)
-else
-    echo "警告: .env 文件不存在，使用默认配置"
+# 开发模式才加载 .env 文件
+if [ "$MODE" != "prod" ]; then
+    if [ -f .env ]; then
+        echo "正在加载 .env 配置..."
+        export $(cat .env | grep -v '^#' | grep -v '^$' | xargs)
+    else
+        echo "提示: .env 文件不存在，使用默认配置"
+    fi
 fi
 
 # 设置数据库连接字符串（使用环境变量，注意：冒号用双下划线替代）
@@ -38,10 +40,14 @@ echo "================================"
 
 # 根据模式启动
 if [ "$MODE" = "prod" ]; then
-    # 生产模式：使用已编译的dll
+    # 生产模式：使用已编译的dll（Docker容器中已在正确目录）
     echo "生产模式启动..."
-    cd COMCMS.Web
-    exec dotnet COMCMS.Web.dll
+    if [ -f "COMCMS.Web.dll" ]; then
+        exec dotnet COMCMS.Web.dll
+    else
+        cd COMCMS.Web
+        exec dotnet COMCMS.Web.dll
+    fi
 else
     # 开发模式：使用dotnet run
     echo "开发模式启动..."
