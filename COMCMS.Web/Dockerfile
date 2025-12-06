@@ -31,15 +31,16 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-# 创建必要的目录
-RUN mkdir -p /app/wwwroot/userfiles \
-    && mkdir -p /app/logs
-
 # 从发布阶段复制文件
 COPY --from=publish /app/publish .
 
-# 设置权限
-RUN chown -R app:app /app
+# 创建必要的目录并设置权限（在切换用户之前）
+RUN mkdir -p /app/wwwroot/userfiles \
+    && mkdir -p /app/logs \
+    && mkdir -p /home/app/.aspnet/DataProtection-Keys \
+    && chown -R app:app /app \
+    && chown -R app:app /home/app/.aspnet
+
 USER app
 
 # 健康检查
