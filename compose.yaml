@@ -60,6 +60,7 @@ services:
     volumes:
       - uploads_data:/app/wwwroot/userfiles
       - logs_data:/app/logs
+      - dataprotection_keys:/home/app/.aspnet/DataProtection-Keys
     networks:
       - comcms_network
     healthcheck:
@@ -77,6 +78,8 @@ volumes:
   uploads_data:
     driver: local
   logs_data:
+    driver: local
+  dataprotection_keys:
     driver: local
 
 networks:
