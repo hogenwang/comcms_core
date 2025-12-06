@@ -1,6 +1,6 @@
 services:
   # MySQL 数据库服务
-  mysql:
+  web_mysql:
     image: mysql:8.0
     container_name: comcms_mysql
     restart: unless-stopped
@@ -22,7 +22,7 @@ services:
       start_period: 30s
 
   # Redis 缓存服务
-  redis:
+  web_redis:
     image: redis:7-alpine
     container_name: comcms_redis
     restart: unless-stopped
@@ -47,15 +47,17 @@ services:
       - "8080:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - connectionStrings__dbconn__connectionString=Server=mysql;Port=3306;Database=comcms;Uid=comcms;Pwd=comcms123;charset=utf8mb4;
+      - connectionStrings__dbconn__connectionString=Server=web_mysql;Port=3306;Database=comcms;Uid=comcms;Pwd=comcms123;charset=utf8mb4
       - connectionStrings__dbconn__providerName=MySql.Data.MySqlClient
-      - RedisCache__ConnectionString=server=redis;db=2;
+      - RedisCache__ConnectionString=server=web_redis;password=;db=2
       - RedisCache__InstanceName=COMCMS
       - RedisCache__DefaultDatabase=2
+      - Logging__LogLevel__Default=Information
+      - Logging__LogLevel__Microsoft=Information
     depends_on:
-      mysql:
+      web_mysql:
         condition: service_healthy
-      redis:
+      web_redis:
         condition: service_healthy
     volumes:
       - uploads_data:/app/wwwroot/userfiles
