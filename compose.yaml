@@ -47,8 +47,8 @@ services:
       - "8080:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__dbconn__ConnectionString=Server=mysql;Port=3306;Database=comcms;Uid=comcms;Pwd=comcms123;charset=utf8mb4;
-      - ConnectionStrings__dbconn__providerName=MySql.Data.MySqlClient
+      - connectionStrings__dbconn__connectionString=Server=mysql;Port=3306;Database=comcms;Uid=comcms;Pwd=comcms123;charset=utf8mb4;
+      - connectionStrings__dbconn__providerName=MySql.Data.MySqlClient
       - RedisCache__ConnectionString=server=redis;db=2;
       - RedisCache__InstanceName=COMCMS
       - RedisCache__DefaultDatabase=2
@@ -63,12 +63,12 @@ services:
       - dataprotection_keys:/home/app/.aspnet/DataProtection-Keys
     networks:
       - comcms_network
-    # 暂时禁用健康检查以排查问题
-    # healthcheck:
-    #   test: [ "CMD", "curl", "-f", "http://localhost:80/" ]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:80/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
 
 volumes:
