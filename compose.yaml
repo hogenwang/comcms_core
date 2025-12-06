@@ -45,13 +45,14 @@ services:
     restart: unless-stopped
     ports:
       - "8080:80"
+    command: 
+      - dotnet
+      - COMCMS.Web.dll
+      - --connectionStrings:dbconn:connectionString=Server=web_mysql;Port=3306;Database=comcms;Uid=comcms;Pwd=comcms123;charset=utf8mb4
+      - --connectionStrings:dbconn:providerName=MySql.Data.MySqlClient
+      - --RedisCache:ConnectionString=server=web_redis;password=;db=2
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - connectionStrings__dbconn__connectionString=Server=web_mysql;Port=3306;Database=comcms;Uid=comcms;Pwd=comcms123;charset=utf8mb4
-      - connectionStrings__dbconn__providerName=MySql.Data.MySqlClient
-      - RedisCache__ConnectionString=server=web_redis;password=;db=2
-      - RedisCache__InstanceName=COMCMS
-      - RedisCache__DefaultDatabase=2
       - Logging__LogLevel__Default=Information
       - Logging__LogLevel__Microsoft=Information
     depends_on:
