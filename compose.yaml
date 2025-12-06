@@ -16,8 +16,10 @@ services:
       - comcms_network
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
       timeout: 20s
       retries: 10
+      start_period: 30s
 
   # Redis 缓存服务
   redis:
