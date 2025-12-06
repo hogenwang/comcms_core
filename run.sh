@@ -8,9 +8,9 @@ else
     echo "警告: .env 文件不存在，使用默认配置"
 fi
 
-# 设置数据库连接字符串（使用环境变量）
-export ConnectionStrings__dbconn__ConnectionString="Server=${MYSQL_HOST:-localhost};Port=${MYSQL_PORT:-3306};Database=${MYSQL_DATABASE:-comcms};Uid=${MYSQL_USER:-root};Pwd=${MYSQL_PASSWORD:-root};charset=utf8mb4"
-export ConnectionStrings__dbconn__providerName="MySql.Data.MySqlClient"
+# 设置数据库连接字符串（使用环境变量，注意：冒号用双下划线替代）
+export connectionStrings__dbconn__connectionString="Server=${MYSQL_HOST:-localhost};Port=${MYSQL_PORT:-3306};Database=${MYSQL_DATABASE:-comcms};Uid=${MYSQL_USER:-root};Pwd=${MYSQL_PASSWORD:-root};charset=utf8mb4"
+export connectionStrings__dbconn__providerName="MySql.Data.MySqlClient"
 
 # 设置 Redis 连接字符串
 export RedisCache__ConnectionString="server=${REDIS_HOST:-127.0.0.1}:${REDIS_PORT:-6379};password=${REDIS_PASSWORD};db=${REDIS_DB:-2}"
@@ -28,6 +28,9 @@ echo "启动配置："
 echo "  MySQL: ${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}"
 echo "  Redis: ${REDIS_HOST}:${REDIS_PORT}"
 echo "  环境: ${ASPNETCORE_ENVIRONMENT}"
+echo ""
+echo "环境变量检查："
+echo "  connectionStrings__dbconn__connectionString=${connectionStrings__dbconn__connectionString}"
 echo "================================"
 
 # 进入项目目录并运行
