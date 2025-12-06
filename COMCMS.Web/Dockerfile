@@ -45,8 +45,11 @@ COPY --from=publish /app/publish .
 # 创建必要的目录并设置权限（在切换用户之前）
 RUN mkdir -p /app/wwwroot/userfiles \
     && mkdir -p /app/logs \
+    && mkdir -p /app/Log \
+    && mkdir -p /appLog \
     && mkdir -p /home/app/.aspnet/DataProtection-Keys \
     && chown -R app:app /app \
+    && chown -R app:app /appLog \
     && chown -R app:app /home/app/.aspnet
 
 USER app
