@@ -36,6 +36,9 @@ RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 EXPOSE 80
 
+# 设置 ASP.NET Core 监听端口
+ENV ASPNETCORE_URLS=http://+:80
+
 # 从发布阶段复制文件
 COPY --from=publish /app/publish .
 
