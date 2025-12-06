@@ -313,3 +313,9 @@ COMCMS.Web/wwwroot/install.lock
 
 # others
 .cursorrules
+
+# 环境变量文件（包含敏感信息）
+.env
+
+# 环境变量文件（包含敏感信息）
+.env

@@ -1,7 +1,7 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 # 构建阶段
-FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 # 复制项目文件
@@ -27,7 +27,7 @@ FROM build AS publish
 RUN dotnet publish "COMCMS.Web.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # 运行时阶段
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 
 # 安装 curl 用于健康检查
 USER root
