@@ -29,9 +29,16 @@ RUN dotnet publish "COMCMS.Web.csproj" -c Release -o /app/publish /p:UseAppHost=
 # 运行时阶段
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 
-# 安装 curl 用于健康检查
+# 安装 curl 用于健康检查和 SkiaSharp 依赖
 USER root
-RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    curl \
+    libfontconfig1 \
+    libfreetype6 \
+    libx11-6 \
+    libxext6 \
+    libxrender1 \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 EXPOSE 80
