@@ -37,10 +37,20 @@
                 </div>
                 @if (ViewBag.sqltype == "mysql")
                 {
+                    var isLinux = System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux);
+                    var defaultMysqlType = isLinux ? "linux" : "windows";
                     <div class="form-group">
                         <select class="form-control" name="mysqltype" id="mysqltype">
-                            <option value="windows">Windows 下 Mysql(数据库表不区分大小写)</option>
-                            <option value="linux">Linux 下 Mysql(数据库表区分大小写)</option>
+                            @if (defaultMysqlType == "windows")
+                            {
+                                <option value="windows" selected>Windows 下 Mysql(数据库表不区分大小写)</option>
+                                <option value="linux">Linux 下 Mysql(数据库表区分大小写)</option>
+                            }
+                            else
+                            {
+                                <option value="windows">Windows 下 Mysql(数据库表不区分大小写)</option>
+                                <option value="linux" selected>Linux 下 Mysql(数据库表区分大小写)</option>
+                            }
                         </select>
                     </div>
                 }
