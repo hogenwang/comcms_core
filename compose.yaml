@@ -39,8 +39,8 @@ services:
   # COMCMS Web 服务
   web:
     build:
-      context: ./COMCMS.Web
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: COMCMS.Web/Dockerfile
     container_name: comcms_web
     restart: unless-stopped
     ports:
