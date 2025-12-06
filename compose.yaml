@@ -45,16 +45,19 @@ services:
     restart: unless-stopped
     ports:
       - "8080:80"
-    command: 
-      - dotnet
-      - COMCMS.Web.dll
-      - --connectionStrings:dbconn:connectionString=Server=web_mysql;Port=3306;Database=comcms;Uid=comcms;Pwd=comcms123;charset=utf8mb4
-      - --connectionStrings:dbconn:providerName=MySql.Data.MySqlClient
-      - --RedisCache:ConnectionString=server=web_redis;password=;db=2
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - Logging__LogLevel__Default=Information
-      - Logging__LogLevel__Microsoft=Information
+      # MySQL配置(docker-entrypoint.sh会自动构建连接字符串)
+      - MYSQL_HOST=web_mysql
+      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=comcms
+      - MYSQL_USER=comcms
+      - MYSQL_PASSWORD=comcms123
+      # Redis配置(docker-entrypoint.sh会自动构建连接字符串)
+      - REDIS_HOST=web_redis
+      - REDIS_PASSWORD=
+      - REDIS_DB=2
+      - REDIS_INSTANCE_NAME=COMCMS:
     depends_on:
       web_mysql:
         condition: service_healthy

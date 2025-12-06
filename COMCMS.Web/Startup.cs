@@ -50,6 +50,14 @@ namespace COMCMS.Web
         {
             //添加Configuration到静态变量
             Utils.AddUtils(Configuration);
+            
+            // 配置XCode数据库连接
+            var connStr = Configuration["connectionStrings:dbconn:connectionString"];
+            var providerName = Configuration["connectionStrings:dbconn:providerName"];
+            if (!string.IsNullOrEmpty(connStr))
+            {
+                XCode.DataAccessLayer.DAL.AddConnStr("dbconn", connStr, null, providerName);
+            }
 
             services.Configure<CookiePolicyOptions>(options =>
             {
