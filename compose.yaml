@@ -46,16 +46,16 @@ services:
     ports:
       - "8080:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - MYSQL_HOST=web_mysql
-      - MYSQL_PORT=3306
-      - MYSQL_DATABASE=comcms
-      - MYSQL_USER=comcms
-      - MYSQL_PASSWORD=comcms123
-      - REDIS_HOST=web_redis
-      - REDIS_PASSWORD=""
-      - REDIS_DB=2
-      - REDIS_INSTANCE_NAME=COMCMS:
+      ASPNETCORE_ENVIRONMENT: Production
+      MYSQL_HOST: web_mysql
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: comcms
+      MYSQL_USER: comcms
+      MYSQL_PASSWORD: comcms123
+      REDIS_HOST: web_redis
+      REDIS_PASSWORD: ""
+      REDIS_DB: 2
+      REDIS_INSTANCE_NAME: "COMCMS:"
     depends_on:
       web_mysql:
         condition: service_healthy
