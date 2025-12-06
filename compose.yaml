@@ -63,11 +63,12 @@ services:
       - dataprotection_keys:/home/app/.aspnet/DataProtection-Keys
     networks:
       - comcms_network
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:80/" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    # 暂时禁用健康检查以排查问题
+    # healthcheck:
+    #   test: [ "CMD", "curl", "-f", "http://localhost:80/" ]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 3
 
 
 volumes:

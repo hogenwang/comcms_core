@@ -28,6 +28,11 @@ RUN dotnet publish "COMCMS.Web.csproj" -c Release -o /app/publish /p:UseAppHost=
 
 # 运行时阶段
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
+
+# 安装 curl 用于健康检查
+USER root
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 EXPOSE 80
 
