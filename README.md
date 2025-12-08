@@ -43,6 +43,7 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 - WebTest 测试站点；暂时屏蔽
 
 - data 目录是初始化sql ，目前是mysql，注意linux版本要还原comcms_for_linux.sql
+<<<<<<< HEAD
 
 ### 演示地址
 
@@ -52,6 +53,80 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 账号密码都是admin
 ```
+=======
+
+### Docker 快速部署
+
+#### 一键启动
+
+```bash
+# 克隆项目
+git clone https://github.com/hogenwang/comcms_core.git
+cd comcms_core
+
+# 启动所有服务(MySQL + Redis + Web)
+docker-compose up -d
+
+# 查看日志
+docker logs -f comcms_web
+```
+
+#### 访问地址
+
+- **前台首页**: http://localhost:8080
+- **后台管理**: http://localhost:8080/AdminCP
+- **默认账号**: admin
+- **默认密码**: admin
+
+#### 自动初始化说明
+
+Docker环境会在首次启动时**自动初始化数据库**:
+
+1. MySQL容器启动时检测到数据库为空
+2. 自动执行 `./data/comcms_for_linux.sql` 初始化脚本
+3. 创建所有表结构和初始数据(包括默认管理员账号)
+4. Web应用启动后即可直接使用
+
+如需重新初始化数据库:
+
+```bash
+# 停止并删除所有容器和数据卷
+docker-compose down -v
+
+# 重新启动(会自动初始化)
+docker-compose up -d
+```
+
+#### 环境配置
+
+所有配置通过环境变量管理,无需修改代码:
+
+- **MySQL配置**: 在 `compose.yaml` 中修改 `MYSQL_*` 环境变量
+- **Redis配置**: 在 `compose.yaml` 中修改 `REDIS_*` 环境变量
+- **数据持久化**: 数据自动保存在Docker卷中,重启不丢失
+
+### 本地开发
+
+```bash
+# 使用 run.sh 脚本启动(需要先配置本地MySQL和Redis)
+./run.sh
+
+# 访问地址
+http://localhost:5000
+```
+
+### 演示地址
+
+- **演示地址1**（Windows Server 2016 + IIS）
+  - 前台：http://demo.comcms.com
+  - 后台：http://demo.comcms.com/AdminCP
+  
+- **演示地址2**（CentOS + Nginx）
+  - 前台：http://demo.comcms.cn
+  - 后台：http://demo.comcms.cn/AdminCP
+
+**账号密码都是 admin**
+>>>>>>> df478d351626c40c987712d66d991f327a698ff5
 
 
 ### 技术交流群
