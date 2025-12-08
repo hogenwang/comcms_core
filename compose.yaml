@@ -48,12 +48,12 @@ services:
     ports:
       - "8080:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
-      - ConnectionStrings__dbconn__ConnectionString=Server=mysql;Port=3306;Database=${MYSQL_DATABASE:-comcms};Uid=${MYSQL_USER:-comcms};Pwd=${MYSQL_PASSWORD:-comcms123};charset=utf8mb4;
-      - ConnectionStrings__dbconn__providerName=MySql.Data.MySqlClient
-      - RedisCache__ConnectionString=server=redis;password=${REDIS_PASSWORD:-};db=2;
-      - RedisCache__InstanceName=COMCMS:
-      - RedisCache__DefaultDatabase=2
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__dbconn__ConnectionString: "Server=mysql;Port=3306;Database=${MYSQL_DATABASE:-comcms};Uid=${MYSQL_USER:-comcms};Pwd=${MYSQL_PASSWORD:-comcms123};charset=utf8mb4;"
+      ConnectionStrings__dbconn__providerName: MySql.Data.MySqlClient
+      RedisCache__ConnectionString: "server=redis;password=${REDIS_PASSWORD:-};db=2;"
+      RedisCache__InstanceName: "COMCMS:"
+      RedisCache__DefaultDatabase: "2"
     depends_on:
       mysql:
         condition: service_healthy
