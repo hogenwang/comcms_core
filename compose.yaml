@@ -1,6 +1,5 @@
 services:
   # MySQL 数据库服务
-<<<<<<< HEAD
   mysql:
     image: mysql:8.4.7
     container_name: comcms_mysql
@@ -10,32 +9,12 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-comcms}
       MYSQL_USER: ${MYSQL_USER:-comcms}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-comcms123}
-=======
-  web_mysql:
-    image: mysql:8.0
-    container_name: comcms_mysql
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: comcms
-      MYSQL_USER: comcms
-      MYSQL_PASSWORD: comcms123
->>>>>>> df478d351626c40c987712d66d991f327a698ff5
     volumes:
       - mysql_data:/var/lib/mysql
       - ./data:/docker-entrypoint-initdb.d:ro
     networks:
       - comcms_network
-<<<<<<< HEAD
     command: --default-authentication-plugin=mysql_native_password
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      timeout: 20s
-      retries: 10
-
-  # Redis 缓存服务
-  redis:
-=======
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
@@ -44,8 +23,7 @@ services:
       start_period: 30s
 
   # Redis 缓存服务
-  web_redis:
->>>>>>> df478d351626c40c987712d66d991f327a698ff5
+  redis:
     image: redis:7-alpine
     container_name: comcms_redis
     restart: unless-stopped
@@ -53,10 +31,7 @@ services:
       - redis_data:/data
     networks:
       - comcms_network
-<<<<<<< HEAD
     command: redis-server --requirepass ${REDIS_PASSWORD:-}
-=======
->>>>>>> df478d351626c40c987712d66d991f327a698ff5
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 30s
@@ -66,19 +41,13 @@ services:
   # COMCMS Web 服务
   web:
     build:
-<<<<<<< HEAD
       context: ./COMCMS.Web
       dockerfile: Dockerfile
-=======
-      context: .
-      dockerfile: COMCMS.Web/Dockerfile
->>>>>>> df478d351626c40c987712d66d991f327a698ff5
     container_name: comcms_web
     restart: unless-stopped
     ports:
       - "8080:80"
     environment:
-<<<<<<< HEAD
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
       - ConnectionStrings__dbconn__ConnectionString=Server=mysql;Port=3306;Database=${MYSQL_DATABASE:-comcms};Uid=${MYSQL_USER:-comcms};Pwd=${MYSQL_PASSWORD:-comcms123};charset=utf8mb4;
       - ConnectionStrings__dbconn__providerName=MySql.Data.MySqlClient
@@ -89,30 +58,11 @@ services:
       mysql:
         condition: service_healthy
       redis:
-=======
-      ASPNETCORE_ENVIRONMENT: Production
-      MYSQL_HOST: web_mysql
-      MYSQL_PORT: 3306
-      MYSQL_DATABASE: comcms
-      MYSQL_USER: comcms
-      MYSQL_PASSWORD: comcms123
-      REDIS_HOST: web_redis
-      REDIS_PASSWORD: ""
-      REDIS_DB: 2
-      REDIS_INSTANCE_NAME: "COMCMS:"
-    depends_on:
-      web_mysql:
-        condition: service_healthy
-      web_redis:
->>>>>>> df478d351626c40c987712d66d991f327a698ff5
         condition: service_healthy
     volumes:
       - uploads_data:/app/wwwroot/userfiles
       - logs_data:/app/logs
-<<<<<<< HEAD
-=======
       - dataprotection_keys:/home/app/.aspnet/DataProtection-Keys
->>>>>>> df478d351626c40c987712d66d991f327a698ff5
     networks:
       - comcms_network
     healthcheck:
@@ -120,10 +70,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-<<<<<<< HEAD
-=======
       start_period: 40s
->>>>>>> df478d351626c40c987712d66d991f327a698ff5
 
 
 volumes:
@@ -135,11 +82,8 @@ volumes:
     driver: local
   logs_data:
     driver: local
-<<<<<<< HEAD
-=======
   dataprotection_keys:
     driver: local
->>>>>>> df478d351626c40c987712d66d991f327a698ff5
 
 networks:
   comcms_network:
