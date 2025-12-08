@@ -14,7 +14,6 @@ services:
       - ./data:/docker-entrypoint-initdb.d:ro
     networks:
       - comcms_network
-    command: --default-authentication-plugin=mysql_native_password
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       interval: 10s
