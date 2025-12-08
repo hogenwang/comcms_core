@@ -1,23 +1,7 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-<<<<<<< HEAD
-FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
-WORKDIR /app
-EXPOSE 80
-
-# 创建必要的目录
-RUN mkdir -p /app/wwwroot/userfiles \
-    && mkdir -p /app/logs
-
-# 设置权限
-RUN chown -R app:app /app
-USER app
-
-COPY . .
-
-=======
 # 构建阶段
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
 # 复制项目文件
@@ -43,7 +27,7 @@ FROM build AS publish
 RUN dotnet publish "COMCMS.Web.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 # 运行时阶段
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS base
 
 # 安装 curl 用于健康检查和 SkiaSharp 依赖
 USER root
@@ -81,13 +65,8 @@ RUN mkdir -p /app/wwwroot/userfiles \
 
 USER app
 
->>>>>>> df478d351626c40c987712d66d991f327a698ff5
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD curl -f http://localhost/ || exit 1
 
-<<<<<<< HEAD
-ENTRYPOINT ["dotnet", "COMCMS.Web.dll"]
-=======
 ENTRYPOINT ["/app/run.sh", "prod"]
->>>>>>> df478d351626c40c987712d66d991f327a698ff5
