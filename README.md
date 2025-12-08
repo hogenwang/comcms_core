@@ -138,7 +138,7 @@ http://localhost:5000
 - 漫遊者(hogenwang)
 - 笑笑(xxred)
 - 一只萌新(HTR)
-- 兼哲（ferock）
+- 兼哲（github: ferocknew）
 
 ### 捐赠
 
