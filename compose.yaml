@@ -31,7 +31,14 @@ services:
       - redis_data:/data
     networks:
       - comcms_network
-    command: redis-server --requirepass ${REDIS_PASSWORD:-}
+    command: >
+      sh -c "
+      if [ -n \"${REDIS_PASSWORD:-}\" ]; then
+        redis-server --requirepass \"${REDIS_PASSWORD}\"
+      else
+        redis-server
+      fi
+      "
     healthcheck:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 30s
