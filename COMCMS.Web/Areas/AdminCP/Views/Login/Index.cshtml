@@ -22,7 +22,8 @@
     <script>var encrypt_key = '@ViewBag.key';</script>
 </head>
 <body class="gray-bg">
-    <div class="middle-box text-center loginscreen  animated fadeInDown">
+    <canvas id="canvas-bg"></canvas>
+    <div class="middle-box animated fadeInDown">
         <div>
             <div class="text-center m-b-md" style="font-size:64px">
                 COMCMS
@@ -80,6 +81,89 @@
             };
             DoAdminLogin("loginForm", rules);
         });
+        // --- 科技感粒子连线动画特效 (原生JS实现，无需引入额外库) ---
+        (function() {
+            var canvas = document.getElementById('canvas-bg');
+            var ctx = canvas.getContext('2d');
+            var width, height;
+            var particles = [];
+
+            // 特效配置
+            var config = {
+                count: 80,            // 粒子数量
+                dist: 160,            // 连线距离
+                radius: 2,            // 粒子大小
+                color: '26, 179, 148',// 主色调 RGB (#1ab394)
+                speed: 0.8            // 移动速度
+            };
+
+            function resize() {
+                width = window.innerWidth;
+                height = window.innerHeight;
+                canvas.width = width;
+                canvas.height = height;
+            }
+
+            function Particle() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * config.speed;
+                this.vy = (Math.random() - 0.5) * config.speed;
+            }
+
+            Particle.prototype.update = function() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > height) this.vy = -this.vy;
+            };
+
+            Particle.prototype.draw = function() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, config.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(' + config.color + ', 0.6)';
+                ctx.fill();
+            };
+
+            function init() {
+                resize();
+                particles = [];
+                for (var i = 0; i < config.count; i++) {
+                    particles.push(new Particle());
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+
+                for (var i = 0; i < particles.length; i++) {
+                    var p1 = particles[i];
+                    p1.update();
+                    p1.draw();
+
+                    for (var j = i + 1; j < particles.length; j++) {
+                        var p2 = particles[j];
+                        var dx = p1.x - p2.x;
+                        var dy = p1.y - p2.y;
+                        var dist = Math.sqrt(dx * dx + dy * dy);
+
+                        if (dist < config.dist) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = 'rgba(' + config.color + ',' + (1 - dist / config.dist) * 0.4 + ')';
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', resize);
+            init();
+            animate();
+        })();
     </script>
 
 </body>

@@ -1,75 +1,673 @@
-﻿@{
+﻿@using Newtonsoft.Json
+@{
     ViewBag.title = "附件管理";
+    var folderJson = ViewBag.folderJson as string;
 }
+<style>
+    /* Grid View Styles */
+    .file-box {
+        float: left;
+        width: 120px;
+        height: 140px;
+        padding: 10px;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+        margin: 5px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
 
-    <div class="wrapper wrapper-content">
-        <div class="row">
-            <div class="col-sm-3">
-                <div class="ibox float-e-margins">
-                    <div class="ibox-content">
-                        <div class="file-manager">
-                            <h5>显示：</h5>
-                            <a href="file_manager.html#" class="file-control active">所有</a>
-                            <a href="file_manager.html#" class="file-control">文档</a>
-                            <a href="file_manager.html#" class="file-control">视频</a>
-                            <a href="file_manager.html#" class="file-control">图片</a>
-                            <div class="hr-line-dashed"></div>
-                            <button class="btn btn-primary btn-block">上传文件</button>
-                            <div class="hr-line-dashed"></div>
-                            <h5>文件夹</h5>
-                            <ul class="folder-list" style="padding: 0">
-                                <li>
-                                    <a href="file_manager.html"><i class="fa fa-folder"></i> 文件</a>
-                                </li>
-                                <li>
-                                    <a href="file_manager.html"><i class="fa fa-folder"></i> 图片</a>
-                                </li>
-                                <li>
-                                    <a href="file_manager.html"><i class="fa fa-folder"></i> Web页面</a>
-                                </li>
-                                <li>
-                                    <a href="file_manager.html"><i class="fa fa-folder"></i> 插图</a>
-                                </li>
-                                <li>
-                                    <a href="file_manager.html"><i class="fa fa-folder"></i> 电影</a>
-                                </li>
-                                <li>
-                                    <a href="file_manager.html"><i class="fa fa-folder"></i> 书籍</a>
-                                </li>
-                            </ul>
-                            <h5 class="tag-title">标签</h5>
-                            <ul class="tag-list" style="padding: 0">
-                                <li>
-                                    <a href="file_manager.html">爱人</a>
-                                </li>
-                                <li>
-                                    <a href="file_manager.html">工作</a>
-                                </li>
-                                <li>
-                                    <a href="file_manager.html">家庭</a>
-                                </li>
-                                <li>
-                                    <a href="file_manager.html">孩子</a>
-                                </li>
-                                <li>
-                                    <a href="file_manager.html">假期</a>
-                                </li>
-                                <li>
-                                    <a href="file_manager.html">音乐</a>
-                                </li>
-                                <li>
-                                    <a href="file_manager.html">照片</a>
-                                </li>
-                                <li>
-                                    <a href="file_manager.html">电影</a>
-                                </li>
-                            </ul>
-                            <div class="clearfix"></div>
+        .file-box:hover {
+            background-color: #f8f8f8;
+            border-color: #ddd;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+
+        .file-box.active {
+            background-color: #e8f0fe;
+            border-color: #1c84c6;
+        }
+
+    .file-icon {
+        height: 80px;
+        line-height: 80px;
+        font-size: 48px;
+        color: #666;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        .file-icon img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+    .file-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 12px;
+        line-height: 1.5;
+        color: #333;
+    }
+
+    .file-info {
+        font-size: 10px;
+        color: #999;
+    }
+
+    /* List View Styles */
+    .file-list-item {
+        display: flex;
+        align-items: center;
+        padding: 8px 15px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+        .file-list-item:hover {
+            background-color: #f8f8f8;
+        }
+
+        .file-list-item.active {
+            background-color: #e8f0fe;
+        }
+
+    .file-list-icon {
+        width: 30px;
+        font-size: 20px;
+        color: #666;
+        text-align: center;
+        margin-right: 10px;
+    }
+
+        .file-list-icon img {
+            max-width: 100%;
+            max-height: 30px;
+        }
+
+    .file-list-name {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .file-list-info {
+        width: 150px;
+        text-align: right;
+        font-size: 12px;
+        color: #999;
+    }
+
+    .file-list-date {
+        width: 150px;
+        text-align: right;
+        font-size: 12px;
+        color: #999;
+        margin-left: 15px;
+    }
+
+    .folder-tree {
+        overflow-x: auto;
+    }
+
+        .folder-tree ul {
+            list-style: none;
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        .folder-tree li {
+            padding: 2px 0;
+            white-space: nowrap;
+        }
+
+        .folder-tree a {
+            color: #333;
+            text-decoration: none;
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 3px;
+        }
+
+            .folder-tree a:hover {
+                background-color: #f0f0f0;
+            }
+
+            .folder-tree a.active {
+                background-color: #e8f0fe;
+                color: #1c84c6;
+                font-weight: bold;
+            }
+
+        .folder-tree i {
+            margin-right: 5px;
+            color: #f8ac59;
+        }
+
+    .breadcrumb {
+        background: none;
+        padding: 8px 0;
+        margin-bottom: 10px;
+    }
+
+    /* Drag and Drop Overlay */
+    #dropOverlay {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        z-index: 1000;
+        border: 3px dashed #1c84c6;
+        text-align: center;
+        padding-top: 20%;
+        font-size: 24px;
+        color: #1c84c6;
+    }
+
+    .ibox-content {
+        position: relative;
+    }
+</style>
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>文件夹</h5>
+                    <div class="ibox-tools">
+                        <a onclick="window.location.reload()"><i class="fa fa-refresh"></i></a>
+                    </div>
+                </div>
+                <div class="ibox-content" style="min-height: 600px; overflow-y: auto;">
+                    <div id="folderTree"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <div class="btn-group">
+                        <button class="btn btn-primary btn-sm" onclick="uploadFile()"><i class="fa fa-upload"></i> 上传</button>
+                        <button class="btn btn-success btn-sm" onclick="createFolder()"><i class="fa fa-plus"></i> 新建文件夹</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteSelected()"><i class="fa fa-trash"></i> 删除</button>
+                        <button class="btn btn-warning btn-sm" onclick="renameFile()"><i class="fa fa-pencil"></i> 重命名</button>
+                        <button class="btn btn-info btn-sm" onclick="copyLink()"><i class="fa fa-copy"></i> 复制链接</button>
+                        <button class="btn btn-default btn-sm" onclick="refreshFiles()"><i class="fa fa-refresh"></i> 刷新</button>
+                    </div>
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default btn-sm active" id="btnViewGrid" onclick="switchView('grid')" title="缩略图模式"><i class="fa fa-th-large"></i></button>
+                            <button type="button" class="btn btn-default btn-sm" id="btnViewList" onclick="switchView('list')" title="列表模式"><i class="fa fa-list"></i></button>
                         </div>
+                        <span id="currentPathDisplay" class="text-muted" style="margin-left: 10px;">/</span>
+                    </div>
+                </div>
+                <div class="ibox-content" style="min-height: 600px;" id="fileContainer">
+                    <div id="dropOverlay">
+                        <i class="fa fa-cloud-upload fa-3x"></i><br>
+                        松开鼠标上传文件
+                    </div>
+                    <div id="fileList" class="clearfix">
+                        <div class="text-center text-muted" style="padding: 50px;">正在加载...</div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
+</div>
+
+<input type="file" id="fileInput" multiple style="display:none" onchange="doUpload()" />
+
+<script>
+    var currentPath = "";
+    var folders = @Html.Raw(string.IsNullOrEmpty(folderJson) ? "[]" : folderJson);
+    var selectedFile = null;
+    var currentView = 'grid'; // 'grid' or 'list'
+    var currentFilesData = []; // Store current files data for view switching
+
+    $(function() {
+        initTree();
+        loadFiles("");
+
+        // 点击空白处取消选择
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('.file-box').length &&
+                !$(e.target).closest('.file-list-item').length &&
+                !$(e.target).closest('.btn-group').length) {
+                $('.file-box, .file-list-item').removeClass('active');
+                selectedFile = null;
+            }
+        });
+
+        // Drag and Drop Support
+        var $container = $('#fileContainer');
+        var $overlay = $('#dropOverlay');
+        var dragCounter = 0;
+
+        $container.on('dragenter', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter++;
+            $overlay.show();
+        });
+
+        $container.on('dragover', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+
+        $container.on('dragleave', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter--;
+            if (dragCounter === 0) {
+                $overlay.hide();
+            }
+        });
+
+        $container.on('drop', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter = 0;
+            $overlay.hide();
+
+            var files = e.originalEvent.dataTransfer.files;
+            if (files.length > 0) {
+                handleDroppedFiles(files);
+            }
+        });
+    });
+
+    function switchView(view) {
+        currentView = view;
+        if (view === 'grid') {
+            $('#btnViewGrid').addClass('active');
+            $('#btnViewList').removeClass('active');
+        } else {
+            $('#btnViewGrid').removeClass('active');
+            $('#btnViewList').addClass('active');
+        }
+        renderFiles(currentFilesData);
+    }
+
+    function initTree() {
+        var treeData = convertToJsTreeData(folders);
+        // Add root node
+        var rootNode = {
+            "id": "root",
+            "text": "根目录",
+            "state": { "opened": true, "selected": true },
+            "icon": "fa fa-folder-open",
+            "data": { "path": "" },
+            "children": treeData
+        };
+
+        $('#folderTree').jstree({
+            'core': {
+                'data': [rootNode],
+                'check_callback': true
+            },
+            'plugins': ['types', 'wholerow'],
+            'types': {
+                'default': {
+                    'icon': 'fa fa-folder'
+                }
+            }
+        }).on('select_node.jstree', function(e, data) {
+            var path = data.node.data.path;
+            currentPath = path;
+            $('#currentPathDisplay').text(path || '/');
+            loadFiles(path);
+        });
+    }
+
+    function convertToJsTreeData(nodes) {
+        var data = [];
+        $.each(nodes, function(i, node) {
+            var item = {
+                "text": node.name,
+                "icon": "fa fa-folder",
+                "data": { "path": node.path },
+                "children": []
+            };
+            if (node.subList && node.subList.length > 0) {
+                item.children = convertToJsTreeData(node.subList);
+            }
+            data.push(item);
+        });
+        return data;
+    }
+
+    function loadFiles(path) {
+        $('#fileList').html('<div class="text-center text-muted" style="padding: 50px;"><i class="fa fa-spinner fa-spin"></i> 正在加载...</div>');
+        selectedFile = null;
+
+        $.ajax({
+            url: '/AdminCP/Attach/GetFileList',
+            type: 'POST',
+            data: { path: path },
+            success: function(res) {
+                if (res.code === 0) {
+                    currentFilesData = res.data;
+                    renderFiles(res.data);
+                } else {
+                    layer.msg(res.message, {icon: 2});
+                }
+            },
+            error: function() {
+                layer.msg('加载失败', {icon: 2});
+            }
+        });
+    }
+
+    function renderFiles(files) {
+        var html = '';
+        if (!files || files.length === 0) {
+            html = '<div class="text-center text-muted" style="padding: 50px;">暂无文件</div>';
+        } else {
+            if (currentView === 'grid') {
+                // Grid View
+                $.each(files, function(i, file) {
+                    var icon = '';
+                    if (file.isDir) {
+                        icon = '<i class="fa fa-folder" style="color: #f8ac59;"></i>';
+                    } else if (file.type === 'image') {
+                        icon = '<img src="/' + '@(Config.GetSystemConfig().AttachConfigEntity.AttachPatch)/' + file.path + '" />';
+                    } else if (file.type === 'video') {
+                        icon = '<i class="fa fa-file-video-o" style="color: #23c6c8;"></i>';
+                    } else {
+                        icon = '<i class="fa fa-file-o"></i>';
+                    }
+
+                    var safeName = file.name.replace(/'/g, "\\'");
+                    var safePath = file.path.replace(/'/g, "\\'");
+
+                    html += '<div class="file-box" onclick="selectFile(this, \'' + safePath + '\', ' + file.isDir + ', \'' + safeName + '\')" ondblclick="openFile(\'' + safePath + '\', ' + file.isDir + ')">';
+                    html += '<div class="file-icon">' + icon + '</div>';
+                    html += '<div class="file-name" title="' + file.name + '">' + file.name + '</div>';
+                    if (!file.isDir) {
+                        html += '<div class="file-info">' + formatSize(file.size) + '</div>';
+                    }
+                    html += '</div>';
+                });
+            } else {
+                // List View
+                html += '<div class="file-list-header" style="padding: 8px 15px; border-bottom: 1px solid #ddd; font-weight: bold; color: #666; display: flex;">';
+                html += '<div style="width: 40px;"></div>';
+                html += '<div style="flex: 1;">名称</div>';
+                html += '<div style="width: 150px; text-align: right;">大小</div>';
+                html += '<div style="width: 150px; text-align: right; margin-left: 15px;">修改时间</div>';
+                html += '</div>';
+
+                $.each(files, function(i, file) {
+                    var icon = '';
+                    if (file.isDir) {
+                        icon = '<i class="fa fa-folder" style="color: #f8ac59;"></i>';
+                    } else if (file.type === 'image') {
+                        icon = '<i class="fa fa-file-image-o" style="color: #1c84c6;"></i>';
+                    } else if (file.type === 'video') {
+                        icon = '<i class="fa fa-file-video-o" style="color: #23c6c8;"></i>';
+                    } else {
+                        icon = '<i class="fa fa-file-o"></i>';
+                    }
+
+                    var safeName = file.name.replace(/'/g, "\\'");
+                    var safePath = file.path.replace(/'/g, "\\'");
+                    var sizeStr = file.isDir ? '-' : formatSize(file.size);
+                    var dateStr = file.updateTime ? file.updateTime.replace('T', ' ').substring(0, 19) : '-';
+
+                    html += '<div class="file-list-item" onclick="selectFile(this, \'' + safePath + '\', ' + file.isDir + ', \'' + safeName + '\')" ondblclick="openFile(\'' + safePath + '\', ' + file.isDir + ')">';
+                    html += '<div class="file-list-icon">' + icon + '</div>';
+                    html += '<div class="file-list-name" title="' + file.name + '">' + file.name + '</div>';
+                    html += '<div class="file-list-info">' + sizeStr + '</div>';
+                    html += '<div class="file-list-date">' + dateStr + '</div>';
+                    html += '</div>';
+                });
+            }
+        }
+        $('#fileList').html(html);
+    }
+
+    function selectFile(el, path, isDir, name) {
+        $('.file-box, .file-list-item').removeClass('active');
+        $(el).addClass('active');
+        selectedFile = { path: path, isDir: isDir, name: name };
+        event.stopPropagation();
+    }
+
+    function openFile(path, isDir) {
+        if (isDir) {
+            currentPath = path;
+            $('#currentPathDisplay').text(path || '/');
+            loadFiles(path);
+        } else {
+            // Preview file?
+            var file = currentFilesData.find(function(f) { return f.path == path; });
+            if (file && file.type === 'image') {
+                var photosData = {
+                    "title": "图片预览",
+                    "id": 1,
+                    "start": 0,
+                    "data": []
+                };
+
+                var images = [];
+                $.each(currentFilesData, function(i, f) {
+                    if (f.type === 'image') images.push(f);
+                });
+
+                $.each(images, function(i, img) {
+                    var src = '/' + '@(Config.GetSystemConfig().AttachConfigEntity.AttachPatch)/' + img.path;
+                    photosData.data.push({
+                        "alt": img.name,
+                        "pid": i,
+                        "src": src,
+                        "thumb": ""
+                    });
+
+                    if (img.path === path) {
+                        photosData.start = i;
+                    }
+                });
+
+                layer.photos({
+                    photos: photosData,
+                    anim: 5
+                });
+            } else {
+                var url = '/' + '@(Config.GetSystemConfig().AttachConfigEntity.AttachPatch)/' + path;
+                window.open(url);
+            }
+        }
+    }
+
+    function createFolder() {
+        layer.prompt({title: '请输入文件夹名称', formType: 0}, function(text, index){
+            layer.close(index);
+            $.ajax({
+                url: '/AdminCP/Attach/CreateDir',
+                type: 'POST',
+                data: { path: currentPath, name: text },
+                success: function(res) {
+                    if (res.code === 0) {
+                        layer.msg('创建成功', {icon: 1});
+                        refreshFiles();
+                        setTimeout(function(){ window.location.reload(); }, 1000);
+                    } else {
+                        layer.msg(res.message, {icon: 2});
+                    }
+                }
+            });
+        });
+    }
+
+    function deleteSelected() {
+        if (!selectedFile) {
+            layer.msg('请先选择文件或文件夹', {icon: 0});
+            return;
+        }
+
+        layer.confirm('确定要删除吗？此操作不可恢复！', {icon: 3, title:'提示'}, function(index){
+            $.ajax({
+                url: '/AdminCP/Attach/DeleteFile',
+                type: 'POST',
+                data: { path: selectedFile.path, isDir: selectedFile.isDir },
+                success: function(res) {
+                    if (res.code === 0) {
+                        layer.msg('删除成功', {icon: 1});
+                        refreshFiles();
+                        if (selectedFile.isDir) {
+                            setTimeout(function(){ window.location.reload(); }, 1000);
+                        }
+                        selectedFile = null;
+                    } else {
+                        layer.msg(res.message, {icon: 2});
+                    }
+                }
+            });
+            layer.close(index);
+        });
+    }
+
+    function renameFile() {
+        if (!selectedFile) {
+            layer.msg('请先选择文件或文件夹', {icon: 0});
+            return;
+        }
+
+        var currentFile = selectedFile;
+
+        layer.prompt({
+            title: '请输入新名称',
+            formType: 0,
+            value: currentFile.name
+        }, function(text, index){
+            layer.close(index);
+
+            if (text === currentFile.name) {
+                return;
+            }
+
+            var loading = layer.load(1, {shade: [0.1,'#fff']});
+            $.ajax({
+                url: '/AdminCP/Attach/RenameFile',
+                type: 'POST',
+                data: { path: currentFile.path, newName: text, isDir: currentFile.isDir },
+                success: function(res) {
+                    layer.close(loading);
+                    if (res.code === 0) {
+                        layer.msg('重命名成功', {icon: 1});
+                        refreshFiles();
+                        if (currentFile.isDir) {
+                            setTimeout(function(){ window.location.reload(); }, 1000);
+                        }
+                        selectedFile = null;
+                    } else {
+                        layer.msg(res.message, {icon: 2});
+                    }
+                },
+                error: function() {
+                    layer.close(loading);
+                    layer.msg('请求失败', {icon: 2});
+                }
+            });
+        });
+    }
+
+    function uploadFile() {
+        if (!checkUploadPermission()) return;
+        $('#fileInput').click();
+    }
+
+    function checkUploadPermission() {
+        if (!currentPath || currentPath === "") {
+             layer.msg('根目录不允许上传文件，请选择子目录', {icon: 0});
+             return false;
+        }
+        return true;
+    }
+
+    function doUpload() {
+        var files = $('#fileInput')[0].files;
+        if (files.length === 0) return;
+        processUpload(files);
+    }
+
+    function handleDroppedFiles(files) {
+        if (!checkUploadPermission()) return;
+        processUpload(files);
+    }
+
+    function processUpload(files) {
+        var formData = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            formData.append("files", files[i]);
+        }
+        formData.append("path", currentPath);
+
+        var loading = layer.load(1, {shade: [0.1,'#fff']});
+
+        $.ajax({
+            url: '/AdminCP/Attach/UploadFile',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(res) {
+                layer.close(loading);
+                if (res.code === 0) {
+                    layer.msg(res.message, {icon: 1});
+                    refreshFiles();
+                } else {
+                    layer.alert(res.message, {icon: 2});
+                }
+                $('#fileInput').val('');
+            },
+            error: function() {
+                layer.close(loading);
+                layer.msg('上传出错', {icon: 2});
+                $('#fileInput').val('');
+            }
+        });
+    }
+
+    function refreshFiles() {
+        loadFiles(currentPath);
+    }
+
+    function copyLink() {
+        if (!selectedFile || selectedFile.isDir) {
+            layer.msg('请选择一个文件', {icon: 0});
+            return;
+        }
+        var url = '/' + '@(Config.GetSystemConfig().AttachConfigEntity.AttachPatch)/' + selectedFile.path;
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val(url).select();
+        document.execCommand("copy");
+        $temp.remove();
+        layer.msg('链接已复制', {icon: 1});
+    }
+
+    function formatSize(bytes) {
+        if (bytes === 0) return '0 B';
+        var k = 1024;
+        var sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+        var i = Math.floor(Math.log(bytes) / Math.log(k));
+        return (bytes / Math.pow(k, i)).toFixed(2) + ' ' + sizes[i];
+    }
+</script>
 

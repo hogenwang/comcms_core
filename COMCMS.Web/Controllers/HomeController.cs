@@ -154,10 +154,7 @@ namespace COMCMS.Web.Controllers
             string sqlname = "comcms_sqlserver.sql";
             if (sqltype == "mysql")
             {
-                if (mysqltype == "linux")
-                    sqlname = "comcms_for_linux.sql";
-                else
-                    sqlname = "comcms_for_windows.sql";
+                sqlname = "comcms_mysql.sql";
             }
 
             string sqlPath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}install{Path.DirectorySeparatorChar}";

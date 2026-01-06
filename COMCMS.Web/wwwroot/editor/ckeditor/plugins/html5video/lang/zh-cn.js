@@ -11,5 +11,7 @@ CKEDITOR.plugins.setLang('html5video', 'zh-cn', {
     autoplay: '自动播放?',
     yes: '是',
     no: '否',
-    responsive: '响应式宽度'
+    responsive: '响应式宽度',
+    poster: '封面图',
+    posterUpload: '上传封面图'
 });

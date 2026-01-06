@@ -498,7 +498,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             using (Stream stream = fileProvider.GetFileInfo(logname).CreateReadStream())
             {
                 byte[] buffer = new byte[stream.Length];
-                await stream.ReadAsync(buffer, 0, buffer.Length);
+                await stream.ReadExactlyAsync(buffer);
                 detail.Append(Encoding.Default.GetString(buffer));
             }
 

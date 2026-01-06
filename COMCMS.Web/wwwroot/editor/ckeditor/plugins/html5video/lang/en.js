@@ -11,5 +11,7 @@ CKEDITOR.plugins.setLang( 'html5video', 'en', {
     autoplay: 'Autoplay?',
     yes: 'Yes',
     no: 'No',
-	responsive: 'Responsive width'
+	responsive: 'Responsive width',
+    poster: 'Poster image',
+    posterUpload: 'Upload poster image'
 } );

@@ -38,6 +38,31 @@ CKEDITOR.dialog.add( 'html5video', function( editor ) {
                         hidden: true,
                         filebrowser: 'info:url'
                     } ]
+                },
+                {
+                    type: 'hbox',
+                    widths: [ '365px', '110px' ],
+                    align: 'right',
+                    children: [ {
+                        type: 'text',
+                        id: 'poster',
+                        label: editor.lang.html5video.poster,
+                        setup: function( widget ) {
+                            this.setValue( widget.data.poster );
+                        },
+                        commit: function( widget ) {
+                            widget.setData( 'poster', this.getValue() );
+                        }
+                    },
+                    {
+                        type: 'button',
+                        id: 'browsePoster',
+                        style: 'display:inline-block;margin-top:14px;',
+                        align: 'center',
+                        label: editor.lang.common.browseServer,
+                        hidden: true,
+                        filebrowser: 'info:poster'
+                    } ]
                 } ]
             },
             {
@@ -126,6 +151,20 @@ CKEDITOR.dialog.add( 'html5video', function( editor ) {
                 filebrowser: 'info:url',
                 label: editor.lang.html5video.btnUpload,
                 'for': [ 'Upload', 'upload' ]
+            },
+            {
+                type: 'file',
+                id: 'uploadPoster',
+                label: editor.lang.html5video.posterUpload,
+                style: 'height:40px',
+                size: 38
+            },
+            {
+                type: 'fileButton',
+                id: 'uploadButtonPoster',
+                filebrowser: 'info:poster',
+                label: editor.lang.html5video.btnUpload,
+                'for': [ 'Upload', 'uploadPoster' ]
             } ]
         },
         {

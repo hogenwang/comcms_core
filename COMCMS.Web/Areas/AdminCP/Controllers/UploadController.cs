@@ -909,7 +909,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         {
             // 保存为byte[] 
             byte[] byData = new byte[stream.Length];
-            stream.Read(byData, 0, byData.Length);
+            stream.ReadExactly(byData);
             stream.Dispose();
             return byData;
         }

@@ -390,8 +390,6 @@
     <None Include="wwwroot\editor\ckeditor\plugins\xml\plugin.js" />
     <None Include="wwwroot\editor\ckeditor\skins\moono-lisa\readme.md" />
     <None Include="wwwroot\editor\ckeditor\vendor\promise.js" />
-    <None Include="wwwroot\install\comcms_for_linux.sql" />
-    <None Include="wwwroot\install\comcms_for_windows.sql" />
     <None Include="wwwroot\install\comcms_sqlserver.sql" />
     <None Include="wwwroot\js\my97\lang\en.js" />
     <None Include="wwwroot\js\my97\lang\zh-cn.js" />

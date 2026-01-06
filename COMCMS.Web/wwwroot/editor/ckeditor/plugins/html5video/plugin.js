@@ -11,7 +11,7 @@ CKEDITOR.plugins.add( 'html5video', {
              *  - div-s with text-align,float,margin-left,margin-right inline style rules and required ckeditor-html5-video class.
              *  - video tags with src, controls, width and height attributes.
              */
-            allowedContent: 'div[data-responsive](!ckeditor-html5-video){text-align,float,margin-left,margin-right}; video[src,controls,autoplay,width, height]{max-width,height};',
+            allowedContent: 'div[data-responsive](!ckeditor-html5-video){text-align,float,margin-left,margin-right}; video[src,controls,autoplay,width,height,poster]{max-width,height};',
             requiredContent: 'div(ckeditor-html5-video); video[src,controls];',
             upcast: function( element ) {
                 return element.name === 'div' && element.hasClass( 'ckeditor-html5-video' );
@@ -21,6 +21,7 @@ CKEDITOR.plugins.add( 'html5video', {
                 var src = '';
                 var autoplay = '';
                 var align = this.element.getStyle( 'text-align' );
+                var poster = '';
 
                 var width = '';
                 var height = '';
@@ -32,6 +33,7 @@ CKEDITOR.plugins.add( 'html5video', {
                     width = this.element.getChild( 0 ).getAttribute( 'width' );
                     height = this.element.getChild( 0 ).getAttribute( 'height' );
                     autoplay = this.element.getChild( 0 ).getAttribute( 'autoplay' );
+                    poster = this.element.getChild( 0 ).getAttribute( 'poster' );
 										responsive = this.element.getAttribute( 'data-responsive' );
                 }
 
@@ -55,7 +57,11 @@ CKEDITOR.plugins.add( 'html5video', {
                     if ( autoplay ) {
                         this.setData( 'autoplay', 'yes' );
                     }
-										
+                    
+                    if ( poster ) {
+                        this.setData('poster', poster);
+                    }
+					
                     if ( responsive ) {
                         this.setData( 'responsive', responsive );	
                     }
@@ -76,6 +82,7 @@ CKEDITOR.plugins.add( 'html5video', {
                     this.element.getChild( 0 ).setAttribute( 'src', this.data.src );
                     if (this.data.width) this.element.getChild( 0 ).setAttribute( 'width', this.data.width );
                     if (this.data.height) this.element.getChild( 0 ).setAttribute( 'height', this.data.height );
+                    if (this.data.poster) this.element.getChild( 0 ).setAttribute( 'poster', this.data.poster );
 
                     if ( this.data.responsive ) {
                             this.element.setAttribute("data-responsive", this.data.responsive);
