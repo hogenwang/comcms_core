@@ -16,7 +16,6 @@ using System.Drawing;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using NewLife.UserGroup.WebUploader;
 using SkiaSharp;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
@@ -808,99 +807,6 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             return Content(JsonConvert.SerializeObject(new { status = status, msg = msg, name = name, path = path, thumb = thumb, size = size, ext = ext }), "text/plain");
         }
-
-        #region 分片上传文件，可断点续传
-
-        /// <summary>
-        /// 保存文件或者分块
-        /// </summary>
-        /// <param name="md5">文件md5</param>
-        /// <param name="chunk">分块号</param>
-        /// <param name="chunks">分块总数</param>
-        /// <returns></returns>
-        [HttpPost]
-        public IActionResult SaveFile(string md5, int? chunk, int? chunks)
-        {
-            var tempDir = "UploadTemp"; // 缓存文件夹
-            var targetDir = "UploadFile"; // 目标文件夹
-
-            var file = Request.Form.Files[0];
-
-            file.SaveFileOrChunkFile(targetDir, tempDir, md5, chunks, chunk);
-
-            return Json(new
-            {
-                Data = new { md5 = md5, url = Path.Combine("/", targetDir, file.FileName) },
-                Message = "ok",
-                Result = true
-            });
-        }
-
-        /// <summary>
-        /// 合并文件
-        /// </summary>
-        /// <param name="md5">文件md5</param>
-        /// <param name="fileName">文件名</param>
-        /// <param name="chunks">分块数</param>
-        /// <returns></returns>
-        [HttpPost]
-        public IActionResult MergeFile(string md5, string fileName, int chunks)
-        {
-            var tempDir = "UploadTemp";
-            var targetDir = "UploadFile";
-
-            var (res, msg) = tempDir.Merge(targetDir, fileName, md5, chunks);
-
-            if (!res)
-            {
-                return Json(new
-                {
-                    Message = msg,
-                    Result = false
-                });
-            }
-
-            return Json(new
-            {
-                Data = new { md5 = md5, url = Path.Combine("/", targetDir, fileName) },
-                Message = "ok",
-                Result = true
-            });
-        }
-
-        /// <summary>
-        /// 检查文件或分块是否存在
-        /// </summary>
-        /// <param name="md5">文件md5</param>
-        /// <param name="fileName">文件名</param>
-        /// <param name="chunk">分块号</param>
-        /// <returns></returns>
-        public IActionResult CheckFile(string md5, string fileName, int? chunk)
-        {
-            var tempDir = "UploadTemp";
-            var targetDir = "UploadFile";
-
-            string filePath;
-
-            //分片文件
-            if (chunk != null)
-            {
-                filePath = Path.Combine(tempDir, md5, $"{chunk}.part");
-            }
-            else
-            {
-                filePath = Path.Combine(targetDir, fileName);
-            }
-
-            var exists = System.IO.File.Exists(filePath);
-
-            return Json(new
-            {
-                Data = fileName != null && exists ? (object)new { md5 = md5, url = Path.Combine("/", targetDir, fileName) } : null,
-                Result = exists
-            });
-        }
-        #endregion
 
         #endregion
 
