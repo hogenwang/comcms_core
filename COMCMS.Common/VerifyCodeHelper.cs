@@ -293,14 +293,13 @@ namespace COMCMS.Common
                 canvas.DrawLine(random.Next(0, width), random.Next(0, height), random.Next(0, width), random.Next(0, height), drawStyle);
             }
             // 在图片上写验证码
+            using SKFont textFont = new() { Size = 22 };
             SKPaint textPaint = new SKPaint
             {
                 IsAntialias = true,
-                TextAlign = SKTextAlign.Left,
                 Shader = SKShader.CreateLinearGradient(new SKPoint(0, 0), new SKPoint(width, height), new SKColor[] { SKColors.Blue, SKColors.DarkRed }, SKShaderTileMode.Clamp),
-                TextSize = 22
             };
-            canvas.DrawText(text, 4, 24, textPaint);
+            canvas.DrawText(text, 4, 24, SKTextAlign.Left, textFont, textPaint);
 
             //将文字写到画布上
             //using (SKPaint drawStyle = new())

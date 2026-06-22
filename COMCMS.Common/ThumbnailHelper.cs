@@ -120,7 +120,7 @@ namespace COMCMS.Common
             }
 
 
-            var newImg = originalImage.Resize(new SKSizeI(towidth, toheight), SKFilterQuality.Medium);
+            var newImg = originalImage.Resize(new SKSizeI(towidth, toheight), new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear));
             using var fs = new FileStream(newFileName, FileMode.Create);
             //判断类型
             SKEncodedImageFormat imgType = new SKEncodedImageFormat();

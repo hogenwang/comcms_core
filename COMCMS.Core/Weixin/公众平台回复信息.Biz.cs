@@ -32,7 +32,7 @@ namespace COMCMS.Core
         {
 
             // 过滤器 UserModule、TimeModule、IPModule
-            Meta.Modules.Add<TimeModule>();
+            Meta.Interceptors.Add<TimeInterceptor>();
         }
 
         /// <summary>验证数据，通过抛出异常的方式提示验证失败。</summary>
