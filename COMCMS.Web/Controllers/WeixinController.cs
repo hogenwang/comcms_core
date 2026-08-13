@@ -13,7 +13,6 @@ using System.Threading;
 using COMCMS.API.Weixin.CustomMessageHandler;
 using Senparc.Weixin;
 using Senparc.NeuChar.MessageHandlers;
-using Senparc.Weixin.MP.MvcExtension;
 using Senparc.CO2NET.AspNet.HttpUtility;
 
 namespace COMCMS.Web.Controllers
@@ -22,27 +21,18 @@ namespace COMCMS.Web.Controllers
     {
         [HttpGet]
         [ActionName("Index")]
-        public Task<ActionResult> Get(string signature, string timestamp, string nonce, string echostr)
+        public IActionResult Get(string signature, string timestamp, string nonce, string echostr)
         {
             string token = cfg.Token;
-
-            return Task.Factory.StartNew(() =>
-                 {
-                     if (CheckSignature.Check(signature, timestamp, nonce, token))
-                     {
-                         return echostr; //返回随机字符串则表示验证通过
-                                 }
-                     else
-                     {
-                         return "failed:" + signature + "," + Senparc.Weixin.MP.CheckSignature.GetSignature(timestamp, nonce, token) + "。" +
-                             "如果你在浏览器中看到这句话，说明此地址可以被作为微信公众账号后台的Url，请注意保持Token一致。";
-                     }
-                 }).ContinueWith<ActionResult>(task => Content(task.Result));
+            if (CheckSignature.Check(signature, timestamp, nonce, token)) return Content(echostr);
+            return Content("failed:" + signature + "," + Senparc.Weixin.MP.CheckSignature.GetSignature(timestamp, nonce, token) + "。" +
+                "如果你在浏览器中看到这句话，说明此地址可以被作为微信公众账号后台的Url，请注意保持Token一致。");
         }
 
 
         #region 处理微信接口 消息，事件等
         [HttpPost]
+        [ExternalWebhook]
         [ActionName("Index")]
         public async Task<IActionResult> Post(PostModel postModel)
         {
@@ -67,7 +57,6 @@ namespace COMCMS.Web.Controllers
             string content = messageHandler.TextResponseMessage.Replace("\r\n", "\n");
 
             return Content(content, "text/xml");
-            //return new FixWeixinBugWeixinResult(messageHandler);
 
         }
         #endregion

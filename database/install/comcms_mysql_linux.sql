@@ -20,11 +20,11 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for admin
 -- ----------------------------
-DROP TABLE IF EXISTS `admin`;
-CREATE TABLE `admin`  (
+DROP TABLE IF EXISTS `Admin`;
+CREATE TABLE `Admin`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `UserName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `PassWord` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `PassWord` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `Salt` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '盐值',
   `RealName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `Tel` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '电话',
@@ -43,13 +43,12 @@ CREATE TABLE `admin`  (
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', 'A8D385D64F7578E5985E3FEDF0DC82C1', 'w0gOGhJB2a', 'admin', '', '', 100, 1, 0, '2026-01-06 10:10:23', '127.0.0.1', '2018-04-16 00:17:43', '127.0.0.1', 0);
 
 -- ----------------------------
 -- Table structure for adminmenu
 -- ----------------------------
-DROP TABLE IF EXISTS `adminmenu`;
-CREATE TABLE `adminmenu`  (
+DROP TABLE IF EXISTS `AdminMenu`;
+CREATE TABLE `AdminMenu`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `MenuKey` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '标识key',
   `MenuName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '页面名称',
@@ -69,51 +68,51 @@ CREATE TABLE `adminmenu`  (
 -- ----------------------------
 -- Records of adminmenu
 -- ----------------------------
-INSERT INTO `adminmenu` VALUES (1, 'home', '主页', NULL, NULL, 'Index/Main', 0, 0, '0,', 0, 0, NULL, 'fa-home');
-INSERT INTO `adminmenu` VALUES (2, 'system', '系统设置', NULL, NULL, '#', 0, 0, '0,', 0, 1, NULL, 'fa-gears');
-INSERT INTO `adminmenu` VALUES (3, 'baseconfig', '基本配置', NULL, NULL, 'System/BaseConfig', 2, 1, '0,2,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (4, 'smptconfig', 'SMTP设置', NULL, NULL, 'System/SmtpConfig', 2, 1, '0,2,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (5, 'attachconfig', '附件设置', NULL, NULL, 'System/AttachConfig', 2, 1, '0,2,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (6, 'articlesys', '文章系统', NULL, NULL, '#', 0, 0, '0,', 0, 2, NULL, 'fa-book');
-INSERT INTO `adminmenu` VALUES (7, 'articlecategory', '文章栏目管理', NULL, NULL, 'Article/ArticleCategoryList', 6, 1, '0,6,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (8, 'article', '文章管理', NULL, NULL, 'Article/ArticleList', 6, 1, '0,6,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (9, 'productsys', '商品系统', NULL, NULL, '#', 0, 0, '0,', 0, 3, NULL, 'fa-balance-scale');
-INSERT INTO `adminmenu` VALUES (10, 'productcategory', '商品分类管理', NULL, NULL, 'Product/CategoryList', 9, 1, '0,9,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (11, 'product', '商品管理', NULL, NULL, 'Product/ProductList', 9, 1, '0,9,', 0, 1, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (12, 'ordersys', '订单系统', NULL, NULL, '#', 0, 0, '0,', 0, 4, NULL, 'fa-shopping-bag');
-INSERT INTO `adminmenu` VALUES (13, 'order', '商品订单管理', NULL, NULL, 'Order/OrderList', 12, 1, '0,12,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (14, 'payonline', '支付记录', NULL, NULL, 'Order/PayOnlineList', 12, 1, '0,12,', 0, 1, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (15, 'user', '用户系统', NULL, NULL, '#', 0, 0, '0,', 0, 5, NULL, 'fa-user');
-INSERT INTO `adminmenu` VALUES (16, 'memberrole', '用户组管理', NULL, NULL, 'Member/MemberRole', 15, 1, '0,15,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (17, 'members', '用户管理', NULL, NULL, 'Member/Members', 15, 1, '0,15,', 0, 1, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (18, 'permissionsys', '后台权限', NULL, NULL, '#', 0, 0, '0,', 0, 6, NULL, 'fa-users');
-INSERT INTO `adminmenu` VALUES (19, 'adminrole', '管理组管理', NULL, NULL, 'Member/AdminRole', 18, 1, '0,18,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (20, 'admins', '管理员管理', NULL, NULL, 'Member/Admins', 18, 1, '0,18,', 0, 1, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (21, 'eventkey', '事件权限管理', NULL, NULL, 'Permission/EventKey', 18, 1, '0,18,', 0, 3, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (22, 'adminmenu', '后台栏目管理', NULL, NULL, 'Permission/AdminMenuList', 18, 1, '0,18,', 0, 4, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (23, 'editme', ' 修改密码', NULL, NULL, 'Member/EditMe', 18, 1, '0,18,', 0, 5, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (24, 'guestbooksys', '留言系统', NULL, NULL, '#', 0, 0, '0,', 0, 7, NULL, 'fa-rss-square');
-INSERT INTO `adminmenu` VALUES (25, 'guestbookkinds', '留言分类管理', NULL, NULL, 'Guestbook/GuestbookCategorys', 24, 1, '0,24,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (26, 'guestbook', '留言管理', NULL, NULL, 'Guestbook/GuestbookList', 24, 1, '0,24,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (27, 'other', '其他', NULL, NULL, '#', 0, 0, '0,', 0, 99, NULL, 'fa-square-o');
-INSERT INTO `adminmenu` VALUES (28, 'adskinds', '广告分类管理', NULL, NULL, 'Other/AdsCategoryList', 27, 1, '0,27,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (29, 'ads', '广告管理', NULL, NULL, 'Other/AdsList', 27, 1, '0,27,', 0, 1, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (30, 'linkkinds', '友情连接分类管理', NULL, NULL, 'Other/LinkCategoryList', 27, 1, '0,27,', 0, 2, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (31, 'link', '友情连接管理', NULL, NULL, 'Other/LinkList', 27, 1, '0,27,', 0, 3, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (32, 'weixinsys', '微信公众号管理', NULL, NULL, '#', 0, 0, '0,', 0, 8, NULL, 'fa-file-word-o');
-INSERT INTO `adminmenu` VALUES (33, 'wxautoreply', '关注自动回复', NULL, NULL, 'Weixin/SubscribeReply', 32, 1, '0,32,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (34, 'wxmenu', '自定义菜单管理', NULL, NULL, 'Weixin/Menu', 32, 1, '0,32,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (35, 'wxkeywordreply', '关键字回复', NULL, NULL, 'Weixin/ReplyRule', 32, 1, '0,32,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (36, 'clickreplyrule', '点击事件自动回复', NULL, NULL, 'Weixin/ClickReplyRule', 32, 1, '0,32,', 0, 0, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (37, 'robots', 'Robots文档设置', NULL, NULL, 'System/Robots', 2, 1, '0,2,', 0, 3, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (38, 'admincplog', '后台管理日志', NULL, NULL, 'Member/AdminCPLogList', 18, 1, '0,18,', 0, 10, NULL, NULL);
-INSERT INTO `adminmenu` VALUES (39, 'attach', '附件管理', NULL, NULL, 'Attach/AttachList', 2, 1, '0,2,', 0, 99, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (1, 'home', '主页', NULL, NULL, 'Index/Main', 0, 0, '0,', 0, 0, NULL, 'fa-home');
+INSERT INTO `AdminMenu` VALUES (2, 'system', '系统设置', NULL, NULL, '#', 0, 0, '0,', 0, 1, NULL, 'fa-gears');
+INSERT INTO `AdminMenu` VALUES (3, 'baseconfig', '基本配置', NULL, NULL, 'System/BaseConfig', 2, 1, '0,2,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (4, 'smptconfig', 'SMTP设置', NULL, NULL, 'System/SmtpConfig', 2, 1, '0,2,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (5, 'attachconfig', '附件设置', NULL, NULL, 'System/AttachConfig', 2, 1, '0,2,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (6, 'articlesys', '文章系统', NULL, NULL, '#', 0, 0, '0,', 0, 2, NULL, 'fa-book');
+INSERT INTO `AdminMenu` VALUES (7, 'articlecategory', '文章栏目管理', NULL, NULL, 'Article/ArticleCategoryList', 6, 1, '0,6,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (8, 'article', '文章管理', NULL, NULL, 'Article/ArticleList', 6, 1, '0,6,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (9, 'productsys', '商品系统', NULL, NULL, '#', 0, 0, '0,', 0, 3, NULL, 'fa-balance-scale');
+INSERT INTO `AdminMenu` VALUES (10, 'productcategory', '商品分类管理', NULL, NULL, 'Product/CategoryList', 9, 1, '0,9,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (11, 'product', '商品管理', NULL, NULL, 'Product/ProductList', 9, 1, '0,9,', 0, 1, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (12, 'ordersys', '订单系统', NULL, NULL, '#', 0, 0, '0,', 0, 4, NULL, 'fa-shopping-bag');
+INSERT INTO `AdminMenu` VALUES (13, 'order', '商品订单管理', NULL, NULL, 'Order/OrderList', 12, 1, '0,12,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (14, 'payonline', '支付记录', NULL, NULL, 'Order/PayOnlineList', 12, 1, '0,12,', 0, 1, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (15, 'user', '用户系统', NULL, NULL, '#', 0, 0, '0,', 0, 5, NULL, 'fa-user');
+INSERT INTO `AdminMenu` VALUES (16, 'memberrole', '用户组管理', NULL, NULL, 'Member/MemberRole', 15, 1, '0,15,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (17, 'members', '用户管理', NULL, NULL, 'Member/Members', 15, 1, '0,15,', 0, 1, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (18, 'permissionsys', '后台权限', NULL, NULL, '#', 0, 0, '0,', 0, 6, NULL, 'fa-users');
+INSERT INTO `AdminMenu` VALUES (19, 'adminrole', '管理组管理', NULL, NULL, 'Member/AdminRole', 18, 1, '0,18,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (20, 'admins', '管理员管理', NULL, NULL, 'Member/Admins', 18, 1, '0,18,', 0, 1, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (21, 'eventkey', '事件权限管理', NULL, NULL, 'Permission/EventKey', 18, 1, '0,18,', 0, 3, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (22, 'adminmenu', '后台栏目管理', NULL, NULL, 'Permission/AdminMenuList', 18, 1, '0,18,', 0, 4, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (23, 'editme', ' 修改密码', NULL, NULL, 'Member/EditMe', 18, 1, '0,18,', 0, 5, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (24, 'guestbooksys', '留言系统', NULL, NULL, '#', 0, 0, '0,', 0, 7, NULL, 'fa-rss-square');
+INSERT INTO `AdminMenu` VALUES (25, 'guestbookkinds', '留言分类管理', NULL, NULL, 'Guestbook/GuestbookCategorys', 24, 1, '0,24,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (26, 'guestbook', '留言管理', NULL, NULL, 'Guestbook/GuestbookList', 24, 1, '0,24,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (27, 'other', '其他', NULL, NULL, '#', 0, 0, '0,', 0, 99, NULL, 'fa-square-o');
+INSERT INTO `AdminMenu` VALUES (28, 'adskinds', '广告分类管理', NULL, NULL, 'Other/AdsCategoryList', 27, 1, '0,27,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (29, 'ads', '广告管理', NULL, NULL, 'Other/AdsList', 27, 1, '0,27,', 0, 1, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (30, 'linkkinds', '友情连接分类管理', NULL, NULL, 'Other/LinkCategoryList', 27, 1, '0,27,', 0, 2, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (31, 'link', '友情连接管理', NULL, NULL, 'Other/LinkList', 27, 1, '0,27,', 0, 3, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (32, 'weixinsys', '微信公众号管理', NULL, NULL, '#', 0, 0, '0,', 0, 8, NULL, 'fa-file-word-o');
+INSERT INTO `AdminMenu` VALUES (33, 'wxautoreply', '关注自动回复', NULL, NULL, 'Weixin/SubscribeReply', 32, 1, '0,32,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (34, 'wxmenu', '自定义菜单管理', NULL, NULL, 'Weixin/Menu', 32, 1, '0,32,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (35, 'wxkeywordreply', '关键字回复', NULL, NULL, 'Weixin/ReplyRule', 32, 1, '0,32,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (36, 'clickreplyrule', '点击事件自动回复', NULL, NULL, 'Weixin/ClickReplyRule', 32, 1, '0,32,', 0, 0, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (37, 'robots', 'Robots文档设置', NULL, NULL, 'System/Robots', 2, 1, '0,2,', 0, 3, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (38, 'admincplog', '后台管理日志', NULL, NULL, 'Member/AdminCPLogList', 18, 1, '0,18,', 0, 10, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (39, 'attach', '附件管理', NULL, NULL, 'Attach/AttachList', 2, 1, '0,2,', 0, 99, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for adminmenuevent
 -- ----------------------------
-DROP TABLE IF EXISTS `adminmenuevent`;
-CREATE TABLE `adminmenuevent`  (
+DROP TABLE IF EXISTS `AdminMenuEvent`;
+CREATE TABLE `AdminMenuEvent`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `MenuId` int(11) NOT NULL COMMENT '菜单ID',
   `MenuKey` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '菜单key',
@@ -126,214 +125,214 @@ CREATE TABLE `adminmenuevent`  (
 -- ----------------------------
 -- Records of adminmenuevent
 -- ----------------------------
-INSERT INTO `adminmenuevent` VALUES (1, 1, 'home', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (2, 3, 'baseconfig', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (3, 3, 'baseconfig', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (4, 4, 'smptconfig', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (5, 4, 'smptconfig', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (6, 5, 'attachconfig', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (7, 5, 'attachconfig', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (8, 7, 'articlecategory', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (9, 7, 'articlecategory', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (10, 7, 'articlecategory', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (11, 7, 'articlecategory', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (12, 7, 'articlecategory', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (13, 7, 'articlecategory', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (14, 8, 'article', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (15, 8, 'article', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (16, 8, 'article', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (17, 8, 'article', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (18, 8, 'article', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (19, 8, 'article', 6, 'import', '导入');
-INSERT INTO `adminmenuevent` VALUES (20, 8, 'article', 7, 'export', '导出');
-INSERT INTO `adminmenuevent` VALUES (21, 8, 'article', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (22, 8, 'article', 9, 'batch', '批量操作');
-INSERT INTO `adminmenuevent` VALUES (23, 8, 'article', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (24, 8, 'article', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (25, 10, 'productcategory', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (26, 10, 'productcategory', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (27, 10, 'productcategory', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (28, 10, 'productcategory', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (29, 10, 'productcategory', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (30, 10, 'productcategory', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (31, 11, 'product', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (32, 11, 'product', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (33, 11, 'product', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (34, 11, 'product', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (35, 11, 'product', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (36, 11, 'product', 6, 'import', '导入');
-INSERT INTO `adminmenuevent` VALUES (37, 11, 'product', 7, 'export', '导出');
-INSERT INTO `adminmenuevent` VALUES (38, 11, 'product', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (39, 11, 'product', 9, 'batch', '批量操作');
-INSERT INTO `adminmenuevent` VALUES (40, 11, 'product', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (41, 11, 'product', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (42, 13, 'order', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (43, 13, 'order', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (44, 13, 'order', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (45, 13, 'order', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (46, 13, 'order', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (47, 13, 'order', 6, 'import', '导入');
-INSERT INTO `adminmenuevent` VALUES (48, 13, 'order', 7, 'export', '导出');
-INSERT INTO `adminmenuevent` VALUES (49, 13, 'order', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (50, 13, 'order', 9, 'batch', '批量操作');
-INSERT INTO `adminmenuevent` VALUES (51, 13, 'order', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (52, 13, 'order', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (53, 14, 'payonline', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (54, 14, 'payonline', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (55, 14, 'payonline', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (56, 14, 'payonline', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (57, 14, 'payonline', 6, 'import', '导入');
-INSERT INTO `adminmenuevent` VALUES (58, 14, 'payonline', 7, 'export', '导出');
-INSERT INTO `adminmenuevent` VALUES (59, 14, 'payonline', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (60, 14, 'payonline', 9, 'batch', '批量操作');
-INSERT INTO `adminmenuevent` VALUES (61, 14, 'payonline', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (62, 14, 'payonline', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (63, 16, 'memberrole', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (64, 16, 'memberrole', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (65, 16, 'memberrole', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (66, 16, 'memberrole', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (67, 16, 'memberrole', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (68, 16, 'memberrole', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (69, 17, 'members', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (70, 17, 'members', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (71, 17, 'members', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (72, 17, 'members', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (73, 17, 'members', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (74, 17, 'members', 6, 'import', '导入');
-INSERT INTO `adminmenuevent` VALUES (75, 17, 'members', 7, 'export', '导出');
-INSERT INTO `adminmenuevent` VALUES (76, 17, 'members', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (77, 17, 'members', 9, 'batch', '批量操作');
-INSERT INTO `adminmenuevent` VALUES (78, 17, 'members', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (79, 17, 'members', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (80, 19, 'adminrole', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (81, 19, 'adminrole', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (82, 19, 'adminrole', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (83, 19, 'adminrole', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (84, 19, 'adminrole', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (85, 19, 'adminrole', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (86, 19, 'adminrole', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (87, 20, 'admins', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (88, 20, 'admins', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (89, 20, 'admins', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (90, 20, 'admins', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (91, 20, 'admins', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (92, 20, 'admins', 6, 'import', '导入');
-INSERT INTO `adminmenuevent` VALUES (93, 20, 'admins', 7, 'export', '导出');
-INSERT INTO `adminmenuevent` VALUES (94, 20, 'admins', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (95, 20, 'admins', 9, 'batch', '批量操作');
-INSERT INTO `adminmenuevent` VALUES (96, 20, 'admins', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (97, 20, 'admins', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (98, 21, 'eventkey', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (99, 21, 'eventkey', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (100, 21, 'eventkey', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (101, 21, 'eventkey', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (102, 21, 'eventkey', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (103, 21, 'eventkey', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (104, 21, 'eventkey', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (105, 22, 'adminmenu', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (106, 22, 'adminmenu', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (107, 22, 'adminmenu', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (108, 22, 'adminmenu', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (109, 22, 'adminmenu', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (110, 22, 'adminmenu', 6, 'import', '导入');
-INSERT INTO `adminmenuevent` VALUES (111, 22, 'adminmenu', 7, 'export', '导出');
-INSERT INTO `adminmenuevent` VALUES (112, 22, 'adminmenu', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (113, 22, 'adminmenu', 9, 'batch', '批量操作');
-INSERT INTO `adminmenuevent` VALUES (114, 22, 'adminmenu', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (115, 22, 'adminmenu', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (116, 23, 'editme', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (117, 23, 'editme', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (118, 25, 'guestbookkinds', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (119, 25, 'guestbookkinds', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (120, 25, 'guestbookkinds', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (121, 25, 'guestbookkinds', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (122, 25, 'guestbookkinds', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (123, 25, 'guestbookkinds', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (124, 25, 'guestbookkinds', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (125, 25, 'guestbookkinds', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (126, 26, 'guestbook', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (127, 26, 'guestbook', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (128, 26, 'guestbook', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (129, 26, 'guestbook', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (130, 26, 'guestbook', 6, 'import', '导入');
-INSERT INTO `adminmenuevent` VALUES (131, 26, 'guestbook', 7, 'export', '导出');
-INSERT INTO `adminmenuevent` VALUES (132, 26, 'guestbook', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (133, 26, 'guestbook', 9, 'batch', '批量操作');
-INSERT INTO `adminmenuevent` VALUES (134, 26, 'guestbook', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (135, 26, 'guestbook', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (136, 28, 'adskinds', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (137, 28, 'adskinds', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (138, 28, 'adskinds', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (139, 28, 'adskinds', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (140, 28, 'adskinds', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (141, 29, 'ads', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (142, 29, 'ads', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (143, 29, 'ads', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (144, 29, 'ads', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (145, 29, 'ads', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (146, 30, 'linkkinds', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (147, 30, 'linkkinds', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (148, 30, 'linkkinds', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (149, 30, 'linkkinds', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (150, 30, 'linkkinds', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (151, 31, 'link', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (152, 31, 'link', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (153, 31, 'link', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (154, 31, 'link', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (155, 31, 'link', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (156, 31, 'link', 6, 'import', '导入');
-INSERT INTO `adminmenuevent` VALUES (157, 31, 'link', 7, 'export', '导出');
-INSERT INTO `adminmenuevent` VALUES (158, 31, 'link', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (159, 31, 'link', 9, 'batch', '批量操作');
-INSERT INTO `adminmenuevent` VALUES (160, 31, 'link', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (161, 31, 'link', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (162, 33, 'wxautoreply', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (163, 33, 'wxautoreply', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (164, 34, 'wxmenu', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (165, 34, 'wxmenu', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (166, 35, 'wxkeywordreply', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (167, 35, 'wxkeywordreply', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (168, 35, 'wxkeywordreply', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (169, 35, 'wxkeywordreply', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (170, 35, 'wxkeywordreply', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (171, 35, 'wxkeywordreply', 6, 'import', '导入');
-INSERT INTO `adminmenuevent` VALUES (172, 35, 'wxkeywordreply', 7, 'export', '导出');
-INSERT INTO `adminmenuevent` VALUES (173, 35, 'wxkeywordreply', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (174, 35, 'wxkeywordreply', 9, 'batch', '批量操作');
-INSERT INTO `adminmenuevent` VALUES (175, 35, 'wxkeywordreply', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (176, 35, 'wxkeywordreply', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (177, 36, 'clickreplyrule', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (178, 36, 'clickreplyrule', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (179, 36, 'clickreplyrule', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (180, 36, 'clickreplyrule', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (181, 36, 'clickreplyrule', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (182, 36, 'clickreplyrule', 6, 'import', '导入');
-INSERT INTO `adminmenuevent` VALUES (183, 36, 'clickreplyrule', 7, 'export', '导出');
-INSERT INTO `adminmenuevent` VALUES (184, 36, 'clickreplyrule', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (185, 36, 'clickreplyrule', 9, 'batch', '批量操作');
-INSERT INTO `adminmenuevent` VALUES (186, 36, 'clickreplyrule', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (187, 36, 'clickreplyrule', 11, 'confirm', '确认');
-INSERT INTO `adminmenuevent` VALUES (188, 37, 'robots', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (189, 37, 'robots', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (190, 38, 'admincplog', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (191, 38, 'admincplog', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (192, 39, 'attach', 1, 'add', '添加');
-INSERT INTO `adminmenuevent` VALUES (193, 39, 'attach', 2, 'edit', '修改');
-INSERT INTO `adminmenuevent` VALUES (194, 39, 'attach', 3, 'del', '删除');
-INSERT INTO `adminmenuevent` VALUES (195, 39, 'attach', 4, 'view', '查看');
-INSERT INTO `adminmenuevent` VALUES (196, 39, 'attach', 5, 'viewlist', '查看列表');
-INSERT INTO `adminmenuevent` VALUES (197, 39, 'attach', 6, 'import', '导入');
-INSERT INTO `adminmenuevent` VALUES (198, 39, 'attach', 7, 'export', '导出');
-INSERT INTO `adminmenuevent` VALUES (199, 39, 'attach', 8, 'filter', '搜索');
-INSERT INTO `adminmenuevent` VALUES (200, 39, 'attach', 9, 'batch', '批量操作');
-INSERT INTO `adminmenuevent` VALUES (201, 39, 'attach', 10, 'recycle', '回收站');
-INSERT INTO `adminmenuevent` VALUES (202, 39, 'attach', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (1, 1, 'home', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (2, 3, 'baseconfig', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (3, 3, 'baseconfig', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (4, 4, 'smptconfig', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (5, 4, 'smptconfig', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (6, 5, 'attachconfig', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (7, 5, 'attachconfig', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (8, 7, 'articlecategory', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (9, 7, 'articlecategory', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (10, 7, 'articlecategory', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (11, 7, 'articlecategory', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (12, 7, 'articlecategory', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (13, 7, 'articlecategory', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (14, 8, 'article', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (15, 8, 'article', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (16, 8, 'article', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (17, 8, 'article', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (18, 8, 'article', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (19, 8, 'article', 6, 'import', '导入');
+INSERT INTO `AdminMenuEvent` VALUES (20, 8, 'article', 7, 'export', '导出');
+INSERT INTO `AdminMenuEvent` VALUES (21, 8, 'article', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (22, 8, 'article', 9, 'batch', '批量操作');
+INSERT INTO `AdminMenuEvent` VALUES (23, 8, 'article', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (24, 8, 'article', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (25, 10, 'productcategory', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (26, 10, 'productcategory', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (27, 10, 'productcategory', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (28, 10, 'productcategory', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (29, 10, 'productcategory', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (30, 10, 'productcategory', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (31, 11, 'product', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (32, 11, 'product', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (33, 11, 'product', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (34, 11, 'product', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (35, 11, 'product', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (36, 11, 'product', 6, 'import', '导入');
+INSERT INTO `AdminMenuEvent` VALUES (37, 11, 'product', 7, 'export', '导出');
+INSERT INTO `AdminMenuEvent` VALUES (38, 11, 'product', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (39, 11, 'product', 9, 'batch', '批量操作');
+INSERT INTO `AdminMenuEvent` VALUES (40, 11, 'product', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (41, 11, 'product', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (42, 13, 'order', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (43, 13, 'order', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (44, 13, 'order', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (45, 13, 'order', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (46, 13, 'order', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (47, 13, 'order', 6, 'import', '导入');
+INSERT INTO `AdminMenuEvent` VALUES (48, 13, 'order', 7, 'export', '导出');
+INSERT INTO `AdminMenuEvent` VALUES (49, 13, 'order', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (50, 13, 'order', 9, 'batch', '批量操作');
+INSERT INTO `AdminMenuEvent` VALUES (51, 13, 'order', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (52, 13, 'order', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (53, 14, 'payonline', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (54, 14, 'payonline', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (55, 14, 'payonline', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (56, 14, 'payonline', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (57, 14, 'payonline', 6, 'import', '导入');
+INSERT INTO `AdminMenuEvent` VALUES (58, 14, 'payonline', 7, 'export', '导出');
+INSERT INTO `AdminMenuEvent` VALUES (59, 14, 'payonline', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (60, 14, 'payonline', 9, 'batch', '批量操作');
+INSERT INTO `AdminMenuEvent` VALUES (61, 14, 'payonline', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (62, 14, 'payonline', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (63, 16, 'memberrole', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (64, 16, 'memberrole', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (65, 16, 'memberrole', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (66, 16, 'memberrole', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (67, 16, 'memberrole', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (68, 16, 'memberrole', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (69, 17, 'members', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (70, 17, 'members', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (71, 17, 'members', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (72, 17, 'members', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (73, 17, 'members', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (74, 17, 'members', 6, 'import', '导入');
+INSERT INTO `AdminMenuEvent` VALUES (75, 17, 'members', 7, 'export', '导出');
+INSERT INTO `AdminMenuEvent` VALUES (76, 17, 'members', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (77, 17, 'members', 9, 'batch', '批量操作');
+INSERT INTO `AdminMenuEvent` VALUES (78, 17, 'members', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (79, 17, 'members', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (80, 19, 'adminrole', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (81, 19, 'adminrole', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (82, 19, 'adminrole', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (83, 19, 'adminrole', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (84, 19, 'adminrole', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (85, 19, 'adminrole', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (86, 19, 'adminrole', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (87, 20, 'admins', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (88, 20, 'admins', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (89, 20, 'admins', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (90, 20, 'admins', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (91, 20, 'admins', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (92, 20, 'admins', 6, 'import', '导入');
+INSERT INTO `AdminMenuEvent` VALUES (93, 20, 'admins', 7, 'export', '导出');
+INSERT INTO `AdminMenuEvent` VALUES (94, 20, 'admins', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (95, 20, 'admins', 9, 'batch', '批量操作');
+INSERT INTO `AdminMenuEvent` VALUES (96, 20, 'admins', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (97, 20, 'admins', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (98, 21, 'eventkey', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (99, 21, 'eventkey', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (100, 21, 'eventkey', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (101, 21, 'eventkey', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (102, 21, 'eventkey', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (103, 21, 'eventkey', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (104, 21, 'eventkey', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (105, 22, 'adminmenu', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (106, 22, 'adminmenu', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (107, 22, 'adminmenu', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (108, 22, 'adminmenu', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (109, 22, 'adminmenu', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (110, 22, 'adminmenu', 6, 'import', '导入');
+INSERT INTO `AdminMenuEvent` VALUES (111, 22, 'adminmenu', 7, 'export', '导出');
+INSERT INTO `AdminMenuEvent` VALUES (112, 22, 'adminmenu', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (113, 22, 'adminmenu', 9, 'batch', '批量操作');
+INSERT INTO `AdminMenuEvent` VALUES (114, 22, 'adminmenu', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (115, 22, 'adminmenu', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (116, 23, 'editme', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (117, 23, 'editme', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (118, 25, 'guestbookkinds', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (119, 25, 'guestbookkinds', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (120, 25, 'guestbookkinds', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (121, 25, 'guestbookkinds', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (122, 25, 'guestbookkinds', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (123, 25, 'guestbookkinds', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (124, 25, 'guestbookkinds', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (125, 25, 'guestbookkinds', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (126, 26, 'guestbook', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (127, 26, 'guestbook', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (128, 26, 'guestbook', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (129, 26, 'guestbook', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (130, 26, 'guestbook', 6, 'import', '导入');
+INSERT INTO `AdminMenuEvent` VALUES (131, 26, 'guestbook', 7, 'export', '导出');
+INSERT INTO `AdminMenuEvent` VALUES (132, 26, 'guestbook', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (133, 26, 'guestbook', 9, 'batch', '批量操作');
+INSERT INTO `AdminMenuEvent` VALUES (134, 26, 'guestbook', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (135, 26, 'guestbook', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (136, 28, 'adskinds', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (137, 28, 'adskinds', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (138, 28, 'adskinds', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (139, 28, 'adskinds', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (140, 28, 'adskinds', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (141, 29, 'ads', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (142, 29, 'ads', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (143, 29, 'ads', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (144, 29, 'ads', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (145, 29, 'ads', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (146, 30, 'linkkinds', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (147, 30, 'linkkinds', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (148, 30, 'linkkinds', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (149, 30, 'linkkinds', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (150, 30, 'linkkinds', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (151, 31, 'link', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (152, 31, 'link', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (153, 31, 'link', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (154, 31, 'link', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (155, 31, 'link', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (156, 31, 'link', 6, 'import', '导入');
+INSERT INTO `AdminMenuEvent` VALUES (157, 31, 'link', 7, 'export', '导出');
+INSERT INTO `AdminMenuEvent` VALUES (158, 31, 'link', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (159, 31, 'link', 9, 'batch', '批量操作');
+INSERT INTO `AdminMenuEvent` VALUES (160, 31, 'link', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (161, 31, 'link', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (162, 33, 'wxautoreply', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (163, 33, 'wxautoreply', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (164, 34, 'wxmenu', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (165, 34, 'wxmenu', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (166, 35, 'wxkeywordreply', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (167, 35, 'wxkeywordreply', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (168, 35, 'wxkeywordreply', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (169, 35, 'wxkeywordreply', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (170, 35, 'wxkeywordreply', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (171, 35, 'wxkeywordreply', 6, 'import', '导入');
+INSERT INTO `AdminMenuEvent` VALUES (172, 35, 'wxkeywordreply', 7, 'export', '导出');
+INSERT INTO `AdminMenuEvent` VALUES (173, 35, 'wxkeywordreply', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (174, 35, 'wxkeywordreply', 9, 'batch', '批量操作');
+INSERT INTO `AdminMenuEvent` VALUES (175, 35, 'wxkeywordreply', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (176, 35, 'wxkeywordreply', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (177, 36, 'clickreplyrule', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (178, 36, 'clickreplyrule', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (179, 36, 'clickreplyrule', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (180, 36, 'clickreplyrule', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (181, 36, 'clickreplyrule', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (182, 36, 'clickreplyrule', 6, 'import', '导入');
+INSERT INTO `AdminMenuEvent` VALUES (183, 36, 'clickreplyrule', 7, 'export', '导出');
+INSERT INTO `AdminMenuEvent` VALUES (184, 36, 'clickreplyrule', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (185, 36, 'clickreplyrule', 9, 'batch', '批量操作');
+INSERT INTO `AdminMenuEvent` VALUES (186, 36, 'clickreplyrule', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (187, 36, 'clickreplyrule', 11, 'confirm', '确认');
+INSERT INTO `AdminMenuEvent` VALUES (188, 37, 'robots', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (189, 37, 'robots', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (190, 38, 'admincplog', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (191, 38, 'admincplog', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (192, 39, 'attach', 1, 'add', '添加');
+INSERT INTO `AdminMenuEvent` VALUES (193, 39, 'attach', 2, 'edit', '修改');
+INSERT INTO `AdminMenuEvent` VALUES (194, 39, 'attach', 3, 'del', '删除');
+INSERT INTO `AdminMenuEvent` VALUES (195, 39, 'attach', 4, 'view', '查看');
+INSERT INTO `AdminMenuEvent` VALUES (196, 39, 'attach', 5, 'viewlist', '查看列表');
+INSERT INTO `AdminMenuEvent` VALUES (197, 39, 'attach', 6, 'import', '导入');
+INSERT INTO `AdminMenuEvent` VALUES (198, 39, 'attach', 7, 'export', '导出');
+INSERT INTO `AdminMenuEvent` VALUES (199, 39, 'attach', 8, 'filter', '搜索');
+INSERT INTO `AdminMenuEvent` VALUES (200, 39, 'attach', 9, 'batch', '批量操作');
+INSERT INTO `AdminMenuEvent` VALUES (201, 39, 'attach', 10, 'recycle', '回收站');
+INSERT INTO `AdminMenuEvent` VALUES (202, 39, 'attach', 11, 'confirm', '确认');
 
 -- ----------------------------
 -- Table structure for adminroles
 -- ----------------------------
-DROP TABLE IF EXISTS `adminroles`;
-CREATE TABLE `adminroles`  (
+DROP TABLE IF EXISTS `AdminRoles`;
+CREATE TABLE `AdminRoles`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `RoleType` int(11) NOT NULL COMMENT '角色类型',
   `RoleName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色名称',
@@ -355,13 +354,13 @@ CREATE TABLE `adminroles`  (
 -- ----------------------------
 -- Records of adminroles
 -- ----------------------------
-INSERT INTO `adminroles` VALUES (1, 0, '超级管理员', '系统超级管理员', 1, 5, 1, 0, '', '', '', NULL, NULL, NULL, NULL);
+INSERT INTO `AdminRoles` VALUES (1, 0, '超级管理员', '系统超级管理员', 1, 5, 1, 0, '', '', '', NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for ads
 -- ----------------------------
-DROP TABLE IF EXISTS `ads`;
-CREATE TABLE `ads`  (
+DROP TABLE IF EXISTS `Ads`;
+CREATE TABLE `Ads`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `Title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '广告标题',
   `Content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '广告详情JSON',
@@ -377,14 +376,14 @@ CREATE TABLE `ads`  (
 -- ----------------------------
 -- Records of ads
 -- ----------------------------
-INSERT INTO `ads` VALUES (1, '首页banner广告', '[{\"img\":\"/images/default/slide-1.jpg\",\"link\":\"/\",\"width\":1920,\"height\":686,\"alt\":\"\"},{\"img\":\"/images/default/slide-2.jpg\",\"link\":\"/\",\"width\":1920,\"height\":686,\"alt\":\"\"},{\"img\":\"/images/default/slide-3.jpg\",\"link\":\"/\",\"width\":1920,\"height\":686,\"alt\":\"\"},{\"img\":\"/images/default/slide-4.jpg\",\"link\":\"/\",\"width\":1920,\"height\":686,\"alt\":\"\"},{\"img\":\"/images/default/slide-5.jpg\",\"link\":\"/\",\"width\":1920,\"height\":686,\"alt\":\"\"}]', 1, 4, '2000-01-01 00:00:00', '2999-01-01 00:00:00', 'N', 999);
-INSERT INTO `ads` VALUES (2, '移动端首页Banner', '[{\"img\":\"/images/default/slide-1.jpg\",\"link\":\"/\",\"width\":375,\"height\":185,\"alt\":\"\"},{\"img\":\"/images/default/slide-2.jpg\",\"link\":\"/\",\"width\":375,\"height\":185,\"alt\":\"\"},{\"img\":\"/images/default/slide-3.jpg\",\"link\":\"/\",\"width\":375,\"height\":185,\"alt\":\"\"},{\"img\":\"/images/default/slide-4.jpg\",\"link\":\"/\",\"width\":375,\"height\":185,\"alt\":\"\"},{\"img\":\"/images/default/slide-5.jpg\",\"link\":\"/\",\"width\":375,\"height\":185,\"alt\":\"\"}]', 1, 4, '2000-01-01 00:00:00', '2999-01-01 00:00:00', 'N', 999);
+INSERT INTO `Ads` VALUES (1, '首页banner广告', '[{\"img\":\"/images/default/slide-1.jpg\",\"link\":\"/\",\"width\":1920,\"height\":686,\"alt\":\"\"},{\"img\":\"/images/default/slide-2.jpg\",\"link\":\"/\",\"width\":1920,\"height\":686,\"alt\":\"\"},{\"img\":\"/images/default/slide-3.jpg\",\"link\":\"/\",\"width\":1920,\"height\":686,\"alt\":\"\"},{\"img\":\"/images/default/slide-4.jpg\",\"link\":\"/\",\"width\":1920,\"height\":686,\"alt\":\"\"},{\"img\":\"/images/default/slide-5.jpg\",\"link\":\"/\",\"width\":1920,\"height\":686,\"alt\":\"\"}]', 1, 4, '2000-01-01 00:00:00', '2999-01-01 00:00:00', 'N', 999);
+INSERT INTO `Ads` VALUES (2, '移动端首页Banner', '[{\"img\":\"/images/default/slide-1.jpg\",\"link\":\"/\",\"width\":375,\"height\":185,\"alt\":\"\"},{\"img\":\"/images/default/slide-2.jpg\",\"link\":\"/\",\"width\":375,\"height\":185,\"alt\":\"\"},{\"img\":\"/images/default/slide-3.jpg\",\"link\":\"/\",\"width\":375,\"height\":185,\"alt\":\"\"},{\"img\":\"/images/default/slide-4.jpg\",\"link\":\"/\",\"width\":375,\"height\":185,\"alt\":\"\"},{\"img\":\"/images/default/slide-5.jpg\",\"link\":\"/\",\"width\":375,\"height\":185,\"alt\":\"\"}]', 1, 4, '2000-01-01 00:00:00', '2999-01-01 00:00:00', 'N', 999);
 
 -- ----------------------------
 -- Table structure for adskind
 -- ----------------------------
-DROP TABLE IF EXISTS `adskind`;
-CREATE TABLE `adskind`  (
+DROP TABLE IF EXISTS `AdsKind`;
+CREATE TABLE `AdsKind`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `KindName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '广告类别名称',
   `KindInfo` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '简单说明',
@@ -395,13 +394,13 @@ CREATE TABLE `adskind`  (
 -- ----------------------------
 -- Records of adskind
 -- ----------------------------
-INSERT INTO `adskind` VALUES (1, '默认广告', NULL, 0);
+INSERT INTO `AdsKind` VALUES (1, '默认广告', NULL, 0);
 
 -- ----------------------------
 -- Table structure for article
 -- ----------------------------
-DROP TABLE IF EXISTS `article`;
-CREATE TABLE `article`  (
+DROP TABLE IF EXISTS `Article`;
+CREATE TABLE `Article`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `KId` int(11) NOT NULL COMMENT '栏目ID',
   `Title` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '标题',
@@ -445,23 +444,23 @@ CREATE TABLE `article`  (
 -- ----------------------------
 -- Records of article
 -- ----------------------------
-INSERT INTO `article` VALUES (1, 1, '关于我们', 'About Us', '<p>内容管理系统（英语：content management system，缩写为 CMS）是指在一个合作模式下，用于管理工作流程的一套制度。该系统可应用于手工操作中，也可以应用到计算机或网络里。作为一种中央储存器（central repository），内容管理系统可将相关内容集中储存并具有群组管理、版本控制等功能。版本控制是内容管理系统的一个主要优势。</p>\n\n<p>内容是任何类型的数字信息的结合体，可以是文本、图形图像、Web页面、业务文档、数据库表单、视频、声音、XML文件等。应该说，内容是一个比数据、文档和信息更广的概念，是对各种结构化数据、非结构化文档、信息的聚合。管理就是施加在&ldquo;内容&rdquo;对象上的一系列处理过程，包括收集、存储、审批、整理、定位、转换、分发、搜索、分析等，目的是为了使&ldquo;内容&rdquo;能够在正确的时间、以正确的形式传递到正确的地点和人。</p>\n\n<p>内容管理可以定义为：协助组织和个人，借助信息技术，实现内容的创建、储存、分享、应用、检索，并在企业个人、组织、业务、战略等诸方面产生价值的过程。而内容管理系统就是能够支撑内容管理的一种工具或一套工具的软件系统。</p>\n\n<p>内容管理系统的定义可以很狭窄，通常是指门户或商业网站的发布和管理系统；定义也可以很宽泛，个人网站系统也可归入其中。Wiki也是一种内容管理系统，Blog也算是一种内容管理系统。</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 999, 0, NULL, NULL, NULL, '/images/default/slide-3.jpg', 0, NULL, NULL, NULL, '/userfiles/images/2018/20180413145904(1).png|||', 1, '2018-04-18 20:35:54', '2018-12-02 17:14:13', NULL, NULL, NULL);
-INSERT INTO `article` VALUES (2, 10, '联系我们', NULL, '<p>联系我们</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-15 23:58:24', '2018-12-01 22:44:45', NULL, NULL, NULL);
-INSERT INTO `article` VALUES (3, 1, '企业文化', NULL, '<p>企业文化</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:19', NULL, NULL, NULL, NULL);
-INSERT INTO `article` VALUES (4, 1, '发展历程', NULL, '<p>发展历程</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:28', NULL, NULL, NULL, NULL);
-INSERT INTO `article` VALUES (5, 1, '组织架构', NULL, '<p>组织架构</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:38', NULL, NULL, NULL, NULL);
-INSERT INTO `article` VALUES (6, 1, '荣誉证书', NULL, '<p>荣誉证书</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:49', NULL, NULL, NULL, NULL);
-INSERT INTO `article` VALUES (7, 6, 'COMCMS v0.9 正式发布，PC版前端演示', 'COMCMS v0.9 正式发布，PC版前端演示', '<p>COMCMS v0.9 正式发布，PC版前端演示</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 999, 0, NULL, NULL, NULL, '/images/default/slide-2.jpg', 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:52:15', NULL, NULL, NULL, NULL);
-INSERT INTO `article` VALUES (8, 7, '行业资讯行业资讯行业资讯行业资讯', NULL, '<p>行业资讯行业资讯行业资讯行业资讯</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-2.jpg', 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:54:48', NULL, NULL, NULL, NULL);
-INSERT INTO `article` VALUES (9, 6, 'COMCMS v0.9 正式发布，PC版前端演示2', NULL, '<p>COMCMS v0.9 正式发布，PC版前端演示2</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:55:39', NULL, NULL, NULL, NULL);
-INSERT INTO `article` VALUES (10, 6, 'COMCMS v0.9 正式发布，PC版前端演示3', NULL, '<p>COMCMS v0.9 正式发布，PC版前端演示3</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:56:18', NULL, NULL, NULL, NULL);
-INSERT INTO `article` VALUES (11, 6, 'COMCMS v0.9 正式发布，PC版前端演示4', NULL, '<p>COMCMS v0.9 正式发布，PC版前端演示4</p>\n\n<p>&nbsp;</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:56:27', '2026-01-06 10:12:46', NULL, NULL, NULL);
+INSERT INTO `Article` VALUES (1, 1, '关于我们', 'About Us', '<p>内容管理系统（英语：content management system，缩写为 CMS）是指在一个合作模式下，用于管理工作流程的一套制度。该系统可应用于手工操作中，也可以应用到计算机或网络里。作为一种中央储存器（central repository），内容管理系统可将相关内容集中储存并具有群组管理、版本控制等功能。版本控制是内容管理系统的一个主要优势。</p>\n\n<p>内容是任何类型的数字信息的结合体，可以是文本、图形图像、Web页面、业务文档、数据库表单、视频、声音、XML文件等。应该说，内容是一个比数据、文档和信息更广的概念，是对各种结构化数据、非结构化文档、信息的聚合。管理就是施加在&ldquo;内容&rdquo;对象上的一系列处理过程，包括收集、存储、审批、整理、定位、转换、分发、搜索、分析等，目的是为了使&ldquo;内容&rdquo;能够在正确的时间、以正确的形式传递到正确的地点和人。</p>\n\n<p>内容管理可以定义为：协助组织和个人，借助信息技术，实现内容的创建、储存、分享、应用、检索，并在企业个人、组织、业务、战略等诸方面产生价值的过程。而内容管理系统就是能够支撑内容管理的一种工具或一套工具的软件系统。</p>\n\n<p>内容管理系统的定义可以很狭窄，通常是指门户或商业网站的发布和管理系统；定义也可以很宽泛，个人网站系统也可归入其中。Wiki也是一种内容管理系统，Blog也算是一种内容管理系统。</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 55, 999, 0, NULL, NULL, NULL, '/images/default/slide-3.jpg', 0, NULL, NULL, NULL, '/userfiles/images/2018/20180413145904(1).png|||', 1, '2018-04-18 20:35:54', '2018-12-02 17:14:13', NULL, NULL, NULL);
+INSERT INTO `Article` VALUES (2, 10, '联系我们', NULL, '<p>联系我们</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 27, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-15 23:58:24', '2018-12-01 22:44:45', NULL, NULL, NULL);
+INSERT INTO `Article` VALUES (3, 1, '企业文化', NULL, '<p>企业文化</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:19', NULL, NULL, NULL, NULL);
+INSERT INTO `Article` VALUES (4, 1, '发展历程', NULL, '<p>发展历程</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:28', NULL, NULL, NULL, NULL);
+INSERT INTO `Article` VALUES (5, 1, '组织架构', NULL, '<p>组织架构</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:38', NULL, NULL, NULL, NULL);
+INSERT INTO `Article` VALUES (6, 1, '荣誉证书', NULL, '<p>荣誉证书</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-11-19 00:08:49', NULL, NULL, NULL, NULL);
+INSERT INTO `Article` VALUES (7, 6, 'COMCMS v0.9 正式发布，PC版前端演示', 'COMCMS v0.9 正式发布，PC版前端演示', '<p>COMCMS v0.9 正式发布，PC版前端演示</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 999, 0, NULL, NULL, NULL, '/images/default/slide-2.jpg', 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:52:15', NULL, NULL, NULL, NULL);
+INSERT INTO `Article` VALUES (8, 7, '行业资讯行业资讯行业资讯行业资讯', NULL, '<p>行业资讯行业资讯行业资讯行业资讯</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-2.jpg', 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:54:48', NULL, NULL, NULL, NULL);
+INSERT INTO `Article` VALUES (9, 6, 'COMCMS v0.9 正式发布，PC版前端演示2', NULL, '<p>COMCMS v0.9 正式发布，PC版前端演示2</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:55:39', NULL, NULL, NULL, NULL);
+INSERT INTO `Article` VALUES (10, 6, 'COMCMS v0.9 正式发布，PC版前端演示3', NULL, '<p>COMCMS v0.9 正式发布，PC版前端演示3</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:56:18', NULL, NULL, NULL, NULL);
+INSERT INTO `Article` VALUES (11, 6, 'COMCMS v0.9 正式发布，PC版前端演示4', NULL, '<p>COMCMS v0.9 正式发布，PC版前端演示4</p>\n\n<p>&nbsp;</p>\n', NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 999, 0, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, '', 1, '2018-12-02 16:56:27', '2026-01-06 10:12:46', NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for articlecategory
 -- ----------------------------
-DROP TABLE IF EXISTS `articlecategory`;
-CREATE TABLE `articlecategory`  (
+DROP TABLE IF EXISTS `ArticleCategory`;
+CREATE TABLE `ArticleCategory`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `KindName` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '栏目名称',
   `SubTitle` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '栏目副标题',
@@ -501,24 +500,24 @@ CREATE TABLE `articlecategory`  (
 -- ----------------------------
 -- Records of articlecategory
 -- ----------------------------
-INSERT INTO `articlecategory` VALUES (1, '关于我们', NULL, NULL, NULL, NULL, '1', NULL, 'Index.cshtml', 'Detail_About.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 5, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `articlecategory` VALUES (2, '新闻资讯', NULL, NULL, NULL, NULL, '/Article/Index/6', NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `articlecategory` VALUES (3, '项目案例', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `articlecategory` VALUES (4, '用户服务', NULL, NULL, NULL, NULL, '/Article/Index/8', NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `articlecategory` VALUES (5, '联系我们', NULL, NULL, NULL, NULL, '/Article/Index/10', NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `articlecategory` VALUES (6, '公司新闻', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 2, 2, 1, '0,2,', 0, 0, 0, 0, 0, 1, 0, 4, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `articlecategory` VALUES (7, '行业资讯', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 2, 1, '0,2,', 0, 0, 0, 0, 0, 1, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `articlecategory` VALUES (8, '产品使用', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 4, 1, '0,4,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `articlecategory` VALUES (9, '产品下载', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 4, 1, '0,4,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `articlecategory` VALUES (10, '联系方式', NULL, NULL, NULL, NULL, '2', NULL, 'Index.cshtml', 'Detail_Contact.cshtml', NULL, 1, 15, 5, 1, '0,5,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `articlecategory` VALUES (11, '在线留言', NULL, NULL, NULL, NULL, NULL, NULL, 'Index_Guestbook.cshtml', 'Detail.cshtml', NULL, 0, 15, 5, 1, '0,5,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
-INSERT INTO `articlecategory` VALUES (12, '常见问题', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 4, 1, '0,4,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `ArticleCategory` VALUES (1, '关于我们', NULL, NULL, NULL, NULL, '1', NULL, 'Index.cshtml', 'Detail_About.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 5, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `ArticleCategory` VALUES (2, '新闻资讯', NULL, NULL, NULL, NULL, '/Article/Index/6', NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `ArticleCategory` VALUES (3, '项目案例', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `ArticleCategory` VALUES (4, '用户服务', NULL, NULL, NULL, NULL, '/Article/Index/8', NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `ArticleCategory` VALUES (5, '联系我们', NULL, NULL, NULL, NULL, '/Article/Index/10', NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 1, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `ArticleCategory` VALUES (6, '公司新闻', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 2, 2, 1, '0,2,', 0, 0, 0, 0, 0, 1, 0, 4, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `ArticleCategory` VALUES (7, '行业资讯', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 2, 1, '0,2,', 0, 0, 0, 0, 0, 1, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `ArticleCategory` VALUES (8, '产品使用', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 4, 1, '0,4,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `ArticleCategory` VALUES (9, '产品下载', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 4, 1, '0,4,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `ArticleCategory` VALUES (10, '联系方式', NULL, NULL, NULL, NULL, '2', NULL, 'Index.cshtml', 'Detail_Contact.cshtml', NULL, 1, 15, 5, 1, '0,5,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `ArticleCategory` VALUES (11, '在线留言', NULL, NULL, NULL, NULL, NULL, NULL, 'Index_Guestbook.cshtml', 'Detail.cshtml', NULL, 0, 15, 5, 1, '0,5,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
+INSERT INTO `ArticleCategory` VALUES (12, '常见问题', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail_News.cshtml', NULL, 1, 15, 4, 1, '0,4,', 0, 0, 0, 0, 0, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for category
 -- ----------------------------
-DROP TABLE IF EXISTS `category`;
-CREATE TABLE `category`  (
+DROP TABLE IF EXISTS `Category`;
+CREATE TABLE `Category`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `KindName` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '栏目名称',
   `SubTitle` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '栏目副标题',
@@ -557,15 +556,15 @@ CREATE TABLE `category`  (
 -- ----------------------------
 -- Records of category
 -- ----------------------------
-INSERT INTO `category` VALUES (1, '网站系统', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 0, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 2, 0, NULL, NULL, NULL, NULL, NULL, 0, '/wangzhanjitong');
-INSERT INTO `category` VALUES (2, '微商城系统', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 2, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
-INSERT INTO `category` VALUES (3, '小程序系统', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `Category` VALUES (1, '网站系统', NULL, NULL, NULL, NULL, NULL, NULL, 'Index.cshtml', 'Detail.cshtml', NULL, 0, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 2, 0, NULL, NULL, NULL, NULL, NULL, 0, '/wangzhanjitong');
+INSERT INTO `Category` VALUES (2, '微商城系统', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 2, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
+INSERT INTO `Category` VALUES (3, '小程序系统', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 15, 0, 0, '0,', 0, 0, 0, 0, 0, 1, 0, 1, 0, NULL, NULL, NULL, NULL, NULL, 0, NULL);
 
 -- ----------------------------
 -- Table structure for config
 -- ----------------------------
-DROP TABLE IF EXISTS `config`;
-CREATE TABLE `config`  (
+DROP TABLE IF EXISTS `Config`;
+CREATE TABLE `Config`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `SiteName` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '站点名称',
   `SiteUrl` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '站点URL',
@@ -616,13 +615,13 @@ CREATE TABLE `config`  (
 -- ----------------------------
 -- Records of config
 -- ----------------------------
-INSERT INTO `config` VALUES (1, 'comcms', 'https://localhost:44307', '/images/logo.png', '', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 0, NULL, NULL, '2018-12-05 11:49:59', '2018-12-05 11:49:59', NULL, NULL, 0, 0, NULL, NULL, 0);
+INSERT INTO `Config` VALUES (1, 'comcms', 'https://localhost:44307', '/images/logo.png', '', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, 0, NULL, NULL, '2018-12-05 11:49:59', '2018-12-05 11:49:59', NULL, NULL, 0, 0, NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for guestbook
 -- ----------------------------
-DROP TABLE IF EXISTS `guestbook`;
-CREATE TABLE `guestbook`  (
+DROP TABLE IF EXISTS `Guestbook`;
+CREATE TABLE `Guestbook`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `KId` int(11) NOT NULL COMMENT '分类ID',
   `UId` int(11) NOT NULL COMMENT '用户ID',
@@ -657,8 +656,8 @@ CREATE TABLE `guestbook`  (
 -- ----------------------------
 -- Table structure for guestbookcategory
 -- ----------------------------
-DROP TABLE IF EXISTS `guestbookcategory`;
-CREATE TABLE `guestbookcategory`  (
+DROP TABLE IF EXISTS `GuestbookCategory`;
+CREATE TABLE `GuestbookCategory`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `KindName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类别名称',
   `KindInfo` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '简单说明',
@@ -670,13 +669,13 @@ CREATE TABLE `guestbookcategory`  (
 -- ----------------------------
 -- Records of guestbookcategory
 -- ----------------------------
-INSERT INTO `guestbookcategory` VALUES (1, '默认类别', NULL, NULL, 0);
+INSERT INTO `GuestbookCategory` VALUES (1, '默认类别', NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for link
 -- ----------------------------
-DROP TABLE IF EXISTS `link`;
-CREATE TABLE `link`  (
+DROP TABLE IF EXISTS `Link`;
+CREATE TABLE `Link`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `KId` int(11) NOT NULL COMMENT '分类ID',
   `Title` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '站点标题',
@@ -691,14 +690,14 @@ CREATE TABLE `link`  (
 -- ----------------------------
 -- Records of link
 -- ----------------------------
-INSERT INTO `link` VALUES (1, 1, 'Google', 'https://www.google.com', NULL, '/userfiles/images/2018/46704eae13e45ead.png', 'N', 999);
-INSERT INTO `link` VALUES (2, 1, '谷歌', 'https://www.google.com', NULL, '/userfiles/images/2018/46704eae13e45ead.png', 'N', 999);
+INSERT INTO `Link` VALUES (1, 1, 'Google', 'https://www.google.com', NULL, '/userfiles/images/2018/46704eae13e45ead.png', 'N', 999);
+INSERT INTO `Link` VALUES (2, 1, '谷歌', 'https://www.google.com', NULL, '/userfiles/images/2018/46704eae13e45ead.png', 'N', 999);
 
 -- ----------------------------
 -- Table structure for linkkind
 -- ----------------------------
-DROP TABLE IF EXISTS `linkkind`;
-CREATE TABLE `linkkind`  (
+DROP TABLE IF EXISTS `LinkKind`;
+CREATE TABLE `LinkKind`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `KindName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类别名称',
   `KindInfo` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '简单说明',
@@ -710,16 +709,16 @@ CREATE TABLE `linkkind`  (
 -- ----------------------------
 -- Records of linkkind
 -- ----------------------------
-INSERT INTO `linkkind` VALUES (1, '友情链接', NULL, NULL, 0);
+INSERT INTO `LinkKind` VALUES (1, '友情链接', NULL, NULL, 0);
 
 -- ----------------------------
 -- Table structure for member
 -- ----------------------------
-DROP TABLE IF EXISTS `member`;
-CREATE TABLE `member`  (
+DROP TABLE IF EXISTS `Member`;
+CREATE TABLE `Member`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `UserName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `PassWord` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `PassWord` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `Salt` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '盐值',
   `RealName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `Tel` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机',
@@ -788,13 +787,13 @@ CREATE TABLE `member`  (
 -- ----------------------------
 -- Table structure for memberlog
 -- ----------------------------
-DROP TABLE IF EXISTS `memberlog`;
-CREATE TABLE `memberlog`  (
+DROP TABLE IF EXISTS `MemberLog`;
+CREATE TABLE `MemberLog`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `UId` int(11) NOT NULL COMMENT '管理员ID',
   `GUID` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '唯一ID',
   `UserName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `PassWord` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `PassWord` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `LoginTime` datetime NULL DEFAULT NULL COMMENT '登录时间',
   `LoginIP` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '登录IP',
   `IsLoginOK` int(11) NOT NULL COMMENT '是否登录成功',
@@ -810,8 +809,8 @@ CREATE TABLE `memberlog`  (
 -- ----------------------------
 -- Table structure for memberroles
 -- ----------------------------
-DROP TABLE IF EXISTS `memberroles`;
-CREATE TABLE `memberroles`  (
+DROP TABLE IF EXISTS `MemberRoles`;
+CREATE TABLE `MemberRoles`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `RoleName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色名称',
   `RoleDescription` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '角色简单介绍',
@@ -835,15 +834,15 @@ CREATE TABLE `memberroles`  (
 -- ----------------------------
 -- Records of memberroles
 -- ----------------------------
-INSERT INTO `memberroles` VALUES (1, '钻石代理', '钻石代理(一级代理)', 5, 1, 0, '', 50, 10, 5, 0, 0, 10, 5, 100000, 1, 5000);
-INSERT INTO `memberroles` VALUES (2, '白金代理', '白金代理(二级代理)', 4, 1, 0, '', 30, 10, 0, 0, 1, 5, 0, 50000, 0, 0);
-INSERT INTO `memberroles` VALUES (3, '普通会员', '普通会员', 1, 1, 0, '', 0, 0, 0, 1, 1, 0, 0, 0, 0, 0);
+INSERT INTO `MemberRoles` VALUES (1, '钻石代理', '钻石代理(一级代理)', 5, 1, 0, '', 50, 10, 5, 0, 0, 10, 5, 100000, 1, 5000);
+INSERT INTO `MemberRoles` VALUES (2, '白金代理', '白金代理(二级代理)', 4, 1, 0, '', 30, 10, 0, 0, 1, 5, 0, 50000, 0, 0);
+INSERT INTO `MemberRoles` VALUES (3, '普通会员', '普通会员', 1, 1, 0, '', 0, 0, 0, 1, 1, 0, 0, 0, 0, 0);
 
 -- ----------------------------
 -- Table structure for onlinepayorder
 -- ----------------------------
-DROP TABLE IF EXISTS `onlinepayorder`;
-CREATE TABLE `onlinepayorder`  (
+DROP TABLE IF EXISTS `OnlinePayOrder`;
+CREATE TABLE `OnlinePayOrder`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `PayOrderNum` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '在线支付订单号，唯一',
   `OrderId` int(11) NOT NULL COMMENT '订单ID',
@@ -876,8 +875,8 @@ CREATE TABLE `onlinepayorder`  (
 -- ----------------------------
 -- Table structure for order
 -- ----------------------------
-DROP TABLE IF EXISTS `order`;
-CREATE TABLE `order`  (
+DROP TABLE IF EXISTS `Order`;
+CREATE TABLE `Order`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `OrderNum` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单号',
   `UId` int(11) NOT NULL COMMENT '用户ID',
@@ -944,8 +943,8 @@ CREATE TABLE `order`  (
 -- ----------------------------
 -- Table structure for orderdetail
 -- ----------------------------
-DROP TABLE IF EXISTS `orderdetail`;
-CREATE TABLE `orderdetail`  (
+DROP TABLE IF EXISTS `OrderDetail`;
+CREATE TABLE `OrderDetail`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `OrderId` int(11) NOT NULL COMMENT '订单ID',
   `OrderNum` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单号',
@@ -984,8 +983,8 @@ CREATE TABLE `orderdetail`  (
 -- ----------------------------
 -- Table structure for orderlog
 -- ----------------------------
-DROP TABLE IF EXISTS `orderlog`;
-CREATE TABLE `orderlog`  (
+DROP TABLE IF EXISTS `OrderLog`;
+CREATE TABLE `OrderLog`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `OrderId` int(11) NOT NULL COMMENT '订单ID',
   `OrderNum` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单号',
@@ -1002,8 +1001,8 @@ CREATE TABLE `orderlog`  (
 -- ----------------------------
 -- Table structure for otherconfig
 -- ----------------------------
-DROP TABLE IF EXISTS `otherconfig`;
-CREATE TABLE `otherconfig`  (
+DROP TABLE IF EXISTS `OtherConfig`;
+CREATE TABLE `OtherConfig`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `ConfigName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '配置名称',
   `ConfigValue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '配置值 JSON',
@@ -1014,14 +1013,14 @@ CREATE TABLE `otherconfig`  (
 -- ----------------------------
 -- Records of otherconfig
 -- ----------------------------
-INSERT INTO `otherconfig` VALUES (1, 'attach', '{\"SiteId\":0,\"AttachPatch\":\"userfiles\",\"SaveType\":0,\"IsCreateThum\":0,\"ThumQty\":80,\"ThumMaxWidth\":200,\"ThumMaxHeight\":200,\"IsWaterMark\":0,\"WaterMarkType\":0,\"WaterMarkMinWidth\":400,\"WaterMarkMinHeight\":400,\"WaterMarkImg\":null,\"WaterMarkText\":\"\",\"WaterMarkTextColor\":\"#0FF\",\"WaterMarkPlace\":9,\"WaterMarkQty\":80,\"WaterMarkDiaphaneity\":80,\"IsRandomFileName\":1,\"ImgMaxWidth\":1920,\"ImgMaxHeight\":2000}', '2018-04-18 20:36:55');
-INSERT INTO `otherconfig` VALUES (2, 'smtp', '{\"SiteId\":0,\"SmtpEmail\":\"poster@comcms.com\",\"SmtpHost\":\"redbull.mxrouting.net\",\"SmtpProt\":\"25\",\"SmtpEmailPwd\":\"1qaz@WSX\",\"PostUserName\":\"poster@comcms.com\",\"IsSSL\":0}', '2024-03-27 10:53:32');
+INSERT INTO `OtherConfig` VALUES (1, 'attach', '{\"SiteId\":0,\"AttachPatch\":\"userfiles\",\"SaveType\":0,\"IsCreateThum\":0,\"ThumQty\":80,\"ThumMaxWidth\":200,\"ThumMaxHeight\":200,\"IsWaterMark\":0,\"WaterMarkType\":0,\"WaterMarkMinWidth\":400,\"WaterMarkMinHeight\":400,\"WaterMarkImg\":null,\"WaterMarkText\":\"\",\"WaterMarkTextColor\":\"#0FF\",\"WaterMarkPlace\":9,\"WaterMarkQty\":80,\"WaterMarkDiaphaneity\":80,\"IsRandomFileName\":1,\"ImgMaxWidth\":1920,\"ImgMaxHeight\":2000}', '2018-04-18 20:36:55');
+INSERT INTO `OtherConfig` VALUES (2, 'smtp', '{\"SiteId\":0,\"SmtpEmail\":\"\",\"SmtpHost\":\"\",\"SmtpProt\":\"587\",\"SmtpEmailPwd\":\"\",\"PostUserName\":\"\",\"IsSSL\":1}', '2024-03-27 10:53:32');
 
 -- ----------------------------
 -- Table structure for product
 -- ----------------------------
-DROP TABLE IF EXISTS `product`;
-CREATE TABLE `product`  (
+DROP TABLE IF EXISTS `Product`;
+CREATE TABLE `Product`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `KId` int(11) NOT NULL COMMENT '栏目ID',
   `BId` int(11) NOT NULL COMMENT '品牌ID',
@@ -1094,17 +1093,17 @@ CREATE TABLE `product`  (
 -- ----------------------------
 -- Records of product
 -- ----------------------------
-INSERT INTO `product` VALUES (1, 1, 0, 0, 0, 0, 'CMS系统', NULL, NULL, NULL, NULL, NULL, NULL, 5000, 6000, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>CMS系统</p>\n\n<p>CMS系统</p>\n\n<p>CMS系统</p>\n\n<p>CMS系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-4.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:17:53', NULL, NULL, NULL, NULL);
-INSERT INTO `product` VALUES (2, 2, 0, 0, 0, 0, 'PC+手机商城系统', NULL, NULL, NULL, NULL, NULL, NULL, 18000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>PC+手机商城系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-5.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:21:43', NULL, NULL, NULL, NULL);
-INSERT INTO `product` VALUES (3, 2, 0, 0, 0, 0, '微商城Shop系统', NULL, NULL, NULL, NULL, NULL, NULL, 25000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>微商城Shop系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-3.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:22:19', NULL, NULL, NULL, NULL);
-INSERT INTO `product` VALUES (4, 3, 0, 0, 0, 0, '小程序商城系统', NULL, NULL, NULL, NULL, NULL, NULL, 18000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>小程序商城系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-2.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:23:02', NULL, NULL, NULL, NULL);
-INSERT INTO `product` VALUES (5, 1, 0, 0, 0, 0, '博客系统', NULL, NULL, NULL, NULL, NULL, NULL, 10000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>博客系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-1.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:49:43', NULL, NULL, NULL, NULL);
+INSERT INTO `Product` VALUES (1, 1, 0, 0, 0, 0, 'CMS系统', NULL, NULL, NULL, NULL, NULL, NULL, 5000, 6000, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>CMS系统</p>\n\n<p>CMS系统</p>\n\n<p>CMS系统</p>\n\n<p>CMS系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-4.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:17:53', NULL, NULL, NULL, NULL);
+INSERT INTO `Product` VALUES (2, 2, 0, 0, 0, 0, 'PC+手机商城系统', NULL, NULL, NULL, NULL, NULL, NULL, 18000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>PC+手机商城系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-5.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:21:43', NULL, NULL, NULL, NULL);
+INSERT INTO `Product` VALUES (3, 2, 0, 0, 0, 0, '微商城Shop系统', NULL, NULL, NULL, NULL, NULL, NULL, 25000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>微商城Shop系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-3.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:22:19', NULL, NULL, NULL, NULL);
+INSERT INTO `Product` VALUES (4, 3, 0, 0, 0, 0, '小程序商城系统', NULL, NULL, NULL, NULL, NULL, NULL, 18000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>小程序商城系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-2.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:23:02', NULL, NULL, NULL, NULL);
+INSERT INTO `Product` VALUES (5, 1, 0, 0, 0, 0, '博客系统', NULL, NULL, NULL, NULL, NULL, NULL, 10000, 0, 0, 0, 0, NULL, NULL, 0, 0, 0, 0, 0, '<p>博客系统</p>\n', NULL, NULL, NULL, NULL, NULL, NULL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 999, 0, NULL, NULL, NULL, '/images/default/slide-1.jpg', 0, NULL, '', NULL, 1, '2018-12-02 17:49:43', NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for tagsdetail
 -- ----------------------------
-DROP TABLE IF EXISTS `tagsdetail`;
-CREATE TABLE `tagsdetail`  (
+DROP TABLE IF EXISTS `TagsDetail`;
+CREATE TABLE `TagsDetail`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `TagsId` int(11) NOT NULL DEFAULT 0 COMMENT '所属标签ID',
   `TagName` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT 'Tag标签名称',
@@ -1124,8 +1123,8 @@ CREATE TABLE `tagsdetail`  (
 -- ----------------------------
 -- Table structure for targetevent
 -- ----------------------------
-DROP TABLE IF EXISTS `targetevent`;
-CREATE TABLE `targetevent`  (
+DROP TABLE IF EXISTS `TargetEvent`;
+CREATE TABLE `TargetEvent`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `EventKey` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '事件key',
   `EventName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '事件名称',
@@ -1137,23 +1136,23 @@ CREATE TABLE `targetevent`  (
 -- ----------------------------
 -- Records of targetevent
 -- ----------------------------
-INSERT INTO `targetevent` VALUES (1, 'add', '添加', 0, 0);
-INSERT INTO `targetevent` VALUES (2, 'edit', '修改', 0, 0);
-INSERT INTO `targetevent` VALUES (3, 'del', '删除', 0, 0);
-INSERT INTO `targetevent` VALUES (4, 'view', '查看', 0, 0);
-INSERT INTO `targetevent` VALUES (5, 'viewlist', '查看列表', 0, 0);
-INSERT INTO `targetevent` VALUES (6, 'import', '导入', 0, 0);
-INSERT INTO `targetevent` VALUES (7, 'export', '导出', 0, 0);
-INSERT INTO `targetevent` VALUES (8, 'filter', '搜索', 0, 0);
-INSERT INTO `targetevent` VALUES (9, 'batch', '批量操作', 0, 0);
-INSERT INTO `targetevent` VALUES (10, 'recycle', '回收站', 0, 0);
-INSERT INTO `targetevent` VALUES (11, 'confirm', '确认', 0, 0);
+INSERT INTO `TargetEvent` VALUES (1, 'add', '添加', 0, 0);
+INSERT INTO `TargetEvent` VALUES (2, 'edit', '修改', 0, 0);
+INSERT INTO `TargetEvent` VALUES (3, 'del', '删除', 0, 0);
+INSERT INTO `TargetEvent` VALUES (4, 'view', '查看', 0, 0);
+INSERT INTO `TargetEvent` VALUES (5, 'viewlist', '查看列表', 0, 0);
+INSERT INTO `TargetEvent` VALUES (6, 'import', '导入', 0, 0);
+INSERT INTO `TargetEvent` VALUES (7, 'export', '导出', 0, 0);
+INSERT INTO `TargetEvent` VALUES (8, 'filter', '搜索', 0, 0);
+INSERT INTO `TargetEvent` VALUES (9, 'batch', '批量操作', 0, 0);
+INSERT INTO `TargetEvent` VALUES (10, 'recycle', '回收站', 0, 0);
+INSERT INTO `TargetEvent` VALUES (11, 'confirm', '确认', 0, 0);
 
 -- ----------------------------
 -- Table structure for weixinrequestcontent
 -- ----------------------------
-DROP TABLE IF EXISTS `weixinrequestcontent`;
-CREATE TABLE `weixinrequestcontent`  (
+DROP TABLE IF EXISTS `WeixinRequestContent`;
+CREATE TABLE `WeixinRequestContent`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `RuleId` int(11) NOT NULL COMMENT '规则名称',
   `Title` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '回复标题',
@@ -1174,13 +1173,13 @@ CREATE TABLE `weixinrequestcontent`  (
 -- ----------------------------
 -- Records of weixinrequestcontent
 -- ----------------------------
-INSERT INTO `weixinrequestcontent` VALUES (1, 1, NULL, '关注公众号自动回复文本', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2020-02-19 14:41:24');
+INSERT INTO `WeixinRequestContent` VALUES (1, 1, NULL, '关注公众号自动回复文本', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, '2020-02-19 14:41:24');
 
 -- ----------------------------
 -- Table structure for weixinrequestrule
 -- ----------------------------
-DROP TABLE IF EXISTS `weixinrequestrule`;
-CREATE TABLE `weixinrequestrule`  (
+DROP TABLE IF EXISTS `WeixinRequestRule`;
+CREATE TABLE `WeixinRequestRule`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `RuleName` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '规则名称',
   `Keywords` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '请求关键词,逗号分隔',
@@ -1197,13 +1196,13 @@ CREATE TABLE `weixinrequestrule`  (
 -- ----------------------------
 -- Records of weixinrequestrule
 -- ----------------------------
-INSERT INTO `weixinrequestrule` VALUES (1, '关注自动回复', NULL, 6, 0, 0, 1, 0, NULL, '2020-02-19 14:41:24');
+INSERT INTO `WeixinRequestRule` VALUES (1, '关注自动回复', NULL, 6, 0, 0, 1, 0, NULL, '2020-02-19 14:41:24');
 
 -- ----------------------------
 -- Table structure for weixinresponsecontent
 -- ----------------------------
-DROP TABLE IF EXISTS `weixinresponsecontent`;
-CREATE TABLE `weixinresponsecontent`  (
+DROP TABLE IF EXISTS `WeixinResponseContent`;
+CREATE TABLE `WeixinResponseContent`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `OpenId` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户OpenId',
   `RequestType` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '请求类型',
@@ -1222,8 +1221,8 @@ CREATE TABLE `weixinresponsecontent`  (
 -- ----------------------------
 -- Table structure for withdraworder
 -- ----------------------------
-DROP TABLE IF EXISTS `withdraworder`;
-CREATE TABLE `withdraworder`  (
+DROP TABLE IF EXISTS `WithdrawOrder`;
+CREATE TABLE `WithdrawOrder`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `UId` int(11) NOT NULL COMMENT '用户ID',
   `OrderNum` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '订单号',
@@ -1243,5 +1242,49 @@ CREATE TABLE `withdraworder`  (
 -- ----------------------------
 -- Records of withdraworder
 -- ----------------------------
+
+
+-- Authentication sessions and one-time tokens are intentionally created without seed data.
+DROP TABLE IF EXISTS `AuthSession`;
+CREATE TABLE `AuthSession` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `SessionId` varchar(36) NOT NULL,
+  `SubjectType` varchar(20) NOT NULL,
+  `SubjectId` int NOT NULL,
+  `TokenFamily` varchar(36) NOT NULL,
+  `RefreshTokenHash` varchar(64) DEFAULT NULL,
+  `PreviousRefreshTokenHash` varchar(64) DEFAULT NULL,
+  `SecurityStamp` varchar(64) NOT NULL,
+  `DeviceName` varchar(100) DEFAULT NULL,
+  `CreatedUtc` datetime(6) NOT NULL,
+  `ExpiresUtc` datetime(6) NOT NULL,
+  `LastUsedUtc` datetime(6) NOT NULL,
+  `RevokedUtc` datetime(6) NOT NULL DEFAULT '1970-01-01 00:00:00',
+  `ReplacedBySessionId` varchar(36) DEFAULT NULL,
+  `IsRevoked` int NOT NULL DEFAULT 0,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `UX_AuthSession_SessionId` (`SessionId`),
+  UNIQUE KEY `UX_AuthSession_RefreshTokenHash` (`RefreshTokenHash`),
+  KEY `IX_AuthSession_PreviousRefreshTokenHash` (`PreviousRefreshTokenHash`),
+  KEY `IX_AuthSession_Subject` (`SubjectType`, `SubjectId`, `IsRevoked`),
+  KEY `IX_AuthSession_TokenFamily` (`TokenFamily`, `IsRevoked`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `AuthOneTimeToken`;
+CREATE TABLE `AuthOneTimeToken` (
+  `Id` int NOT NULL AUTO_INCREMENT,
+  `TokenHash` varchar(64) NOT NULL,
+  `SubjectType` varchar(20) NOT NULL,
+  `SubjectId` int NOT NULL,
+  `Purpose` varchar(30) NOT NULL,
+  `CreatedUtc` datetime(6) NOT NULL,
+  `ExpiresUtc` datetime(6) NOT NULL,
+  `UsedUtc` datetime(6) NOT NULL DEFAULT '1970-01-01 00:00:00',
+  `IsUsed` int NOT NULL DEFAULT 0,
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `UX_AuthOneTimeToken_TokenHash` (`TokenHash`),
+  KEY `IX_AuthOneTimeToken_Subject` (`SubjectType`, `SubjectId`, `Purpose`, `IsUsed`),
+  KEY `IX_AuthOneTimeToken_ExpiresUtc` (`ExpiresUtc`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;

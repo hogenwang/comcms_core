@@ -160,7 +160,7 @@ DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `UserName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `PassWord` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `PassWord` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `Salt` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '盐值',
   `RealName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `Tel` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '电话',
@@ -179,7 +179,6 @@ CREATE TABLE `admin`  (
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', '8788C77C8FA36CF9D3718026355AB571', 'fOtOFYYpLO90', 'admin', '', '', 100, 1, 0, '2020-03-06 15:40:43', '127.0.0.1', '2018-04-16 00:17:43', '127.0.0.1', 0);
 
 -- ----------------------------
 -- Table structure for adminlog
@@ -190,7 +189,7 @@ CREATE TABLE `adminlog`  (
   `UId` int(11) NOT NULL COMMENT '管理员ID',
   `GUID` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '唯一ID',
   `UserName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `PassWord` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `PassWord` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `LoginTime` datetime(0) NULL DEFAULT NULL COMMENT '登录时间',
   `LoginIP` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '登录IP',
   `IsLoginOK` int(11) NOT NULL COMMENT '是否登录成功',
@@ -1205,7 +1204,7 @@ DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `UserName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `PassWord` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `PassWord` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `Salt` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '盐值',
   `RealName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `Tel` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机',
@@ -1325,7 +1324,7 @@ CREATE TABLE `memberlog`  (
   `UId` int(11) NOT NULL COMMENT '管理员ID',
   `GUID` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '唯一ID',
   `UserName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `PassWord` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `PassWord` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `LoginTime` datetime(0) NULL DEFAULT NULL COMMENT '登录时间',
   `LoginIP` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '登录IP',
   `IsLoginOK` int(11) NOT NULL COMMENT '是否登录成功',

@@ -25,6 +25,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     [Description("微信公众号系统，包括关注自动回复、自定义菜单、关键字回复")]
     public class WeixinController : AdminBaseController
     {
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public WeixinController(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
 
         #region 自定义菜单
         //自定义菜单
@@ -106,16 +112,10 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             HttpContent content = new StringContent(allmenu);
             string value = string.Empty;
-            using (HttpClient client = new HttpClient())
-            {
-                content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                var re = await client.PostAsync(posturl, content);
-                string responseString = re.Content.ReadAsStringAsync().Result;
-                if (!string.IsNullOrEmpty(responseString))
-                {
-                    value = responseString;
-                }
-            }
+            content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+            var re = await _httpClientFactory.CreateClient().PostAsync(posturl, content, HttpContext.RequestAborted);
+            string responseString = await re.Content.ReadAsStringAsync(HttpContext.RequestAborted);
+            if (!string.IsNullOrEmpty(responseString)) value = responseString;
             XTrace.WriteLine("创建公众号菜单回传：" + value);
 
             dynamic rejson = Newtonsoft.Json.Linq.JToken.Parse(value) as dynamic;

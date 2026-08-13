@@ -27,17 +27,9 @@ namespace COMCMS.Web.Models
         /// </summary>
         public string ImageExtensions { get; set; }
         /// <summary>
-        /// JWT验证的密钥
-        /// </summary>
-        public string JwtSecret { get; set; }
-        /// <summary>
         /// 前缀
         /// </summary>
         public string COMCMSPrefixKey { get; set; }
-        /// <summary>
-        /// 签名盐
-        /// </summary>
-        public string SignSalt { get; set; }
         /// <summary>
         /// 密码强度
         /// 0:6位无要求

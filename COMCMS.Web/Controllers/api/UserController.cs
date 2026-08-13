@@ -9,7 +9,6 @@ using COMCMS.Core;
 using COMCMS.Core.Models;
 using XCode;
 using System.Web;
-using COMCMS.Web.Filter;
 using NewLife.Log;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -22,10 +21,11 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Options;
+using COMCMS.Common.Security;
 
 namespace COMCMS.Web.Controllers.api
 {
-    [Authorize(Roles ="user")]
+    [Authorize(AuthenticationSchemes = AuthenticationSchemes.Bearer, Roles = "member")]
     public class UserController : APIBaseController
     {
         private readonly SystemSetting _attachsetting;
@@ -57,54 +57,6 @@ namespace COMCMS.Web.Controllers.api
             return reJson;
         }
         #endregion
-
-        #region jwt登录演示
-        [HttpGet]
-        [AllowAnonymous]
-        public object TestLogin(string username,string password)
-        {
-            //演示jwt登录，不判断逻辑，请自行判断
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var jwtkey = Encoding.ASCII.GetBytes(_appSettings.JwtSecret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-{
-                    new Claim(ClaimTypes.Name, username),
-                    new Claim(ClaimTypes.Role,"user")
-}),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(jwtkey), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            string wtoken = tokenHandler.WriteToken(token);
-
-            reJson.code = 0;
-            reJson.detail = new
-            {
-                token = wtoken
-            };
-            reJson.message = "登录成功！";
-            return reJson;
-        }
-
-        [HttpGet]
-        public object TestGetMyInfo()
-        {
-            var user = User;
-
-            reJson.code = 0;
-            reJson.detail = new
-            {
-                username = user.Identity.Name
-            };
-            reJson.message = "登录成功！";
-            return reJson;
-        }
-        #endregion
-
-
-
 
     }
 }

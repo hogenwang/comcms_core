@@ -105,7 +105,10 @@ $(function () {
         }
     });
 
-    function menuItem() {
+    function menuItem(event) {
+        // Keep the admin shell in place even if tab creation fails later.
+        event.preventDefault();
+
         // 获取标识数据
         var dataUrl = $(this).attr('href'),
             dataIndex = $(this).data('index'),
@@ -137,17 +140,25 @@ $(function () {
             var str = '<a href="javascript:;" class="active J_menuTab" data-id="' + dataUrl + '">' + menuName + ' <i class="fa fa-times-circle"></i></a>';
             $('.J_menuTab').removeClass('active');
 
-            // 添加选项卡对应的iframe
-            var str1 = '<iframe class="J_iframe" name="iframe' + dataIndex + '" width="100%" height="100%" src="' + dataUrl + '" frameborder="0" data-id="' + dataUrl + '" seamless></iframe>';
-            $('.J_mainContent').find('iframe.J_iframe').hide().parents('.J_mainContent').append(str1);
-
             //显示loading提示
             var loading = layer.load();
-
-            $('.J_mainContent iframe:visible').load(function () {
+            var iframe = $('<iframe>', {
+                'class': 'J_iframe',
+                name: 'iframe' + dataIndex,
+                width: '100%',
+                height: '100%',
+                src: dataUrl,
+                frameborder: '0',
+                'data-id': dataUrl,
+                seamless: 'seamless'
+            }).one('load', function () {
                 //iframe加载完成后隐藏loading提示
                 layer.close(loading);
             });
+
+            // 添加选项卡对应的iframe
+            $('.J_mainContent').find('iframe.J_iframe').hide();
+            $('.J_mainContent').append(iframe);
             // 添加选项卡
             $('.J_menuTabs .page-tabs-content').append(str);
             scrollToTab($('.J_menuTab.active'));
@@ -166,7 +177,7 @@ $(function () {
         if ($(this).parents('.J_menuTab').hasClass('active')) {
 
             // 当前元素后面有同辈元素，使后面的一个元素处于活动状态
-            if ($(this).parents('.J_menuTab').next('.J_menuTab').size()) {
+            if ($(this).parents('.J_menuTab').next('.J_menuTab').length) {
 
                 var activeId = $(this).parents('.J_menuTab').next('.J_menuTab:eq(0)').data('id');
                 $(this).parents('.J_menuTab').next('.J_menuTab:eq(0)').addClass('active');
@@ -198,7 +209,7 @@ $(function () {
             }
 
             // 当前元素后面没有同辈元素，使当前元素的上一个元素处于活动状态
-            if ($(this).parents('.J_menuTab').prev('.J_menuTab').size()) {
+            if ($(this).parents('.J_menuTab').prev('.J_menuTab').length) {
                 var activeId = $(this).parents('.J_menuTab').prev('.J_menuTab:last').data('id');
                 $(this).parents('.J_menuTab').prev('.J_menuTab:last').addClass('active');
                 $('.J_mainContent .J_iframe').each(function () {
@@ -280,10 +291,10 @@ $(function () {
         var url = target.attr('src');
         //显示loading提示
         var loading = layer.load();
-        target.attr('src', url).load(function () {
+        target.one('load', function () {
             //关闭loading提示
             layer.close(loading);
-        });
+        }).attr('src', url);
     }
 
     $('.J_menuTabs').on('dblclick', '.J_menuTab', refreshTab);

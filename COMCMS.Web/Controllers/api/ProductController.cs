@@ -9,7 +9,6 @@ using COMCMS.Core;
 using COMCMS.Core.Models;
 using XCode;
 using System.Web;
-using COMCMS.Web.Filter;
 using NewLife.Log;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -32,7 +31,6 @@ namespace COMCMS.Web.Controllers.api
         /// <param name="signature"></param>
         /// <returns></returns>
         [HttpGet]
-        [CheckFilter]
         public object GetCategories(int level, int pid = 0)
         {
             var list = Category.GetListTree(pid, level, false, false);
@@ -72,9 +70,9 @@ namespace COMCMS.Web.Controllers.api
         /// <param name="signature"></param>
         /// <returns></returns>
         [HttpGet]
-        [CheckFilter]
         public object GetProductList(int kid, int page, int pageSize = 10)
         {
+            pageSize = Math.Clamp(pageSize, 1, 100);
             var where = Product._.IsHide == 0;
             if (kid > 0)
                 where &= Product._.KId == kid;
@@ -127,7 +125,6 @@ namespace COMCMS.Web.Controllers.api
         /// <param name="signature"></param>
         /// <returns></returns>
         [HttpGet]
-        [CheckFilter]
         public object GetProductDetail(int id, string random = "", string timeStamp = "", string signature = "")
         {
             //获取商品
@@ -140,7 +137,7 @@ namespace COMCMS.Web.Controllers.api
             }
             entity.Hits++;
             entity.Update();
-            return entity;
+            return ToPublicProduct(entity);
         }
         #endregion
 
@@ -156,9 +153,9 @@ namespace COMCMS.Web.Controllers.api
         /// <param name="signature"></param>
         /// <returns></returns>
         [HttpGet]
-        [CheckFilter]
         public object GetSearchProductList(string key, int page, int pageSize = 10, int kid = 0, string random = "", string timeStamp = "", string signature = "")
         {
+            pageSize = Math.Clamp(pageSize, 1, 100);
             var where = Product._.IsHide == 0;
 
             if (kid != 0)
@@ -209,6 +206,32 @@ namespace COMCMS.Web.Controllers.api
             return reJson;
         }
         #endregion
+
+        private static object ToPublicProduct(Product entity)
+        {
+            return new
+            {
+                id = entity.Id,
+                categoryId = entity.KId,
+                title = entity.Title,
+                subTitle = entity.SubTitle,
+                content = entity.Content,
+                parameters = entity.Parameters,
+                description = entity.Description,
+                price = entity.Price,
+                marketPrice = entity.MarketPrice,
+                specialPrice = entity.SpecialPrice,
+                fare = entity.Fare,
+                stock = entity.Stock,
+                pic = entity.Pic,
+                banner = entity.BannerImg,
+                images = entity.ItemImg,
+                tags = entity.Tags,
+                service = entity.Service,
+                hits = entity.Hits,
+                addTime = entity.AddTime
+            };
+        }
 
 
     }

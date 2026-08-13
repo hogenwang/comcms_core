@@ -55,7 +55,7 @@
                             <option value="0" >HTML代码</option>
                             <option value="1" >文字广告</option>
                             <option value="2" >图片广告</option>
-                            <option value="3" >Flash广告</option>
+                            <option value="3" disabled>Flash广告（已禁用）</option>
                             <option value="4">幻灯片广告</option>
                             <option value="7" >视频广告</option>
                         </select>
@@ -275,7 +275,6 @@
         $(function () {
             DoPost("editAdsForm");
             $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
-            $(".upload-swf").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderFile", swf: "/js/webuploader/uploader.swf", filetypes: "swf", notwater: true });
             //加载内容
             FillAds(@Model.TId,jsonstr);
             ChangeType();

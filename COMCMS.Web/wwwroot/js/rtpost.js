@@ -304,25 +304,10 @@ function DoAdminLogin(formId, rules, messages) {
             btn.attr("disabled", "disabled");
             //执行loadding 并且ajax提交
 
-            var password = $("#password").val();
-            var username = $("#username").val();
-            password = encMe(password, encrypt_key, 1, 0);
-            username = encMe(username, encrypt_key, 1, 0);
-            var queryString = $myform.formSerialize();
-            var code = "";
-            if ($("#code").length > 0) {
-                code = $("#code").val();
-            }
-            var postData = {
-                username: username,
-                password: password,
-                __RequestVerificationToken: rvtoken,
-                code: code
-            }
             $.ajax({
                 type: "POST",
                 url: url,
-                data: postData,
+                data: $myform.formSerialize(),
                 dataType: "JSON",
                 success: function (data) {
                     if (data.status == "success") {

@@ -185,66 +185,6 @@ namespace COMCMS.Common
         #region 帮助方法
         #endregion
 
-        #region 内容远程保存图片
-        /// <summary>
-        /// 保存内容种远程图片到本地
-        /// </summary>
-        /// <param name="content"></param>
-        /// <returns></returns>
-        public static string SaveRemoteImgForContent(string content)
-        {
-            string recontent = content;
-            if (string.IsNullOrEmpty(content))
-                return "";
-            //WebClient client = new WebClient();
-            var _httpClient = new HttpClient();
-            Regex reg = new Regex("IMG[^>]*?src\\s*=\\s*(?:\"(?<1>[^\"]*)\"|'(?<1>[^\']*)')", RegexOptions.IgnoreCase);
-            MatchCollection m = reg.Matches(content);
-            foreach (Match math in m)
-            {
-                string imgUrl = math.Groups[1].Value;
-                Regex regName = new Regex(@"\w+(?:jpg|gif|bmp|png|jpeg)", RegexOptions.IgnoreCase);//不按点。这样可以兼容复制公众号文章
-                string imgName = imgUrl.Substring(imgUrl.LastIndexOf("/") + 1, imgUrl.Length - imgUrl.LastIndexOf("/") - 1);
-                //判断是否是远程图片
-                if (imgUrl.ToLower().StartsWith("http://") || imgUrl.ToLower().StartsWith("https://") || imgUrl.ToLower().StartsWith("ftp://"))
-                {
-                    string imgsrc = imgName.ToLower();
-                    string ext = "jpg";
-                    if (imgsrc.EndsWith("gif")) ext = "gif";
-                    else if (imgsrc.EndsWith("png")) ext = "png";
-                    else if (imgsrc.EndsWith("jpeg")) ext = "jpeg";
-                    else if (imgsrc.EndsWith("bmp")) ext = "bmp";
-                    string strNewImgName = Utils.GetOrderNum() + "." + ext;
-                    string savepath = $"{_WebRootPath}{DirectorySeparatorChar}userfiles{DirectorySeparatorChar}images{DirectorySeparatorChar}auto{DirectorySeparatorChar}{DateTime.Now.Year.ToString()}\\{DateTime.Now.ToString("MM")}";// 
-                    string imgNewSrc = $"/userfiles/images/auto/{DateTime.Now.Year.ToString()}/{DateTime.Now.ToString("MM")}/{strNewImgName}";//保存后路径
-                    //判断路径
-                    if (!Directory.Exists(savepath))
-                        Directory.CreateDirectory(savepath);
-                    string fullpath = Path.Combine(savepath, strNewImgName);//图片
-                    try
-                    {
-                        System.IO.FileStream fs;
-                        byte[] urlContents = _httpClient.GetByteArrayAsync(imgUrl).Result;
-                        fs = new System.IO.FileStream(fullpath, FileMode.CreateNew);
-                        fs.Write(urlContents, 0, urlContents.Length);
-                        //保存图片
-                        //client.DownloadFile(imgUrl, fullpath);
-                        //_httpClient
-                        recontent = recontent.Replace(imgUrl, imgNewSrc);
-                    }
-                    catch (Exception ex)
-                    {
-                        //throw new Exception(ex.Message);
-                        XTrace.WriteLine($"远程保存图片保存图片：{imgUrl},错误：{ex.Message}");
-                    }
-                }
-
-            }
-
-            return recontent;
-        }
-        #endregion
-
     }
 
 

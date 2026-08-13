@@ -6,6 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using COMCMS.Common;
 using COMCMS.Core;
 using XCode;
+using System.Security.Claims;
+using COMCMS.Common.Security;
+using COMCMS.Web.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.RateLimiting;
+using Microsoft.Extensions.Logging;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -13,6 +19,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     public class LoginController : Controller
     {
         public JsonTip tip = new JsonTip();
+        private readonly LoginAttemptService _loginAttempts;
+        private readonly ILogger<LoginController> _logger;
+
+        public LoginController(LoginAttemptService loginAttempts, ILogger<LoginController> logger)
+        {
+            _loginAttempts = loginAttempts;
+            _logger = logger;
+        }
 
         #region 登录页面
         public IActionResult Index()
@@ -28,9 +42,6 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 return Redirect("/Home/Install");
             }
 
-            string key = Utils.GetRandomChar(12);
-            SessionHelper.WriteSession("des_key", key);
-            ViewBag.key = key;
             return View();
         }
         #endregion
@@ -46,30 +57,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         #region 执行登录
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Login()
+        [EnableRateLimiting("login")]
+        public async Task<IActionResult> Login()
         {
-            string strUserName = Request.Form["username"];
-            string strPassWord = Request.Form["password"];
+            string username = Request.Form["username"].ToString().Trim();
+            string password = Request.Form["password"].ToString();
             string code = Request.Form["code"];
-
-            if (strUserName.Length % 8 != 0)
-            {
-                tip.Message = "请输入用户名不合法！";
-                return Json(tip);
-            }
-            if (strPassWord.Length % 8 != 0)
-            {
-                tip.Message = "请输入密码不合法！";
-                return Json(tip);
-            }
-            //判断并解密
-            string key = SessionHelper.GetSession("des_key").ToString();
-            if (string.IsNullOrEmpty(key))
-            {
-                tip.Message = "页面访问超时，请刷新页面重新登录！";
-                tip.Other = "reload";
-                return Json(tip);
-            }
 
             if (Utils.GetSetting("SystemSetting:AdminLoginWithCode") == "1")
             {
@@ -85,45 +78,42 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 }
             }
 
-            //解密
-            string username = "";
-            string password = "";
-            try
-            {
-                username = MyDES.uncMe(strUserName, key);
-                password = MyDES.uncMe(strPassWord, key);
-            }
-            catch (Exception exp)
-            {
-                NewLife.Log.XTrace.WriteException(exp);
-                tip.Message = "页面访问超时，请刷新页面重新登录！";
-                tip.Other = "reload";
-                return Json(tip);
-            }
-
             //验证用户
             if (string.IsNullOrEmpty(username))
             {
                 tip.Message = "请输入用户名！";
                 return Json(tip);
             }
-            if (string.IsNullOrEmpty(password) || Utils.GetStringLength(password) < 5)
+            if (string.IsNullOrEmpty(password) || password.Length > 128)
             {
-                tip.Message = "登录密码不能为空或者长度小于5！";
+                tip.Message = "管理员登录密码不能为空且不能超过128个字符！";
                 return Json(tip);
             }
-            //如果15分钟内有10次失败登录，则提示错误
             string ip = Utils.GetIP();
-            Expression ex = AdminLog._.IsLoginOK == 0 & AdminLog._.LoginIP == ip & AdminLog._.LoginTime >= DateTime.Now.AddMinutes(-15);
-
-            if (AdminLog.FindCount(ex, null, null, 0, 0) >= 10)
+            if (await _loginAttempts.IsBlockedAsync(username, ip))
             {
                 tip.Message = "错误登录次数限制！";
                 return Json(tip);
             }
             //执行登录操作
-            if (Admin.AdminLogin(username, password))
+            if (Admin.AdminLogin(username, password, out var loginLogId))
             {
+                var admin = Admin.Find(Admin._.UserName == username);
+                await _loginAttempts.RecordSuccessAsync(username);
+                var stamp = SecurityStampService.Compute("admin", admin.Id, admin.PassWord, admin.RoleId, admin.IsLock);
+                var identity = new ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.NameIdentifier, admin.Id.ToString()),
+                    new Claim(ClaimTypes.Name, admin.UserName),
+                    new Claim(ClaimTypes.Role, "admin"),
+                    new Claim(ComCmsClaimTypes.SubjectType, "admin"),
+                    new Claim(ComCmsClaimTypes.AdminRoleId, admin.RoleId.ToString()),
+                    new Claim(ComCmsClaimTypes.SecurityStamp, stamp),
+                    new Claim(ComCmsClaimTypes.LoginLogId, loginLogId),
+                    new Claim("auth_time", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
+                }, AuthenticationSchemes.AdminCookie);
+                await HttpContext.SignInAsync(AuthenticationSchemes.AdminCookie, new ClaimsPrincipal(identity));
+
                 tip.Status = JsonTip.SUCCESS;
                 tip.Message = "登录成功";
                 tip.ReturnUrl = "/AdminCP";
@@ -131,6 +121,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             else
             {
+                await _loginAttempts.RecordFailureAsync(username, ip);
+                _logger.LogWarning("Admin login failed for account hash {AccountHash} from {RemoteIp}",
+                    Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(username.ToUpperInvariant()))), ip);
                 tip.Message = "用户名或者密码错误！请重新登录！";
                 return Json(tip);
             }
@@ -143,10 +136,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         /// 退出登录
         /// </summary>
         /// <returns></returns>
-        public IActionResult Logout()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
         {
+            await HttpContext.SignOutAsync(AuthenticationSchemes.AdminCookie);
             Admin.ClearInfo();
-            //Admin.ClearInfoAsync().Wait();
             return Redirect("~/AdminCP/Login");
         }
         #endregion

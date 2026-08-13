@@ -308,8 +308,8 @@ function refreshCurrentTab() {
     var url = target.attr('src');
     //显示loading提示
     var loading = layer.load();
-    target.attr('src', url).load(function () {
+    target.one('load', function () {
         //关闭loading提示
         layer.close(loading);
-    });
+    }).attr('src', url);
 }

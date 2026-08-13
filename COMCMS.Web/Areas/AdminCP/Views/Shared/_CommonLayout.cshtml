@@ -59,8 +59,12 @@
     </environment>
 </head>
 <body class="gray-bg">
+    @Html.AntiForgeryToken()
     @RenderBody()
     <script>
+        $.ajaxSetup({
+            headers: { "RequestVerificationToken": $("input[name='__RequestVerificationToken']").first().val() }
+        });
         var index = parent.layer.getFrameIndex(window.name);
         function closethisdialog() {
             parent.layer.close(index);

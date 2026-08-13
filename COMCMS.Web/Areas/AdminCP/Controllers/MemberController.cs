@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using COMCMS.Common;
+using COMCMS.Common.Security;
 using COMCMS.Core;
 using XCode;
 using Newtonsoft.Json;
@@ -96,9 +97,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     tip.Message = "您修改密码，旧密码不能为空！";
                     return Json(tip);
                 }
-                if (newPwd.Length < 5)
+                if (string.IsNullOrWhiteSpace(newPwd) || newPwd.Length < 12 || newPwd.Length > 128)
                 {
-                    tip.Message = "新密码不能小于5个字符！";
+                    tip.Message = "管理员密码长度必须为12至128个字符！";
                     return Json(tip);
                 }
 
@@ -116,24 +117,21 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     return Json(tip);
                 }
                 //判断旧密码是否正确
-                if (my.PassWord != Utils.MD5(my.Salt + oldPwd.Trim()))
+                if (!PasswordHashService.Verify(my.PassWord, my.Salt, oldPwd, out var ignoredUpgrade))
                 {
                     tip.Message = "您输入的旧密码不正确，请重新输入！";
                     return Json(tip);
                 }
-                my.PassWord = Utils.MD5(my.Salt + newPwd);
+                my.PassWord = PasswordHashService.HashPassword(newPwd);
             }
-            tip.Message = "测试版暂时屏蔽修改密码，敬请原谅！";
+            my.Tel = tel;
+            my.Email = email;
+            my.RealName = realname;
+            my.Update();
+            Core.Admin.WriteLogActions("修改我的信息;");
+            tip.Status = JsonTip.SUCCESS;
+            tip.Message = "编辑我的信息成功！";
             return Json(tip);
-            //my.Tel = tel;
-            //my.Email = email;
-            //my.RealName = realname;
-            //my.Update();
-            //Core.Admin.WriteLogActions("修改我的信息;");
-            //tip.Status = JsonTip.SUCCESS;
-            //tip.Message = "编辑我的信息成功！";
-
-            //return Json(tip);
         }
         #endregion
 
@@ -544,14 +542,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "登录用户名不能小于5个字节！";
                 return Json(tip);
             }
-            if (string.IsNullOrEmpty(newPwd))
+            if (string.IsNullOrWhiteSpace(newPwd))
             {
                 tip.Message = "密码不能为空！";
                 return Json(tip);
             }
-            if (newPwd.Length < 5)
+            if (newPwd.Length < 12 || newPwd.Length > 128)
             {
-                tip.Message = "密码不能小于5个字符！";
+                tip.Message = "管理员密码长度必须为12至128个字符！";
                 return Json(tip);
             }
             if (_systemSetting.PasswordStrength > 0)
@@ -579,7 +577,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.UserName = userName;
             entity.RealName = realname;
             entity.Salt = Utils.GetRandomChar(10);
-            entity.PassWord = Utils.MD5(entity.Salt + newPwd);
+            entity.PassWord = PasswordHashService.HashPassword(newPwd);
             entity.RoleId = int.Parse(roleid);
             entity.Insert();
             tip.Status = JsonTip.SUCCESS;
@@ -656,9 +654,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             if (!string.IsNullOrEmpty(newPwd))//修改密码
             {
-                if (newPwd.Length < 5)
+                if (string.IsNullOrWhiteSpace(newPwd) || newPwd.Length < 12 || newPwd.Length > 128)
                 {
-                    tip.Message = "密码不能小于5个字符！";
+                    tip.Message = "管理员密码长度必须为12至128个字符！";
                     return Json(tip);
                 }
                 if (_systemSetting.PasswordStrength > 0)
@@ -674,7 +672,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     tip.Message = "两次输入密码不一致，请重新输入！";
                     return Json(tip);
                 }
-                entity.PassWord = Utils.MD5(entity.Salt + newPwd);
+                entity.PassWord = PasswordHashService.HashPassword(newPwd);
             }
             entity.RoleId = int.Parse(roleid);
             entity.RealName = realname;
@@ -980,9 +978,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 return Json(tip);
             }
 
-            if (string.IsNullOrEmpty(model.PassWord) || model.PassWord.Length < 6)
+            if (string.IsNullOrWhiteSpace(model.PassWord) || model.PassWord.Length < 10 || model.PassWord.Length > 128)
             {
-                tip.Message = "密码必须不小于6个字符";
+                tip.Message = "会员密码长度必须为10至128个字符";
                 return Json(tip);
             }
             if (_systemSetting.PasswordStrength > 0)
@@ -1016,7 +1014,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             Member entity = new Member();
             entity.UserName = model.UserName;
             entity.Salt = Utils.GetRandomChar(20);
-            entity.PassWord = Utils.MD5(entity.Salt + model.PassWord);
+            entity.PassWord = PasswordHashService.HashPassword(model.PassWord);
             entity.Email = model.Email;
             entity.Tel = model.Tel;
             entity.Parent = model.Parent;
@@ -1086,9 +1084,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             if (!string.IsNullOrEmpty(model.PassWord))
             {
-                if (string.IsNullOrEmpty(model.PassWord) || model.PassWord.Length < 6)
+                if (string.IsNullOrWhiteSpace(model.PassWord) || model.PassWord.Length < 10 || model.PassWord.Length > 128)
                 {
-                    tip.Message = "密码必须不小于6个字符";
+                    tip.Message = "会员密码长度必须为10至128个字符";
                     return Json(tip);
                 }
                 string PassWord2 = Request.Form["PassWord2"];
@@ -1097,7 +1095,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     tip.Message = "两次输入密码不一致，请重新输入！";
                     return Json(tip);
                 }
-                entity.PassWord = Utils.MD5(entity.Salt + model.PassWord);
+                entity.PassWord = PasswordHashService.HashPassword(model.PassWord);
             }
             if (string.IsNullOrEmpty(model.UserName))
             {

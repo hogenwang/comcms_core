@@ -23,6 +23,7 @@ using XCode.Membership;
 using COMCMS.Core.Models;
 using Newtonsoft.Json;
 using COMCMS.Common;
+using COMCMS.Common.Security;
 
 namespace COMCMS.Core
 {
@@ -201,12 +202,13 @@ namespace COMCMS.Core
             model = Find(_.Id == aid);
             if (model != null && DateTime.Compare(DateTime.Now, model.StartTime) > 0 && DateTime.Compare(model.EndTime, DateTime.Now) > 0 && !model.IsDisabled)
             {
+                if (model.TId == 3 || model.TId == 4) return string.Empty;
                 switch (model.TId)
                 {
                     case 0://0为代码广告
                         ScriptAds script = new ScriptAds();
                         script = JsonConvert.DeserializeObject<ScriptAds>(model.Content);
-                        str.Append(script.content);
+                        str.Append(new ContentSanitizer().Sanitize(script?.content));
                         break;
                     case 1://1为文字广告
                         TextAds txt = new TextAds();
@@ -276,7 +278,7 @@ namespace COMCMS.Core
                         break;
                 }
             }
-            return str.ToString();
+            return new ContentSanitizer().Sanitize(str.ToString());
         }
         /// <summary>
         /// 获取图片广告

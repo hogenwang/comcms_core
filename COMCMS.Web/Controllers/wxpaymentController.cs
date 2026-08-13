@@ -25,6 +25,8 @@ namespace COMCMS.Web.Controllers
         /// 微信支付异步通知
         /// </summary>
         /// <returns></returns>
+        [HttpPost]
+        [ExternalWebhook]
         public IActionResult notify()
         {
             XTrace.WriteLine("微信支付异步通知开始：");

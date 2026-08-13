@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using COMCMS.Web.Models;
 using COMCMS.Common;
+using COMCMS.Common.Security;
 using COMCMS.Core;
 using XCode;
 using System.Text;
@@ -118,9 +119,9 @@ namespace COMCMS.Web.Controllers
                 return Json(tip);
             }
 
-            if (string.IsNullOrEmpty(password) || Utils.GetStringLength(password) < 5)
+            if (string.IsNullOrWhiteSpace(password) || password.Length < 12 || password.Length > 128)
             {
-                tip.Message = "登录密码不能为空或者长度小于5！";
+                tip.Message = "管理员密码长度必须为 12 到 128 个字符！";
                 return Json(tip);
             }
 
@@ -154,10 +155,12 @@ namespace COMCMS.Web.Controllers
             string sqlname = "comcms_sqlserver.sql";
             if (sqltype == "mysql")
             {
-                sqlname = "comcms_mysql.sql";
+                sqlname = string.Equals(mysqltype, "linux", StringComparison.OrdinalIgnoreCase)
+                    ? "comcms_mysql_linux.sql"
+                    : "comcms_mysql.sql";
             }
 
-            string sqlPath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}install{Path.DirectorySeparatorChar}";
+            string sqlPath = Path.GetFullPath(Path.Combine(_env.ContentRootPath, "..", "database", "install"));
             string sqlFullPath = Path.Combine(sqlPath, sqlname);
 
             if (!System.IO.File.Exists(sqlFullPath))
@@ -174,7 +177,7 @@ namespace COMCMS.Web.Controllers
             catch (Exception ex)
             {
                 NewLife.Log.XTrace.WriteException(ex);
-                tip.Message = "读取SQL文件时发生错误：" + ex.Message;
+                tip.Message = $"读取初始化数据失败，请使用 TraceId {HttpContext.TraceIdentifier} 联系管理员。";
                 return Json(tip);
             }
 
@@ -191,7 +194,7 @@ namespace COMCMS.Web.Controllers
             catch (Exception ex)
             {
                 NewLife.Log.XTrace.WriteException(ex);
-                tip.Message = "执行SQL时发生错误：" + ex.Message;
+                tip.Message = $"初始化数据库失败，请使用 TraceId {HttpContext.TraceIdentifier} 联系管理员。";
                 return Json(tip);
             }
 
@@ -208,27 +211,43 @@ namespace COMCMS.Web.Controllers
                 catch (Exception ex)
                 {
                     NewLife.Log.XTrace.WriteException(ex);
-                    tip.Message = "初始化配置时发生错误：" + ex.Message;
+                    tip.Message = $"初始化配置失败，请使用 TraceId {HttpContext.TraceIdentifier} 联系管理员。";
                     return Json(tip);
                 }
             }
 
             Admin admin = Admin.Find(Admin._.Id == 1);
-            if (admin != null)
+            try
             {
-                try
+                if (admin == null)
+                {
+                    admin = new Admin
+                    {
+                        UserName = username,
+                        RealName = username,
+                        UserLevel = 100,
+                        RoleId = 1,
+                        GroupId = 0,
+                        LastLoginTime = DateTime.Now,
+                        ThisLoginTime = DateTime.Now,
+                        LastLoginIP = Utils.GetIP(),
+                        ThisLoginIP = Utils.GetIP(),
+                        IsLock = 0
+                    };
+                }
+                else
                 {
                     admin.UserName = username;
-                    admin.Salt = Utils.GetRandomChar(10);
-                    admin.PassWord = Utils.MD5(admin.Salt + password);
-                    admin.Update();
                 }
-                catch (Exception ex)
-                {
-                    NewLife.Log.XTrace.WriteException(ex);
-                    tip.Message = "创建管理员账户时发生错误：" + ex.Message;
-                    return Json(tip);
-                }
+                admin.Salt = Utils.GetRandomChar(10);
+                admin.PassWord = PasswordHashService.HashPassword(password);
+                admin.Save();
+            }
+            catch (Exception ex)
+            {
+                NewLife.Log.XTrace.WriteException(ex);
+                tip.Message = "创建管理员账户时发生错误，请检查服务端日志。";
+                return Json(tip);
             }
 
 
@@ -240,7 +259,7 @@ namespace COMCMS.Web.Controllers
             catch (Exception ex)
             {
                 NewLife.Log.XTrace.WriteException(ex);
-                tip.Message = "创建安装锁文件时发生错误：" + ex.Message;
+                tip.Message = $"完成安装失败，请使用 TraceId {HttpContext.TraceIdentifier} 联系管理员。";
                 return Json(tip);
             }
 
@@ -552,33 +571,5 @@ namespace COMCMS.Web.Controllers
 
         #endregion
 
-        #region 测试
-
-        public IActionResult Test()
-        {
-            //至少八个字符，至少一个字母和一个数字
-            string rgx1 = @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,20}$";
-            bool t1 = Regex.IsMatch("123456a", rgx1);
-            bool t2 = Regex.IsMatch("123456aA", rgx1);
-            bool t3 = Regex.IsMatch("123458484635438日654646的手法4sd", rgx1);
-
-            //至少八个字符，至少一个字母，一个数字和一个特殊字符
-            string rgx2 = @"^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,20}$";
-            bool t4 = Regex.IsMatch("123456a", rgx2);
-            bool t5 = Regex.IsMatch("123456aA", rgx2);
-            bool t6 = Regex.IsMatch("123456vW@", rgx2);
-
-
-            string result = $"t1:{t1}; t2:{t2}; t3:{t3}; t4:{t4}; t5:{t5}; t6:{t6}";
-
-
-            _cacheProvider.Cache.Add("test", "test", 60);
-
-            string a = _cacheProvider.Cache.Get<string>("test");
-
-            return Content(result + ";cache:" + a);
-        }
-
-        #endregion
     }
 }

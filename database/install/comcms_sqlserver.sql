@@ -26,7 +26,7 @@ GO
 CREATE TABLE [dbo].[Admin] (
   [Id] int  IDENTITY(1,1) NOT NULL,
   [UserName] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
-  [PassWord] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NULL,
+  [PassWord] nvarchar(256) COLLATE Chinese_PRC_CI_AS  NULL,
   [Salt] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
   [RealName] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
   [Tel] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
@@ -160,14 +160,6 @@ GO
 -- ----------------------------
 -- Records of Admin
 -- ----------------------------
-SET IDENTITY_INSERT [dbo].[Admin] ON
-GO
-
-INSERT INTO [dbo].[Admin] ([Id], [UserName], [PassWord], [Salt], [RealName], [Tel], [Email], [UserLevel], [RoleId], [GroupId], [LastLoginTime], [LastLoginIP], [ThisLoginTime], [ThisLoginIP], [IsLock]) VALUES (N'1', N'admin', N'6671BCF861E8B2FA78BA7786EBC6D14C', N'n9FYh5Pztsba', N'admin', N'', N'', N'100', N'1', N'0', N'2020-04-26 16:35:43.000', N'127.0.0.1', N'2020-04-26 16:35:43.000', N'127.0.0.1', N'0')
-GO
-
-SET IDENTITY_INSERT [dbo].[Admin] OFF
-GO
 
 
 -- ----------------------------
@@ -182,7 +174,7 @@ CREATE TABLE [dbo].[AdminLog] (
   [UId] int DEFAULT ((0)) NOT NULL,
   [GUID] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NULL,
   [UserName] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
-  [PassWord] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NULL,
+  [PassWord] nvarchar(256) COLLATE Chinese_PRC_CI_AS  NULL,
   [LoginTime] datetime  NULL,
   [LoginIP] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
   [IsLoginOK] int DEFAULT ((0)) NOT NULL,
@@ -4908,7 +4900,7 @@ GO
 CREATE TABLE [dbo].[Member] (
   [Id] int  IDENTITY(1,1) NOT NULL,
   [UserName] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
-  [PassWord] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NULL,
+  [PassWord] nvarchar(256) COLLATE Chinese_PRC_CI_AS  NULL,
   [Salt] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
   [RealName] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
   [Tel] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
@@ -5773,7 +5765,7 @@ CREATE TABLE [dbo].[MemberLog] (
   [UId] int DEFAULT ((0)) NOT NULL,
   [GUID] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NULL,
   [UserName] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
-  [PassWord] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NULL,
+  [PassWord] nvarchar(256) COLLATE Chinese_PRC_CI_AS  NULL,
   [LoginTime] datetime  NULL,
   [LoginIP] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
   [IsLoginOK] int DEFAULT ((0)) NOT NULL,
@@ -9811,3 +9803,51 @@ WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW
 ON [PRIMARY]
 GO
 
+-- Authentication sessions and one-time tokens are intentionally created without seed data.
+CREATE TABLE [dbo].[AuthSession] (
+  [Id] int IDENTITY(1,1) NOT NULL CONSTRAINT [PK_AuthSession] PRIMARY KEY,
+  [SessionId] nvarchar(36) NOT NULL,
+  [SubjectType] nvarchar(20) NOT NULL,
+  [SubjectId] int NOT NULL,
+  [TokenFamily] nvarchar(36) NOT NULL,
+  [RefreshTokenHash] nvarchar(64) NULL,
+  [PreviousRefreshTokenHash] nvarchar(64) NULL,
+  [SecurityStamp] nvarchar(64) NOT NULL,
+  [DeviceName] nvarchar(100) NULL,
+  [CreatedUtc] datetime2 NOT NULL,
+  [ExpiresUtc] datetime2 NOT NULL,
+  [LastUsedUtc] datetime2 NOT NULL,
+  [RevokedUtc] datetime2 NOT NULL CONSTRAINT [DF_AuthSession_RevokedUtc] DEFAULT '1970-01-01T00:00:00',
+  [ReplacedBySessionId] nvarchar(36) NULL,
+  [IsRevoked] int NOT NULL CONSTRAINT [DF_AuthSession_IsRevoked] DEFAULT 0
+)
+GO
+CREATE UNIQUE INDEX [UX_AuthSession_SessionId] ON [dbo].[AuthSession]([SessionId])
+GO
+CREATE UNIQUE INDEX [UX_AuthSession_RefreshTokenHash] ON [dbo].[AuthSession]([RefreshTokenHash]) WHERE [RefreshTokenHash] IS NOT NULL
+GO
+CREATE INDEX [IX_AuthSession_PreviousRefreshTokenHash] ON [dbo].[AuthSession]([PreviousRefreshTokenHash]) WHERE [PreviousRefreshTokenHash] IS NOT NULL
+GO
+CREATE INDEX [IX_AuthSession_Subject] ON [dbo].[AuthSession]([SubjectType], [SubjectId], [IsRevoked])
+GO
+CREATE INDEX [IX_AuthSession_TokenFamily] ON [dbo].[AuthSession]([TokenFamily], [IsRevoked])
+GO
+
+CREATE TABLE [dbo].[AuthOneTimeToken] (
+  [Id] int IDENTITY(1,1) NOT NULL CONSTRAINT [PK_AuthOneTimeToken] PRIMARY KEY,
+  [TokenHash] nvarchar(64) NOT NULL,
+  [SubjectType] nvarchar(20) NOT NULL,
+  [SubjectId] int NOT NULL,
+  [Purpose] nvarchar(30) NOT NULL,
+  [CreatedUtc] datetime2 NOT NULL,
+  [ExpiresUtc] datetime2 NOT NULL,
+  [UsedUtc] datetime2 NOT NULL CONSTRAINT [DF_AuthOneTimeToken_UsedUtc] DEFAULT '1970-01-01T00:00:00',
+  [IsUsed] int NOT NULL CONSTRAINT [DF_AuthOneTimeToken_IsUsed] DEFAULT 0
+)
+GO
+CREATE UNIQUE INDEX [UX_AuthOneTimeToken_TokenHash] ON [dbo].[AuthOneTimeToken]([TokenHash])
+GO
+CREATE INDEX [IX_AuthOneTimeToken_Subject] ON [dbo].[AuthOneTimeToken]([SubjectType], [SubjectId], [Purpose], [IsUsed])
+GO
+CREATE INDEX [IX_AuthOneTimeToken_ExpiresUtc] ON [dbo].[AuthOneTimeToken]([ExpiresUtc])
+GO

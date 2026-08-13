@@ -10,6 +10,8 @@ using XCode;
 using Newtonsoft.Json;
 using COMCMS.Web.Common;
 using Microsoft.AspNetCore.Http;
+using COMCMS.Common.Security;
+using COMCMS.Web.Services;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -17,6 +19,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     [Description("文章系统管理，包括文章、文章栏目")]
     public class ArticleController : AdminBaseController
     {
+        private readonly IContentSanitizer _contentSanitizer;
+        private readonly RemoteImageService _remoteImages;
+
+        public ArticleController(IContentSanitizer contentSanitizer, RemoteImageService remoteImages)
+        {
+            _contentSanitizer = contentSanitizer;
+            _remoteImages = remoteImages;
+        }
         #region 文章栏目
         /// <summary>
         /// 文章栏目列表
@@ -515,7 +525,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         //执行添加文章
         [HttpPost]
         [MyAuthorize("add", "article", "JSON")]
-        public IActionResult AddArticle(Article model)
+        public async Task<IActionResult> AddArticle(Article model)
         {
             if (model.KId <= 0)
             {
@@ -575,9 +585,10 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             string content = model.Content;
             if(Request.Form["autoSaveRemoteImg"] == "1" && !string.IsNullOrEmpty(content))
             {
-                content = ThumbnailHelper.SaveRemoteImgForContent(content);
+                content = await _remoteImages.ImportAsync(content, HttpContext.RequestAborted);
                 model.Content = content;
             }
+            model.Content = _contentSanitizer.Sanitize(model.Content);
             model.ItemImg = morIMG;
             model.AuthorId = my.Id;
             model.Insert();
@@ -613,7 +624,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
         [HttpPost]
         [MyAuthorize("edit", "article", "JSON")]
-        public IActionResult EditArticle(Article model)
+        public async Task<IActionResult> EditArticle(Article model)
         {
 
             if (model.Id <= 0)
@@ -701,9 +712,10 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             string content = model.Content;
             if (Request.Form["autoSaveRemoteImg"] == "1" && !string.IsNullOrEmpty(content))
             {
-                content = ThumbnailHelper.SaveRemoteImgForContent(content);
+                content = await _remoteImages.ImportAsync(content, HttpContext.RequestAborted);
                 model.Content = content;
             }
+            model.Content = _contentSanitizer.Sanitize(model.Content);
 
 
             entity.AddTime = model.AddTime;

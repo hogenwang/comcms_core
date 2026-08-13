@@ -1,0 +1,154 @@
+:root {
+    --admin-login-primary: #1ab394;
+    --admin-login-primary-glow: rgba(26, 179, 148, 0.5);
+    --admin-login-bg: #0f1319;
+}
+
+.admin-login-page.gray-bg {
+    background: var(--admin-login-bg);
+    overflow: hidden;
+}
+
+.admin-login-page #canvas-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.admin-login-page .middle-box {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    margin: 50px auto auto auto;
+    max-width: 400px;
+    width: 100%;
+    float: none;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #e0e0e0;
+    position: relative;
+    z-index: 10;
+    top: 50px;
+}
+
+.admin-login-page .middle-box h3 {
+    color: #fff;
+    font-weight: 300;
+    margin-bottom: 30px;
+}
+
+.admin-login-page .middle-box .form-control {
+    background-color: transparent !important;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0;
+    color: #fff !important;
+    box-shadow: none;
+    padding-left: 0;
+    transition: all 0.3s ease;
+    height: 40px;
+}
+
+.admin-login-page .middle-box .form-control:focus {
+    border-bottom: 1px solid var(--admin-login-primary);
+    box-shadow: 0 1px 0 0 var(--admin-login-primary-glow);
+    color: #fff;
+}
+
+.admin-login-page .middle-box input:-webkit-autofill,
+.admin-login-page .middle-box input:-webkit-autofill:hover,
+.admin-login-page .middle-box input:-webkit-autofill:focus,
+.admin-login-page .middle-box input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #151a23 inset !important;
+    -webkit-text-fill-color: white !important;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.admin-login-page .middle-box .form-control::-webkit-input-placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.admin-login-page .middle-box .form-control:-moz-placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.admin-login-page .login-captcha-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 120px;
+    align-items: start;
+}
+
+.admin-login-page .login-captcha-row > .form-control {
+    grid-column: 1;
+    width: 100%;
+    min-width: 0;
+}
+
+.admin-login-page .login-captcha-addon {
+    grid-column: 2;
+    grid-row: 1;
+    width: 120px;
+    height: 40px;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0;
+}
+
+.admin-login-page .login-captcha-addon img {
+    display: block;
+    width: 120px;
+    height: 32px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.admin-login-page .login-captcha-row > label.error {
+    grid-column: 1 / -1;
+    box-sizing: border-box;
+    margin-left: 0;
+    padding-top: 5px;
+    color: #cc5965;
+    display: block;
+    text-align: left;
+}
+
+.admin-login-page .middle-box .btn-primary {
+    background-color: var(--admin-login-primary);
+    border-color: var(--admin-login-primary);
+    color: #fff;
+    font-weight: bold;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px var(--admin-login-primary-glow);
+    margin-top: 20px;
+}
+
+.admin-login-page .middle-box .btn-primary:hover,
+.admin-login-page .middle-box .btn-primary:active,
+.admin-login-page .middle-box .btn-primary:focus {
+    background-color: #15947a !important;
+    border-color: #15947a !important;
+    box-shadow: 0 6px 20px rgba(26, 179, 148, 0.8);
+    transform: translateY(-2px);
+}
+
+.admin-login-page .middle-box .text-muted {
+    color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Layer dialogs are appended directly to body, outside this scope. */
+.admin-login-page > .layui-layer,
+.admin-login-page > .layui-layer-shade {
+    font-family: Helvetica Neue, Helvetica, PingFang SC, Tahoma, Arial, sans-serif;
+}

@@ -7,9 +7,11 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.17.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.9" />
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="10.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="10.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.10" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
     <PackageReference Include="MimeKit" Version="4.17.0" />
@@ -21,7 +23,6 @@
     <PackageReference Include="Senparc.NeuChar" Version="2.6.2" />
     <PackageReference Include="Senparc.Weixin" Version="6.23.1" />
     <PackageReference Include="Senparc.Weixin.MP" Version="16.24.2" />
-    <PackageReference Include="Senparc.Weixin.MP.MvcExtension" Version="4.1.1" />
     <PackageReference Include="Senparc.Weixin.TenPay" Version="1.18.1" />
     <PackageReference Include="Senparc.Weixin.WxOpen" Version="3.26.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.9.1" />
@@ -390,7 +391,6 @@
     <None Include="wwwroot\editor\ckeditor\plugins\xml\plugin.js" />
     <None Include="wwwroot\editor\ckeditor\skins\moono-lisa\readme.md" />
     <None Include="wwwroot\editor\ckeditor\vendor\promise.js" />
-    <None Include="wwwroot\install\comcms_sqlserver.sql" />
     <None Include="wwwroot\js\my97\lang\en.js" />
     <None Include="wwwroot\js\my97\lang\zh-cn.js" />
     <None Include="wwwroot\js\my97\lang\zh-tw.js" />
@@ -399,6 +399,10 @@
   <ItemGroup>
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Update="appsettings.Development.local.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
 

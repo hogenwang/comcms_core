@@ -10,12 +10,22 @@ using XCode;
 using Newtonsoft.Json;
 using COMCMS.Web.Common;
 using Microsoft.AspNetCore.Http;
+using COMCMS.Common.Security;
+using COMCMS.Web.Services;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
     [DisplayName("商品")]
     public class ProductController : AdminBaseController
     {
+        private readonly IContentSanitizer _contentSanitizer;
+        private readonly RemoteImageService _remoteImages;
+
+        public ProductController(IContentSanitizer contentSanitizer, RemoteImageService remoteImages)
+        {
+            _contentSanitizer = contentSanitizer;
+            _remoteImages = remoteImages;
+        }
         #region 商品栏目
         /// <summary>
         /// 商品栏目列表
@@ -413,7 +423,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         //执行添加商品
         [HttpPost]
         [MyAuthorize("edit", "product", "JSON")]
-        public IActionResult AddProduct(Product model)
+        public async Task<IActionResult> AddProduct(Product model)
         {
             if (model.KId <= 0)
             {
@@ -469,9 +479,10 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             string content = model.Content;
             if (Request.Form["autoSaveRemoteImg"] == "1" && !string.IsNullOrEmpty(content))
             {
-                content = ThumbnailHelper.SaveRemoteImgForContent(content);
+                content = await _remoteImages.ImportAsync(content, HttpContext.RequestAborted);
                 model.Content = content;
             }
+            model.Content = _contentSanitizer.Sanitize(model.Content);
             model.ItemImg = morIMG;
             model.AuthorId = my.Id;
             model.Insert();
@@ -509,7 +520,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         //执行添加商品
         [HttpPost]
         [MyAuthorize("add", "product", "JSON")]
-        public IActionResult EditProduct(Product model)
+        public async Task<IActionResult> EditProduct(Product model)
         {
             if (model.Id <= 0)
             {
@@ -596,9 +607,10 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             string content = model.Content;
             if (Request.Form["autoSaveRemoteImg"] == "1" && !string.IsNullOrEmpty(content))
             {
-                content = ThumbnailHelper.SaveRemoteImgForContent(content);
+                content = await _remoteImages.ImportAsync(content, HttpContext.RequestAborted);
                 model.Content = content;
             }
+            model.Content = _contentSanitizer.Sanitize(model.Content);
             entity.SupportId = model.SupportId;
             entity.BannerImg = model.BannerImg;
             entity.BId = model.BId;

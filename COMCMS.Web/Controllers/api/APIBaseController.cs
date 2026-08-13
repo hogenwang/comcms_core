@@ -15,6 +15,7 @@ namespace COMCMS.Web.Controllers.api
     [Produces("application/json")]
     [Route("api/[controller]/[action]")]
     [WebAPIHandleError]
+    [IgnoreAntiforgeryToken]
     public class APIBaseController : Controller
     {
         public APIBaseController()
@@ -27,69 +28,6 @@ namespace COMCMS.Web.Controllers.api
         public ReJSON reJson = new ReJSON() { code = 40000 };
         #endregion
 
-        #region 验证签名
-        public bool CheckSignature(SortedDictionary<string, string> pars, string signature)
-        {
-            if (!MySign.CheckSign(pars, signature))
-            {
-                reJson.code = 40004;
-                reJson.message = "signature 错误！";
-                return false;
-            }
-            //判断是否超时
-            string timeStamp = pars["timeStamp"];
-            //判断时间有效性
-            DateTime postTime = Utils.StampToDateTime(timeStamp);
-            if (postTime < DateTime.UtcNow.AddSeconds(-120))//30秒有效期
-            {
-                reJson.code = 40004;
-                reJson.message = "数据请求超时！";
-                reJson.isReload = 1;
-                return false;
-            }
-            return true;
-        }
-
-        #endregion
-
-        #region 自动验证QueryString 的签名
-        /// <summary>
-        /// 自动验证QueryString 的签名
-        /// </summary>
-        /// <returns></returns>
-        public bool AutoCheckQueryStringSignature()
-        {
-            var queryStrings = Request.Query;
-            List<string> keys = new List<string>();
-            //string[] keys = HttpContext.Current.Request.QueryString.AllKeys;
-            if (queryStrings == null)
-            {
-                return false;
-            }
-            foreach (var item in queryStrings.Keys)
-            {
-                keys.Add(item);
-            }
-            SortedDictionary<string, string> pars = new SortedDictionary<string, string>();
-            string signature = "";
-            foreach (var k in keys)
-            {
-                if (k != "signature")
-                {
-                    string v = Request.Query[k];
-                    pars.Add(k, v);
-                }
-                else
-                {
-                    signature = Request.Query[k];
-                }
-            }
-            //没有签名返回错误
-            if (string.IsNullOrEmpty(signature))
-                return false;
-            return CheckSignature(pars, signature);
-        }
-        #endregion
     }
 
     #region 通用返回信息

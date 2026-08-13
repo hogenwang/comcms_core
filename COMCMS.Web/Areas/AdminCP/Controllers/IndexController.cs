@@ -27,14 +27,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             MachineInfo.RegisterAsync();
         }
         #region 后台首页
-        [AllowAnonymous]
         public IActionResult Index()
         {
-            if (!Core.Admin.IsAdminLogin())
-            {
-                return RedirectToAction("Index", "Login");
-            }
-
             Admin admin = Admin.GetMyInfo();
             ViewBag.admin = admin;
             //获取菜单

@@ -15,7 +15,7 @@ namespace WebTest
 {
     public class MyStartup : Startup
     {
-        public MyStartup(IConfiguration configuration) : base(configuration)
+        public MyStartup(IConfiguration configuration, IWebHostEnvironment environment) : base(configuration, environment)
         {
         }
     }

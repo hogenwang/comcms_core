@@ -187,26 +187,19 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
         /// </summary>
         /// <param name="requestMessage"></param>
         /// <returns></returns>
-        public override async Task<IResponseMessageBase> OnLocationRequestAsync(RequestMessageLocation requestMessage)
+        public override Task<IResponseMessageBase> OnLocationRequestAsync(RequestMessageLocation requestMessage)
         {
-            return await Task.Run(() =>
-            {
-                var locationService = new LocationService();
-                var responseMessage = locationService.GetResponseMessage(requestMessage as RequestMessageLocation);
-                return responseMessage;
-            });
+            var locationService = new LocationService();
+            return Task.FromResult<IResponseMessageBase>(locationService.GetResponseMessage(requestMessage));
 
         }
 
 
-        public override async Task<IResponseMessageBase> OnShortVideoRequestAsync(RequestMessageShortVideo requestMessage)
+        public override Task<IResponseMessageBase> OnShortVideoRequestAsync(RequestMessageShortVideo requestMessage)
         {
-            return await Task.Run(() =>
-            {
-                var responseMessage = this.CreateResponseMessage<ResponseMessageText>();
-                responseMessage.Content = "您刚才发送的是小视频";
-                return responseMessage;
-            });
+            var responseMessage = this.CreateResponseMessage<ResponseMessageText>();
+            responseMessage.Content = "您刚才发送的是小视频";
+            return Task.FromResult<IResponseMessageBase>(responseMessage);
 
         }
 
@@ -215,7 +208,7 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
         /// </summary>
         /// <param name="requestMessage"></param>
         /// <returns></returns>
-        public override async Task<IResponseMessageBase> OnImageRequestAsync(RequestMessageImage requestMessage)
+        public override Task<IResponseMessageBase> OnImageRequestAsync(RequestMessageImage requestMessage)
         {
             //一隔一返回News或Image格式
             if (base.GlobalMessageContext.GetMessageContext(requestMessage).RequestMessages.Count() % 2 == 0)
@@ -236,21 +229,13 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
                     PicUrl = requestMessage.PicUrl,
                     Url = "https://sdk.weixin.senparc.com"
                 });
-                return await Task.Run(() =>
-                {
-                    return responseMessage;
-                });
-                //return responseMessage;
+                return Task.FromResult<IResponseMessageBase>(responseMessage);
             }
             else
             {
                 var responseMessage = CreateResponseMessage<ResponseMessageImage>();
                 responseMessage.Image.MediaId = requestMessage.MediaId;
-                return await Task.Run(() =>
-                {
-                    return responseMessage;
-                });
-                //return responseMessage;
+                return Task.FromResult<IResponseMessageBase>(responseMessage);
             }
         }
 
@@ -264,8 +249,8 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
             var responseMessage = CreateResponseMessage<ResponseMessageMusic>();
             //上传缩略图
             //var accessToken = Containers.AccessTokenContainer.TryGetAccessToken(appId, appSecret);
-            var uploadResult = Senparc.Weixin.MP.AdvancedAPIs.MediaApi.UploadTemporaryMedia(appId, UploadMediaFileType.image,
-                                                         ServerUtility.ContentRootMapPath("~/Images/Logo.jpg"));
+            var uploadResult = await Senparc.Weixin.MP.AdvancedAPIs.MediaApi.UploadTemporaryMediaAsync(appId, UploadMediaFileType.image,
+                ServerUtility.ContentRootMapPath("~/Images/Logo.jpg"));
 
             //设置音乐信息
             responseMessage.Music.Title = "天籁之音";
@@ -277,16 +262,13 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
             //推送一条客服消息
             try
             {
-                CustomApi.SendText(appId, OpenId, "本次上传的音频MediaId：" + requestMessage.MediaId);
+                await CustomApi.SendTextAsync(appId, OpenId, "本次上传的音频MediaId：" + requestMessage.MediaId);
 
             }
             catch
             {
             }
-            return await Task.Run(() =>
-            {
-                return responseMessage;
-            });
+            return responseMessage;
 
         }
         /// <summary>
@@ -294,7 +276,7 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
         /// </summary>
         /// <param name="requestMessage"></param>
         /// <returns></returns>
-        public override async Task<IResponseMessageBase> OnVideoRequestAsync(RequestMessageVideo requestMessage)
+        public override Task<IResponseMessageBase> OnVideoRequestAsync(RequestMessageVideo requestMessage)
         {
             var responseMessage = CreateResponseMessage<ResponseMessageText>();
             responseMessage.Content = "您发送了一条视频信息，ID：" + requestMessage.MediaId;
@@ -325,10 +307,7 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
             //});
 
             #endregion
-            return await Task.Run(() =>
-            {
-                return responseMessage;
-            });
+            return Task.FromResult<IResponseMessageBase>(responseMessage);
         }
 
         /// <summary>
@@ -336,20 +315,17 @@ namespace COMCMS.API.Weixin.CustomMessageHandler
         /// </summary>
         /// <param name="requestMessage"></param>
         /// <returns></returns>
-        public override async Task<IResponseMessageBase> OnLinkRequestAsync(RequestMessageLink requestMessage)
+        public override Task<IResponseMessageBase> OnLinkRequestAsync(RequestMessageLink requestMessage)
         {
             var responseMessage = ResponseMessageBase.CreateFromRequestMessage<ResponseMessageText>(requestMessage);
             responseMessage.Content = string.Format(@"您发送了一条连接信息：
 Title：{0}
 Description:{1}
 Url:{2}", requestMessage.Title, requestMessage.Description, requestMessage.Url);
-            return await Task.Run(() =>
-            {
-                return responseMessage;
-            });
+            return Task.FromResult<IResponseMessageBase>(responseMessage);
         }
 
-        public override async Task<IResponseMessageBase> OnFileRequestAsync(RequestMessageFile requestMessage)
+        public override Task<IResponseMessageBase> OnFileRequestAsync(RequestMessageFile requestMessage)
         {
             var responseMessage = requestMessage.CreateResponseMessage<ResponseMessageText>();
             responseMessage.Content = string.Format(@"您发送了一个文件：
@@ -357,10 +333,7 @@ Url:{2}", requestMessage.Title, requestMessage.Description, requestMessage.Url);
 说明:{1}
 大小：{2}
 MD5:{3}", requestMessage.Title, requestMessage.Description, requestMessage.FileTotalLen, requestMessage.FileMd5);
-            return await Task.Run(() =>
-            {
-                return responseMessage;
-            });
+            return Task.FromResult<IResponseMessageBase>(responseMessage);
         }
 
         /// <summary>
@@ -375,7 +348,7 @@ MD5:{3}", requestMessage.Title, requestMessage.Description, requestMessage.FileT
             return eventResponseMessage;
         }
 
-        public override async Task<IResponseMessageBase> OnUnknownTypeRequestAsync(RequestMessageUnknownType requestMessage)
+        public override Task<IResponseMessageBase> OnUnknownTypeRequestAsync(RequestMessageUnknownType requestMessage)
         {
             /*
              * 此方法用于应急处理SDK没有提供的消息类型，
@@ -388,10 +361,7 @@ MD5:{3}", requestMessage.Title, requestMessage.Description, requestMessage.FileT
             XTrace.WriteLine("未知请求消息类型", requestMessage.RequestDocument.ToString());
             //WeixinTrace.SendCustomLog("未知请求消息类型", requestMessage.RequestDocument.ToString());//记录到日志中
 
-            return await Task.Run(() =>
-            {
-                return responseMessage;
-            });
+            return Task.FromResult<IResponseMessageBase>(responseMessage);
         }
 
     }

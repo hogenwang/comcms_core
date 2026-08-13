@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Hosting;
 using COMCMS.Core.Models;
 using Microsoft.Extensions.Options;
 using System.IO;
+using SkiaSharp;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -63,12 +65,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         [MyAuthorize("viewlist", "attach", "JSON")]
         public IActionResult GetFileList(string path)
         {
-            string basePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}";
-            string currentPath = basePath;
-            if (!string.IsNullOrEmpty(path))
-            {
-                currentPath = Path.Combine(basePath, path.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
-            }
+            if (!TryResolveAttachPath(path, out var currentPath))
+                return Json(new { code = 1, message = "非法路径" });
 
             if (!Directory.Exists(currentPath))
             {
@@ -124,12 +122,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             if (string.IsNullOrEmpty(name)) return Json(new { code = 1, message = "文件夹名称不能为空" });
             if (!IsSafeName(name)) return Json(new { code = 1, message = "文件夹名称包含非法字符" });
 
-            string basePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}";
-            string currentPath = basePath;
-            if (!string.IsNullOrEmpty(path))
-            {
-                currentPath = Path.Combine(basePath, path.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
-            }
+            if (!TryResolveAttachPath(path, out var currentPath))
+                return Json(new { code = 1, message = "非法路径" });
 
             string newDirPath = Path.Combine(currentPath, name);
             if (Directory.Exists(newDirPath))
@@ -144,7 +138,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { code = 1, message = "创建失败：" + ex.Message });
+                NewLife.Log.XTrace.WriteException(ex);
+                return Json(new { code = 1, message = "创建失败，请使用 TraceId 联系管理员。", traceId = HttpContext.TraceIdentifier });
             }
         }
         #endregion
@@ -156,11 +151,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         {
             if (string.IsNullOrEmpty(path)) return Json(new { code = 1, message = "路径不能为空" });
 
-            string basePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}";
-            string fullPath = Path.Combine(basePath, path.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
-
-            // 安全检查，防止删除基础目录以外的文件
-            if (!Path.GetFullPath(fullPath).StartsWith(Path.GetFullPath(basePath)))
+            if (!TryResolveAttachPath(path, out var fullPath, allowRoot: false))
             {
                 return Json(new { code = 1, message = "非法路径" });
             }
@@ -187,7 +178,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { code = 1, message = "删除失败：" + ex.Message });
+                NewLife.Log.XTrace.WriteException(ex);
+                return Json(new { code = 1, message = "删除失败，请使用 TraceId 联系管理员。", traceId = HttpContext.TraceIdentifier });
             }
         }
         #endregion
@@ -200,11 +192,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             if (string.IsNullOrEmpty(path) || string.IsNullOrEmpty(newName)) return Json(new { code = 1, message = "参数不能为空" });
             if (!IsSafeName(newName)) return Json(new { code = 1, message = "新名称包含非法字符" });
 
-            string basePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}";
-            string fullPath = Path.Combine(basePath, path.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
-
-            // 安全检查
-            if (!Path.GetFullPath(fullPath).StartsWith(Path.GetFullPath(basePath)))
+            if (!TryResolveAttachPath(path, out var fullPath, allowRoot: false))
             {
                 return Json(new { code = 1, message = "非法路径" });
             }
@@ -213,6 +201,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 string parentDir = Path.GetDirectoryName(fullPath);
                 string newFullPath = Path.Combine(parentDir, newName);
+                if (!TryResolveAttachPath(Path.GetRelativePath(GetAttachRoot(), newFullPath), out newFullPath, allowRoot: false))
+                    return Json(new { code = 1, message = "非法路径" });
 
                 if (isDir)
                 {
@@ -232,13 +222,15 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             catch (Exception ex)
             {
-                return Json(new { code = 1, message = "重命名失败：" + ex.Message });
+                NewLife.Log.XTrace.WriteException(ex);
+                return Json(new { code = 1, message = "重命名失败，请使用 TraceId 联系管理员。", traceId = HttpContext.TraceIdentifier });
             }
         }
         #endregion
 
         #region 上传文件
         [HttpPost]
+        [RequestSizeLimit(52_428_800)]
         [MyAuthorize("add", "attach", "JSON")]
         public async Task<IActionResult> UploadFile(string path)
         {
@@ -254,15 +246,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 return Json(new { code = 1, message = "请选择文件" });
             }
 
-            string basePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}";
-            string currentPath = basePath;
-            if (!string.IsNullOrEmpty(path))
-            {
-                currentPath = Path.Combine(basePath, path.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
-            }
-
-            // 安全检查：防止目录遍历
-            if (!Path.GetFullPath(currentPath).StartsWith(Path.GetFullPath(basePath)))
+            if (!TryResolveAttachPath(path, out var currentPath, allowRoot: false))
             {
                 return Json(new { code = 1, message = "非法路径" });
             }
@@ -277,9 +261,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             foreach (var file in files)
             {
-                string fileName = file.FileName;
+                string fileName = Path.GetFileName(file.FileName.Replace('\\', '/'));
                 // 安全检查：文件名
-                if (!IsSafeName(fileName))
+                if (!IsSafeName(fileName) || file.Length <= 0 || file.Length > 52_428_800)
                 {
                     msg += $"文件 {fileName} 名称非法; ";
                     continue;
@@ -293,6 +277,21 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     msg += $"文件 {fileName} 类型不允许; ";
                     continue;
                 }
+                if (!IsImage(ext))
+                {
+                    msg += $"文件 {fileName} 不是图片；普通附件必须通过私有附件上传器上传; ";
+                    continue;
+                }
+                if (IsImage(ext))
+                {
+                    using var imageStream = file.OpenReadStream();
+                    using var codec = SKCodec.Create(imageStream);
+                    if (codec == null)
+                    {
+                        msg += $"文件 {fileName} 不是有效图片; ";
+                        continue;
+                    }
+                }
 
                 string fullPath = Path.Combine(currentPath, fileName);
                 // 如果文件存在，重命名
@@ -305,7 +304,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
                 try
                 {
-                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    await using (var stream = new FileStream(fullPath, FileMode.CreateNew, FileAccess.Write, FileShare.None, 81920, true))
                     {
                         await file.CopyToAsync(stream);
                     }
@@ -313,7 +312,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 }
                 catch (Exception ex)
                 {
-                    msg += $"文件 {fileName} 上传失败: {ex.Message}; ";
+                    NewLife.Log.XTrace.WriteException(ex);
+                    msg += $"文件 {fileName} 上传失败; ";
                 }
             }
 
@@ -345,6 +345,30 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             // 允许字母、数字、下划线、中划线、点、中文
             return System.Text.RegularExpressions.Regex.IsMatch(str, @"^[\u4e00-\u9fa5a-zA-Z0-9_\-\.]+$");
         }
+
+        private string GetAttachRoot() => Path.GetFullPath(Path.Combine(_env.WebRootPath, attach.AttachPatch ?? string.Empty));
+
+        private bool TryResolveAttachPath(string relativePath, out string fullPath, bool allowRoot = true)
+        {
+            fullPath = null;
+            try
+            {
+                var root = GetAttachRoot();
+                var normalized = (relativePath ?? string.Empty).TrimStart('/', '\\').Replace('/', Path.DirectorySeparatorChar);
+                var candidate = Path.GetFullPath(Path.Combine(root, normalized));
+                var relative = Path.GetRelativePath(root, candidate);
+                if (Path.IsPathRooted(relative) || relative == ".." || relative.StartsWith(".." + Path.DirectorySeparatorChar, StringComparison.Ordinal))
+                    return false;
+                if (!allowRoot && string.Equals(candidate.TrimEnd(Path.DirectorySeparatorChar), root.TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase))
+                    return false;
+                fullPath = candidate;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
         #endregion
 
         #region 获取附件目录和所有子目录树
@@ -356,11 +380,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         public List<DirInfo> getAllAttach(string subdir)
         {
             List<DirInfo> list = new List<DirInfo>();
-            string basePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}";//基础目录
-            if (!string.IsNullOrEmpty(subdir))
-            {
-                basePath += subdir.Replace("/", Path.DirectorySeparatorChar.ToString());
-            }
+            if (!TryResolveAttachPath(subdir, out var basePath)) return list;
 
             if (!Directory.Exists(basePath)) return list;
 

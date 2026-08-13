@@ -12,16 +12,14 @@
     <link href="~/hplus/css/style.css" rel="stylesheet" />
     <link href="~/hplus/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/hplus/css/animate.min.css" rel="stylesheet" />
-    <link href="~/hplus/css/login.css" rel="stylesheet" />
+    <link href="~/hplus/css/login-scoped.css" rel="stylesheet" />
 
     <!--[if lt IE 8]>
     <meta http-equiv="refresh" content="0;Ie" />
     <![endif]-->
     <script>if (window.top !== window.self) { window.top.location = window.location; }</script>
-    <script src="~/js/des.js"></script>
-    <script>var encrypt_key = '@ViewBag.key';</script>
 </head>
-<body class="gray-bg">
+<body class="gray-bg admin-login-page">
     <canvas id="canvas-bg"></canvas>
     <div class="middle-box animated fadeInDown">
         <div>
@@ -38,11 +36,13 @@
                 </div>
                 @if (Utils.GetSetting("SystemSetting:AdminLoginWithCode") == "1")
                 {
-                    <div class="form-group input-group">
-                        <input type="text" name="code" id="code" class="form-control" placeholder="验证码" required="">
-                        <span class="input-group-addon" style="padding:0px;">
-                            <img src="~/VerifyCode/MixVerifyCode" onclick="this.src='/VerifyCode/MixVerifyCode?'+Math.random()" style="cursor:pointer;" />
-                        </span>
+                    <div class="form-group login-captcha-group">
+                        <div class="login-captcha-row">
+                            <input type="text" name="code" id="code" class="form-control" placeholder="验证码" required="">
+                            <span class="input-group-addon login-captcha-addon">
+                                <img src="~/VerifyCode/MixVerifyCode" onclick="this.src='/VerifyCode/MixVerifyCode?'+Math.random()" alt="验证码" />
+                            </span>
+                        </div>
                     </div>
                 }
                 <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
@@ -54,7 +54,7 @@
     </div>
     <!-- 全局js -->
     <environment names="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/js/jquery-3.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/validation/jquery.validate.js"></script>
         <script src="~/js/validation/messages_zh.js"></script>
@@ -63,7 +63,7 @@
         <script src="~/js/rtpost.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/js/jquery-3.min.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/validation/jquery.validate.min.js"></script>
         <script src="~/js/validation/messages_zh.min.js"></script>
@@ -76,7 +76,8 @@
             var rules = {
                 password: {
                     required: true,
-                    minlength: 5
+                    minlength: 5,
+                    maxlength: 128
                 }
             };
             DoAdminLogin("loginForm", rules);

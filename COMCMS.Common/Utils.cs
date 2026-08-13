@@ -63,22 +63,6 @@ namespace COMCMS.Common
             }
         }
 
-        /// <summary>
-        /// 与小程序验签的盐值
-        /// </summary>
-        public static string SIGNSALT
-        {
-            get
-            {
-                string strPrefixKey = Configuration["SystemSetting:SignSalt"];
-                if (string.IsNullOrEmpty(strPrefixKey))
-                {
-                    strPrefixKey = "comcms";
-                }
-                return strPrefixKey;
-            }
-        }
-
 
         /// <summary>
         /// 订单状态 "未确认", "已确认", "已完成", "已取消" 
@@ -595,7 +579,7 @@ namespace COMCMS.Common
         /// <returns></returns>
         public static string GetSetting(string path)
         {
-            string value = Configuration[path];
+            string value = Configuration?[path];
 
             return value;
         }
@@ -976,28 +960,10 @@ namespace COMCMS.Common
         /// <returns>用户IP地址</returns>
         public static string GetIP()
         {
-            string userHostAddress = MyHttpContext.Current.Request.HttpContext.Connection.RemoteIpAddress.ToString();
-            //2019-05-11 增加反向代理获取真实IP
-            string xForwardedForAddress = MyHttpContext.Current.Request.Headers["X-Forwarded-For"];
-            if (!string.IsNullOrEmpty(userHostAddress) && !string.IsNullOrEmpty(xForwardedForAddress) && userHostAddress != xForwardedForAddress)
-            {
-                if (xForwardedForAddress.IndexOf(",") > -1)
-                {
-                    string[] arrIP = xForwardedForAddress.Split(new string[] { "," }, StringSplitOptions.None);
-                    if (arrIP.Length > 1)
-                    {
-                        return arrIP[0].Trim();
-                    }
-                }
-                return xForwardedForAddress;
-            }
-            if (!string.IsNullOrEmpty(userHostAddress) && Utils.IsIP(userHostAddress))
-            {
-                if (userHostAddress == "::1")
-                    userHostAddress = "127.0.0.1";
-                return userHostAddress;
-            }
-            return "127.0.0.1";
+            var address = MyHttpContext.Current?.Connection?.RemoteIpAddress;
+            if (address == null) return "127.0.0.1";
+            if (System.Net.IPAddress.IsLoopback(address)) return "127.0.0.1";
+            return address.MapToIPv4().ToString();
         }
 
 
@@ -1229,26 +1195,6 @@ namespace COMCMS.Common
                 return str.Substring(0, str.LastIndexOf(strchar));
             }
             return str;
-        }
-
-        /// <summary>
-        /// HTTP GET方式请求数据.
-        /// </summary>
-        /// <param name="url">URL.</param>
-        /// <returns></returns>
-        public static string HttpGet(string url)
-        {
-            //使用webclient http get
-            string responseStr = null;
-            using (HttpClient client = new HttpClient())
-            {
-                var re = client.GetAsync(url).Result;
-                if (re.IsSuccessStatusCode)
-                {
-                    responseStr = re.Content.ReadAsStringAsync().Result;
-                }
-            }
-            return responseStr;
         }
 
         /// <summary>

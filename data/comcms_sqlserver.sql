@@ -26,7 +26,7 @@ GO
 CREATE TABLE [dbo].[Admin] (
   [Id] int  IDENTITY(1,1) NOT NULL,
   [UserName] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
-  [PassWord] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NULL,
+  [PassWord] nvarchar(256) COLLATE Chinese_PRC_CI_AS  NULL,
   [Salt] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
   [RealName] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
   [Tel] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
@@ -160,14 +160,6 @@ GO
 -- ----------------------------
 -- Records of Admin
 -- ----------------------------
-SET IDENTITY_INSERT [dbo].[Admin] ON
-GO
-
-INSERT INTO [dbo].[Admin] ([Id], [UserName], [PassWord], [Salt], [RealName], [Tel], [Email], [UserLevel], [RoleId], [GroupId], [LastLoginTime], [LastLoginIP], [ThisLoginTime], [ThisLoginIP], [IsLock]) VALUES (N'1', N'admin', N'6671BCF861E8B2FA78BA7786EBC6D14C', N'n9FYh5Pztsba', N'admin', N'', N'', N'100', N'1', N'0', N'2020-04-26 16:35:43.000', N'127.0.0.1', N'2020-04-26 16:35:43.000', N'127.0.0.1', N'0')
-GO
-
-SET IDENTITY_INSERT [dbo].[Admin] OFF
-GO
 
 
 -- ----------------------------
@@ -182,7 +174,7 @@ CREATE TABLE [dbo].[AdminLog] (
   [UId] int DEFAULT ((0)) NOT NULL,
   [GUID] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NULL,
   [UserName] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
-  [PassWord] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NULL,
+  [PassWord] nvarchar(256) COLLATE Chinese_PRC_CI_AS  NULL,
   [LoginTime] datetime  NULL,
   [LoginIP] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
   [IsLoginOK] int DEFAULT ((0)) NOT NULL,
@@ -4908,7 +4900,7 @@ GO
 CREATE TABLE [dbo].[Member] (
   [Id] int  IDENTITY(1,1) NOT NULL,
   [UserName] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
-  [PassWord] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NULL,
+  [PassWord] nvarchar(256) COLLATE Chinese_PRC_CI_AS  NULL,
   [Salt] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
   [RealName] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
   [Tel] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
@@ -5773,7 +5765,7 @@ CREATE TABLE [dbo].[MemberLog] (
   [UId] int DEFAULT ((0)) NOT NULL,
   [GUID] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NULL,
   [UserName] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
-  [PassWord] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NULL,
+  [PassWord] nvarchar(256) COLLATE Chinese_PRC_CI_AS  NULL,
   [LoginTime] datetime  NULL,
   [LoginIP] nvarchar(20) COLLATE Chinese_PRC_CI_AS  NULL,
   [IsLoginOK] int DEFAULT ((0)) NOT NULL,

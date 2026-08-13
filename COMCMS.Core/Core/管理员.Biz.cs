@@ -26,6 +26,7 @@ using COMCMS.Common;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using COMCMS.Common.Security;
 
 namespace COMCMS.Core
 {
@@ -58,30 +59,7 @@ namespace COMCMS.Core
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected override void InitData()
         {
-            // InitData一般用于当数据表没有数据时添加一些默认数据，该实体类的任何第一次数据库操作都会触发该方法，默认异步调用
-            if (Meta.Count > 0) return;
-
-            if (XTrace.Debug) XTrace.WriteLine("开始初始化Admin[管理员]数据……");
-
-            var entity = new Admin();
-            entity.UserName = "admin";
-
-            entity.Salt = Utils.GetRandomChar(12);
-            entity.PassWord = Utils.MD5(entity.Salt + "admin");
-            entity.RealName = "admin";
-            entity.Tel = "";
-            entity.Email = "";
-            entity.UserLevel = 100;
-            entity.RoleId = 1;
-            entity.GroupId = 0;
-            entity.LastLoginTime = DateTime.Now;
-            entity.LastLoginIP = "127.0.0.1";
-            entity.ThisLoginTime = DateTime.Now;
-            entity.ThisLoginIP = "127.0.0.1";
-            entity.IsLock = 0;
-            entity.Insert();
-
-            if (XTrace.Debug) XTrace.WriteLine("完成初始化Admin[管理员]数据！");
+            // Administrator provisioning is only allowed through the explicit installer.
         }
 
         ///// <summary>已重载。基类先调用Valid(true)验证数据，然后在事务保护内调用OnInsert</summary>
@@ -184,7 +162,7 @@ namespace COMCMS.Core
         {
             if (IsAdminLogin())
             {
-                return Find(_.UserName == SessionHelper.GetSession(sessionAdminNameKey).ToString());
+                return Find(_.Id == ComCmsClaimTypes.GetSubjectId(MyHttpContext.Current.User));
                 //return Find(_.UserName == AuthenticationHelper.GetClaim(sessionAdminNameKey));
 
             }
@@ -201,6 +179,12 @@ namespace COMCMS.Core
         /// <returns>是否登录成功</returns>
         public static bool AdminLogin(String userName, String passWord)
         {
+            return AdminLogin(userName, passWord, out var ignoredLoginLogId);
+        }
+
+        public static bool AdminLogin(String userName, String passWord, out string loginLogId)
+        {
+            loginLogId = null;
             if (string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(passWord))
                 return false;
 
@@ -210,7 +194,7 @@ namespace COMCMS.Core
             AdminLog log = new AdminLog();
             log.GUID = GUID.ToString();
             log.IsLoginOK = 0;
-            log.PassWord = passWord.Trim();
+            log.PassWord = "******";
             log.LoginIP = Utils.GetIP();
             log.LoginTime = DateTime.Now;
             log.UserName = userName.Trim();
@@ -224,7 +208,7 @@ namespace COMCMS.Core
             }
             else
             {
-                if (entity.PassWord != Utils.MD5(entity.Salt + passWord.Trim()))
+                if (entity.IsLock == 1 || !PasswordHashService.Verify(entity.PassWord, entity.Salt, passWord, out var upgradedHash))
                 {
                     log.Actions = "登录失败：密码错误。";
                     log.Insert();
@@ -232,16 +216,18 @@ namespace COMCMS.Core
                 }
                 else
                 {
+                    if (!string.IsNullOrEmpty(upgradedHash)) entity.PassWord = upgradedHash;
                     entity.LastLoginTime = DateTime.Now;
                     entity.Update();
                     //添加到记录
                     log.IsLoginOK = 1;
                     log.PassWord = "******";
                     log.Insert();
+                    loginLogId = GUID.ToString();
                     //写入Session 和 Cookies
                     //SessionHelper.WriteSession("rtadminguid", GUID.ToString());
                     //CookiesHelper.WriteCookie("rtadminguid", GUID.ToString(), 120);
-                    SetAdminInfo(entity.UserName, entity.PassWord, entity.Id, 0, "", GUID.ToString(), entity.Salt);
+                    // The web layer creates the encrypted ASP.NET Core authentication cookie.
                     //SetAdminInfoAsync(entity.UserName, entity.PassWord, entity.Id, 0, "", GUID.ToString(), entity.Salt).Wait();
 
                     return true;
@@ -255,124 +241,16 @@ namespace COMCMS.Core
         /// <returns>是否登录</returns>
         public static bool IsAdminLogin()
         {
-            string adminName = SessionHelper.GetSession(sessionAdminNameKey).ToString();//用户名
-            string adminID = SessionHelper.GetSession(sessionAdminIDKey).ToString();//ID
-            //string adminName = AuthenticationHelper.GetClaim(sessionAdminNameKey);//用户名
-            //string adminID = AuthenticationHelper.GetClaim(sessionAdminIDKey);//ID
-
-            //如果Session失效，则用Cookies判断
-            if (string.IsNullOrEmpty(adminName) || string.IsNullOrEmpty(adminID))
+            var principal = MyHttpContext.Current?.User;
+            if (principal?.Identity?.IsAuthenticated == true &&
+                string.Equals(principal.FindFirstValue(ComCmsClaimTypes.SubjectType), "admin", StringComparison.Ordinal))
             {
-                string cooAdminName = CookiesHelper.GetCookie(cookiesAdminNameKey);//用户名
-                string cooAdminID = CookiesHelper.GetCookie(cookiesAdminIDKey);//ID
-                string cooLoginInfo = CookiesHelper.GetCookie(cookiesAdminInfoKey);//信息
-                string cooAdminLogID = CookiesHelper.GetCookie(cookiesAdminLogIDKey);//日志GUID
-                //string cooAdminName = AuthenticationHelper.GetClaim(cookiesAdminNameKey);//用户名
-                //string cooAdminID = AuthenticationHelper.GetClaim(cookiesAdminIDKey);//ID
-                //string cooLoginInfo = AuthenticationHelper.GetClaim(cookiesAdminInfoKey);//信息
-                //string cooAdminLogID = AuthenticationHelper.GetClaim(cookiesAdminLogIDKey);//日志GUID
-
-                if (string.IsNullOrEmpty(cooAdminID) || string.IsNullOrEmpty(cooAdminName) || string.IsNullOrEmpty(cooLoginInfo) || string.IsNullOrEmpty(cooAdminLogID))
-                {
-                    return false;//信息不完整
-                }
-                else
-                {
-                    //全不为空则判断信息是否正确
-                    Admin model = Find(Admin._.UserName == Utils.SqlStr(cooAdminName));// FindByName(Utils.SqlStr(cooAdminName));
-                    if (model == null)
-                    {
-                        return false;//找不到管理员
-                    }
-                    else
-                    {
-                        if (Utils.MD5(model.UserName + model.PassWord + model.Salt + Utils.GetIP()) == cooLoginInfo)
-                        {
-                            //信息正确，重建session
-                            //获取日志ID
-                            if (AdminLog.FindByGUID(cooAdminLogID) == null)
-                            {
-                                //ClearInfo();//清除信息
-                                ClearInfoAsync().Wait();
-                                return false;//日志出错
-                            }
-
-                            //重新写入Session 和 Cookies
-                            SetAdminInfo(model.UserName, model.PassWord, model.Id, 0, "", cooAdminLogID, model.Salt);
-
-                            //SetAdminInfoAsync(model.UserName, model.PassWord, model.Id, 0, "", cooAdminLogID, model.Salt).Wait();
-
-                            return true;
-                        }
-                        else
-                        {
-                            ClearInfo();//清除信息
-                            //ClearInfoAsync().Wait();
-                            return false;//信息错误
-                        }
-                    }
-                }
+                var entity = Find(_.Id == ComCmsClaimTypes.GetSubjectId(principal));
+                if (entity == null || entity.IsLock == 1) return false;
+                var expectedStamp = SecurityStampService.Compute("admin", entity.Id, entity.PassWord, entity.RoleId, entity.IsLock);
+                return SecurityStampService.Equals(expectedStamp, principal.FindFirstValue(ComCmsClaimTypes.SecurityStamp));
             }
-            else
-            {
-                return true;//Session未失效，正确
-            }
-        }
-
-        /// <summary>
-        /// 设置管理员信息，写入Session 和Cookies
-        /// </summary>
-        /// <param name="adminName">管理员帐号</param>
-        /// <param name="adminPwd">管理员密码，经过加密后的</param>
-        /// <param name="adminID">管理员ID</param>
-        /// <param name="isSupperAdmin">是否是超级管理员</param>
-        /// <param name="adminPower">管理员管理权限</param>
-        /// <param name="adminLogID">后台日志ID</param>
-        /// <param name="adminSalt">加密盐</param>
-        public static void SetAdminInfo(string adminName, string adminPwd, int adminID, int isSupperAdmin, string adminPower, string adminLogID, string adminSalt)
-        {
-            //写入 session
-            SessionHelper.WriteSession(sessionAdminIDKey, adminID.ToString());
-            SessionHelper.WriteSession(sessionAdminNameKey, adminName);
-            SessionHelper.WriteSession(sessionAdminPowerKey, adminPower);
-            SessionHelper.WriteSession(sessionIsSupperAdminKey, isSupperAdmin.ToString());
-            SessionHelper.WriteSession(sessionAdminLogIDKey, adminLogID);
-
-            //写入cookie 
-            CookiesHelper.WriteCookie(cookiesAdminIDKey, adminID.ToString(), 120);
-            CookiesHelper.WriteCookie(cookiesAdminNameKey, adminName, 120);
-            //2016-6-01 增加IP加密信息，防止cookies被盗用
-            CookiesHelper.WriteCookie(cookiesAdminInfoKey, Utils.MD5(adminName + adminPwd + adminSalt + Utils.GetIP()), 120);
-            CookiesHelper.WriteCookie(sessionAdminLogIDKey, adminLogID, 120);
-        }
-
-        /// <summary>
-        /// 设置管理员信息，写入Session 和Cookies
-        /// </summary>
-        /// <param name="isSupperAdmin">是否是超级管理员</param>
-        /// <param name="adminPower">管理员管理权限</param>
-        /// <param name="adminLogID">后台日志ID</param>
-        public static async Task SetAdminInfoAsync(string adminName, string adminPwd, int adminID, int isSupperAdmin, string adminPower, string adminLogID, string adminSalt)
-        {
-            var expiresUtc = DateTimeOffset.Now.AddMinutes(60 * 2);
-
-            var claimsIdentity = new ClaimsIdentity(new[]
-            {
-                new Claim(sessionAdminIDKey, adminID.ToString()),
-                new Claim(sessionAdminNameKey, adminName),
-                new Claim(sessionAdminPowerKey, adminPower),
-                new Claim(sessionIsSupperAdminKey, isSupperAdmin.ToString()),
-                new Claim(sessionAdminLogIDKey, adminLogID),
-
-                new Claim(cookiesAdminIDKey, adminID.ToString()),
-                new Claim(cookiesAdminNameKey, adminName),
-                //2016-6-01 增加IP加密信息，防止cookies被盗用
-                new Claim(cookiesAdminInfoKey, Utils.MD5(adminName + adminPwd + adminSalt + Utils.GetIP())),
-            });
-
-            var genericPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-           await AuthenticationHelper.SignInAsync(genericPrincipal, expiresUtc);
+            return false;
         }
 
 
@@ -396,15 +274,6 @@ namespace COMCMS.Core
         }
 
         /// <summary>
-        /// 管理员退出登录，清除信息
-        /// </summary>
-        /// <returns></returns>
-        public static async Task ClearInfoAsync()
-        {
-            await AuthenticationHelper.SignOutAsync();
-        }
-
-        /// <summary>
         /// 写入日志
         /// </summary>
         /// <param name="action">动作</param>
@@ -412,7 +281,7 @@ namespace COMCMS.Core
         {
             if (IsAdminLogin())
             {
-                string adminLogId = SessionHelper.GetSession(sessionAdminLogIDKey).ToString();
+                string adminLogId = MyHttpContext.Current.User.FindFirstValue(ComCmsClaimTypes.LoginLogId);
                 //string adminLogId = AuthenticationHelper.GetClaim(sessionAdminLogIDKey);
                 if (string.IsNullOrEmpty(adminLogId))
                 {

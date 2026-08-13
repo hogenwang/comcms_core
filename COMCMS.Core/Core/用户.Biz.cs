@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Xml.Serialization;
 using COMCMS.Common;
+using COMCMS.Common.Security;
+using System.Security.Claims;
 using NewLife;
 using NewLife.Data;
 using NewLife.Log;
@@ -242,7 +244,7 @@ namespace COMCMS.Core
             MemberLog log = new MemberLog();
             log.GUID = GUID.ToString();
             log.IsLoginOK = 0;
-            log.PassWord = passWord.Trim();
+            log.PassWord = "******";
             log.LoginIP = Utils.GetIP();
             log.UId = 0;
             log.LoginTime = DateTime.Now;
@@ -277,7 +279,7 @@ namespace COMCMS.Core
             //}
             entity = Member.Find(Member._.UserName == userName);
 
-            if (entity != null && entity.PassWord == Utils.MD5(entity.Salt + passWord.Trim()))
+            if (entity != null && VerifyPassword(entity, passWord))
             {
                 entity.LoginCount += 1;
                 entity.LastLoginIP = entity.ThisLoginIP;
@@ -293,7 +295,6 @@ namespace COMCMS.Core
                 log.Actions = "用户登录成功。";
                 log.Insert();
 
-                SetUserInfo(entity.UserName, entity.PassWord, entity.Id, 60 * 2, entity.Salt, GUID.ToString());
                 flag = true;
             }
             else
@@ -304,6 +305,18 @@ namespace COMCMS.Core
             return flag;
         }
 
+        public static bool VerifyPassword(Member entity, string password)
+        {
+            if (entity == null || entity.IsLock == 1) return false;
+            if (!PasswordHashService.Verify(entity.PassWord, entity.Salt, password, out var upgradedHash)) return false;
+            if (!string.IsNullOrEmpty(upgradedHash))
+            {
+                entity.PassWord = upgradedHash;
+                entity.Update();
+            }
+            return true;
+        }
+
         /// <summary>
         /// 获取我的资料
         /// </summary>
@@ -312,8 +325,7 @@ namespace COMCMS.Core
         {
             if (IsMemberLogin())
             {
-                string uid = SessionHelper.GetSession(KEY_S_Uid).ToString();//ID
-                return Member.FindById(int.Parse(uid));
+                return Member.FindById(ComCmsClaimTypes.GetSubjectId(MyHttpContext.Current.User));
             }
             else
                 return null;
@@ -324,78 +336,16 @@ namespace COMCMS.Core
         /// <returns>是否登录</returns>
         public static bool IsMemberLogin()
         {
-            string username = SessionHelper.GetSession(KEY_S_UserName).ToString();//用户名
-            string uid = SessionHelper.GetSession(KEY_S_Uid).ToString();//ID
-            //使用Oauth 第三方登录
-            string oauth_access_token = SessionHelper.GetSession(KEY_OAUTH_ACCESS_TOKEN).ToString();
-            string oauth_openid = SessionHelper.GetSession(KEY_OAUTH_OPENID).ToString();
-
-            //如果Session失效，则用Cookies判断
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(uid))
+            var principal = MyHttpContext.Current?.User;
+            if (principal?.Identity?.IsAuthenticated == true &&
+                string.Equals(principal.FindFirstValue(ComCmsClaimTypes.SubjectType), "member", StringComparison.Ordinal))
             {
-                string cooUserName = CookiesHelper.GetCookie(KEY_C_UserName);//用户名
-                string cooUID = CookiesHelper.GetCookie(KEY_C_Uid);//ID
-                string cooLoginInfo = CookiesHelper.GetCookie(KEY_C_UserInfo);//信息
-                string cooLogID = CookiesHelper.GetCookie(KEY_C_LOGID);//日志GUID
-
-                if (string.IsNullOrEmpty(cooUID) || string.IsNullOrEmpty(cooUserName) || string.IsNullOrEmpty(cooLoginInfo))
-                {
-                    return false;//信息不完整
-                }
-                else
-                {
-                    //全不为空则判断信息是否正确
-                    Member model = Find(_.UserName, Utils.SqlStr(cooUserName));
-                    if (model == null)
-                    {
-                        return false;//
-                    }
-                    else
-                    {
-                        if (Utils.MD5(model.UserName + model.PassWord + model.Salt) == cooLoginInfo)
-                        {
-                            SetUserInfo(model.UserName, model.PassWord, model.Id, 60 * 2, model.Salt, cooLogID);
-                            return true;
-                        }
-                        else
-                        {
-                            ClearUserInfo();//清除用户信息
-                            return false;//信息错误
-                        }
-                    }
-                }
+                var entity = Member.FindById(ComCmsClaimTypes.GetSubjectId(principal));
+                if (entity == null || entity.IsLock == 1) return false;
+                var expectedStamp = SecurityStampService.Compute("member", entity.Id, entity.PassWord, entity.RoleId, entity.IsLock);
+                return SecurityStampService.Equals(expectedStamp, principal.FindFirstValue(ComCmsClaimTypes.SecurityStamp));
             }
-            else
-            {
-                return true;//Session未失效，正确
-            }
-
-        }
-
-        /// <summary>
-        /// 将用户信息写入Session 和Cookies 保存用户登录状态
-        /// </summary>
-        /// <param name="username">用户名</param>
-        /// <param name="password">密码（经过md5加密）</param>
-        /// <param name="uid">用户ID</param>
-        /// <param name="expiresMin">保存时间</param>
-        /// <param name="logguid">日志guid</param>
-        /// <param name="salt">盐</param>
-        public static void SetUserInfo(string username, string password, int uid, int expiresMin, string salt, string logguid)
-        {
-            //写入 session
-            SessionHelper.WriteSession(KEY_S_UserName, username);
-            SessionHelper.WriteSession(KEY_S_Uid, uid);
-            SessionHelper.WriteSession(KEY_C_LOGID, logguid);
-
-            //写入cookie 
-            CookiesHelper.WriteCookie(KEY_C_UserName, username, expiresMin);
-            CookiesHelper.WriteCookie(KEY_C_Uid, uid.ToString(), expiresMin);
-            CookiesHelper.WriteCookie(KEY_C_UserInfo, Utils.MD5(username + password), expiresMin);
-
-            //2016-6-01 增加IP加密信息，防止cookies被盗用
-            CookiesHelper.WriteCookie(KEY_C_UserInfo, Utils.MD5(username + password + salt), expiresMin);
-            CookiesHelper.WriteCookie(KEY_C_LOGID, logguid, 60 * 2);
+            return false;
         }
         /// <summary>
         /// 清空我的登录信息

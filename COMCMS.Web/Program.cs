@@ -20,6 +20,17 @@ namespace COMCMS.Web
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    if (!hostingContext.HostingEnvironment.IsDevelopment()) return;
+
+                    // Machine-local development settings never ship with the application.
+                    config.AddJsonFile("appsettings.Development.local.json", optional: true, reloadOnChange: true);
+
+                    // Preserve the standard precedence for deployment and test overrides.
+                    config.AddEnvironmentVariables();
+                    config.AddCommandLine(args);
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

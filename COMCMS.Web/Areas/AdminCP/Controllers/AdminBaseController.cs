@@ -6,10 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using COMCMS.Common;
 using COMCMS.Core;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Authorization;
+using COMCMS.Common.Security;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
     [Area("AdminCP")]
+    [Authorize(AuthenticationSchemes = AuthenticationSchemes.AdminCookie)]
+    [AutoValidateAntiforgeryToken]
     public class AdminBaseController : Controller
     {
         public JsonTip tip = new JsonTip();
@@ -18,17 +22,6 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         /// 如果没登录
         /// </summary>
         /// <param name="context"></param>
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            bool islogin = Admin.IsAdminLogin();
-            if (!islogin)
-            {
-                context.Result = new RedirectResult("/AdminCP/Login");
-                return;
-            }
-            base.OnActionExecuting(context);
-        }
-
         #region 获取验证第一条错误
         /// <summary>
         /// 获取服务端验证的第一条错误信息

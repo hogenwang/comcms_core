@@ -534,7 +534,7 @@ function doPostMessage() {
     var name = $("#name_txt").val();
     var phone = $("#phone_txt").val();
     var content = $("#content_txt").val();
-	var __RequestVerificationToken = $("intput[name='__RequestVerificationToken']").val();
+	var __RequestVerificationToken = $("input[name='__RequestVerificationToken']").first().val();
     if (!name) {
         alert('请输入您的姓名！');
         return false;

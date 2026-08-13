@@ -36,8 +36,8 @@ namespace COMCMS.Core
         /// <summary>密码</summary>
         [DisplayName("密码")]
         [Description("密码")]
-        [DataObjectField(false, false, true, 50)]
-        [BindColumn("PassWord", "密码", "nvarchar(50)")]
+        [DataObjectField(false, false, true, 256)]
+        [BindColumn("PassWord", "密码", "nvarchar(256)")]
         public String PassWord { get { return _PassWord; } set { if (OnPropertyChanging(__.PassWord, value)) { _PassWord = value; OnPropertyChanged(__.PassWord); } } }
 
         private String _Salt;

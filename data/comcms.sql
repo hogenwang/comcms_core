@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `admin`;
 CREATE TABLE `admin`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `UserName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `PassWord` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `PassWord` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `Salt` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '盐值',
   `RealName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `Tel` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '电话',
@@ -43,7 +43,6 @@ CREATE TABLE `admin`  (
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', 'A8D385D64F7578E5985E3FEDF0DC82C1', 'w0gOGhJB2a', 'admin', '', '', 100, 1, 0, '2026-01-06 10:10:23', '127.0.0.1', '2018-04-16 00:17:43', '127.0.0.1', 0);
 
 -- ----------------------------
 -- Table structure for adminmenu
@@ -719,7 +718,7 @@ DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '编号',
   `UserName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `PassWord` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `PassWord` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `Salt` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '盐值',
   `RealName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '姓名',
   `Tel` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '手机',
@@ -794,7 +793,7 @@ CREATE TABLE `memberlog`  (
   `UId` int(11) NOT NULL COMMENT '管理员ID',
   `GUID` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '唯一ID',
   `UserName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
-  `PassWord` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
+  `PassWord` varchar(256) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '密码',
   `LoginTime` datetime NULL DEFAULT NULL COMMENT '登录时间',
   `LoginIP` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '登录IP',
   `IsLoginOK` int(11) NOT NULL COMMENT '是否登录成功',
@@ -1015,7 +1014,7 @@ CREATE TABLE `otherconfig`  (
 -- Records of otherconfig
 -- ----------------------------
 INSERT INTO `otherconfig` VALUES (1, 'attach', '{\"SiteId\":0,\"AttachPatch\":\"userfiles\",\"SaveType\":0,\"IsCreateThum\":0,\"ThumQty\":80,\"ThumMaxWidth\":200,\"ThumMaxHeight\":200,\"IsWaterMark\":0,\"WaterMarkType\":0,\"WaterMarkMinWidth\":400,\"WaterMarkMinHeight\":400,\"WaterMarkImg\":null,\"WaterMarkText\":\"\",\"WaterMarkTextColor\":\"#0FF\",\"WaterMarkPlace\":9,\"WaterMarkQty\":80,\"WaterMarkDiaphaneity\":80,\"IsRandomFileName\":1,\"ImgMaxWidth\":1920,\"ImgMaxHeight\":2000}', '2018-04-18 20:36:55');
-INSERT INTO `otherconfig` VALUES (2, 'smtp', '{\"SiteId\":0,\"SmtpEmail\":\"poster@comcms.com\",\"SmtpHost\":\"redbull.mxrouting.net\",\"SmtpProt\":\"25\",\"SmtpEmailPwd\":\"1qaz@WSX\",\"PostUserName\":\"poster@comcms.com\",\"IsSSL\":0}', '2024-03-27 10:53:32');
+INSERT INTO `otherconfig` VALUES (2, 'smtp', '{\"SiteId\":0,\"SmtpEmail\":\"\",\"SmtpHost\":\"\",\"SmtpProt\":\"587\",\"SmtpEmailPwd\":\"\",\"PostUserName\":\"\",\"IsSSL\":1}', '2024-03-27 10:53:32');
 
 -- ----------------------------
 -- Table structure for product

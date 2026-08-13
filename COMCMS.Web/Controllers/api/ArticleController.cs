@@ -9,7 +9,6 @@ using COMCMS.Core;
 using COMCMS.Core.Models;
 using XCode;
 using System.Web;
-using COMCMS.Web.Filter;
 using NewLife.Log;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -28,9 +27,9 @@ namespace COMCMS.Web.Controllers.api
         /// <param name="page"></param>
         /// <returns></returns>
         [HttpGet]
-        [CheckFilter]
         public object GetArticleList(int kid, int pagesize = 10, int page = 1)
         {
+            pagesize = Math.Clamp(pagesize, 1, 100);
             var where = Article._.IsHide != 1;
             if (kid > 0)
                 where &= Article._.KId == kid;
@@ -81,9 +80,9 @@ namespace COMCMS.Web.Controllers.api
         /// <param name="page"></param>
         /// <returns></returns>
         [HttpGet]
-        [CheckFilter]
         public object GetArticleListWidthSub(int kid, int pagesize = 10, int page = 1, string key = "")
         {
+            pagesize = Math.Clamp(pagesize, 1, 100);
 
             var where = Article._.IsHide != 1;
             if (kid > 0)
@@ -152,7 +151,6 @@ namespace COMCMS.Web.Controllers.api
         /// <param name="signature"></param>
         /// <returns></returns>
         [HttpGet]
-        [CheckFilter]
         public object GetArticleDetail(int id)
         {
             //获取商品
@@ -165,13 +163,28 @@ namespace COMCMS.Web.Controllers.api
             }
             entity.Hits++;
             entity.Update();
-            return entity;
+            return new
+            {
+                id = entity.Id,
+                categoryId = entity.KId,
+                title = entity.Title,
+                subTitle = entity.SubTitle,
+                content = entity.Content,
+                description = entity.Description,
+                pic = entity.Pic,
+                banner = entity.BannerImg,
+                images = entity.ItemImg,
+                tags = entity.Tags,
+                origin = entity.Origin,
+                originUrl = entity.OriginURL,
+                hits = entity.Hits,
+                addTime = entity.AddTime
+            };
         }
         #endregion
 
         #region 获取文章栏目详情，并带下一级栏目
         [HttpGet]
-        [CheckFilter]
         public object GetArticleCategory(int id)
         {
             ArticleCategory entity = ArticleCategory.FindById(id);
@@ -198,7 +211,17 @@ namespace COMCMS.Web.Controllers.api
             }
             dynamic detail = new
             {
-                category = entity,
+                category = new
+                {
+                    id = entity.Id,
+                    parentId = entity.PId,
+                    kindName = entity.KindName,
+                    subTitle = entity.SubTitle,
+                    description = entity.Description,
+                    banner = entity.BannerImg,
+                    pic = entity.Pic,
+                    content = entity.KindInfo
+                },
                 sublist = reListSubs
             };
 

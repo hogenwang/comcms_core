@@ -17,6 +17,9 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using SkiaSharp;
+using Microsoft.AspNetCore.Mvc.Filters;
+using NewLife.Log;
+using COMCMS.Web.Services;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -43,16 +46,45 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     /// <summary>
     /// 后台上传文件帮助类
     /// </summary>
+    [RequestSizeLimit(52_428_800)]
     public class UploadController : AdminBaseController
     {
         private readonly SystemSetting _attachsetting;
         private IWebHostEnvironment _env;
         private AttachConfigEntity attach;
-        public UploadController(IWebHostEnvironment env, IOptions<SystemSetting> attachsetting)
+        private readonly PrivateFileStorage _privateFiles;
+        public UploadController(IWebHostEnvironment env, IOptions<SystemSetting> attachsetting, PrivateFileStorage privateFiles)
         {
             attach = Config.GetSystemConfig().AttachConfigEntity;
             _env = env;
             _attachsetting = attachsetting.Value;
+            _privateFiles = privateFiles;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            base.OnActionExecuting(context);
+            if (!Request.HasFormContentType) return;
+            foreach (var file in Request.Form.Files)
+            {
+                var fileName = Path.GetFileName(file.FileName.Replace('\\', '/'));
+                if (file.Length <= 0 || file.Length > 52_428_800 || string.IsNullOrWhiteSpace(fileName))
+                {
+                    context.HttpContext.Response.StatusCode = StatusCodes.Status413PayloadTooLarge;
+                    context.Result = new JsonResult(new { code = 413, message = "上传文件为空或超过 50 MiB。" });
+                    return;
+                }
+                if (Utils.IsImgFilename(fileName))
+                {
+                    using var stream = file.OpenReadStream();
+                    using var codec = SKCodec.Create(stream);
+                    if (codec == null)
+                    {
+                        context.Result = new BadRequestObjectResult(new { code = 400, message = "上传内容不是有效图片。" });
+                        return;
+                    }
+                }
+            }
         }
 
         #region CKEditor 上传图片
@@ -137,13 +169,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     Directory.CreateDirectory(thumbsFilePath);
                 if (data != null)
                 {
-                    await Task.Run(() =>
-                    {
-                        using (FileStream fs = new FileStream(fullpath, FileMode.Create))
-                        {
-                            data.CopyTo(fs);
-                        }
-                    });
+                    await using var fs = new FileStream(fullpath, FileMode.CreateNew, FileAccess.Write, FileShare.None, 81920, true);
+                    await data.CopyToAsync(fs);
                     //生成缩略图
                     if (attach.IsCreateThum == 1)
                     {
@@ -191,7 +218,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             catch (Exception ex)
             {
-                errorJson.error.message = "图片上传失败，" + ex.Message + "!";
+                XTrace.WriteException(ex);
+                errorJson.error.message = "图片上传失败，请使用 TraceId 联系管理员。";
                 return Json(errorJson);
                 //return Content(string.Format(tpl, "", callback, "图片上传失败：" + ex.Message), "text/html");
             }
@@ -249,9 +277,22 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             bool isImage = false;
             //判断是否是图片类型
             List<string> imgtypelist = new List<string> { "image/jpg", "image/png", "image/x-png", "image/gif", "image/bmp", "image/jpeg" };
-            if (imgtypelist.FindIndex(x => x == upload.ContentType) >= 0)
+            if (Utils.IsImgFilename(upload.FileName) && imgtypelist.FindIndex(x => x == upload.ContentType) >= 0)
             {
                 isImage = true;
+            }
+            if (!isImage)
+            {
+                try
+                {
+                    var stored = await _privateFiles.SaveAsync(upload, sFullExtension);
+                    return Json(new { fileName = stored.OriginalName, uploaded = 1, url = PrivateFileStorage.BuildUrl(stored) });
+                }
+                catch (InvalidDataException)
+                {
+                    errorJson.error.message = "该文件包含不允许的主动或可执行内容。";
+                    return Json(errorJson);
+                }
             }
             var data = Request.Form.Files["upload"];
             string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
@@ -300,13 +341,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     Directory.CreateDirectory(thumbsFilePath);
                 if (data != null)
                 {
-                    await Task.Run(() =>
-                    {
-                        using (FileStream fs = new FileStream(fullpath, FileMode.Create))
-                        {
-                            data.CopyTo(fs);
-                        }
-                    });
+                    await using var fs = new FileStream(fullpath, FileMode.CreateNew, FileAccess.Write, FileShare.None, 81920, true);
+                    await data.CopyToAsync(fs);
                     //生成缩略图
                     if (isImage && attach.IsCreateThum == 1)
                     {
@@ -354,7 +390,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             catch (Exception ex)
             {
-                errorJson.error.message = "文件上传失败：" + ex.Message;
+                XTrace.WriteException(ex);
+                errorJson.error.message = "文件上传失败，请使用 TraceId 联系管理员。";
                 return Json(errorJson);
                 //return Content(string.Format(tpl, "", callback, "文件上传失败：" + ex.Message), "text/html");
             }
@@ -620,13 +657,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                         Directory.CreateDirectory(thumbsFilePath);
                     if (data != null)
                     {
-                        await Task.Run(() =>
-                        {
-                            using (FileStream fs = new FileStream(fullpath, FileMode.Create))
-                            {
-                                data.CopyTo(fs);
-                            }
-                        });
+                        await using var fs = new FileStream(fullpath, FileMode.CreateNew, FileAccess.Write, FileShare.None, 81920, true);
+                        await data.CopyToAsync(fs);
                         //生成缩略图
                         if (attach.IsCreateThum == 1)
                         {
@@ -682,7 +714,8 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 }
                 catch (Exception ex)
                 {
-                    msg = "图片上传失败：" + ex.Message;
+                    XTrace.WriteException(ex);
+                    msg = "图片上传失败，请使用 TraceId 联系管理员。";
                 }
             }
             else
@@ -713,22 +746,6 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             var data = Request.Form.Files[0];
             if (data != null)
             {
-                string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
-                string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
-                //根据附件配置，设置上传图片目录
-                string imgPath = DateTime.Now.Year.ToString();//默认按年
-                switch (attach.SaveType)
-                {
-                    case 1://按月份
-                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}";
-                        break;
-                    case 2:
-                        imgPath = $"{DateTime.Now.Year.ToString()}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("MM")}{Path.DirectorySeparatorChar}{DateTime.Now.ToString("dd")}";
-                        break;
-                }
-                filepath += imgPath;//存放路径
-                thumbsFilePath += imgPath;//缩略图路径
-                string sFileNameNoExt = Utils.GetFileNameWithoutExtension(data.FileName);//文件名字，不带扩展名
                 string sFullExtension = Utils.GetFileExtName(data.FileName);//扩展名
 
                 //判断是否是允许文件扩展名
@@ -748,56 +765,23 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     return Content(JsonConvert.SerializeObject(new { status = status, msg = msg, name = name, path = path, thumb = thumb, size = size, ext = ext }), "text/plain");
                 }
 
-                //图片名字
-                string imgname = Utils.GetOrderNum() + Utils.GetFileExtName(data.FileName);
-
-                switch (attach.IsRandomFileName)
-                {
-                    case 0://不随机
-                        imgname = data.FileName;
-                        //判断是否存在
-                        if (System.IO.File.Exists(Path.Combine(filepath, imgname)))
-                        {
-                            imgname = sFileNameNoExt + "(1)" + sFullExtension;
-                        }
-                        break;
-                    case 1://随机字符串
-                        imgname = Utils.GetShortGUId() + sFullExtension;
-                        break;
-                    case 2://时间
-                        imgname = Utils.GetOrderNum() + sFullExtension;
-                        break;
-                }
-                string fullpath = Path.Combine(filepath, imgname);//图片
-                string fullThumbPath = Path.Combine(thumbsFilePath, imgname);//缩略图
                 try
                 {
-                    //判断路径
-                    if (!Directory.Exists(filepath))
-                        Directory.CreateDirectory(filepath);
-                    //缩略图路径
-                    if (!Directory.Exists(thumbsFilePath))
-                        Directory.CreateDirectory(thumbsFilePath);
-                    if (data != null)
-                    {
-                        await Task.Run(() =>
-                        {
-                            using (FileStream fs = new FileStream(fullpath, FileMode.Create))
-                            {
-                                data.CopyTo(fs);
-                            }
-                        });
-                    }
+                    var stored = await _privateFiles.SaveAsync(data, sFullExtension);
                     status = 1;
-                    name = imgname;
-                    path = $"/{attach.AttachPatch}/files/{imgPath.Replace("\\", "/")}/" + imgname;
-                    thumb = $"/{attach.AttachPatch}/_thumbs/files/{imgPath.Replace("\\", "/")}/" + imgname;
+                    name = stored.OriginalName;
+                    path = PrivateFileStorage.BuildUrl(stored);
                     ext = sFullExtension;
                     msg = "上传成功!";
                 }
+                catch (InvalidDataException)
+                {
+                    msg = "该文件包含不允许的主动或可执行内容。";
+                }
                 catch (Exception ex)
                 {
-                    msg = "图片上传失败：" + ex.Message;
+                    XTrace.WriteException(ex);
+                    msg = "文件上传失败，请使用 TraceId 联系管理员。";
                 }
             }
             else

@@ -6,6 +6,8 @@ using COMCMS.Web.Common;
 using COMCMS.Web.Controllers.api;
 using Lib.Core.MiddlewareExtension;
 using Microsoft.AspNetCore.Http;
+using NewLife.Log;
+using System.Text.Json;
 
 namespace COMCMS.Web.ExceptionHandler
 {
@@ -13,11 +15,17 @@ namespace COMCMS.Web.ExceptionHandler
     {
         public async Task ExceptionHandle(HttpContext context, Exception exception)
         {
-            string message = exception.Message;
-
-            ReJson error = new ReJson(message);
-            context.Response.ContentType = "text/json";
-            await context.Response.WriteAsync(error.ToJson());
+            XTrace.WriteException(exception);
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.ContentType = "application/problem+json";
+            var problem = new
+            {
+                type = "https://httpstatuses.com/500",
+                title = "服务器内部错误",
+                status = 500,
+                traceId = context.TraceIdentifier
+            };
+            await context.Response.WriteAsync(JsonSerializer.Serialize(problem));
         }
     }
 }

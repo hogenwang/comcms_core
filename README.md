@@ -4,6 +4,7 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 主要是演示了.net 10 一个系统后台如何搭建。前台如何使用。可以简单的完成一个企业站。通过二次开发，可以支持商城系统、小程序、app服务器端等...
 
 ### 更新日志
+- 2026-08-13 完成安全与认证第一轮加固：统一 Cookie/JWT 认证、密码渐进迁移、会话撤销、CSRF、防重放、上传和异常响应防护；移除旧 WebUploader 项目依赖并统一使用 jQuery 3
 - 2025-11-13 升级到.net 10
 - 2024-06-26 升级到.net 8 调整后台UI，精简js插件
 - 2022-11-23 升级到.net 7 和使用SkiaSharp 替换掉System.Drawing
@@ -38,11 +39,11 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 - Lib.Core 部分中间件
 
-- NewLife.UserGroup.WebUploader 大文件上传
+- WebUploader 前端组件提供大文件上传功能
 
-- WebTest 测试站点；暂时屏蔽
+- WebTest 已升级到 .NET 10，仅作为兼容性测试站点，不包含旧版 ASP.NET Core 2.2 依赖
 
-- data 目录是初始化sql ，目前是mysql，注意linux版本要还原comcms_for_linux.sql
+- `database/install` 是新安装基线 SQL，`database/migrations` 是现有数据库的版本化迁移；`data` 仅保留历史参考，不能用于新安装。
 
 ### 演示地址
 
@@ -50,8 +51,29 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 演示地址1（windows server 2016 + IIS）：前台：[前台演示地址](http://demo.comcms.com) 后台：[后台演示地址](http://demo.comcms.com/AdminCP)
 演示地址2（CentOS + Nginx）：前台：[前台演示地址](http://demo.comcms.cn) 后台：[后台演示地址](http://demo.comcms.cn/AdminCP)
 
-账号密码都是admin
+演示站点账号以站点公告为准。源码和新安装流程不会内置 `admin/admin` 默认管理员。
 ```
+
+### 安全与认证更新
+
+当前安全方案的代码实现完成度约为 85%（第一至第五阶段中可在现有宿主内落地的核心项已完成）。后台和同站会员网页使用 ASP.NET Core 加密 Cookie；移动端和独立 API 客户端使用短期 JWT，刷新令牌只保存哈希并支持轮换、重放检测、设备撤销和全量下线。密码新写入 PBKDF2，旧版 MD5 在成功登录后渐进升级；登录限流、账号锁定、CSRF、可信代理、ProblemDetails、上传路径和 SSRF 防护已接入。`COMCMS.SecurityTests` 当前包含 40 项安全回归测试。
+
+仓库配置不保存数据库、JWT、支付或微信密钥。开发机请创建被 `.gitignore` 忽略的 `COMCMS.Web/appsettings.Development.local.json`，例如：
+
+```json
+{
+  "connectionStrings": {
+    "dbconn": {
+      "connectionString": "Server=.;Port=3306;Database=comcms;Uid=root;Pwd=root;charset=utf8mb4",
+      "providerName": "MySql.Data.MySqlClient"
+    }
+  }
+}
+```
+
+生产环境必须通过环境变量或密钥服务配置 Redis、数据库、RSA JWT 密钥、可信代理和支付/微信/SMTP 凭据，并在上线前轮换历史已暴露值。生产启动会拒绝空 Redis、空 RSA 密钥和占位 `kid`；数据库迁移脚本位于 `database/migrations`，不会由应用自动改表。
+
+仍需单独排期的增强项：CKEditor 4 替换为受维护版本、CSP 从 Report-Only 切换为正式策略、结构化指标和告警、密码迁移窗口结束后的旧算法关闭，以及 MFA/OIDC/微信统一登录。旧 API 已限制分页并使用公开字段投影，后续可继续把匿名投影整理为共享强类型 DTO。
 
 
 ### 技术交流群

@@ -154,6 +154,11 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             StartTime = Convert.ToDateTime("2000-01-01");
             EndTime = Convert.ToDateTime("2999-01-01");
             #region 获取数据
+            if (model.TId == 3)
+            {
+                tip.Message = "Flash 广告已因安全原因禁用，请改用图片或视频。";
+                return Json(tip);
+            }
             switch (model.TId)
             {
                 case 0://代码
@@ -353,6 +358,11 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             EndTime = Convert.ToDateTime("2999-01-01");
 
             #region 获取数据
+            if (model.TId == 3)
+            {
+                tip.Message = "Flash 广告已因安全原因禁用，请改用图片或视频。";
+                return Json(tip);
+            }
             switch (model.TId)
             {
                 case 0://代码
