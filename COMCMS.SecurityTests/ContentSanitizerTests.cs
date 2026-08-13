@@ -28,5 +28,19 @@ namespace COMCMS.SecurityTests
             Assert.Contains(">link</a>", output);
             Assert.DoesNotContain("javascript:", output);
         }
+
+        [Fact]
+        public void LocalVideo_IsPreservedWithoutActiveAttributes()
+        {
+            const string input = "<video controls preload=\"metadata\" playsinline src=\"/media/2026/08/test.mp4\" onerror=\"alert(1)\"></video>";
+
+            var output = _sanitizer.Sanitize(input);
+
+            Assert.Contains("<video", output);
+            Assert.Contains("controls", output);
+            Assert.Contains("preload=\"metadata\"", output);
+            Assert.Contains("src=\"/media/2026/08/test.mp4\"", output);
+            Assert.DoesNotContain("onerror", output);
+        }
     }
 }

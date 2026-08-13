@@ -206,7 +206,7 @@
         DoPost("addArticleForm");
         //
         $("#TitleColor").colorpicker();
-        CKEDITOR.replace('Content');
+        COMCMSEditor.create('Content');
     })
 </script>
 @if (!string.IsNullOrEmpty(ViewBag.lastkid))

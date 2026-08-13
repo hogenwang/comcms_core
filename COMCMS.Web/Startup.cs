@@ -160,6 +160,7 @@ namespace COMCMS.Web
             services.AddScoped<PasswordRecoveryService>();
             services.AddScoped<RemoteImageService>();
             services.AddSingleton<PrivateFileStorage>();
+            services.AddSingleton<PublicMediaStorage>();
             services.AddSingleton<PaymentIdempotencyService>();
             services.AddSingleton<LoginAttemptService>();
             services.AddSingleton<IContentSanitizer, ContentSanitizer>();

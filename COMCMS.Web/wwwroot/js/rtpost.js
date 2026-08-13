@@ -12,6 +12,7 @@ function DoPost(formId, rules, messages) {
     }
     //alert(queryString);
     var v = $myform.validate({
+        ignore: ":hidden, .jodit-wysiwyg",
         rules: rules,
         messages: messages,
         submitHandler: function (form) {
@@ -22,11 +23,8 @@ function DoPost(formId, rules, messages) {
 
             btn.attr("disabled", "disabled");
             //执行loadding 并且ajax提交
-            //如果是有CKEditor的话，需要update，否则取不到值
-            if (window.CKEDITOR) {
-                for (instance in CKEDITOR.instances)
-                    CKEDITOR.instances[instance].updateElement();
-            }
+            // 富文本编辑器需要先把内容同步回 textarea，再序列化表单。
+            if (window.COMCMSEditor) window.COMCMSEditor.syncAll();
             var queryString = $myform.formSerialize();
             $.ajax({
                 type: "POST",

@@ -14,6 +14,7 @@
     <link href="~/js/webuploader/webuploader.css" rel="stylesheet" />
     <link href="~/js/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
     <link href="~/js/jstree/themes/default/style.min.css" rel="stylesheet" />
+    <link href="~/editor/jodit/jodit.min.css" rel="stylesheet" asp-append-version="true" />
     <script src="~/js/my97/WdatePicker.js"></script>
 	<script src="~/js/jquery-3.min.js"></script>
     <environment names="Development">
@@ -33,7 +34,6 @@
         <script src="~/hplus/js/plugins/iCheck/icheck.min.js"></script>
         <script src="~/js/webuploader/webuploader.min.js"></script>
         <script src="~/js/uploader.js"></script>
-        <script src="~/editor/ckeditor/ckeditor.js" asp-append-version="true"></script>
         <script src="~/js/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
         <script src="~/js/jstree/jstree.min.js"></script>
     </environment>
@@ -53,10 +53,11 @@
         <script src="~/hplus/js/plugins/iCheck/icheck.min.js"></script>
         <script src="~/js/webuploader/webuploader.min.js"></script>
         <script src="~/js/uploader.js"></script>
-        <script src="~/editor/ckeditor/ckeditor.js"></script>
         <script src="~/js/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
         <script src="~/js/jstree/jstree.min.js"></script>
     </environment>
+    <script src="~/editor/jodit/jodit.min.js" asp-append-version="true"></script>
+    <script src="~/editor/jodit/comcms-editor.js" asp-append-version="true"></script>
 </head>
 <body class="gray-bg">
     @Html.AntiForgeryToken()
@@ -65,7 +66,7 @@
         $.ajaxSetup({
             headers: { "RequestVerificationToken": $("input[name='__RequestVerificationToken']").first().val() }
         });
-        var index = parent.layer.getFrameIndex(window.name);
+        var index = window.name ? parent.layer.getFrameIndex(window.name) : null;
         function closethisdialog() {
             parent.layer.close(index);
         }

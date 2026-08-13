@@ -23,7 +23,7 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 - ORM:数据库操作使用XCode，目前支持mysql、sqlserver。详细见：https://github.com/NewLifeX/X
 - 据库驱动使用：MySQL官方驱动，9.5
 - 后台模板是H+
-- 编辑器采用CKeditor 支持截图粘贴进去，上传图片采用webuploader
+- 富文本编辑器采用自托管 Jodit 4，支持截图粘贴、图片拖拽上传、附件上传和 MP4/WebM/Ogg 视频上传；其他图片字段继续使用 WebUploader
 
 ### 文件夹介绍
 
@@ -73,7 +73,7 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 生产环境必须通过环境变量或密钥服务配置 Redis、数据库、RSA JWT 密钥、可信代理和支付/微信/SMTP 凭据，并在上线前轮换历史已暴露值。生产启动会拒绝空 Redis、空 RSA 密钥和占位 `kid`；数据库迁移脚本位于 `database/migrations`，不会由应用自动改表。
 
-仍需单独排期的增强项：CKEditor 4 替换为受维护版本、CSP 从 Report-Only 切换为正式策略、结构化指标和告警、密码迁移窗口结束后的旧算法关闭，以及 MFA/OIDC/微信统一登录。旧 API 已限制分页并使用公开字段投影，后续可继续把匿名投影整理为共享强类型 DTO。
+仍需单独排期的增强项：CSP 从 Report-Only 切换为正式策略、结构化指标和告警、密码迁移窗口结束后的旧算法关闭，以及 MFA/OIDC/微信统一登录。旧 API 已限制分页并使用公开字段投影，后续可继续把匿名投影整理为共享强类型 DTO。
 
 
 ### 技术交流群

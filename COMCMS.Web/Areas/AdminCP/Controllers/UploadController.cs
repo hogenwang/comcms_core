@@ -23,42 +23,30 @@ using COMCMS.Web.Services;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
-    #region CKEditor错误返回实体类
-    /// <summary>
-    /// CKEditor错误返回实体类
-    /// </summary>
-    public class CKFileUploadError
-    {
-        public CKFileUploadErrorMessage error { get; set; } = new CKFileUploadErrorMessage();
-    }
-    public class CKFileUploadErrorMessage
-    {
-        /// <summary>
-        /// 错误代码
-        /// </summary>
-        public int number { get; set; } = 100;
-        /// <summary>
-        /// 错误信息
-        /// </summary>
-        public string message { get; set; }
-    }
-    #endregion
     /// <summary>
     /// 后台上传文件帮助类
     /// </summary>
-    [RequestSizeLimit(52_428_800)]
+    [RequestSizeLimit(54_525_952)]
+    [RequestFormLimits(MultipartBodyLengthLimit = 54_525_952)]
     public class UploadController : AdminBaseController
     {
         private readonly SystemSetting _attachsetting;
         private IWebHostEnvironment _env;
         private AttachConfigEntity attach;
         private readonly PrivateFileStorage _privateFiles;
-        public UploadController(IWebHostEnvironment env, IOptions<SystemSetting> attachsetting, PrivateFileStorage privateFiles)
+        private readonly PublicMediaStorage _publicMedia;
+
+        public UploadController(
+            IWebHostEnvironment env,
+            IOptions<SystemSetting> attachsetting,
+            PrivateFileStorage privateFiles,
+            PublicMediaStorage publicMedia)
         {
             attach = Config.GetSystemConfig().AttachConfigEntity;
             _env = env;
             _attachsetting = attachsetting.Value;
             _privateFiles = privateFiles;
+            _publicMedia = publicMedia;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -87,38 +75,29 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
         }
 
-        #region CKEditor 上传图片
+        #region Jodit 上传图片
         /// <summary>
-        /// ckeditor 上传图片
+        /// Jodit 上传图片
         /// </summary>
-        /// <returns></returns>
-        public async Task<IActionResult> CKUploadImage()
+        [HttpPost]
+        public async Task<IActionResult> JoditUploadImage()
         {
-
-            string callback = Request.Query["CKEditorFuncNum"];//要求返回值
-            var upload = Request.Form.Files[0];
-            //string tpl = "<script type=\"text/javascript\">window.parent.CKEDITOR.tools.callFunction(\"{1}\", \"{0}\", \"{2}\");</script>";
-            CKFileUploadError errorJson = new CKFileUploadError();
+            var upload = Request.Form.Files.FirstOrDefault();
             if (upload == null)
             {
-
-                errorJson.error.message = "请选择一张图片!";
-                return Json(errorJson);
+                return JoditError("请选择一张图片！");
             }
             //判断是否是图片类型
             List<string> imgtypelist = new List<string> { "image/jpg", "image/png", "image/x-png", "image/gif", "image/bmp", "image/jpeg" };
             if (imgtypelist.FindIndex(x => x == upload.ContentType) == -1)
             {
-                errorJson.error.message = "请选择一张图片!";
-                return Json(errorJson);
-                //return Content(string.Format(tpl, "", callback, "请上传一张图片！"), "text/html");
+                return JoditError("请选择一张图片！");
             }
             if (!Utils.IsImgFilename(upload.FileName))
             {
-                errorJson.error.message = "请选择一张图片!";
-                return Json(errorJson);
+                return JoditError("请选择一张图片！");
             }
-            var data = Request.Form.Files["upload"];
+            var data = upload;
             string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
             string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}images{Path.DirectorySeparatorChar}";
 
@@ -219,42 +198,27 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             catch (Exception ex)
             {
                 XTrace.WriteException(ex);
-                errorJson.error.message = "图片上传失败，请使用 TraceId 联系管理员。";
-                return Json(errorJson);
-                //return Content(string.Format(tpl, "", callback, "图片上传失败：" + ex.Message), "text/html");
+                return JoditError("图片上传失败，请使用 TraceId 联系管理员。");
             }
-            dynamic successJson = new
-            {
-                fileName = imgname,
-                uploaded = 1,
-                url = $"/{attach.AttachPatch}/images/{imgPath.Replace("\\", "/")}/" + imgname
-            };
-            return Json(successJson);
-            //{"fileName":"20180413145904.png","uploaded":1,"url":"\/userfiles\/files\/Public%20Folder\/20180413145904.png"}
-            //return Content(string.Format(tpl, $"/{attach.AttachPatch}/images/{imgPath.Replace("\\", "/")}/" + imgname, callback, ""), "text/html");
+            var url = $"/{attach.AttachPatch}/images/{imgPath.Replace("\\", "/")}/{imgname}";
+            return JoditSuccess(url, true);
         }
         #endregion
 
-        #region CKEditor 上传文件
-        public async Task<IActionResult> CKUploadFile()
+        #region Jodit 上传文件
+        [HttpPost]
+        public async Task<IActionResult> JoditUploadFile()
         {
-            string callback = Request.Query["CKEditorFuncNum"];//要求返回值
-            var upload = Request.Form.Files[0];
-            //string tpl = "<script type=\"text/javascript\">window.parent.CKEDITOR.tools.callFunction(\"{1}\", \"{0}\", \"{2}\");</script>";
-            CKFileUploadError errorJson = new CKFileUploadError();
+            var upload = Request.Form.Files.FirstOrDefault();
             if (upload == null)
             {
-                errorJson.error.message = "请选择一个文件！";
-                return Json(errorJson);
+                return JoditError("请选择一个文件！");
             }
-            //return Content(string.Format(tpl, "", callback, "请选择一个文件！"), "text/html");
             string sFileNameNoExt = Utils.GetFileNameWithoutExtension(upload.FileName);//文件名字，不带扩展名
             string sFullExtension = Utils.GetFileExtName(upload.FileName);//扩展名
             if (string.IsNullOrEmpty(sFullExtension))
             {
-                errorJson.error.message = "错误的文件类型！";
-                return Json(errorJson);
-                //return Content(string.Format(tpl, "", callback, $"错误的文件类型！"), "text/html");
+                return JoditError("错误的文件类型！");
             }
             //判断是否是允许文件扩展名
             string sAllowedExtensions = _attachsetting.FileAllowedExtensions;
@@ -269,9 +233,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
             if (listAllowedExtensions.Find(x => x == sFullExtension.ToLower().Replace(".", "")) == null)
             {
-                errorJson.error.message = $"{sFullExtension}的文件类型，不允许上传！";
-                return Json(errorJson);
-                //return Content(string.Format(tpl, "", callback, $"{sFullExtension}的文件类型，不允许上传！"), "text/html");
+                return JoditError($"{sFullExtension} 的文件类型不允许上传！");
             }
             //判断是否是图片，如果是图片，后面需要生成缩略图并可能的话，就加上水印
             bool isImage = false;
@@ -286,15 +248,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 try
                 {
                     var stored = await _privateFiles.SaveAsync(upload, sFullExtension);
-                    return Json(new { fileName = stored.OriginalName, uploaded = 1, url = PrivateFileStorage.BuildUrl(stored) });
+                    return JoditSuccess(PrivateFileStorage.BuildUrl(stored), false);
                 }
                 catch (InvalidDataException)
                 {
-                    errorJson.error.message = "该文件包含不允许的主动或可执行内容。";
-                    return Json(errorJson);
+                    return JoditError("该文件包含不允许的主动或可执行内容。");
                 }
             }
-            var data = Request.Form.Files["upload"];
+            var data = upload;
             string filepath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
             string thumbsFilePath = $"{_env.WebRootPath}{Path.DirectorySeparatorChar}{attach.AttachPatch}{Path.DirectorySeparatorChar}_thumbs{Path.DirectorySeparatorChar}files{Path.DirectorySeparatorChar}";
             //根据附件配置，设置上传图片目录
@@ -391,25 +352,63 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             catch (Exception ex)
             {
                 XTrace.WriteException(ex);
-                errorJson.error.message = "文件上传失败，请使用 TraceId 联系管理员。";
-                return Json(errorJson);
-                //return Content(string.Format(tpl, "", callback, "文件上传失败：" + ex.Message), "text/html");
+                return JoditError("文件上传失败，请使用 TraceId 联系管理员。");
             }
-            dynamic successJson = new
-            {
-                fileName = imgname,
-                uploaded = 1,
-                url = $"/{attach.AttachPatch}/files/{imgPath.Replace("\\", "/")}/" + imgname
-            };
-            return Json(successJson);
-            //return Content(string.Format(tpl, $"/{attach.AttachPatch}/fales/{imgPath.Replace("\\", "/")}/" + imgname, callback, ""), "text/html");
+            var url = $"/{attach.AttachPatch}/files/{imgPath.Replace("\\", "/")}/{imgname}";
+            return JoditSuccess(url, true);
 
         }
         #endregion
 
-        #region CKEditor 上传多媒体
+        #region Jodit 上传视频
+        [HttpPost]
+        public async Task<IActionResult> JoditUploadVideo()
+        {
+            var upload = Request.Form.Files.FirstOrDefault();
+            if (upload == null) return JoditError("请选择一个视频！");
 
+            try
+            {
+                var stored = await _publicMedia.SaveVideoAsync(upload);
+                return JoditSuccess(PublicMediaStorage.BuildUrl(stored), false);
+            }
+            catch (InvalidDataException ex)
+            {
+                return JoditError(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                XTrace.WriteException(ex);
+                return JoditError("视频上传失败，请使用 TraceId 联系管理员。");
+            }
+        }
         #endregion
+
+        private JsonResult JoditSuccess(string url, bool isImage) => Json(new
+        {
+            success = true,
+            data = new
+            {
+                files = new[] { url },
+                isImages = new[] { isImage },
+                path = string.Empty,
+                baseurl = string.Empty,
+                messages = Array.Empty<string>()
+            }
+        });
+
+        private JsonResult JoditError(string message) => Json(new
+        {
+            success = false,
+            data = new
+            {
+                files = Array.Empty<string>(),
+                isImages = Array.Empty<bool>(),
+                path = string.Empty,
+                baseurl = string.Empty,
+                messages = new[] { message }
+            }
+        });
 
         #region Webuploader 上传图片
         //public IActionResult WUUploadImage()

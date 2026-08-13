@@ -179,7 +179,7 @@
     $(function () {
         $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp", notwater: true });
         DoPost("editArticleKindForm");
-        CKEDITOR.replace('KindInfo');
+        COMCMSEditor.create('KindInfo');
     });
     function aoutoTransform() {
         var title = $("#KindName").val();

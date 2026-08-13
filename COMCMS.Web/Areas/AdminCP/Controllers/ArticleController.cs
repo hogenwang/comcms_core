@@ -156,6 +156,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 }
             }
 
+            model.KindInfo = _contentSanitizer.Sanitize(model.KindInfo);
             model.Insert();
             Core.Admin.WriteLogActions("添加文章栏目(id:" + model.Id + ");");
             tip.Status = JsonTip.SUCCESS;
@@ -291,7 +292,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.IsShowSubDetail = model.IsShowSubDetail;
             entity.BannerImg = model.BannerImg;
             entity.Pic = model.Pic;
-            entity.KindInfo = model.KindInfo;
+            entity.KindInfo = _contentSanitizer.Sanitize(model.KindInfo);
             entity.KindDomain = model.KindDomain;
             entity.Rank = model.Rank;
             entity.Pic = model.Pic;
