@@ -2,6 +2,7 @@ using System;
 using COMCMS.Common;
 using COMCMS.Common.Security;
 using Xunit;
+using Microsoft.Extensions.Configuration;
 
 namespace COMCMS.SecurityTests
 {
@@ -10,6 +11,7 @@ namespace COMCMS.SecurityTests
         [Fact]
         public void LegacyMd5_CorrectPassword_ReturnsPbkdf2Upgrade()
         {
+            ConfigureLegacyMigration();
             const string salt = "legacy-salt";
             const string password = "Correct Horse Battery Staple";
             var legacyHash = Utils.MD5(salt + password);
@@ -24,6 +26,7 @@ namespace COMCMS.SecurityTests
         [Fact]
         public void LegacyMd5_WrongPassword_DoesNotUpgrade()
         {
+            ConfigureLegacyMigration();
             var legacyHash = Utils.MD5("salt" + "expected-password");
 
             var valid = PasswordHashService.Verify(legacyHash, "salt", "wrong-password", out var upgradedHash);
@@ -71,6 +74,23 @@ namespace COMCMS.SecurityTests
             Assert.True(PasswordHashService.IsLegacyMigrationAllowed(deadline.ToString("O"), deadline.AddSeconds(-1)));
             Assert.False(PasswordHashService.IsLegacyMigrationAllowed(deadline.ToString("O"), deadline));
             Assert.False(PasswordHashService.IsLegacyMigrationAllowed(deadline.ToString("O"), deadline.AddDays(1)));
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("not-a-date")]
+        public void LegacyMigrationDeadline_MissingOrInvalid_FailsClosed(string value)
+        {
+            Assert.False(PasswordHashService.IsLegacyMigrationAllowed(value, DateTimeOffset.UtcNow));
+        }
+
+        private static void ConfigureLegacyMigration()
+        {
+            Utils.AddUtils(new ConfigurationBuilder().AddInMemoryCollection(new System.Collections.Generic.Dictionary<string, string>
+            {
+                ["Security:LegacyPasswordMigrationEndsUtc"] = DateTimeOffset.UtcNow.AddMinutes(5).ToString("O")
+            }).Build());
         }
     }
 }

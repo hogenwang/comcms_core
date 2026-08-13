@@ -21,11 +21,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         public JsonTip tip = new JsonTip();
         private readonly LoginAttemptService _loginAttempts;
         private readonly ILogger<LoginController> _logger;
+        private readonly SecurityEventMetrics _securityMetrics;
 
-        public LoginController(LoginAttemptService loginAttempts, ILogger<LoginController> logger)
+        public LoginController(LoginAttemptService loginAttempts, ILogger<LoginController> logger,
+            SecurityEventMetrics securityMetrics)
         {
             _loginAttempts = loginAttempts;
             _logger = logger;
+            _securityMetrics = securityMetrics;
         }
 
         #region 登录页面
@@ -113,6 +116,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                     new Claim("auth_time", DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString())
                 }, AuthenticationSchemes.AdminCookie);
                 await HttpContext.SignInAsync(AuthenticationSchemes.AdminCookie, new ClaimsPrincipal(identity));
+                _securityMetrics.AuthenticationAttempt("admin", "cookie", true);
 
                 tip.Status = JsonTip.SUCCESS;
                 tip.Message = "登录成功";
@@ -122,6 +126,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             else
             {
                 await _loginAttempts.RecordFailureAsync(username, ip);
+                _securityMetrics.AuthenticationAttempt("admin", "cookie", false);
                 _logger.LogWarning("Admin login failed for account hash {AccountHash} from {RemoteIp}",
                     Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(username.ToUpperInvariant()))), ip);
                 tip.Message = "用户名或者密码错误！请重新登录！";

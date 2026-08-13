@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using COMCMS.Common;
 using COMCMS.Core;
 using XCode;
-using NewLife.Log;
-using Senparc.Weixin.MP;
 using Senparc.Weixin.TenPay.V3;
-using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
 using COMCMS.Common.Security;
 using COMCMS.Web.Services;
 using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace COMCMS.Web.Controllers.api
 {
@@ -24,10 +20,12 @@ namespace COMCMS.Web.Controllers.api
     {
         private static readonly TimeSpan IdempotencyLifetime = TimeSpan.FromMinutes(15);
         private readonly PaymentIdempotencyService _idempotency;
+        private readonly ILogger<PaymentController> _logger;
 
-        public PaymentController(PaymentIdempotencyService idempotency)
+        public PaymentController(PaymentIdempotencyService idempotency, ILogger<PaymentController> logger)
         {
             _idempotency = idempotency;
+            _logger = logger;
         }
 
         #region 微信小程序订单支付
@@ -130,7 +128,6 @@ namespace COMCMS.Web.Controllers.api
 
             TenPayV3Info TenPayV3Info = new TenPayV3Info(appId, appSecrect, wxmchId, wxmchKey,"","", Utils.GetServerUrl() + "/wxpayment/notify", Utils.GetServerUrl() + "/wxpayment/notify");
             TenPayV3Info.TenPayV3Notify = Utils.GetServerUrl() + "/wxpayment/notify";
-            XTrace.WriteLine("微信支付异步通知地址：" + TenPayV3Info.TenPayV3Notify);
             var nonceStr = TenPayV3Util.GetNoncestr();
             string rtimeStamp = Utils.GetTimeStamp();
 
@@ -139,7 +136,8 @@ namespace COMCMS.Web.Controllers.api
 
                 //调用统一订单接口
                 var result = TenPayV3.Unifiedorder(xmlDataInfo);
-                XTrace.WriteLine("微信支付统一下单返回：" + JsonConvert.SerializeObject(result));
+                _logger.LogInformation("WeChat unified order completed for order {OrderNumber} with result {ResultCode}",
+                    entity.OrderNum, result.return_code);
 
                 if (result.return_code == "FAIL")
                 {
@@ -166,7 +164,7 @@ namespace COMCMS.Web.Controllers.api
             }
             catch (Exception ex)
             {
-                XTrace.WriteLine($"统一下单失败：{ex.Message}");
+                _logger.LogError(ex, "WeChat unified order failed for order {OrderNumber}", entity.OrderNum);
 
                 //reJson.code = 40005;
                 //reJson.message = "统一下单失败，请联系管理员！";

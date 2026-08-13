@@ -28,5 +28,6 @@ namespace COMCMS.Web.Models
         public string LegacyPasswordMigrationEndsUtc { get; set; }
         public string PrivateUploadRoot { get; set; }
         public string[] KnownProxies { get; set; } = System.Array.Empty<string>();
+        public bool EnforceContentSecurityPolicy { get; set; } = true;
     }
 }

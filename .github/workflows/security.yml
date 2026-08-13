@@ -1,0 +1,57 @@
+name: Security gate
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-audit:
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore COMCMS_NETCORE.sln
+
+      - name: Build
+        run: dotnet build COMCMS_NETCORE.sln --configuration Release --no-restore
+
+      - name: Run security tests
+        run: dotnet test COMCMS.SecurityTests/COMCMS.SecurityTests.csproj --configuration Release --no-build --no-restore
+
+      - name: Audit vulnerable packages
+        shell: pwsh
+        run: |
+          dotnet list COMCMS_NETCORE.sln package --vulnerable --include-transitive --format json | Out-File -FilePath vulnerable-packages.json -Encoding utf8
+          if ($LASTEXITCODE -ne 0) {
+            throw "dotnet package audit failed with exit code $LASTEXITCODE."
+          }
+
+          $report = Get-Content vulnerable-packages.json -Raw | ConvertFrom-Json
+          $vulnerable = @(
+            $report.projects |
+              ForEach-Object { $_.frameworks } |
+              ForEach-Object { @($_.topLevelPackages) + @($_.transitivePackages) } |
+              Where-Object { $_ -and @($_.vulnerabilities).Count -gt 0 }
+          )
+
+          if ($vulnerable.Count -gt 0) {
+            $vulnerable | ForEach-Object {
+              $package = $_
+              @($package.vulnerabilities) | ForEach-Object {
+                Write-Error "$($package.id) $($package.resolvedVersion): $($_.severity) $($_.advisoryUrl)"
+              }
+            }
+            throw "Known vulnerable NuGet packages were found."
+          }

@@ -6,22 +6,38 @@ SET @member_table = (SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABL
 SET @admin_log_table = (SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND LOWER(TABLE_NAME) = 'adminlog' LIMIT 1);
 SET @member_log_table = (SELECT TABLE_NAME FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND LOWER(TABLE_NAME) = 'memberlog' LIMIT 1);
 
-SET @statement = CONCAT('ALTER TABLE `', REPLACE(@admin_table, '`', '``'), '` MODIFY COLUMN `PassWord` VARCHAR(256) NULL');
+-- Admin and Member are required application tables. The deliberately named
+-- fallback table makes PREPARE fail with an explicit migration error when a
+-- required table is missing, without requiring CREATE ROUTINE privileges.
+SET @statement = IF(
+  @admin_table IS NULL,
+  'SELECT * FROM `COMCMS_MIGRATION_ERROR_REQUIRED_ADMIN_TABLE_NOT_FOUND`',
+  CONCAT('ALTER TABLE `', REPLACE(@admin_table, '`', '``'), '` MODIFY COLUMN `PassWord` VARCHAR(256) NULL'));
 PREPARE migration_statement FROM @statement;
 EXECUTE migration_statement;
 DEALLOCATE PREPARE migration_statement;
 
-SET @statement = CONCAT('ALTER TABLE `', REPLACE(@member_table, '`', '``'), '` MODIFY COLUMN `PassWord` VARCHAR(256) NULL');
+SET @statement = IF(
+  @member_table IS NULL,
+  'SELECT * FROM `COMCMS_MIGRATION_ERROR_REQUIRED_MEMBER_TABLE_NOT_FOUND`',
+  CONCAT('ALTER TABLE `', REPLACE(@member_table, '`', '``'), '` MODIFY COLUMN `PassWord` VARCHAR(256) NULL'));
 PREPARE migration_statement FROM @statement;
 EXECUTE migration_statement;
 DEALLOCATE PREPARE migration_statement;
 
-SET @statement = CONCAT('UPDATE `', REPLACE(@admin_log_table, '`', '``'), '` SET `PassWord` = ''******'' WHERE `PassWord` IS NOT NULL AND `PassWord` <> ''******''');
+-- Log tables are optional in older installations. Skip cleanup when absent.
+SET @statement = IF(
+  @admin_log_table IS NULL,
+  'DO 0',
+  CONCAT('UPDATE `', REPLACE(@admin_log_table, '`', '``'), '` SET `PassWord` = ''******'' WHERE `PassWord` IS NOT NULL AND `PassWord` <> ''******'''));
 PREPARE migration_statement FROM @statement;
 EXECUTE migration_statement;
 DEALLOCATE PREPARE migration_statement;
 
-SET @statement = CONCAT('UPDATE `', REPLACE(@member_log_table, '`', '``'), '` SET `PassWord` = ''******'' WHERE `PassWord` IS NOT NULL AND `PassWord` <> ''******''');
+SET @statement = IF(
+  @member_log_table IS NULL,
+  'DO 0',
+  CONCAT('UPDATE `', REPLACE(@member_log_table, '`', '``'), '` SET `PassWord` = ''******'' WHERE `PassWord` IS NOT NULL AND `PassWord` <> ''******'''));
 PREPARE migration_statement FROM @statement;
 EXECUTE migration_statement;
 DEALLOCATE PREPARE migration_statement;

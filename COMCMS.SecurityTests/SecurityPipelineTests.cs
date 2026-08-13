@@ -1,8 +1,10 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 using COMCMS.Web;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
@@ -67,7 +69,27 @@ namespace COMCMS.SecurityTests
             var body = await response.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("Healthy", body);
+            using var json = JsonDocument.Parse(body);
+            Assert.Equal("Healthy", json.RootElement.GetProperty("status").GetString());
+            Assert.False(string.IsNullOrWhiteSpace(json.RootElement.GetProperty("traceId").GetString()));
+            Assert.Equal(2, json.RootElement.EnumerateObject().Count());
+        }
+
+        [Fact]
+        public async Task LiveHealthCheck_DoesNotRequireExternalDependencies()
+        {
+            var response = await _client.GetAsync("/health/live");
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task Responses_IncludeEnforcedAndObservedContentSecurityPolicies()
+        {
+            var response = await _client.GetAsync("/health/live");
+
+            Assert.Contains("object-src 'none'", response.Headers.GetValues("Content-Security-Policy").Single());
+            Assert.Contains("default-src 'self'", response.Headers.GetValues("Content-Security-Policy-Report-Only").Single());
         }
 
         [Fact]
@@ -84,6 +106,27 @@ namespace COMCMS.SecurityTests
             using var content = new StringContent("{}", Encoding.UTF8, "application/json");
 
             var response = await _client.PostAsync("/api/v1/auth/cookie", content);
+
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task CookieSessionRevocation_WithoutAuthentication_IsRejected()
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Delete, "/api/v1/auth/cookie/sessions/test-session");
+
+            var response = await _client.SendAsync(request);
+
+            Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
+        }
+
+        [Fact]
+        public async Task OversizedAuthenticationPayload_IsRejected()
+        {
+            var password = new string('x', 20 * 1024);
+            using var content = new StringContent($"{{\"userName\":\"member\",\"password\":\"{password}\"}}", Encoding.UTF8, "application/json");
+
+            var response = await _client.PostAsync("/api/v1/auth/token", content);
 
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         }

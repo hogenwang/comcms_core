@@ -42,6 +42,7 @@ namespace COMCMS.Web.Services
                 .Any(item => item.CreatedUtc > now.AddMinutes(-2));
             if (recent) return;
 
+            InvalidateOutstandingTokens(member.Id, now);
             var rawToken = OneTimeTokenService.CreateToken();
             new AuthOneTimeToken
             {
@@ -81,6 +82,7 @@ namespace COMCMS.Web.Services
             if (member == null || member.IsLock == 1) return false;
             member.PassWord = PasswordHashService.HashPassword(newPassword);
             member.Update();
+            InvalidateOutstandingTokens(member.Id, now);
             RevokeAllSessions(member.Id, now);
             transaction.Commit();
             return true;
@@ -101,6 +103,21 @@ namespace COMCMS.Web.Services
                 session.IsRevoked = 1;
                 session.RevokedUtc = now;
                 session.Update();
+            }
+        }
+
+        private static void InvalidateOutstandingTokens(int memberId, DateTime now)
+        {
+            var tokens = AuthOneTimeToken.FindAll(
+                AuthOneTimeToken._.SubjectType == "member" &
+                AuthOneTimeToken._.SubjectId == memberId &
+                AuthOneTimeToken._.Purpose == Purpose &
+                AuthOneTimeToken._.IsUsed == 0);
+            foreach (var token in tokens)
+            {
+                token.IsUsed = 1;
+                token.UsedUtc = now;
+                token.Update();
             }
         }
 

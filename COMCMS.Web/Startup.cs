@@ -27,9 +27,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.WebEncoders;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Net;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Policy;
@@ -102,7 +104,8 @@ namespace COMCMS.Web
             services.AddHttpClient();
             services.AddHttpClient(RemoteImageService.ClientName, client => client.Timeout = TimeSpan.FromSeconds(10))
                 .ConfigurePrimaryHttpMessageHandler(RemoteImageService.CreateHandler);
-            services.AddHealthChecks();
+            services.AddHealthChecks()
+                .AddCheck<ComCmsReadinessHealthCheck>("dependencies", tags: new[] { "ready" });
             services.AddRateLimiter(options =>
             {
                 options.AddPolicy("login", context => RateLimitPartition.GetFixedWindowLimiter(
@@ -115,6 +118,12 @@ namespace COMCMS.Web
                         AutoReplenishment = true
                     }));
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+                options.OnRejected = (context, _) =>
+                {
+                    context.HttpContext.RequestServices.GetRequiredService<SecurityEventMetrics>()
+                        .RateLimitRejected("login");
+                    return ValueTask.CompletedTask;
+                };
             });
 
             var redisConnectionString = Configuration["RedisCache:ConnectionString"];
@@ -141,8 +150,13 @@ namespace COMCMS.Web
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromSeconds(120);
+                options.Cookie.Name = "COMCMS.Session";
                 options.Cookie.HttpOnly = true;
-
+                options.Cookie.SecurePolicy = Environment.IsDevelopment()
+                    ? CookieSecurePolicy.SameAsRequest
+                    : CookieSecurePolicy.Always;
+                options.Cookie.SameSite = SameSiteMode.Lax;
+                options.Cookie.IsEssential = true;
             });
             // 绑定缓存设置
             services.Configure<CacheSettings>(Configuration.GetSection("CacheSettings"));
@@ -154,7 +168,10 @@ namespace COMCMS.Web
             //部分系统配置
             services.Configure<SystemSetting>(Configuration.GetSection("SystemSetting"));
             services.Configure<AuthenticationSettings>(Configuration.GetSection("Authentication"));
-            services.Configure<SecuritySettings>(Configuration.GetSection("Security"));
+            services.AddSingleton<IValidateOptions<SecuritySettings>, SecuritySettingsValidator>();
+            services.AddOptions<SecuritySettings>()
+                .Bind(Configuration.GetSection("Security"))
+                .ValidateOnStart();
             services.AddSingleton<JwtKeyProvider>();
             services.AddScoped<TokenService>();
             services.AddScoped<PasswordRecoveryService>();
@@ -163,6 +180,7 @@ namespace COMCMS.Web
             services.AddSingleton<PublicMediaStorage>();
             services.AddSingleton<PaymentIdempotencyService>();
             services.AddSingleton<LoginAttemptService>();
+            services.AddSingleton<SecurityEventMetrics>();
             services.AddSingleton<IContentSanitizer, ContentSanitizer>();
             services.AddAuthorization();
             services.AddSingleton<IAuthorizationPolicyProvider, AdminPermissionPolicyProvider>();
@@ -260,9 +278,10 @@ namespace COMCMS.Web
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
                 ForwardLimit = 2
             };
-            foreach (var proxy in Configuration.GetSection("Security:KnownProxies").Get<string[]>() ?? Array.Empty<string>())
+            var securitySettings = svp.GetRequiredService<IOptions<SecuritySettings>>().Value;
+            foreach (var proxy in securitySettings.KnownProxies ?? Array.Empty<string>())
             {
-                if (IPAddress.TryParse(proxy, out var address)) forwardedOptions.KnownProxies.Add(address);
+                forwardedOptions.KnownProxies.Add(IPAddress.Parse(proxy));
             }
             app.UseForwardedHeaders(forwardedOptions);
             app.UseMiddlewareExtension(new ResultExceptionHandler());
@@ -273,7 +292,11 @@ namespace COMCMS.Web
                 context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
                 context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
                 context.Response.Headers.Append("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
-                context.Response.Headers.Append("Content-Security-Policy-Report-Only", "default-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'");
+                const string enforcedCsp = "object-src 'none'; base-uri 'self'; frame-ancestors 'self'";
+                const string observedCsp = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.map.baidu.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self' blob:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'self'";
+                if (securitySettings.EnforceContentSecurityPolicy)
+                    context.Response.Headers.Append("Content-Security-Policy", enforcedCsp);
+                context.Response.Headers.Append("Content-Security-Policy-Report-Only", observedCsp);
                 await next();
             });
 
@@ -349,7 +372,9 @@ namespace COMCMS.Web
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHealthChecks("/health");
+                endpoints.MapHealthChecks("/health", CreateHealthOptions(_ => false));
+                endpoints.MapHealthChecks("/health/live", CreateHealthOptions(_ => false));
+                endpoints.MapHealthChecks("/health/ready", CreateHealthOptions(check => check.Tags.Contains("ready")));
                 endpoints.MapControllerRoute(
                   name: "areas",
                   pattern: "{area:exists}/{controller=Index}/{action=Index}/{id?}"
@@ -458,6 +483,21 @@ namespace COMCMS.Web
             return long.TryParse(principal?.FindFirstValue("auth_time"), out var seconds) &&
                    DateTimeOffset.FromUnixTimeSeconds(seconds).Add(lifetime) > DateTimeOffset.UtcNow;
         }
+
+        private static Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions CreateHealthOptions(
+            Func<HealthCheckRegistration, bool> predicate) => new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+        {
+            Predicate = predicate,
+            ResponseWriter = async (context, report) =>
+            {
+                context.Response.ContentType = "application/json";
+                await JsonSerializer.SerializeAsync(context.Response.Body, new
+                {
+                    status = report.Status.ToString(),
+                    traceId = context.TraceIdentifier
+                });
+            }
+        };
 
         #region Senparc 缓存扩展策略
         /// <summary>

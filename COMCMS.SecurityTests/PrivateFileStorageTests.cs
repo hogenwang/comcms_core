@@ -38,6 +38,17 @@ namespace COMCMS.SecurityTests
             await Assert.ThrowsAsync<InvalidDataException>(() => CreateStorage().SaveAsync(formFile, extension));
         }
 
+        [Fact]
+        public void StorageInsideWebRoot_IsRejected()
+        {
+            var root = Path.Combine(Path.GetTempPath(), "comcms-security-tests", Guid.NewGuid().ToString("N"));
+            var webRoot = Path.Combine(root, "wwwroot");
+            var environment = new TestEnvironment { ContentRootPath = root, WebRootPath = webRoot };
+
+            Assert.Throws<InvalidOperationException>(() => new PrivateFileStorage(
+                environment, Options.Create(new SecuritySettings { PrivateUploadRoot = Path.Combine(webRoot, "uploads") })));
+        }
+
         private static PrivateFileStorage CreateStorage()
         {
             var root = Path.Combine(Path.GetTempPath(), "comcms-security-tests", Guid.NewGuid().ToString("N"));

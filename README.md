@@ -56,7 +56,11 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 ### 安全与认证更新
 
-当前安全方案的代码实现完成度约为 85%（第一至第五阶段中可在现有宿主内落地的核心项已完成）。后台和同站会员网页使用 ASP.NET Core 加密 Cookie；移动端和独立 API 客户端使用短期 JWT，刷新令牌只保存哈希并支持轮换、重放检测、设备撤销和全量下线。密码新写入 PBKDF2，旧版 MD5 在成功登录后渐进升级；登录限流、账号锁定、CSRF、可信代理、ProblemDetails、上传路径和 SSRF 防护已接入。`COMCMS.SecurityTests` 当前包含 40 项安全回归测试。
+当前安全方案中适合在现有宿主内编码落地的核心项已基本完成。后台和同站会员网页使用 ASP.NET Core 加密 Cookie；移动端和独立 API 客户端使用短期 JWT，刷新令牌只保存哈希并支持原子轮换、令牌族重放撤销、主体绑定、设备撤销和全量下线。同站 BFF 另有受 CSRF 保护的会话列表、单设备撤销和全设备退出接口，并对历史会话查询设置分页上限。
+
+密码新写入 PBKDF2，旧版 MD5 在成功登录后渐进升级，并于 `Security:LegacyPasswordMigrationEndsUtc` 到期后自动拒绝；配置缺失或格式错误时失败关闭。登录限流、账号锁定、SecurityStamp、CSRF、可信代理、ProblemDetails、上传路径和 SSRF 防护均已接入。密码重置令牌只保存哈希，新令牌签发或重置成功时会作废同账号其余有效令牌。
+
+安全响应头现已启用最小强制 CSP（禁止对象、限制 base URI 和嵌入来源），同时保留完整 Report-Only 策略用于逐步清除旧页面的内联脚本。应用提供 `/health/live` 和 `/health/ready`，安全事件通过 `COMCMS.Security` Meter 输出低基数指标；GitHub Actions 会执行 Release 构建、安全测试和传递依赖漏洞扫描。`COMCMS.SecurityTests` 当前包含 59 项安全回归测试。
 
 仓库配置不保存数据库、JWT、支付或微信密钥。开发机请创建被 `.gitignore` 忽略的 `COMCMS.Web/appsettings.Development.local.json`，例如：
 
@@ -71,9 +75,9 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 }
 ```
 
-生产环境必须通过环境变量或密钥服务配置 Redis、数据库、RSA JWT 密钥、可信代理和支付/微信/SMTP 凭据，并在上线前轮换历史已暴露值。生产启动会拒绝空 Redis、空 RSA 密钥和占位 `kid`；数据库迁移脚本位于 `database/migrations`，不会由应用自动改表。
+生产环境必须通过环境变量或密钥服务配置 Redis、数据库、RSA JWT 密钥、可信代理和支付/微信/SMTP 凭据，并在上线前轮换历史已暴露值。生产启动会拒绝空 Redis、空 RSA 密钥、占位 `kid`、非法可信代理、无效 MD5 迁移截止时间，以及位于 WebRoot 内的私有上传目录；数据库迁移脚本位于 `database/migrations`，不会由应用自动改表。
 
-仍需单独排期的增强项：CSP 从 Report-Only 切换为正式策略、结构化指标和告警、密码迁移窗口结束后的旧算法关闭，以及 MFA/OIDC/微信统一登录。旧 API 已限制分页并使用公开字段投影，后续可继续把匿名投影整理为共享强类型 DTO。
+仍需单独排期或依赖生产环境完成的项目：清除旧 Razor 内联脚本后收紧完整 CSP、将 `COMCMS.Security` 指标接入实际监控告警平台、轮换已暴露的生产密钥并清理历史日志，以及 MFA/OIDC/微信统一登录。旧 API 已限制分页并使用公开字段投影，后续可继续把匿名投影整理为共享强类型 DTO。
 
 
 ### 技术交流群

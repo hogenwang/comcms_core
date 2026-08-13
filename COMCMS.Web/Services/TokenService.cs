@@ -17,12 +17,15 @@ namespace COMCMS.Web.Services
         private readonly JwtKeyProvider _keyProvider;
         private readonly AuthenticationSettings _settings;
         private readonly ILogger<TokenService> _logger;
+        private readonly SecurityEventMetrics _securityMetrics;
 
-        public TokenService(JwtKeyProvider keyProvider, IOptions<AuthenticationSettings> settings, ILogger<TokenService> logger)
+        public TokenService(JwtKeyProvider keyProvider, IOptions<AuthenticationSettings> settings,
+            ILogger<TokenService> logger, SecurityEventMetrics securityMetrics)
         {
             _keyProvider = keyProvider;
             _settings = settings.Value;
             _logger = logger;
+            _securityMetrics = securityMetrics;
         }
 
         public TokenResult CreateSession(Member member, string deviceName)
@@ -46,6 +49,7 @@ namespace COMCMS.Web.Services
                 IsRevoked = 0
             };
             session.Insert();
+            _securityMetrics.TokenEvent("issue", "success");
             return CreateResult(member, session, refreshToken);
         }
 
@@ -61,15 +65,22 @@ namespace COMCMS.Web.Services
             {
                 _logger.LogWarning("Refresh token reuse or inactive session detected for session {SessionId}, family {TokenFamily}; revoking family.", session.SessionId, session.TokenFamily);
                 AuthSession.RevokeFamily(session.TokenFamily);
+                transaction.Commit();
+                _securityMetrics.TokenEvent("refresh", "reuse");
+                _securityMetrics.SessionRevoked("family");
                 return null;
             }
 
             var member = Member.FindById(session.SubjectId);
             var currentStamp = member == null ? null : CurrentStamp(member);
-            if (member == null || member.IsLock == 1 || !SecurityStampService.Equals(session.SecurityStamp, currentStamp))
+            if (!string.Equals(session.SubjectType, "member", StringComparison.Ordinal) ||
+                member == null || member.IsLock == 1 || !SecurityStampService.Equals(session.SecurityStamp, currentStamp))
             {
                 _logger.LogWarning("Refresh rejected because the member session {SessionId} is invalidated by account state; revoking family.", session.SessionId);
                 AuthSession.RevokeFamily(session.TokenFamily);
+                transaction.Commit();
+                _securityMetrics.TokenEvent("refresh", "account-invalid");
+                _securityMetrics.SessionRevoked("family");
                 return null;
             }
 
@@ -86,6 +97,8 @@ namespace COMCMS.Web.Services
                 _logger.LogWarning("Concurrent refresh detected for session {SessionId}, family {TokenFamily}; revoking family.", session.SessionId, session.TokenFamily);
                 AuthSession.RevokeFamily(session.TokenFamily);
                 transaction.Commit();
+                _securityMetrics.TokenEvent("refresh", "concurrent-reuse");
+                _securityMetrics.SessionRevoked("family");
                 return null;
             }
 
@@ -106,13 +119,19 @@ namespace COMCMS.Web.Services
             };
             replacementSession.Insert();
             transaction.Commit();
+            _securityMetrics.TokenEvent("refresh", "success");
             return CreateResult(member, replacementSession, replacementToken);
         }
 
         public bool ValidateActiveSession(ClaimsPrincipal principal)
         {
+            var subjectId = ComCmsClaimTypes.GetSubjectId(principal);
             var session = AuthSession.FindBySessionId(principal.FindFirstValue(ComCmsClaimTypes.SessionId));
-            if (!AuthSession.IsActive(session)) return false;
+            if (!AuthSession.IsActive(session) ||
+                !string.Equals(session.SubjectType, "member", StringComparison.Ordinal) ||
+                session.SubjectId != subjectId ||
+                !string.Equals(principal.FindFirstValue(ComCmsClaimTypes.SubjectType), "member", StringComparison.Ordinal))
+                return false;
             var member = Member.FindById(session.SubjectId);
             return member != null && member.IsLock != 1 &&
                    SecurityStampService.Equals(session.SecurityStamp, CurrentStamp(member)) &&

@@ -28,6 +28,11 @@ namespace COMCMS.Web.Services
             _root = Path.GetFullPath(string.IsNullOrWhiteSpace(configured)
                 ? Path.Combine(environment.ContentRootPath, "App_Data", "uploads")
                 : (Path.IsPathRooted(configured) ? configured : Path.Combine(environment.ContentRootPath, configured)));
+            var webRoot = Path.GetFullPath(environment.WebRootPath ?? Path.Combine(environment.ContentRootPath, "wwwroot"));
+            var relativeToWebRoot = Path.GetRelativePath(webRoot, _root);
+            if (relativeToWebRoot == "." || (!Path.IsPathRooted(relativeToWebRoot) && relativeToWebRoot != ".." &&
+                !relativeToWebRoot.StartsWith(".." + Path.DirectorySeparatorChar, StringComparison.Ordinal)))
+                throw new InvalidOperationException("Private upload storage must be outside WebRoot.");
         }
 
         public async Task<StoredFile> SaveAsync(IFormFile file, string extension)

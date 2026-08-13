@@ -64,7 +64,8 @@ namespace COMCMS.Common.Security
 
         public static bool IsLegacyMigrationAllowed(string migrationEndValue, DateTimeOffset nowUtc)
         {
-            return !DateTimeOffset.TryParse(migrationEndValue, out var migrationEnd) || nowUtc < migrationEnd.ToUniversalTime();
+            return DateTimeOffset.TryParse(migrationEndValue, out var migrationEnd) &&
+                   nowUtc < migrationEnd.ToUniversalTime();
         }
 
         private static bool FixedTimeEquals(string left, string right)
