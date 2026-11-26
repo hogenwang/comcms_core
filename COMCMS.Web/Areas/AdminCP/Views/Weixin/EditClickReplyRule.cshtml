@@ -130,7 +130,7 @@
                                         else
                                         {
                                             <tr>
-                                                <td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_0" name="item_imgurl" value="" placeholder="请输入图片地址"><span class="input-group-btn"><button type="button" class="btn btn-primary" onclick="BrowseServer('slide_Img_0')"><i class="fa fa-search"></i></button></span></div></td>
+                                                <td><div class="input-group"><input type="text" class="form-control upload-path" id="slide_Img_0" name="item_imgurl" value="" placeholder="请输入图片地址"><span class="input-group-addon my-upload-span upload-img"></span></div></td>
                                                 <td><input type="text" class="form-control" id="" name="item_linkurl" value="" placeholder="请输入链接地址"></td>
                                                 <td><input type="text" class="form-control" id="" name="item_title" value="" placeholder="请输入图片标题"></td>
                                                 <td><textarea class="form-control" name="item_imginfo" placeholder="请输入图片说明" rows="2"></textarea></td>
@@ -152,12 +152,11 @@
                             <label class="col-sm-3 control-label">图片详情：</label>
                             <div class="col-sm-8">
                                 <div class="input-group">
-                                    <input id="txtSingleImage" name="txtSingleImage" maxlength="250" type="text" class="form-control" placeholder="选择一张图片（图片不能大于1M，否则微信显示不了！）" value="@(ViewBag.txtSingleImage)">
-                                    <span class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" onclick="BrowseServer('txtSingleImage')">
-                                            选择一张图片
-                                        </button>
+                                    <span class="input-group-btn my-preview">
+                                        <button type="button" class="btn btn-primary"><i class="fa fa-search-plus"></i></button>
                                     </span>
+                                    <input id="txtSingleImage" name="txtSingleImage" maxlength="250" type="text" class="form-control upload-path" placeholder="选择一张图片（图片不能大于1M，否则微信显示不了！）" value="@(ViewBag.txtSingleImage)">
+                                    <span class="input-group-addon my-upload-span upload-img"></span>
                                 </div>
                             </div>
                         </div>
@@ -196,15 +195,15 @@
             var newHtmlTr = htmlText.replace(/\{0\}/g, items);
             $('#SildeImgs').append(newHtmlTr);
             items += 1;
-            $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
+            $(".upload-img").comcmsUploader({ filesize: 10240, sendurl: "/AdminCP/Upload/UploadImage", filetypes: "gif,jpg,png,bmp,jpeg,webp", btntext: "上传图片", notwater: true });
         }
         function delmySlideRow(id) {
             $("#slideTR_" + id).remove();
         }
         $(function () {
             //初始化上传控件
-            $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
-            $(".upload-mp3").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderFile", swf: "/js/webuploader/uploader.swf", filetypes: "mp3", notwater: true });
+            $(".upload-img").comcmsUploader({ filesize: 10240, sendurl: "/AdminCP/Upload/UploadImage", filetypes: "gif,jpg,png,bmp,jpeg,webp", btntext: "上传图片", notwater: true });
+            $(".upload-mp3").comcmsUploader({ filesize: 10240, sendurl: "/AdminCP/Upload/UploadFile", filetypes: "mp3", btntext: "上传音频", icon: "fa-music", notwater: true });
             $('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',

@@ -1,23 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using COMCMS.Common;
-using COMCMS.Core;
-using XCode;
-using Newtonsoft.Json;
-using COMCMS.Web.Common;
-using Microsoft.AspNetCore.Http;
-using Senparc.Weixin.MP.Entities;
-using NewLife.Log;
-using Senparc.Weixin.MP.Containers;
-using Senparc.Weixin.MP.Entities.Menu;
-using System.IO;
-using System.Text;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using COMCMS.Common;
+using COMCMS.Core;
+using COMCMS.Web.Common;
+using Microsoft.AspNetCore.Mvc;
+using NewLife.Log;
+using Newtonsoft.Json;
+using Senparc.Weixin.MP.Containers;
+using Senparc.Weixin.MP.Entities;
+using Senparc.Weixin.MP.Entities.Menu;
+using XCode;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -33,100 +29,92 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         }
 
         #region 自定义菜单
-        //自定义菜单
         [MyAuthorize("view", "wxmenu")]
         [HttpGet]
         public IActionResult Menu()
         {
-
             Config cfg = Config.GetSystemConfig();
-            if(string.IsNullOrEmpty(cfg.AppId) || string.IsNullOrEmpty(cfg.AppSecret))
+            if (string.IsNullOrEmpty(cfg.AppId) || string.IsNullOrEmpty(cfg.AppSecret))
             {
                 return EchoTipPage("请先到【系统设置】> 【基本设置】 设置公众号AppId和AppSecret！");
             }
-            string accessToken = "";
+
+            string accessToken;
             try
             {
                 accessToken = AccessTokenContainer.TryGetAccessToken(cfg.AppId, cfg.AppSecret);
-
             }
             catch (Exception ex)
             {
-                return EchoTipPage(ex.Message);
+                XTrace.WriteException(ex);
+                return EchoTipPage("获取微信 AccessToken 失败，请检查服务端日志与公众号配置！");
             }
 
             if (string.IsNullOrEmpty(accessToken))
             {
-                return EchoTipPage("AccessToken 获取错误，请确认微信配置没错。或者服务器没加入白名单！");
+                return EchoTipPage("AccessToken 获取错误，请确认微信配置没错，或者服务器已加入白名单！");
             }
-            //XTrace.WriteLine("当前AccessToken：" + accessToken);
-            //获取菜单
+
             GetMenuResult result = new GetMenuResult(new ButtonGroup());
             try
             {
-                result = Senparc.Weixin.MP.CommonAPIs.CommonApi.GetMenu(accessToken);
-                if (result == null)
-                {
-                    result = new GetMenuResult(new ButtonGroup());
-                }
+                result = Senparc.Weixin.MP.CommonAPIs.CommonApi.GetMenu(accessToken) ?? new GetMenuResult(new ButtonGroup());
             }
             catch (Exception ex)
             {
                 result = new GetMenuResult(new ButtonGroup());
-                XTrace.WriteLine("获取菜单出错：" + ex.Message);
+                XTrace.WriteException(ex);
             }
+
             Core.Admin.WriteLogActions("查看公众号菜单;");
             return View(result);
         }
-        //修改菜单
+
         [HttpPost]
         [MyAuthorize("edit", "wxmenu", "JSON")]
         public async Task<IActionResult> DoPostMenuData(string allmenu)
         {
-
             Config cfg = Config.GetSystemConfig();
-            string accessToken = "";
+            string accessToken;
             try
             {
                 accessToken = AccessTokenContainer.TryGetAccessToken(cfg.AppId, cfg.AppSecret);
-
             }
             catch (Exception ex)
             {
-                tip.Message = ex.Message;
+                XTrace.WriteException(ex);
+                tip.Message = "获取微信 AccessToken 失败，请检查配置与服务端日志！";
                 return Json(tip);
             }
 
             if (string.IsNullOrEmpty(accessToken))
             {
-                tip.Message = "AccessToken 获取错误，请确认微信配置没错。或者服务器没加入白名单！";
+                tip.Message = "AccessToken 获取错误，请确认微信配置没错，或者服务器已加入白名单！";
                 return Json(tip);
             }
-            if (string.IsNullOrEmpty(allmenu))
+            if (string.IsNullOrWhiteSpace(allmenu))
             {
                 tip.Message = "请填写自定义菜单";
                 return Json(tip);
             }
-            //Senparc.Weixin.MP.CommonAPIs.CommonApi.CreateMenu()
-            string posturl = $"https://api.weixin.qq.com/cgi-bin/menu/create?access_token={accessToken}";
 
-            HttpContent content = new StringContent(allmenu);
-            string value = string.Empty;
+            string posturl = $"https://api.weixin.qq.com/cgi-bin/menu/create?access_token={Uri.EscapeDataString(accessToken)}";
+            using HttpContent content = new StringContent(allmenu);
             content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            var re = await _httpClientFactory.CreateClient().PostAsync(posturl, content, HttpContext.RequestAborted);
+            using var re = await _httpClientFactory.CreateClient().PostAsync(posturl, content, HttpContext.RequestAborted);
             string responseString = await re.Content.ReadAsStringAsync(HttpContext.RequestAborted);
-            if (!string.IsNullOrEmpty(responseString)) value = responseString;
-            XTrace.WriteLine("创建公众号菜单回传：" + value);
+            XTrace.WriteLine("创建公众号菜单回传：" + responseString);
 
-            dynamic rejson = Newtonsoft.Json.Linq.JToken.Parse(value) as dynamic;
+            dynamic rejson = string.IsNullOrWhiteSpace(responseString) ? null : Newtonsoft.Json.Linq.JToken.Parse(responseString);
             if (rejson != null && rejson.errcode == 0)
             {
                 tip.Status = JsonTip.SUCCESS;
                 tip.Message = "创建/修改公众号菜单成功！";
+                Core.Admin.WriteLogActions("修改公众号菜单;");
                 return Json(tip);
             }
-            tip.Message = rejson.errmsg;
-            Core.Admin.WriteLogActions("修改公众号菜单;");
+            tip.Message = rejson?.errmsg != null ? (string)rejson.errmsg : "修改公众号菜单失败！";
+            Core.Admin.WriteLogActions("修改公众号菜单失败;");
             return Json(tip);
         }
         #endregion
@@ -136,199 +124,84 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         [MyAuthorize("edit", "wxautoreply")]
         public IActionResult SubscribeReply()
         {
-
-            WeixinRequestRule ruleModel = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.Flow);//获取规则
+            WeixinRequestRule ruleModel = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.Flow);
             if (ruleModel == null)
             {
-                ruleModel = new WeixinRequestRule();
-                ruleModel.RequestType = (int)WeixinRequestRule.XRequestType.Flow;
-                ruleModel.ResponseType = (int)WeixinRequestRule.XResponseType.Text;
-                ruleModel.RuleName = "关注自动回复";
-                ruleModel.IsDefault = 1;
+                ruleModel = new WeixinRequestRule
+                {
+                    RequestType = (int)WeixinRequestRule.XRequestType.Flow,
+                    ResponseType = (int)WeixinRequestRule.XResponseType.Text,
+                    RuleName = "关注自动回复",
+                    IsDefault = 1
+                };
                 ruleModel.Insert();
-                //增加Response
-                WeixinRequestContent content = new WeixinRequestContent()
+                new WeixinRequestContent
                 {
                     RuleId = ruleModel.Id,
                     Content = "关注公众号自动回复文本"
+                }.Insert();
+                ruleModel = WeixinRequestRule.FindById(ruleModel.Id);
+            }
 
-                };
-                content.Insert();
-            }
-            switch (ruleModel.ResponseType)
-            {
-                case 0://文本
-                    ViewBag.txtContent = ruleModel.ListContent[0].Content;
-                    break;
-                case 1://多图
-                    break;
-                case 2://语音
-                    ViewBag.txtSoundTitle = ruleModel.ListContent[0].Title;
-                    ViewBag.txtSoundUrl = ruleModel.ListContent[0].MediaURL;
-                    ViewBag.txtSoundContent = ruleModel.ListContent[0].Content;
-                    break;
-                case 8://单图
-                    ViewBag.txtSingleImage = ruleModel.ListContent[0].ImgURL;
-                    break;
-            }
+            PopulateRuleViewBag(ruleModel);
             Admin.WriteLogActions("查看公众号关注自动回复;");
             return View(ruleModel);
         }
-        //编辑自动回复规则
+
         [HttpPost]
         [MyAuthorize("edit", "wxautoreply", "JSON")]
         public IActionResult SubscribeReply(WeixinRequestRule entity)
         {
-            WeixinRequestRule model = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.Flow);//获取规则
+            WeixinRequestRule model = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.Flow);
+            if (model == null)
+            {
+                tip.Message = "系统找不到本记录";
+                return Json(tip);
+            }
+
             model.ResponseType = entity.ResponseType;
-
             model.IsDefault = 1;
-            int defaultDetailId = int.Parse(Request.Form["hdfTID"]);//默认一条的ID。肯定至少有一条
-            int responseType = model.ResponseType;
-            IList<WeixinRequestContent> ls = new List<WeixinRequestContent>();
-            if (responseType == 0) //纯文本
+            int defaultDetailId = Utils.StrToInt(Request.Form["hdfTID"], 0);
+            if (!TryBuildRuleContents(model, defaultDetailId, out var ls, out var errorMessage))
             {
-                string txtContent = Request.Form["txtContent"];
-                if (string.IsNullOrEmpty(txtContent))
-                {
-                    tip.Message = "文本回复，文本不能为空！";
-                    return Json(tip);
-                }
-                model.ResponseType = (int)WeixinRequestRule.XResponseType.Text;//回复的类型:文本1，图文2，语音3，视频4,第三方接口5
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, Content = txtContent.Trim(), Id = defaultDetailId});
+                tip.Message = errorMessage;
+                return Json(tip);
             }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.Image) //图文
-            {
-                #region 赋值规则图片
 
-                string[] itemIdArr = Request.Form["item_id"];
-                string[] itemTitleArr = Request.Form["item_title"];
-                string[] itemContentArr = Request.Form["item_imginfo"];
-                string[] itemImgUrlArr = Request.Form["item_imgurl"];
-                string[] itemLinkUrlArr = Request.Form["item_linkurl"];
-                if (itemIdArr != null && itemTitleArr != null && itemImgUrlArr != null && itemLinkUrlArr != null && itemContentArr != null)
-                {
-                    if ((itemIdArr.Length == itemTitleArr.Length) && (itemTitleArr.Length == itemImgUrlArr.Length) && (itemImgUrlArr.Length == itemLinkUrlArr.Length))
-                    {
-
-                        for (int i = 0; i < itemIdArr.Length; i++)
-                        {
-                            if (!string.IsNullOrEmpty(itemTitleArr[i]))
-                            {
-                                WeixinRequestContent modelt = new WeixinRequestContent();
-                                modelt.Id = Utils.StrToInt(itemIdArr[i].Trim(), 0);
-                                modelt.Title = itemTitleArr[i].Trim();
-                                modelt.Content = itemContentArr[i].Trim();
-                                modelt.ImgURL = itemImgUrlArr[i].Trim();
-                                modelt.LinkUrl = itemLinkUrlArr[i].Trim();
-                                modelt.RuleId = model.Id;
-                                ls.Add(modelt);
-                            }
-                        }
-                        //model.contents = ls;
-                    }
-                }
-                #endregion
-                if (ls == null || ls.Count < 1)
-                {
-                    tip.Message = "图文列表，图文项目不能为空！";
-                    return Json(tip);
-                }
-
-            }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.Video) //语音
-            {
-                string txtSoundTitle = Request.Form["txtSoundTitle"];
-                if (string.IsNullOrEmpty(txtSoundTitle))
-                {
-                    tip.Message = "语音回复，语音标题不能为空！";
-                    return Json(tip);
-                }
-                string txtSoundUrl = Request.Form["txtSoundUrl"];
-                if (string.IsNullOrEmpty(txtSoundUrl))
-                {
-                    tip.Message = "语音回复，语音地址不能为空！";
-                    return Json(tip);
-                }
-                string txtSoundContent = Request.Form["txtSoundContent"];
-
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, MediaURL = txtSoundUrl.Trim(), Title = txtSoundTitle, Id = defaultDetailId, Content = txtSoundContent });
-            }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.SingleImage) //单图片
-            {
-                string txtSingleImage = Request.Form["txtSingleImage"];
-                if (string.IsNullOrEmpty(txtSingleImage))
-                {
-                    tip.Message = "单图片回复，图片地址不能为空！";
-                    return Json(tip);
-                }
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, ImgURL = txtSingleImage.Trim(), Id = defaultDetailId});
-            }
-            model.Save();
-            IList<WeixinRequestContent> oldwc = model.ListContent;
-            if (oldwc != null && oldwc.Count > 0)
-            {
-                foreach (WeixinRequestContent p in ls)
-                {
-                    if (oldwc.Find(s => s.Id == p.Id) != null)
-                    {
-                        oldwc.Remove(oldwc.Find(s => s.Id == p.Id));
-                    }
-                }
-                if (oldwc != null && oldwc.Count > 0)
-                {
-                    oldwc.Delete();
-                }
-            }
-            if (ls != null && ls.Count > 0)
-            {
-                foreach (var item in ls)
-                {
-                    item.RuleId = model.Id;
-                }
-            }
-            ls.Save();
+            SaveRuleAndContents(model, ls, isInsert: false);
             tip.Message = "修改成功！";
             tip.Status = JsonTip.SUCCESS;
-            //tip.ReturnUrl = "reload";
             Core.Admin.WriteLogActions("修改公众号关注自动回复;");
             return Json(tip);
         }
         #endregion
 
         #region 自定义回复规则列表
-        //自定义规则
         [MyAuthorize("viewlist", "wxkeywordreply")]
         public IActionResult ReplyRule()
         {
             return View();
         }
-        //自定义规则列表
+
         [MyAuthorize("viewlist", "wxkeywordreply")]
         public IActionResult GetReplyRuleList(string keyword, int page = 1, int limit = 20)
         {
-            int numPerPage, currentPage, startRowIndex;
-
-            numPerPage = limit;
-            currentPage = page;
-            startRowIndex = (currentPage - 1) * numPerPage;
+            int numPerPage = Math.Clamp(limit, 1, 200);
+            int currentPage = Math.Max(page, 1);
+            int startRowIndex = (currentPage - 1) * numPerPage;
             Expression ex = WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.Text;
 
             if (!string.IsNullOrWhiteSpace(keyword))
             {
                 if (Utils.IsInt(keyword))
-                {
                     ex &= (WeixinRequestRule._.Id == int.Parse(keyword) | WeixinRequestRule._.Keywords.Contains(keyword));
-                }
                 else
-                {
                     ex &= WeixinRequestRule._.Keywords.Contains(keyword);
-                }
             }
 
             IList<WeixinRequestRule> list = WeixinRequestRule.FindAll(ex, WeixinRequestRule._.Id.Desc(), null, startRowIndex, numPerPage);
-            long totalCount = WeixinRequestRule.FindCount(ex, null, null, startRowIndex, numPerPage);
-            Admin.WriteLogActions($"查看公众号自定义回复规则({page});");
+            long totalCount = WeixinRequestRule.FindCount(ex, null, null, 0, 0);
+            Admin.WriteLogActions($"查看公众号自定义回复规则({currentPage});");
             return Content(JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
         }
         #endregion
@@ -342,120 +215,19 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             return View(model);
         }
 
-        //执行添加操作
         [HttpPost]
-        [MyAuthorize("add",  "wxkeywordreply", "JSON")]
+        [MyAuthorize("add", "wxkeywordreply", "JSON")]
         public IActionResult AddTextReplyRule(WeixinRequestRule model)
         {
-
             model.IsDefault = 1;
-
-            int responseType = model.ResponseType;
-            model.RequestType = (int)WeixinRequestRule.XRequestType.Text;//文本请求
-            IList<WeixinRequestContent> ls = new List<WeixinRequestContent>();
-            if (responseType == 0) //纯文本
+            model.RequestType = (int)WeixinRequestRule.XRequestType.Text;
+            if (!TryBuildRuleContents(model, 0, out var ls, out var errorMessage))
             {
-                string txtContent = Request.Form["txtContent"];
-                if (string.IsNullOrEmpty(txtContent))
-                {
-                    tip.Message = "文本回复，文本不能为空！";
-                    return Json(tip);
-                }
-                model.ResponseType = (int)WeixinRequestRule.XResponseType.Text;//回复的类型:文本1，图文2，语音3，视频4,第三方接口5
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, Content = txtContent.Trim() });
+                tip.Message = errorMessage;
+                return Json(tip);
             }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.Image) //图文
-            {
-                #region 赋值规则图片
 
-                string[] itemIdArr = Request.Form["item_id"];
-                string[] itemTitleArr = Request.Form["item_title"];
-                string[] itemContentArr = Request.Form["item_imginfo"];
-                string[] itemImgUrlArr = Request.Form["item_imgurl"];
-                string[] itemLinkUrlArr = Request.Form["item_linkurl"];
-                if (itemIdArr != null && itemTitleArr != null && itemImgUrlArr != null && itemLinkUrlArr != null && itemContentArr != null)
-                {
-                    if ((itemIdArr.Length == itemTitleArr.Length) && (itemTitleArr.Length == itemImgUrlArr.Length) && (itemImgUrlArr.Length == itemLinkUrlArr.Length))
-                    {
-
-                        for (int i = 0; i < itemIdArr.Length; i++)
-                        {
-                            if (!string.IsNullOrEmpty(itemTitleArr[i]))
-                            {
-                                WeixinRequestContent modelt = new WeixinRequestContent();
-                                modelt.Id = Utils.StrToInt(itemIdArr[i].Trim(), 0);
-                                modelt.Title = itemTitleArr[i].Trim();
-                                modelt.Content = itemContentArr[i].Trim();
-                                modelt.ImgURL = itemImgUrlArr[i].Trim();
-                                modelt.LinkUrl = itemLinkUrlArr[i].Trim();
-                                modelt.RuleId = model.Id;
-                                ls.Add(modelt);
-                            }
-                        }
-                        //model.contents = ls;
-                    }
-                }
-                #endregion
-                if (ls == null || ls.Count < 1)
-                {
-                    tip.Message = "图文列表，图文项目不能为空！";
-                    return Json(tip);
-                }
-
-            }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.Video) //语音
-            {
-                string txtSoundTitle = Request.Form["txtSoundTitle"];
-                if (string.IsNullOrEmpty(txtSoundTitle))
-                {
-                    tip.Message = "语音回复，语音标题不能为空！";
-                    return Json(tip);
-                }
-                string txtSoundUrl = Request.Form["txtSoundUrl"];
-                if (string.IsNullOrEmpty(txtSoundUrl))
-                {
-                    tip.Message = "语音回复，语音地址不能为空！";
-                    return Json(tip);
-                }
-                string txtSoundContent = Request.Form["txtSoundContent"];
-
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, MediaURL = txtSoundUrl.Trim(), Title = txtSoundTitle, Content = txtSoundContent});
-            }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.SingleImage) //单图片
-            {
-                string txtSingleImage = Request.Form["txtSingleImage"];
-                if (string.IsNullOrEmpty(txtSingleImage))
-                {
-                    tip.Message = "单图片回复，图片地址不能为空！";
-                    return Json(tip);
-                }
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, ImgURL = txtSingleImage.Trim() });
-            }
-            model.Insert();
-            IList<WeixinRequestContent> oldwc = model.ListContent;
-            if (oldwc != null && oldwc.Count > 0)
-            {
-                foreach (WeixinRequestContent p in ls)
-                {
-                    if (oldwc.Find(s => s.Id == p.Id) != null)
-                    {
-                        oldwc.Remove(oldwc.Find(s => s.Id == p.Id));
-                    }
-                }
-                if (oldwc != null && oldwc.Count > 0)
-                {
-                    oldwc.Delete();
-                }
-            }
-            if (ls != null && ls.Count > 0)
-            {
-                foreach (var item in ls)
-                {
-                    item.RuleId = model.Id;
-                }
-            }
-            ls.Save();
-
+            SaveRuleAndContents(model, ls, isInsert: true);
             tip.Message = "添加文本关键字回复规则成功！";
             tip.Status = JsonTip.SUCCESS;
             tip.ReturnUrl = "close";
@@ -465,38 +237,29 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         #endregion
 
         #region 修改文本回复详情
-        [MyAuthorize("edit",  "wxkeywordreply")]
-        public IActionResult EditTextReplyRule()
+        [MyAuthorize("edit", "wxkeywordreply")]
+        public IActionResult EditTextReplyRule(int id = 0)
         {
-            WeixinRequestRule ruleModel = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.Text);//获取规则
+            Expression ex = WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.Text;
+            if (id > 0)
+                ex &= WeixinRequestRule._.Id == id;
+
+            WeixinRequestRule ruleModel = WeixinRequestRule.Find(ex);
             if (ruleModel == null)
-            {
                 return EchoTipPage("系统找不到本记录！");
-            }
-            switch (ruleModel.ResponseType)
-            {
-                case 0://文本
-                    ViewBag.txtContent = ruleModel.ListContent[0].Content;
-                    break;
-                case 1://多图
-                    break;
-                case 2://语音
-                    ViewBag.txtSoundTitle = ruleModel.ListContent[0].Title;
-                    ViewBag.txtSoundUrl = ruleModel.ListContent[0].MediaURL;
-                    ViewBag.txtSoundContent = ruleModel.ListContent[0].Content;
-                    break;
-                case 8://单图
-                    ViewBag.txtSingleImage = ruleModel.ListContent[0].ImgURL;
-                    break;
-            }
-            Core.Admin.WriteLogActions($"查看文本回复规则;");
+
+            PopulateRuleViewBag(ruleModel);
+            Core.Admin.WriteLogActions($"查看文本回复规则({ruleModel.Id});");
             return View(ruleModel);
         }
+
         [HttpPost]
-        [MyAuthorize( "edit", "wxkeywordreply",  "JSON")]
+        [MyAuthorize("edit", "wxkeywordreply", "JSON")]
         public IActionResult EditTextReplyRule(WeixinRequestRule entity)
         {
-            WeixinRequestRule model = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.Text & WeixinRequestRule._.Id == entity.Id);//获取规则
+            WeixinRequestRule model = WeixinRequestRule.Find(
+                WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.Text &
+                WeixinRequestRule._.Id == entity.Id);
 
             if (model == null)
             {
@@ -508,116 +271,18 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             model.Keywords = entity.Keywords;
             model.IsLikeQuery = entity.IsLikeQuery;
             model.IsDefault = 1;
-            int defaultDetailId = int.Parse(Request.Form["hdfTID"]);//默认一条的ID。肯定至少有一条
-            int responseType = model.ResponseType;
-            IList<WeixinRequestContent> ls = new List<WeixinRequestContent>();
-            if (responseType == 0) //纯文本
+            int defaultDetailId = Utils.StrToInt(Request.Form["hdfTID"], 0);
+            if (!TryBuildRuleContents(model, defaultDetailId, out var ls, out var errorMessage))
             {
-                string txtContent = Request.Form["txtContent"];
-                if (string.IsNullOrEmpty(txtContent))
-                {
-                    tip.Message = "文本回复，文本不能为空！";
-                    return Json(tip);
-                }
-                model.ResponseType = (int)WeixinRequestRule.XResponseType.Text;//回复的类型:文本1，图文2，语音3，视频4,第三方接口5
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, Content = txtContent.Trim(), Id = defaultDetailId });
+                tip.Message = errorMessage;
+                return Json(tip);
             }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.Image) //图文
-            {
-                #region 赋值规则图片
 
-                string[] itemIdArr = Request.Form["item_id"];
-                string[] itemTitleArr = Request.Form["item_title"];
-                string[] itemContentArr = Request.Form["item_imginfo"];
-                string[] itemImgUrlArr = Request.Form["item_imgurl"];
-                string[] itemLinkUrlArr = Request.Form["item_linkurl"];
-                if (itemIdArr != null && itemTitleArr != null && itemImgUrlArr != null && itemLinkUrlArr != null && itemContentArr != null)
-                {
-                    if ((itemIdArr.Length == itemTitleArr.Length) && (itemTitleArr.Length == itemImgUrlArr.Length) && (itemImgUrlArr.Length == itemLinkUrlArr.Length))
-                    {
-
-                        for (int i = 0; i < itemIdArr.Length; i++)
-                        {
-                            if (!string.IsNullOrEmpty(itemTitleArr[i]))
-                            {
-                                WeixinRequestContent modelt = new WeixinRequestContent();
-                                modelt.Id = Utils.StrToInt(itemIdArr[i].Trim(), 0);
-                                modelt.Title = itemTitleArr[i].Trim();
-                                modelt.Content = itemContentArr[i].Trim();
-                                modelt.ImgURL = itemImgUrlArr[i].Trim();
-                                modelt.LinkUrl = itemLinkUrlArr[i].Trim();
-                                modelt.RuleId = model.Id;
-                                ls.Add(modelt);
-                            }
-                        }
-                        //model.contents = ls;
-                    }
-                }
-                #endregion
-                if (ls == null || ls.Count < 1)
-                {
-                    tip.Message = "图文列表，图文项目不能为空！";
-                    return Json(tip);
-                }
-
-            }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.Video) //语音
-            {
-                string txtSoundTitle = Request.Form["txtSoundTitle"];
-                if (string.IsNullOrEmpty(txtSoundTitle))
-                {
-                    tip.Message = "语音回复，语音标题不能为空！";
-                    return Json(tip);
-                }
-                string txtSoundUrl = Request.Form["txtSoundUrl"];
-                if (string.IsNullOrEmpty(txtSoundUrl))
-                {
-                    tip.Message = "语音回复，语音地址不能为空！";
-                    return Json(tip);
-                }
-                string txtSoundContent = Request.Form["txtSoundContent"];
-
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, MediaURL = txtSoundUrl.Trim(), Title = txtSoundTitle, Id = defaultDetailId, Content = txtSoundContent });
-            }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.SingleImage) //单图片
-            {
-                string txtSingleImage = Request.Form["txtSingleImage"];
-                if (string.IsNullOrEmpty(txtSingleImage))
-                {
-                    tip.Message = "单图片回复，图片地址不能为空！";
-                    return Json(tip);
-                }
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, ImgURL = txtSingleImage.Trim(), Id = defaultDetailId });
-            }
-            model.Save();
-            IList<WeixinRequestContent> oldwc = model.ListContent;
-            if (oldwc != null && oldwc.Count > 0)
-            {
-                foreach (WeixinRequestContent p in ls)
-                {
-                    if (oldwc.Find(s => s.Id == p.Id) != null)
-                    {
-                        oldwc.Remove(oldwc.Find(s => s.Id == p.Id));
-                    }
-                }
-                if (oldwc != null && oldwc.Count > 0)
-                {
-                    oldwc.Delete();
-                }
-            }
-            if (ls != null && ls.Count > 0)
-            {
-                foreach (var item in ls)
-                {
-                    item.RuleId = model.Id;
-                }
-            }
-            ls.Save();
-
+            SaveRuleAndContents(model, ls, isInsert: false);
             tip.Message = "修改文本自动回复成功！";
             tip.Status = JsonTip.SUCCESS;
             tip.ReturnUrl = "close";
-            Admin.WriteLogActions("修改文本自动回复成;");
+            Admin.WriteLogActions($"修改文本自动回复({model.Id});");
             return Json(tip);
         }
         #endregion
@@ -627,7 +292,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         [MyAuthorize("del", "wxkeywordreply", "JSON")]
         public IActionResult DelTextReplyRule(int id)
         {
-            WeixinRequestRule model = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.Text & WeixinRequestRule._.Id == id);//获取规则
+            WeixinRequestRule model = WeixinRequestRule.Find(
+                WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.Text &
+                WeixinRequestRule._.Id == id);
             if (model == null)
             {
                 tip.Message = "系统找不到本记录";
@@ -642,164 +309,60 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         #endregion
 
         #region 公众号点击事件回复规则
-        //自定义规则
         [MyAuthorize("viewlist", "clickreplyrule")]
         public ActionResult ClickReplyRule()
         {
             return View();
         }
-        //自定义规则列表
+
         [MyAuthorize("viewlist", "clickreplyrule")]
         public ActionResult GetClickReplyRuleList(string keyword, int page = 1, int limit = 20)
         {
-            int numPerPage, currentPage, startRowIndex;
-
-            numPerPage = limit;
-            currentPage = page;
-            startRowIndex = (currentPage - 1) * numPerPage;
-            Expression ex = WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.CustomMenu;//点击自定义菜单
+            int numPerPage = Math.Clamp(limit, 1, 200);
+            int currentPage = Math.Max(page, 1);
+            int startRowIndex = (currentPage - 1) * numPerPage;
+            Expression ex = WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.CustomMenu;
 
             if (!string.IsNullOrWhiteSpace(keyword))
             {
                 if (Utils.IsInt(keyword))
-                {
                     ex &= (WeixinRequestRule._.Id == int.Parse(keyword) | WeixinRequestRule._.Keywords.Contains(keyword));
-                }
                 else
-                {
                     ex &= WeixinRequestRule._.Keywords.Contains(keyword);
-                }
             }
+
             IList<WeixinRequestRule> list = WeixinRequestRule.FindAll(ex, WeixinRequestRule._.Id.Desc(), null, startRowIndex, numPerPage);
-            long totalCount = WeixinRequestRule.FindCount(ex, null, null, startRowIndex, numPerPage);
-            Admin.WriteLogActions($"查看公众号点击事件自定义回复规则({page});");
+            long totalCount = WeixinRequestRule.FindCount(ex, null, null, 0, 0);
+            Admin.WriteLogActions($"查看公众号点击事件自定义回复规则({currentPage});");
             return Content(JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
         }
         #endregion
 
-        #region 添加自定义规则
-        [MyAuthorize( "add", "clickreplyrule")]
+        #region 添加点击事件规则
+        [MyAuthorize("add", "clickreplyrule")]
         public IActionResult AddClickReplyRule()
         {
-            WeixinRequestRule model = new WeixinRequestRule();
-            model.RequestType = (int)WeixinRequestRule.XRequestType.CustomMenu;//文本请求
+            WeixinRequestRule model = new WeixinRequestRule
+            {
+                RequestType = (int)WeixinRequestRule.XRequestType.CustomMenu
+            };
             Core.Admin.WriteLogActions("查看添加点击菜单事件回复规则;");
             return View(model);
         }
 
-        //执行添加操作
         [HttpPost]
-        [MyAuthorize( "add",  "clickreplyrule", "JSON")]
+        [MyAuthorize("add", "clickreplyrule", "JSON")]
         public IActionResult AddClickReplyRule(WeixinRequestRule model)
         {
             model.IsDefault = 1;
-
-            int responseType = model.ResponseType;
-            model.RequestType = (int)WeixinRequestRule.XRequestType.CustomMenu;//文本请求
-            IList<WeixinRequestContent> ls = new List<WeixinRequestContent>();
-            if (responseType == 0) //纯文本
+            model.RequestType = (int)WeixinRequestRule.XRequestType.CustomMenu;
+            if (!TryBuildRuleContents(model, 0, out var ls, out var errorMessage))
             {
-                string txtContent = Request.Form["txtContent"];
-                if (string.IsNullOrEmpty(txtContent))
-                {
-                    tip.Message = "文本回复，文本不能为空！";
-                    return Json(tip);
-                }
-                model.ResponseType = (int)WeixinRequestRule.XResponseType.Text;//回复的类型:文本1，图文2，语音3，视频4,第三方接口5
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, Content = txtContent.Trim() });
+                tip.Message = errorMessage;
+                return Json(tip);
             }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.Image) //图文
-            {
-                #region 赋值规则图片
 
-                string[] itemIdArr = Request.Form["item_id"];
-                string[] itemTitleArr = Request.Form["item_title"];
-                string[] itemContentArr = Request.Form["item_imginfo"];
-                string[] itemImgUrlArr = Request.Form["item_imgurl"];
-                string[] itemLinkUrlArr = Request.Form["item_linkurl"];
-                if (itemIdArr != null && itemTitleArr != null && itemImgUrlArr != null && itemLinkUrlArr != null && itemContentArr != null)
-                {
-                    if ((itemIdArr.Length == itemTitleArr.Length) && (itemTitleArr.Length == itemImgUrlArr.Length) && (itemImgUrlArr.Length == itemLinkUrlArr.Length))
-                    {
-
-                        for (int i = 0; i < itemIdArr.Length; i++)
-                        {
-                            if (!string.IsNullOrEmpty(itemTitleArr[i]))
-                            {
-                                WeixinRequestContent modelt = new WeixinRequestContent();
-                                modelt.Id = Utils.StrToInt(itemIdArr[i].Trim(), 0);
-                                modelt.Title = itemTitleArr[i].Trim();
-                                modelt.Content = itemContentArr[i].Trim();
-                                modelt.ImgURL = itemImgUrlArr[i].Trim();
-                                modelt.LinkUrl = itemLinkUrlArr[i].Trim();
-                                modelt.RuleId = model.Id;
-                                ls.Add(modelt);
-                            }
-                        }
-                        //model.contents = ls;
-                    }
-                }
-                #endregion
-                if (ls == null || ls.Count < 1)
-                {
-                    tip.Message = "图文列表，图文项目不能为空！";
-                    return Json(tip);
-                }
-
-            }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.Video) //语音
-            {
-                string txtSoundTitle = Request.Form["txtSoundTitle"];
-                if (string.IsNullOrEmpty(txtSoundTitle))
-                {
-                    tip.Message = "语音回复，语音标题不能为空！";
-                    return Json(tip);
-                }
-                string txtSoundUrl = Request.Form["txtSoundUrl"];
-                if (string.IsNullOrEmpty(txtSoundUrl))
-                {
-                    tip.Message = "语音回复，语音地址不能为空！";
-                    return Json(tip);
-                }
-                string txtSoundContent = Request.Form["txtSoundContent"];
-
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, MediaURL = txtSoundUrl.Trim(), Title = txtSoundTitle, Content = txtSoundContent });
-            }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.SingleImage) //单图片
-            {
-                string txtSingleImage = Request.Form["txtSingleImage"];
-                if (string.IsNullOrEmpty(txtSingleImage))
-                {
-                    tip.Message = "单图片回复，图片地址不能为空！";
-                    return Json(tip);
-                }
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, ImgURL = txtSingleImage.Trim() });
-            }
-            model.Insert();
-            IList<WeixinRequestContent> oldwc = model.ListContent;
-            if (oldwc != null && oldwc.Count > 0)
-            {
-                foreach (WeixinRequestContent p in ls)
-                {
-                    if (oldwc.Find(s => s.Id == p.Id) != null)
-                    {
-                        oldwc.Remove(oldwc.Find(s => s.Id == p.Id));
-                    }
-                }
-                if (oldwc != null && oldwc.Count > 0)
-                {
-                    oldwc.Delete();
-                }
-            }
-            if (ls != null && ls.Count > 0)
-            {
-                foreach (var item in ls)
-                {
-                    item.RuleId = model.Id;
-                }
-            }
-            ls.Save();
-
+            SaveRuleAndContents(model, ls, isInsert: true);
             tip.Message = "添加自定义菜单点击事件回复规则成功！";
             tip.Status = JsonTip.SUCCESS;
             tip.ReturnUrl = "close";
@@ -808,41 +371,30 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         }
         #endregion
 
-        #region 修改文点击回复详情
+        #region 修改点击事件回复详情
         [MyAuthorize("edit", "clickreplyrule")]
-        public IActionResult EditClickReplyRule()
+        public IActionResult EditClickReplyRule(int id = 0)
         {
+            Expression ex = WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.CustomMenu;
+            if (id > 0)
+                ex &= WeixinRequestRule._.Id == id;
 
-            WeixinRequestRule ruleModel = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.CustomMenu);//获取规则
+            WeixinRequestRule ruleModel = WeixinRequestRule.Find(ex);
             if (ruleModel == null)
-            {
                 return EchoTipPage("系统找不到本记录！");
-            }
-            switch (ruleModel.ResponseType)
-            {
-                case 0://文本
-                    ViewBag.txtContent = ruleModel.ListContent[0].Content;
-                    break;
-                case 1://多图
-                    break;
-                case 2://语音
-                    ViewBag.txtSoundTitle = ruleModel.ListContent[0].Title;
-                    ViewBag.txtSoundUrl = ruleModel.ListContent[0].MediaURL;
-                    ViewBag.txtSoundContent = ruleModel.ListContent[0].Content;
-                    break;
-                case 8://单图
-                    ViewBag.txtSingleImage = ruleModel.ListContent[0].ImgURL;
-                    break;
-            }
-            Core.Admin.WriteLogActions($"查看点击菜单事件回复规则;");
+
+            PopulateRuleViewBag(ruleModel);
+            Core.Admin.WriteLogActions($"查看点击菜单事件回复规则({ruleModel.Id});");
             return View(ruleModel);
         }
 
         [HttpPost]
-        [MyAuthorize( "edit", "clickreplyrule", "JSON")]
+        [MyAuthorize("edit", "clickreplyrule", "JSON")]
         public IActionResult EditClickReplyRule(WeixinRequestRule entity)
         {
-            WeixinRequestRule model = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.CustomMenu & WeixinRequestRule._.Id == entity.Id);//获取规则
+            WeixinRequestRule model = WeixinRequestRule.Find(
+                WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.CustomMenu &
+                WeixinRequestRule._.Id == entity.Id);
 
             if (model == null)
             {
@@ -853,116 +405,18 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             model.ResponseType = entity.ResponseType;
             model.Keywords = entity.Keywords;
             model.IsDefault = 1;
-            int defaultDetailId = int.Parse(Request.Form["hdfTID"]);//默认一条的ID。肯定至少有一条
-            int responseType = model.ResponseType;
-            IList<WeixinRequestContent> ls = new List<WeixinRequestContent>();
-            if (responseType == 0) //纯文本
+            int defaultDetailId = Utils.StrToInt(Request.Form["hdfTID"], 0);
+            if (!TryBuildRuleContents(model, defaultDetailId, out var ls, out var errorMessage))
             {
-                string txtContent = Request.Form["txtContent"];
-                if (string.IsNullOrEmpty(txtContent))
-                {
-                    tip.Message = "文本回复，文本不能为空！";
-                    return Json(tip);
-                }
-                model.ResponseType = (int)WeixinRequestRule.XResponseType.Text;//回复的类型:文本1，图文2，语音3，视频4,第三方接口5
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, Content = txtContent.Trim(), Id = defaultDetailId });
+                tip.Message = errorMessage;
+                return Json(tip);
             }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.Image) //图文
-            {
-                #region 赋值规则图片
 
-                string[] itemIdArr = Request.Form["item_id"];
-                string[] itemTitleArr = Request.Form["item_title"];
-                string[] itemContentArr = Request.Form["item_imginfo"];
-                string[] itemImgUrlArr = Request.Form["item_imgurl"];
-                string[] itemLinkUrlArr = Request.Form["item_linkurl"];
-                if (itemIdArr != null && itemTitleArr != null && itemImgUrlArr != null && itemLinkUrlArr != null && itemContentArr != null)
-                {
-                    if ((itemIdArr.Length == itemTitleArr.Length) && (itemTitleArr.Length == itemImgUrlArr.Length) && (itemImgUrlArr.Length == itemLinkUrlArr.Length))
-                    {
-
-                        for (int i = 0; i < itemIdArr.Length; i++)
-                        {
-                            if (!string.IsNullOrEmpty(itemTitleArr[i]))
-                            {
-                                WeixinRequestContent modelt = new WeixinRequestContent();
-                                modelt.Id = Utils.StrToInt(itemIdArr[i].Trim(), 0);
-                                modelt.Title = itemTitleArr[i].Trim();
-                                modelt.Content = itemContentArr[i].Trim();
-                                modelt.ImgURL = itemImgUrlArr[i].Trim();
-                                modelt.LinkUrl = itemLinkUrlArr[i].Trim();
-                                modelt.RuleId = model.Id;
-                                ls.Add(modelt);
-                            }
-                        }
-                        //model.contents = ls;
-                    }
-                }
-                #endregion
-                if (ls == null || ls.Count < 1)
-                {
-                    tip.Message = "图文列表，图文项目不能为空！";
-                    return Json(tip);
-                }
-
-            }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.Video) //语音
-            {
-                string txtSoundTitle = Request.Form["txtSoundTitle"];
-                if (string.IsNullOrEmpty(txtSoundTitle))
-                {
-                    tip.Message = "语音回复，语音标题不能为空！";
-                    return Json(tip);
-                }
-                string txtSoundUrl = Request.Form["txtSoundUrl"];
-                if (string.IsNullOrEmpty(txtSoundUrl))
-                {
-                    tip.Message = "语音回复，语音地址不能为空！";
-                    return Json(tip);
-                }
-                string txtSoundContent = Request.Form["txtSoundContent"];
-
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, MediaURL = txtSoundUrl.Trim(), Title = txtSoundTitle, Id = defaultDetailId, Content = txtSoundContent });
-            }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.SingleImage) //单图片
-            {
-                string txtSingleImage = Request.Form["txtSingleImage"];
-                if (string.IsNullOrEmpty(txtSingleImage))
-                {
-                    tip.Message = "单图片回复，图片地址不能为空！";
-                    return Json(tip);
-                }
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, ImgURL = txtSingleImage.Trim(), Id = defaultDetailId });
-            }
-            model.Save();
-            IList<WeixinRequestContent> oldwc = model.ListContent;
-            if (oldwc != null && oldwc.Count > 0)
-            {
-                foreach (WeixinRequestContent p in ls)
-                {
-                    if (oldwc.Find(s => s.Id == p.Id) != null)
-                    {
-                        oldwc.Remove(oldwc.Find(s => s.Id == p.Id));
-                    }
-                }
-                if (oldwc != null && oldwc.Count > 0)
-                {
-                    oldwc.Delete();
-                }
-            }
-            if (ls != null && ls.Count > 0)
-            {
-                foreach (var item in ls)
-                {
-                    item.RuleId = model.Id;
-                }
-            }
-            ls.Save();
-
+            SaveRuleAndContents(model, ls, isInsert: false);
             tip.Message = "修改点击自定义菜单事件自动回复成功！";
             tip.Status = JsonTip.SUCCESS;
             tip.ReturnUrl = "close";
-            Admin.WriteLogActions("修改点击自定义菜单事件自动回复;");
+            Admin.WriteLogActions($"修改点击自定义菜单事件自动回复({model.Id});");
             return Json(tip);
         }
         #endregion
@@ -972,169 +426,218 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         [MyAuthorize("view", "wxnotfindkeywordautoreply")]
         public ActionResult NotFindKeywordAutoReply()
         {
-
-            WeixinRequestRule ruleModel = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.NotFindKeyword);//获取规则
+            WeixinRequestRule ruleModel = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.NotFindKeyword);
             if (ruleModel == null)
             {
-                ruleModel = new WeixinRequestRule();
-                ruleModel.RequestType = (int)WeixinRequestRule.XRequestType.NotFindKeyword;
-                ruleModel.ResponseType = (int)WeixinRequestRule.XResponseType.Text;
-                ruleModel.RuleName = "未找到关键词自动回复";
-                ruleModel.IsDefault = 1;
+                ruleModel = new WeixinRequestRule
+                {
+                    RequestType = (int)WeixinRequestRule.XRequestType.NotFindKeyword,
+                    ResponseType = (int)WeixinRequestRule.XResponseType.Text,
+                    RuleName = "未找到关键词自动回复",
+                    IsDefault = 1
+                };
                 ruleModel.Insert();
-                //增加Response
-                WeixinRequestContent content = new WeixinRequestContent()
+                new WeixinRequestContent
                 {
                     RuleId = ruleModel.Id,
-                    Content = "未找到关键词自动回复",
-
-                };
-                content.Insert();
-                ruleModel = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.NotFindKeyword);//重新获取规则
-            }
-            switch (ruleModel.ResponseType)
-            {
-                case 0://文本
-                    ViewBag.txtContent = ruleModel.ListContent[0].Content;
-                    break;
-                case 1://多图
-                    break;
-                case 2://语音
-                    ViewBag.txtSoundTitle = ruleModel.ListContent[0].Title;
-                    ViewBag.txtSoundUrl = ruleModel.ListContent[0].MediaURL;
-                    ViewBag.txtSoundContent = ruleModel.ListContent[0].Content;
-                    break;
-                case 8://单图
-                    ViewBag.txtSingleImage = ruleModel.ListContent[0].ImgURL;
-                    break;
+                    Content = "未找到关键词自动回复"
+                }.Insert();
+                ruleModel = WeixinRequestRule.FindById(ruleModel.Id);
             }
 
+            PopulateRuleViewBag(ruleModel);
             Core.Admin.WriteLogActions("查看公众号未找到关键字自动回复;");
             return View(ruleModel);
         }
-        //编辑自动回复规则
+
         [HttpPost]
         [MyAuthorize("edit", "wxnotfindkeywordautoreply", "JSON")]
         public IActionResult NotFindKeywordAutoReply(WeixinRequestRule entity)
         {
-            WeixinRequestRule model = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.NotFindKeyword );//获取规则
+            WeixinRequestRule model = WeixinRequestRule.Find(WeixinRequestRule._.RequestType == (int)WeixinRequestRule.XRequestType.NotFindKeyword);
+            if (model == null)
+            {
+                tip.Message = "系统找不到本记录";
+                return Json(tip);
+            }
+
             model.ResponseType = entity.ResponseType;
-
             model.IsDefault = 1;
-            int defaultDetailId = int.Parse(Request.Form["hdfTID"]);//默认一条的ID。肯定至少有一条
-            int responseType = model.ResponseType;
-            IList<WeixinRequestContent> ls = new List<WeixinRequestContent>();
-            if (responseType == 0) //纯文本
+            int defaultDetailId = Utils.StrToInt(Request.Form["hdfTID"], 0);
+            if (!TryBuildRuleContents(model, defaultDetailId, out var ls, out var errorMessage))
             {
-                string txtContent = Request.Form["txtContent"];
-                if (string.IsNullOrEmpty(txtContent))
-                {
-                    tip.Message = "文本回复，文本不能为空！";
-                    return Json(tip);
-                }
-                model.ResponseType = (int)WeixinRequestRule.XResponseType.Text;//回复的类型:文本1，图文2，语音3，视频4,第三方接口5
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, Content = txtContent.Trim(), Id = defaultDetailId });
+                tip.Message = errorMessage;
+                return Json(tip);
             }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.Image) //图文
-            {
-                #region 赋值规则图片
 
-                string[] itemIdArr = Request.Form["item_id"];
-                string[] itemTitleArr = Request.Form["item_title"];
-                string[] itemContentArr = Request.Form["item_imginfo"];
-                string[] itemImgUrlArr = Request.Form["item_imgurl"];
-                string[] itemLinkUrlArr = Request.Form["item_linkurl"];
-                if (itemIdArr != null && itemTitleArr != null && itemImgUrlArr != null && itemLinkUrlArr != null && itemContentArr != null)
-                {
-                    if ((itemIdArr.Length == itemTitleArr.Length) && (itemTitleArr.Length == itemImgUrlArr.Length) && (itemImgUrlArr.Length == itemLinkUrlArr.Length))
-                    {
-
-                        for (int i = 0; i < itemIdArr.Length; i++)
-                        {
-                            if (!string.IsNullOrEmpty(itemTitleArr[i]))
-                            {
-                                WeixinRequestContent modelt = new WeixinRequestContent();
-                                modelt.Id = Utils.StrToInt(itemIdArr[i].Trim(), 0);
-                                modelt.Title = itemTitleArr[i].Trim();
-                                modelt.Content = itemContentArr[i].Trim();
-                                modelt.ImgURL = itemImgUrlArr[i].Trim();
-                                modelt.LinkUrl = itemLinkUrlArr[i].Trim();
-                                modelt.RuleId = model.Id;
-                                ls.Add(modelt);
-                            }
-                        }
-                        //model.contents = ls;
-                    }
-                }
-                #endregion
-                if (ls == null || ls.Count < 1)
-                {
-                    tip.Message = "图文列表，图文项目不能为空！";
-                    return Json(tip);
-                }
-
-            }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.Video) //语音
-            {
-                string txtSoundTitle = Request.Form["txtSoundTitle"];
-                if (string.IsNullOrEmpty(txtSoundTitle))
-                {
-                    tip.Message = "语音回复，语音标题不能为空！";
-                    return Json(tip);
-                }
-                string txtSoundUrl = Request.Form["txtSoundUrl"];
-                if (string.IsNullOrEmpty(txtSoundUrl))
-                {
-                    tip.Message = "语音回复，语音地址不能为空！";
-                    return Json(tip);
-                }
-                string txtSoundContent = Request.Form["txtSoundContent"];
-
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, MediaURL = txtSoundUrl.Trim(), Title = txtSoundTitle, Id = defaultDetailId, Content = txtSoundContent });
-            }
-            else if (responseType == (int)WeixinRequestRule.XResponseType.SingleImage) //单图片
-            {
-                string txtSingleImage = Request.Form["txtSingleImage"];
-                if (string.IsNullOrEmpty(txtSingleImage))
-                {
-                    tip.Message = "单图片回复，图片地址不能为空！";
-                    return Json(tip);
-                }
-                ls.Add(new WeixinRequestContent { RuleId = model.Id, ImgURL = txtSingleImage.Trim(), Id = defaultDetailId });
-            }
-            model.Save();
-            IList<WeixinRequestContent> oldwc = model.ListContent;
-            if (oldwc != null && oldwc.Count > 0)
-            {
-                foreach (WeixinRequestContent p in ls)
-                {
-                    if (oldwc.Find(s => s.Id == p.Id) != null)
-                    {
-                        oldwc.Remove(oldwc.Find(s => s.Id == p.Id));
-                    }
-                }
-                if (oldwc != null && oldwc.Count > 0)
-                {
-                    oldwc.Delete();
-                }
-            }
-            if (ls != null && ls.Count > 0)
-            {
-                foreach (var item in ls)
-                {
-                    item.RuleId = model.Id;
-                }
-            }
-            ls.Save();
-
+            SaveRuleAndContents(model, ls, isInsert: false);
             tip.Message = "修改成功！";
             tip.Status = JsonTip.SUCCESS;
-            //tip.ReturnUrl = "reload";
             Admin.WriteLogActions("修改公众号未找到关键字自动回复;");
             return Json(tip);
         }
         #endregion
 
+        #region 规则辅助方法
+        private void PopulateRuleViewBag(WeixinRequestRule ruleModel)
+        {
+            if (ruleModel?.ListContent == null || ruleModel.ListContent.Count == 0)
+                return;
 
+            var first = ruleModel.ListContent[0];
+            switch (ruleModel.ResponseType)
+            {
+                case 0:
+                    ViewBag.txtContent = first.Content;
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    ViewBag.txtSoundTitle = first.Title;
+                    ViewBag.txtSoundUrl = first.MediaURL;
+                    ViewBag.txtSoundContent = first.Content;
+                    break;
+                case 8:
+                    ViewBag.txtSingleImage = first.ImgURL;
+                    break;
+            }
+        }
+
+        private bool TryBuildRuleContents(WeixinRequestRule model, int defaultDetailId, out IList<WeixinRequestContent> contents, out string errorMessage)
+        {
+            contents = new List<WeixinRequestContent>();
+            errorMessage = null;
+            int responseType = model.ResponseType;
+
+            if (responseType == 0)
+            {
+                string txtContent = Request.Form["txtContent"];
+                if (string.IsNullOrEmpty(txtContent))
+                {
+                    errorMessage = "文本回复，文本不能为空！";
+                    return false;
+                }
+                model.ResponseType = (int)WeixinRequestRule.XResponseType.Text;
+                var item = new WeixinRequestContent { RuleId = model.Id, Content = txtContent.Trim() };
+                if (defaultDetailId > 0) item.Id = defaultDetailId;
+                contents.Add(item);
+                return true;
+            }
+
+            if (responseType == (int)WeixinRequestRule.XResponseType.Image)
+            {
+                string[] itemIdArr = Request.Form["item_id"];
+                string[] itemTitleArr = Request.Form["item_title"];
+                string[] itemContentArr = Request.Form["item_imginfo"];
+                string[] itemImgUrlArr = Request.Form["item_imgurl"];
+                string[] itemLinkUrlArr = Request.Form["item_linkurl"];
+
+                if (itemIdArr != null && itemTitleArr != null && itemImgUrlArr != null && itemLinkUrlArr != null && itemContentArr != null &&
+                    itemIdArr.Length == itemTitleArr.Length &&
+                    itemTitleArr.Length == itemImgUrlArr.Length &&
+                    itemImgUrlArr.Length == itemLinkUrlArr.Length &&
+                    itemLinkUrlArr.Length == itemContentArr.Length)
+                {
+                    for (int i = 0; i < itemIdArr.Length; i++)
+                    {
+                        if (!string.IsNullOrEmpty(itemTitleArr[i]))
+                        {
+                            contents.Add(new WeixinRequestContent
+                            {
+                                Id = Utils.StrToInt(itemIdArr[i].Trim(), 0),
+                                Title = itemTitleArr[i].Trim(),
+                                Content = itemContentArr[i].Trim(),
+                                ImgURL = itemImgUrlArr[i].Trim(),
+                                LinkUrl = itemLinkUrlArr[i].Trim(),
+                                RuleId = model.Id
+                            });
+                        }
+                    }
+                }
+
+                if (contents.Count < 1)
+                {
+                    errorMessage = "图文列表，图文项目不能为空！";
+                    return false;
+                }
+                return true;
+            }
+
+            if (responseType == (int)WeixinRequestRule.XResponseType.Video)
+            {
+                string txtSoundTitle = Request.Form["txtSoundTitle"];
+                if (string.IsNullOrEmpty(txtSoundTitle))
+                {
+                    errorMessage = "语音回复，语音标题不能为空！";
+                    return false;
+                }
+                string txtSoundUrl = Request.Form["txtSoundUrl"];
+                if (string.IsNullOrEmpty(txtSoundUrl))
+                {
+                    errorMessage = "语音回复，语音地址不能为空！";
+                    return false;
+                }
+                string txtSoundContent = Request.Form["txtSoundContent"];
+                var item = new WeixinRequestContent
+                {
+                    RuleId = model.Id,
+                    MediaURL = txtSoundUrl.Trim(),
+                    Title = txtSoundTitle,
+                    Content = txtSoundContent
+                };
+                if (defaultDetailId > 0) item.Id = defaultDetailId;
+                contents.Add(item);
+                return true;
+            }
+
+            if (responseType == (int)WeixinRequestRule.XResponseType.SingleImage)
+            {
+                string txtSingleImage = Request.Form["txtSingleImage"];
+                if (string.IsNullOrEmpty(txtSingleImage))
+                {
+                    errorMessage = "单图片回复，图片地址不能为空！";
+                    return false;
+                }
+                var item = new WeixinRequestContent
+                {
+                    RuleId = model.Id,
+                    ImgURL = txtSingleImage.Trim()
+                };
+                if (defaultDetailId > 0) item.Id = defaultDetailId;
+                contents.Add(item);
+                return true;
+            }
+
+            return true;
+        }
+
+        private static void SaveRuleAndContents(WeixinRequestRule model, IList<WeixinRequestContent> ls, bool isInsert)
+        {
+            if (isInsert)
+                model.Insert();
+            else
+                model.Save();
+
+            IList<WeixinRequestContent> oldwc = model.ListContent;
+            if (oldwc != null && oldwc.Count > 0)
+            {
+                foreach (WeixinRequestContent p in ls)
+                {
+                    var match = oldwc.Find(s => s.Id == p.Id);
+                    if (match != null)
+                        oldwc.Remove(match);
+                }
+                if (oldwc.Count > 0)
+                    oldwc.Delete();
+            }
+
+            if (ls != null && ls.Count > 0)
+            {
+                foreach (var item in ls)
+                    item.RuleId = model.Id;
+                ls.Save();
+            }
+        }
+        #endregion
     }
 }

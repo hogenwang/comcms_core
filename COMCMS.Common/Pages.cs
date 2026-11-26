@@ -1,172 +1,202 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.WebUtilities;
 
 namespace COMCMS.Common
 {
     public class Pages
     {
+        private static readonly Regex SafeSegmentRegex = new(@"^[a-zA-Z0-9/_-]+$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(200));
 
         #region 列表分页
         /// <summary>
-        /// 显示分页2
+        /// 生成分页 HTML（严格编码输出，避免反射型 XSS 与 string.Format 崩溃）
         /// </summary>
-        /// <param name="pageSize">每页显示记录数</param>
-        /// <param name="recordCount">总记录数</param>
-        /// <param name="page">当前页码</param>
-        /// <param name="url">分页文件名字，静态：index.html；动态List.aspx</param>
-        /// <param name="isRewrite">系统urlReWrite方案；99为ajax连接</param>
-        /// <param name="maxShowPage">最大显示分页数量</param>
-        /// <param name="filepath">目录名称（系统urlReWrite方案为5必填）</param>
-        /// <returns></returns>
         public static string GetPageStr(int pageSize, int recordCount, int page, string url, int isRewrite, int maxShowPage, string filepath = "")
         {
-            if (recordCount < 1)
-            {
+            if (pageSize <= 0 || recordCount < 1)
                 return "";
-            }
-            int pageCount = recordCount / pageSize;//总页数
+
+            int pageCount = recordCount / pageSize;
             if (recordCount % pageSize > 0)
-            {
                 pageCount += 1;
-            }
             if (pageCount < 2)
-            {
                 return "";
-            }
+
+            if (page < 1) page = 1;
             if (page > pageCount) page = pageCount;
-            StringBuilder strPage = new StringBuilder();
-            string pageLink = "";// url + "?id=" + HttpContext.Current.Request.QueryString["id"] + "&page={0}";
-            string strQueryString = MyHttpContext.Current.Request.QueryString.ToString().ToLower();
-            if (isRewrite != 5 && isRewrite != 99)
-                url = url.ToLower();
-            pageLink = url + "?" + strQueryString;
-            string currPage = MyHttpContext.Current.Request.Query["page"];
-            string id = MyHttpContext.Current.Request.Query["id"];
+            if (maxShowPage < 1) maxShowPage = 5;
 
-            if (isRewrite == 5)
+            var query = MyHttpContext.Current?.Request?.QueryString.Value ?? string.Empty;
+            var rawId = MyHttpContext.Current?.Request?.Query["id"].ToString() ?? string.Empty;
+            return BuildPageHtml(pageCount, page, url, isRewrite, maxShowPage, filepath, query, rawId);
+        }
+
+        /// <summary>
+        /// 纯函数分页生成器（便于单元测试）
+        /// </summary>
+        public static string BuildPageHtml(int pageCount, int page, string url, int isRewrite, int maxShowPage, string filepath, string rawQueryString, string rawId)
+        {
+            if (pageCount < 2) return "";
+            if (page < 1) page = 1;
+            if (page > pageCount) page = pageCount;
+            if (maxShowPage < 1) maxShowPage = 5;
+
+            string safeBaseUrl = SanitizeUrlBase(url);
+            string safeId = int.TryParse(rawId, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedId)
+                ? parsedId.ToString(CultureInfo.InvariantCulture)
+                : "0";
+            string safeFilePath = !string.IsNullOrWhiteSpace(filepath) && SafeSegmentRegex.IsMatch(filepath)
+                ? filepath.Trim('/')
+                : string.Empty;
+
+            // 解析并规范化查询参数，防止任意注入与 format 占位符冲突
+            var parsedQuery = QueryHelpers.ParseQuery(rawQueryString ?? string.Empty);
+
+            string BuildLink(int targetPage)
             {
-                url = $"/{filepath}/index.html";
+                string pageStr = targetPage.ToString(CultureInfo.InvariantCulture);
+                switch (isRewrite)
+                {
+                    case 1:
+                    {
+                        var baseAspx = safeBaseUrl.ToLowerInvariant().Replace(".html", ".aspx", StringComparison.Ordinal);
+                        var withId = ReplaceLastDot(baseAspx, $"-{safeId}.");
+                        return targetPage == 1 ? withId : ReplaceLastDot(withId, $"-{pageStr}.");
+                    }
+                    case 2:
+                    {
+                        var baseHtml = safeBaseUrl.ToLowerInvariant().Replace(".aspx", ".html", StringComparison.Ordinal);
+                        var withId = ReplaceLastDot(baseHtml, $"-{safeId}.");
+                        return targetPage == 1 ? withId : ReplaceLastDot(withId, $"-{pageStr}.");
+                    }
+                    case 3:
+                    {
+                        var lower = safeBaseUrl.ToLowerInvariant();
+                        if (lower.EndsWith(".html", StringComparison.Ordinal) || lower.EndsWith(".aspx", StringComparison.Ordinal))
+                        {
+                            var baseHtml = lower.Replace(".aspx", ".html", StringComparison.Ordinal);
+                            return targetPage == 1 ? baseHtml : ReplaceLastDot(baseHtml, $"-{pageStr}.");
+                        }
+                        return QueryHelpers.AddQueryString(safeBaseUrl, "page", pageStr);
+                    }
+                    case 5:
+                    {
+                        var indexUrl = string.IsNullOrEmpty(safeFilePath) ? "/index.html" : $"/{safeFilePath}/index.html";
+                        return targetPage == 1 ? indexUrl : ReplaceLastDot(indexUrl, $"-{pageStr}.");
+                    }
+                    case 99:
+                    {
+                        // Ajax 模板模式，安全替换 {0} 而不调用 string.Format
+                        return safeBaseUrl.Replace("{0}", pageStr, StringComparison.Ordinal);
+                    }
+                    case 0:
+                    default:
+                    {
+                        var queryDict = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                        foreach (var kv in parsedQuery)
+                        {
+                            if (string.Equals(kv.Key, "page", StringComparison.OrdinalIgnoreCase)) continue;
+                            if (!string.IsNullOrEmpty(kv.Key))
+                                queryDict[kv.Key] = kv.Value.ToString();
+                        }
+                        queryDict["page"] = pageStr;
+                        return QueryHelpers.AddQueryString(safeBaseUrl, queryDict);
+                    }
+                }
             }
 
-            switch (isRewrite)
-            {
-                case 1:
-                    url = url.Replace(".html", ".aspx");//避免设置错之后出现问题
-                    url = url.Replace(".", "-" + id + ".");
-                    pageLink = url.Replace(".", "-{0}.");
-                    break;
-                case 2:
-                    url = url.Replace(".aspx", ".html");//避免设置错之后出现问题
-                    if (!string.IsNullOrEmpty(id))
-                        url = url.Replace(".", "-" + id + ".");
-                    else
-                        url = url.Replace(".", "-0.");
-                    pageLink = url.Replace(".", "-{0}.");
-                    break;
-                case 3:
-                    if(url.EndsWith(".html") || url.EndsWith(".aspx"))
-                    {
-                        url = url.Replace(".aspx", ".html");//避免设置错之后出现问题
-                        pageLink = url.Replace(".", "-{0}.");
-                    }
-                    else
-                    {
-                        pageLink = url + "?page={0}";
-                    }
-                    break;
-                case 5:
-                    pageLink = url.Replace(".", "-{0}.");
-                    break;
-                case 99://调用ajax 连接
-                    pageLink = url;
-                    url = string.Format(pageLink, "1");
-                    break;
-                case 0:
-                default:
-                    //动态链接
-                    if (pageLink.IndexOf("page=") > 0)
-                    {
-                        pageLink = pageLink.Replace("page=" + currPage, "page={0}");
-                    }
-                    else
-                    {
-                        pageLink = pageLink + "&page={0}";
-                    }
-                    url = string.Format(pageLink, "1");
-                    break;
-            }
+            var encoder = HtmlEncoder.Default;
+            var strPage = new StringBuilder();
             strPage.Append("<div class=\"pages\">");
-            if (page != 1)//显示[首页]
+
+            if (page != 1)
             {
-                //strPage.AppendFormat("<span class=\"pageFirst\"><a href=\"{0}\" title=\"{1}\">{1}</a></span>", url, Lang.GetPagesLangVal("firstpage"));
-                strPage.AppendFormat("<span class=\"prev\"><a href=\"{0}\" title=\"{1}\">{1}</a></span>", string.Format(pageLink, 1), "首页");
+                strPage.Append("<span class=\"prev\"><a href=\"")
+                    .Append(encoder.Encode(BuildLink(1)))
+                    .Append("\" title=\"首页\">首页</a></span>");
             }
 
-            if (page > 1)//上一页
+            if (page > 1)
             {
-                if (page == 2)//[首页]要index.html
-                {
-                    //strPage.AppendFormat("<span class=\"prev\"><a href=\"{0}\" title=\"{1}\">{1}</a></span>", url, Lang.GetPagesLangVal("prevpage"));
-                    strPage.AppendFormat("<span class=\"prev\"><a href=\"{0}\" title=\"{1}\">{1}</a></span>", string.Format(pageLink, (page - 1).ToString()), "上一页");
-                }
-                else
-                {
-                    strPage.AppendFormat("<span class=\"prev\"><a href=\"{0}\" title=\"{1}\">{1}</a></span>", string.Format(pageLink, (page - 1).ToString()), "上一页");
-                }
+                strPage.Append("<span class=\"prev\"><a href=\"")
+                    .Append(encoder.Encode(BuildLink(page - 1)))
+                    .Append("\" title=\"上一页\">上一页</a></span>");
             }
-            //显示中间所有页数，如果是当前页，则外加一个样式
-            string strAllPage = "<span {2}><a href=\"{0}\" title=\"{1}\">[{1}]</a></span>";
 
-            //显示当前的多少页
-            int cureSize = maxShowPage;
-            int sizes = cureSize / 2;//中间
-            int minPage = page - sizes;//最小起始页码
-            int maxPage = page + sizes;//最大页码
+            int sizes = maxShowPage / 2;
+            int minPage = page - sizes;
+            int maxPage = page + sizes;
             if (minPage <= 0)
             {
                 minPage = 1;
-                maxPage = cureSize;
+                maxPage = maxShowPage;
             }
             if (maxPage >= pageCount)
             {
-                minPage = pageCount - cureSize + 1;
+                minPage = Math.Max(1, pageCount - maxShowPage + 1);
                 maxPage = pageCount;
             }
 
-            for (int i = 1; i <= pageCount; i++)
+            for (int i = minPage; i <= Math.Min(maxPage, pageCount); i++)
             {
-                if (i >= minPage && i <= maxPage)//循环最小到最大页码中间所有页数
+                string label = i.ToString(CultureInfo.InvariantCulture);
+                if (i == page)
                 {
-                    if (i == page)
-                    {
-                        strPage.Append(string.Format(strAllPage, "javascritp:;", i.ToString(), "class=\"curr\""));
-                    }
-                    else
-                    {
-                        if (i == 1)//第一页不能显示成index-1.html
-                        {
-                            if (isRewrite == 4)
-                            {
-                                strPage.Append(string.Format(strAllPage, string.Format(pageLink, i.ToString()), i.ToString(), ""));
-                            }
-                            else
-                                strPage.Append(string.Format(strAllPage, url, "1", ""));
-                        }
-                        else
-                        {
-                            strPage.Append(string.Format(strAllPage, string.Format(pageLink, i.ToString()), i.ToString(), ""));
-                        }
-                    }
+                    strPage.Append("<span class=\"curr\"><a href=\"javascript:;\" title=\"")
+                        .Append(label)
+                        .Append("\">")
+                        .Append(label)
+                        .Append("</a></span>");
+                }
+                else
+                {
+                    strPage.Append("<span><a href=\"")
+                        .Append(encoder.Encode(BuildLink(i)))
+                        .Append("\" title=\"")
+                        .Append(label)
+                        .Append("\">")
+                        .Append(label)
+                        .Append("</a></span>");
                 }
             }
-            if (page < pageCount)//显示[下一页]/[尾页]
+
+            if (page < pageCount)
             {
-                strPage.AppendFormat("<span class=\"next\"><a href=\"{0}\" title=\"{1}\">{1}</a></span>", string.Format(pageLink, (page + 1).ToString()), "下一页");
-                strPage.AppendFormat("<span class=\"pageEnd\"><a href=\"{0}\" title=\"{1}\">{1}</a></span>", string.Format(pageLink, pageCount.ToString()), "尾页");
+                strPage.Append("<span class=\"next\"><a href=\"")
+                    .Append(encoder.Encode(BuildLink(page + 1)))
+                    .Append("\" title=\"下一页\">下一页</a></span>");
+                strPage.Append("<span class=\"pageEnd\"><a href=\"")
+                    .Append(encoder.Encode(BuildLink(pageCount)))
+                    .Append("\" title=\"尾页\">尾页</a></span>");
             }
+
             strPage.Append("</div>");
-            return strPage.ToString().Replace("[", "").Replace("]", "");
+            return strPage.ToString();
+        }
+
+        private static string SanitizeUrlBase(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url)) return "/";
+            var trimmed = url.Trim();
+            if (trimmed.StartsWith("javascript:", StringComparison.OrdinalIgnoreCase) ||
+                trimmed.StartsWith("data:", StringComparison.OrdinalIgnoreCase) ||
+                trimmed.StartsWith("vbscript:", StringComparison.OrdinalIgnoreCase))
+            {
+                return "/";
+            }
+            return trimmed;
+        }
+
+        private static string ReplaceLastDot(string input, string replacement)
+        {
+            var index = input.LastIndexOf('.');
+            if (index < 0) return input;
+            return input.Substring(0, index) + replacement + input.Substring(index + 1);
         }
         #endregion
     }

@@ -54,7 +54,7 @@ namespace COMCMS.Common
         {
             get
             {
-                string strPrefixKey = Configuration["SystemSetting:COMCMSPrefixKey"];// ConfigurationManager.AppSettings["COMCMSPrefixKey"];
+                string strPrefixKey = Configuration?["SystemSetting:COMCMSPrefixKey"];
                 if (string.IsNullOrEmpty(strPrefixKey))
                 {
                     strPrefixKey = "comcmsntc_";
@@ -180,7 +180,7 @@ namespace COMCMS.Common
         /// <returns>判断结果</returns>
         public static bool IsURL(string strUrl)
         {
-            return Regex.IsMatch(strUrl, @"^(http|https)\://([a-zA-Z0-9\.\-]+(\:[a-zA-Z0-9\.&%\$\-]+)*@)*((25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9])\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[1-9]|0)\.(25[0-5]|2[0-4][0-9]|[0-1]{1}[0-9]{2}|[1-9]{1}[0-9]{1}|[0-9])|localhost|([a-zA-Z0-9\-]+\.)*[a-zA-Z0-9\-]+\.(com|edu|gov|int|mil|net|org|biz|arpa|info|name|pro|aero|coop|museum|[a-zA-Z]{1,10}))(\:[0-9]+)*(/($|[a-zA-Z0-9\.\,\?\'\\\+&%\$#\=~_\-]+))*$");
+            return !string.IsNullOrWhiteSpace(strUrl) && strUrl.Length <= 2048 && Uri.TryCreate(strUrl.Trim(), UriKind.Absolute, out var uri) && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
         }
         /// <summary>
         /// 获取当前网站根目录网址 不带 /
@@ -188,21 +188,18 @@ namespace COMCMS.Common
         /// <returns></returns>
         public static string GetServerUrl()
         {
-            string http = "http://";
-            if (MyHttpContext.Current.Request.IsHttps) //判断是否是https
-            {
-                http = "https://";
-            }
-            if (MyHttpContext.Current.Request.Headers["X-Scheme"].ToString() == "https")//增加判断反向代理
-            {
-                http = "https://";
-            }
-            string port = MyHttpContext.Current.Request.Host.Port.ToString();
-            if (string.IsNullOrEmpty(port) || port == "80" || port == "443")
-                return http + MyHttpContext.Current.Request.Host.Host;
-            else
-                return http + MyHttpContext.Current.Request.Host.Host + ":" + port;
-
+            var configuredBaseUrl = Configuration?["Security:PublicBaseUrl"];
+            if (!string.IsNullOrWhiteSpace(configuredBaseUrl) && Uri.TryCreate(configuredBaseUrl.Trim(), UriKind.Absolute, out var configuredUri) && (configuredUri.Scheme == Uri.UriSchemeHttp || configuredUri.Scheme == Uri.UriSchemeHttps))
+                return configuredUri.GetLeftPart(UriPartial.Authority).TrimEnd('/');
+            var request = MyHttpContext.Current?.Request;
+            if (request == null || !request.Host.HasValue)
+                return string.Empty;
+            // X-Forwarded-Proto 已由 UseForwardedHeaders 可信代理中间件规范化到 Request.IsHttps，不再信任非标准 X-Scheme 请求头
+            string http = request.IsHttps ? "https://" : "http://";
+            int? port = request.Host.Port;
+            if (!port.HasValue || port.Value == 80 || port.Value == 443)
+                return http + request.Host.Host;
+            return http + request.Host.Host + ":" + port.Value;
         }
 
         /// <summary>
@@ -251,7 +248,7 @@ namespace COMCMS.Common
         /// <returns>判断结果</returns>
         public static bool IsValidEmail(string strEmail)
         {
-            return Regex.IsMatch(strEmail, @"^[\w\.]+([-]\w+)*@[A-Za-z0-9-_]+[\.][A-Za-z0-9-_]");
+            return !string.IsNullOrWhiteSpace(strEmail) && strEmail.Length <= 254 && Regex.IsMatch(strEmail.Trim(), @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.None, TimeSpan.FromMilliseconds(200));
         }
 
         public static bool IsIPSect(string ip)
@@ -678,7 +675,7 @@ namespace COMCMS.Common
             Random rd = new Random(Guid.NewGuid().GetHashCode());
             for (int i = 0; i < strLength; i++)
             {
-                newRandom.Append(constant[rd.Next(62)]);
+                newRandom.Append(constant[RandomNumberGenerator.GetInt32(constant.Length)]);
             }
             return newRandom.ToString();
         }

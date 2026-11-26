@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 using COMCMS.Common;
 using COMCMS.Core;
-using XCode;
 using Microsoft.AspNetCore.Authorization;
-using Newtonsoft.Json;
-using COMCMS.Web.Common;
-using System.Diagnostics;
-using NewLife.Log;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using NewLife;
-using System.Runtime.InteropServices;
+using NewLife.Log;
+using Newtonsoft.Json;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -21,26 +18,32 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     public class IndexController : AdminBaseController
     {
         private readonly IWebHostEnvironment _env;
+
+        static IndexController()
+        {
+            MachineInfo.RegisterAsync();
+        }
+
         public IndexController(IWebHostEnvironment env)
         {
             _env = env;
-            MachineInfo.RegisterAsync();
         }
+
         #region 后台首页
         public IActionResult Index()
         {
             Admin admin = Admin.GetMyInfo();
             ViewBag.admin = admin;
-            //获取菜单
-            List<AdminMenu> list = new List<AdminMenu>();
-            //这里需要获取权限，暂时先所有
-            if (admin.Roles.IsSuperAdmin == 1)
+            List<AdminMenu> list;
+            if (admin?.Roles?.IsSuperAdmin == 1)
             {
                 list = AdminMenu.GetListTree(0, -1, false, true).ToList();
             }
             else
             {
-                list = JsonConvert.DeserializeObject<List<AdminMenu>>(admin.Roles.Menus);
+                list = string.IsNullOrWhiteSpace(admin?.Roles?.Menus)
+                    ? new List<AdminMenu>()
+                    : (JsonConvert.DeserializeObject<List<AdminMenu>>(admin.Roles.Menus) ?? new List<AdminMenu>());
             }
 
             return View(list);
@@ -62,14 +65,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
 
             Admin admin = Admin.GetMyInfo();
             ViewBag.admin = admin;
-
             return View();
         }
         #endregion
 
         #region 显示没权限
         [AllowAnonymous]
-        //显示没有权限
         public IActionResult NotAuthorize()
         {
             return View();
@@ -81,36 +82,38 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         public IActionResult DoMemoryFree()
         {
             Admin my = Admin.GetMyInfo();
-            if (my.Roles.IsSuperAdmin == 1)
-            {
-                try
-                {
-                    GC.Collect();
-
-                    // 释放当前进程所占用的内存
-                    var p = Process.GetCurrentProcess();
-                    SetProcessWorkingSetSize(p.Handle, -1, -1);
-                }
-                catch (Exception ex)
-                {
-                    XTrace.WriteException(ex);
-                    tip.Message = "释放内存执行失败！" + ex.Message;
-                    return Json(tip);
-                }
-
-                tip.Message = "释放内存成功！";
-                tip.Status = JsonTip.SUCCESS;
-                return Json(tip);
-            }
-            else
+            if (my?.Roles?.IsSuperAdmin != 1)
             {
                 tip.Message = "您没有权限执行本操作";
                 return Json(tip);
             }
+
+            try
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+
+                if (OperatingSystem.IsWindows())
+                {
+                    var p = Process.GetCurrentProcess();
+                    SetProcessWorkingSetSize(p.Handle, -1, -1);
+                }
+            }
+            catch (Exception ex)
+            {
+                XTrace.WriteException(ex);
+                tip.Message = $"释放内存执行失败，请使用 TraceId {HttpContext.TraceIdentifier} 联系管理员。";
+                return Json(tip);
+            }
+
+            tip.Message = "释放内存成功！";
+            tip.Status = JsonTip.SUCCESS;
+            return Json(tip);
         }
 
         [DllImport("kernel32.dll")]
-        private static extern Boolean SetProcessWorkingSetSize(IntPtr proc, Int32 min, Int32 max);
+        private static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
         #endregion
 
         #region 获取CPU内存等参数
@@ -119,7 +122,7 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         public IActionResult GetMachineInfo()
         {
             Admin my = Admin.GetMyInfo();
-            if (my.Roles.IsSuperAdmin == 0)
+            if (my?.Roles?.IsSuperAdmin != 1)
             {
                 tip.Message = "您没有权限执行本操作！";
                 return Json(tip);
@@ -127,24 +130,25 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             var mi = MachineInfo.Current ?? new MachineInfo();
             var process = Process.GetCurrentProcess();
 
-            double CpuRate = Math.Round(mi.CpuRate, 2);
-            string AvailableMemory = (mi.AvailableMemory / 1024 / 1024).ToString("n0") + "M";
-            decimal memoryUsage = Math.Round((decimal)mi.AvailableMemory / (decimal)mi.Memory * 100M, 2);
-            string WorkingSet64 = (process.WorkingSet64 / 1024 / 1024).ToString("n0") + "M";
-            string PrivateMemorySize64 = (process.PrivateMemorySize64 / 1024 / 1024).ToString("n0") + "M";
-            string GCMemory = (GC.GetTotalMemory(false) / 1024 / 1024).ToString("n0") + "M";
+            double cpuRate = Math.Round(mi.CpuRate, 2);
+            string availableMemory = (mi.AvailableMemory / 1024 / 1024).ToString("n0") + "M";
+            decimal memoryUsage = mi.Memory > 0
+                ? Math.Round((decimal)mi.AvailableMemory / (decimal)mi.Memory * 100M, 2)
+                : 0M;
+            string workingSet64 = (process.WorkingSet64 / 1024 / 1024).ToString("n0") + "M";
+            string privateMemorySize64 = (process.PrivateMemorySize64 / 1024 / 1024).ToString("n0") + "M";
+            string gcMemory = (GC.GetTotalMemory(false) / 1024 / 1024).ToString("n0") + "M";
 
             tip.Status = JsonTip.SUCCESS;
             tip.Detail = new
             {
-                cpuRate = CpuRate,
-                availableMemory = AvailableMemory,
-                memoryUsage = memoryUsage,
-                workingSet64 = WorkingSet64,
-                privateMemorySize64 = PrivateMemorySize64,
-                gCMemory = GCMemory
+                cpuRate,
+                availableMemory,
+                memoryUsage,
+                workingSet64,
+                privateMemorySize64,
+                gCMemory = gcMemory
             };
-
             tip.Message = "获取成功";
             return Json(tip);
         }

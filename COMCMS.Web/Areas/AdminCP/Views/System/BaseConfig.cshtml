@@ -1,4 +1,4 @@
-﻿@model COMCMS.Core.Config
+@model COMCMS.Core.Config
 @{
     ViewBag.title = "编辑网站基本设置";
 }
@@ -9,16 +9,16 @@
             <div class="tabs-container">
                 <ul class="nav nav-tabs">
                     <li class="active">
-                        <a data-toggle="tab" href="#tab-1" aria-expanded="true"> 站点基本设置</a>
+                        <a data-bs-toggle="tab" href="#tab-1" aria-expanded="true"> 站点基本设置</a>
                     </li>
                     <li class="">
-                        <a data-toggle="tab" href="#tab-2" aria-expanded="false"> 优化及其他设置</a>
+                        <a data-bs-toggle="tab" href="#tab-2" aria-expanded="false"> 优化及其他设置</a>
                     </li>
                     <li class="">
-                        <a data-toggle="tab" href="#tab-3" aria-expanded="false"> 微信/商家高级对接设置</a>
+                        <a data-bs-toggle="tab" href="#tab-3" aria-expanded="false"> 微信/商家高级对接设置</a>
                     </li>
                     <li class="">
-                        <a data-toggle="tab" href="#tab-4" aria-expanded="false"> 商品运费设置</a>
+                        <a data-bs-toggle="tab" href="#tab-4" aria-expanded="false"> 商品运费设置</a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -240,6 +240,6 @@
     $(function () {
         DoPost("editBaseConfigForm");
         //初始化上传控件
-        $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp" });
+        $(".upload-img").comcmsUploader({ filesize: 10240, sendurl: "/AdminCP/Upload/UploadImage", filetypes: "gif,jpg,png,bmp,jpeg,webp", btntext: "上传图片" });
     })
 </script>

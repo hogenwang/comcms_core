@@ -2,36 +2,71 @@
     Layout = null;
 }
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>没有权限</title>
-    <!--[if lt IE 8]>
-    <meta http-equiv="refresh" content="0;ie.html" />
-    <![endif]-->
-    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/hplus/css/style.css" rel="stylesheet" />
+    <title>没有访问权限 - COMCMS</title>
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('comcms_admin_theme') === 'dark' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', t);
+                document.documentElement.setAttribute('data-bs-theme', t);
+            } catch (e) { }
+        })();
+    </script>
+    <link href="~/lib/bootstrap5/bootstrap.min.css" rel="stylesheet" />
     <link href="~/hplus/css/font-awesome.min.css" rel="stylesheet" />
-    <script src="~/js/jquery-3.min.js"></script>
+    <link href="~/css/admin-tokens.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/admin-bs3-compat.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/admin-modern.css" rel="stylesheet" asp-append-version="true" />
+    <style>
+        html, body { height: 100%; }
+        .noauth-wrap {
+            min-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .noauth-card {
+            width: 100%;
+            max-width: 460px;
+            padding: 40px 32px;
+            text-align: center;
+            background: var(--adm-surface);
+            border: 1px solid var(--adm-border);
+            border-radius: var(--adm-radius-lg);
+            box-shadow: var(--adm-shadow-md);
+        }
+        .noauth-icon {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            background: var(--adm-danger-soft);
+            color: var(--adm-danger);
+        }
+    </style>
 </head>
-
 <body class="gray-bg">
-    <div class="middle-box text-center animated fadeInDown">
-        <h1 style="font-size:48px">没权限啦！</h1>
-        <h3 class="font-bold">您没权限执行当前操作！</h3>
-        <div class="error-desc">
-            您是否超时登录？或者咨询超级管理员？
-            <br /><a href="/AdminCP/Login" class="btn btn-primary m-t">重新登录试试</a>
+    <div class="noauth-wrap">
+        <div class="noauth-card">
+            <div class="noauth-icon"><i class="fa fa-lock"></i></div>
+            <h2 style="margin:0 0 10px;font-size:22px;font-weight:700;color:var(--adm-text);">暂无操作权限</h2>
+            <p style="margin:0 0 24px;color:var(--adm-text-secondary);font-size:14px;line-height:1.7;">
+                您当前没有权限执行该操作，可能是登录会话已超时或角色未授权，请重新登录或联系超级管理员。
+            </p>
+            <a href="/AdminCP/Login" target="_top" class="btn btn-primary">
+                <i class="fa fa-sign-in"></i> 重新登录
+            </a>
         </div>
     </div>
-    <!-- 全局js -->
-    <script src="~/hplus/js/bootstrap.min.js"></script>
-    <script src="~/js/jquery.form.min.js"></script>
-    <script src="~/js/validate/jquery.validate.min.js"></script>
-    <script src="~/js/validate/messages_zh.min.js"></script>
-    <script src="~/js/jquery.metadata.js"></script>
-    <script src="~/js/layer/layer.js"></script>
-    <script src="~/js/rtpost.js"></script>
+    <script src="~/js/admin-modern.js" asp-append-version="true"></script>
 </body>
 </html>

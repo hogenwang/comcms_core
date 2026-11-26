@@ -145,7 +145,7 @@ namespace COMCMS.Web.Services
                 using var client = new SmtpClient();
                 await client.ConnectAsync(smtp.SmtpHost, port, smtp.IsSSL == 1);
                 await client.AuthenticateAsync(smtp.SmtpEmail, smtp.SmtpEmailPwd);
-                await client.SendAsync(message);
+                await client.SendAsync(new MailKit.SendRequest(message));
                 await client.DisconnectAsync(true);
             }
             catch (Exception ex)

@@ -1,0 +1,115 @@
+/* COMCMS Native HTML5 Uploader */
+.my-upload-span {
+    padding: 0 !important;
+    border: 0 !important;
+    background: transparent !important;
+    overflow: visible;
+    position: relative;
+    vertical-align: middle;
+}
+
+.comcms-uploader {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    height: 34px;
+    vertical-align: middle;
+}
+
+.comcms-uploader-input {
+    display: none !important;
+}
+
+.comcms-upload-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    height: 34px;
+    min-width: 92px;
+    padding: 0 14px;
+    border: 1px solid #1ab394;
+    border-radius: 0 3px 3px 0;
+    background: #1ab394;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    overflow: hidden;
+    transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    outline: none;
+}
+
+.comcms-upload-btn:hover,
+.comcms-upload-btn:focus {
+    background: #169c81;
+    border-color: #169c81;
+    color: #ffffff;
+    box-shadow: 0 2px 6px rgba(26, 179, 148, 0.28);
+}
+
+.comcms-upload-btn.is-uploading {
+    background: #0f766e;
+    border-color: #0f766e;
+    cursor: progress;
+    padding-right: 28px;
+}
+
+.comcms-upload-progress-bar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0%;
+    background: rgba(255, 255, 255, 0.22);
+    transition: width 0.12s linear;
+    pointer-events: none;
+}
+
+.comcms-upload-label {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.comcms-upload-cancel {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    display: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.25);
+    color: #ffffff;
+    font-size: 11px;
+    line-height: 18px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.comcms-upload-btn.is-uploading .comcms-upload-cancel {
+    display: inline-block;
+}
+
+.comcms-upload-cancel:hover {
+    background: rgba(239, 68, 68, 0.85);
+}
+
+.input-group.comcms-upload-dragover {
+    outline: 2px dashed #1ab394;
+    outline-offset: 2px;
+    border-radius: 4px;
+    background: rgba(26, 179, 148, 0.05);
+}
+
+.input-group.comcms-upload-dragover .form-control {
+    background-color: #f0fdfa;
+}

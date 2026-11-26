@@ -1,9 +1,10 @@
 # COMCMS_NETCORE
 
 COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
-主要是演示了.net 10 一个系统后台如何搭建。前台如何使用。可以简单的完成一个企业站。通过二次开发，可以支持商城系统、小程序、app服务器端等...
+主要是演示了.net 11 一个系统后台如何搭建。前台如何使用。可以简单的完成一个企业站。通过二次开发，可以支持商城系统、小程序、app服务器端等...
 
 ### 更新日志
+- 2026-11-26 全面升级至 **.NET 11 (`net11.0`)** 正式版并同步更新全部 NuGet 依赖至最新正式版本（0 CVE 漏洞）；完成系统安全加固与架构重构（RBAC、防重放/CSRF、密码渐进迁移、公共内容/计数器/认证缓存服务拆解、`COMCMS.SecurityTests` 扩展至 169 项测试）；后台全面升级为 **Bootstrap 5.3.3 + Horizon Admin 2026** 现代双主题（浅色/深色一键切换，含登录页与 My97DatePicker 深度美化、侧栏与多标签双向联动）；富文本编辑器升级至 **Jodit v4.21**，自研原生 `comcms-uploader` 彻底替代 WebUploader 并接入新版附件管理器（支持图片编辑与 PDF 预览）；前台重构为现代化科技感响应式企业站，同时清理 439 个无效历史静态资源与旧框架依赖
 - 2026-08-13 完成安全与认证第一轮加固：统一 Cookie/JWT 认证、密码渐进迁移、会话撤销、CSRF、防重放、上传和异常响应防护；移除旧 WebUploader 项目依赖并统一使用 jQuery 3
 - 2025-11-13 升级到.net 10
 - 2024-06-26 升级到.net 8 调整后台UI，精简js插件
@@ -18,12 +19,13 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 ### 技术简要
 
-- .net 10 (请注意升级本地SDK 或者runtime)
+- .net 11 (请注意升级本地SDK 或者runtime)
 - 数据库：Mysql 5.7 /Mysql 8.0 / SqlServer 2008+
 - ORM:数据库操作使用XCode，目前支持mysql、sqlserver。详细见：https://github.com/NewLifeX/X
-- 据库驱动使用：MySQL官方驱动，9.5
-- 后台模板是H+
-- 富文本编辑器采用自托管 Jodit 4，支持截图粘贴、图片拖拽上传、附件上传和 MP4/WebM/Ogg 视频上传；其他图片字段继续使用 WebUploader
+- 数据库驱动使用：MySQL官方驱动（`MySql.Data 26.10.0`）
+- 后台架构：Bootstrap 5.3.3 + Horizon Admin 2026 现代双主题（支持浅色/深色风格实时切换与跨 iframe 同步）
+- 前台架构：Horizon Tech 响应式科技感企业门户模板（`site-tech.css` / `site-tech.js`）
+- 富文本与媒体：自托管 **Jodit v4.21** 富文本编辑器（支持截图粘贴、拖拽上传、音视频上传及对接附件管理器选图）、原生 `comcms-uploader` 上传组件及现代附件管理器（含图片裁剪编辑与 PDF.js 在线预览）
 
 ### 文件夹介绍
 
@@ -33,15 +35,15 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 - COMCMS.Core 数据库操作核心业务逻辑和实体 采用XCode
 
-- COMCMS.Web .net 10 的MVC网站。
+- COMCMS.Web .net 11 的MVC网站。
+
+- COMCMS.SecurityTests 安全与回归自动化测试套件（169 项测试）
 
 - XCoder 代码生成器，跟上述的没任何关系，只是为了生成数据库操作业务逻辑和实体而已。
 
 - Lib.Core 部分中间件
 
-- WebUploader 前端组件提供大文件上传功能
-
-- WebTest 已升级到 .NET 10，仅作为兼容性测试站点，不包含旧版 ASP.NET Core 2.2 依赖
+- WebTest 已升级到 .NET 11，仅作为兼容性测试站点，不包含旧版 ASP.NET Core 2.2 依赖
 
 - `database/install` 是新安装基线 SQL，`database/migrations` 是现有数据库的版本化迁移；`data` 仅保留历史参考，不能用于新安装。
 
@@ -60,7 +62,7 @@ COMCMS NETCORE版本,一个简单的CMS后台管理系统，带前台演示。
 
 密码新写入 PBKDF2，旧版 MD5 在成功登录后渐进升级，并于 `Security:LegacyPasswordMigrationEndsUtc` 到期后自动拒绝；配置缺失或格式错误时失败关闭。登录限流、账号锁定、SecurityStamp、CSRF、可信代理、ProblemDetails、上传路径和 SSRF 防护均已接入。密码重置令牌只保存哈希，新令牌签发或重置成功时会作废同账号其余有效令牌。
 
-安全响应头现已启用最小强制 CSP（禁止对象、限制 base URI 和嵌入来源），同时保留完整 Report-Only 策略用于逐步清除旧页面的内联脚本。应用提供 `/health/live` 和 `/health/ready`，安全事件通过 `COMCMS.Security` Meter 输出低基数指标；GitHub Actions 会执行 Release 构建、安全测试和传递依赖漏洞扫描。`COMCMS.SecurityTests` 当前包含 59 项安全回归测试。
+安全响应头现已启用最小强制 CSP（禁止对象、限制 base URI 和嵌入来源），同时保留完整 Report-Only 策略用于逐步清除旧页面的内联脚本。应用提供 `/health/live` 和 `/health/ready`，安全事件通过 `COMCMS.Security` Meter 输出低基数指标；GitHub Actions 会执行 Release 构建、安全测试和传递依赖漏洞扫描。`COMCMS.SecurityTests` 当前包含 169 项安全与回归测试。
 
 仓库配置不保存数据库、JWT、支付或微信密钥。开发机请创建被 `.gitignore` 忽略的 `COMCMS.Web/appsettings.Development.local.json`，例如：
 

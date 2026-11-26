@@ -1,108 +1,383 @@
 ﻿@{
     Layout = null;
 }
-
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理平台登录</title>
-    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/hplus/css/style.css" rel="stylesheet" />
+    <title>COMCMS 管理控制台登录</title>
+    <script>
+        if (window.top !== window.self) { window.top.location = window.location; }
+        (function () {
+            try {
+                var t = localStorage.getItem('comcms_admin_theme') === 'dark' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', t);
+                document.documentElement.setAttribute('data-bs-theme', t);
+            } catch (e) { }
+        })();
+    </script>
+    <link href="~/lib/bootstrap5/bootstrap.min.css" rel="stylesheet" />
     <link href="~/hplus/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/hplus/css/animate.min.css" rel="stylesheet" />
-    <link href="~/hplus/css/login-scoped.css" rel="stylesheet" />
-
-    <!--[if lt IE 8]>
-    <meta http-equiv="refresh" content="0;Ie" />
-    <![endif]-->
-    <script>if (window.top !== window.self) { window.top.location = window.location; }</script>
+    <link href="~/hplus/css/login-scoped.css" rel="stylesheet" asp-append-version="true" />
 </head>
-<body class="gray-bg admin-login-page">
-    <canvas id="canvas-bg"></canvas>
-    <div class="middle-box animated fadeInDown">
-        <div>
-            <div class="text-center m-b-md" style="font-size:64px">
-                COMCMS
+<body class="admin-login-page">
+    <button type="button" class="login-theme-toggle" id="loginThemeToggle" title="切换浅色/深色风格" aria-label="切换浅色/深色风格">
+        <i class="fa fa-moon-o" aria-hidden="true"></i>
+        <span>深色风格</span>
+    </button>
+    <div class="login-orb login-orb-1" aria-hidden="true"></div>
+    <div class="login-orb login-orb-2" aria-hidden="true"></div>
+    <canvas id="canvas-bg" aria-hidden="true"></canvas>
+    <div class="login-toast-host" id="loginToastHost" aria-live="polite" aria-atomic="true"></div>
+
+    <main class="login-stage">
+        <section class="login-shell animated fadeInUp">
+            <!-- Left Tech Brand Panel -->
+            <div class="login-brand-panel">
+                <div>
+                    <div class="login-status-pill">
+                        <span class="login-status-dot"></span>
+                        <span>System Online · Admin Console</span>
+                    </div>
+
+                    <div class="login-brand-head">
+                        <div class="login-logo-row">
+                            <div class="login-logo-emblem" aria-hidden="true">
+                                <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M16 2.5L28 9.25V22.75L16 29.5L4 22.75V9.25L16 2.5Z" stroke="url(#comcmsGrad)" stroke-width="2.2" stroke-linejoin="round" />
+                                    <path d="M16 9L22.5 12.75V20.25L16 24L9.5 20.25V12.75L16 9Z" fill="url(#comcmsGrad)" fill-opacity="0.25" stroke="#5eead4" stroke-width="1.6" stroke-linejoin="round" />
+                                    <circle cx="16" cy="16.5" r="2.6" fill="#2dd4bf" />
+                                    <defs>
+                                        <linearGradient id="comcmsGrad" x1="4" y1="2.5" x2="28" y2="29.5" gradientUnits="userSpaceOnUse">
+                                            <stop stop-color="#2dd4bf" />
+                                            <stop offset="1" stop-color="#38bdf8" />
+                                        </linearGradient>
+                                    </defs>
+                                </svg>
+                            </div>
+                            <div class="login-brand-name">COMCMS</div>
+                        </div>
+                        <p class="login-brand-tagline">
+                            新一代企业级内容管理与数字化运营中台，安全、高效、可扩展。
+                        </p>
+                    </div>
+
+                    <ul class="login-feature-list">
+                        <li class="login-feature-item">
+                            <span class="login-feature-icon"><i class="fa fa-shield"></i></span>
+                            <div class="login-feature-text">
+                                <strong>全链路安全防护</strong>
+                                <span>RBAC 细粒度权限控制、防 CSRF 与会话实时吊销</span>
+                            </div>
+                        </li>
+                        <li class="login-feature-item">
+                            <span class="login-feature-icon"><i class="fa fa-bolt"></i></span>
+                            <div class="login-feature-text">
+                                <strong>高性能内容与缓存引擎</strong>
+                                <span>.NET 11 架构驱动，分布式缓存与异步聚合加速</span>
+                            </div>
+                        </li>
+                        <li class="login-feature-item">
+                            <span class="login-feature-icon"><i class="fa fa-cubes"></i></span>
+                            <div class="login-feature-text">
+                                <strong>多端媒体与业务一体化</strong>
+                                <span>文章、商品、微信生态与原生媒体资源统一管理</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="login-security-bar">
+                    <span class="login-security-chip">PBKDF2-SHA256</span>
+                    <span class="login-security-chip">Anti-CSRF</span>
+                    <span class="login-security-chip">CSP Guard</span>
+                </div>
             </div>
-            <h3>欢迎使用 COMCMS 后台管理平台</h3>
-            <form asp-controller="Login" asp-area="AdminCP" asp-action="Login"  id="loginForm" class="m-t" role="form" method="post" asp-antiforgery="true">
-                <div class="form-group">
-                    <input type="text" name="username" id="username" class="form-control" placeholder="用户名" required="">
+
+            <!-- Right Authentication Panel -->
+            <div class="login-form-panel">
+                <div class="login-mobile-brand">
+                    <div class="login-brand-name" style="font-size: 30px;">COMCMS</div>
                 </div>
-                <div class="form-group">
-                    <input type="password" name="password" id="password" class="form-control" placeholder="密码" required="">
+
+                <h1 class="login-form-title">管理员登录</h1>
+                <p class="login-form-subtitle">请输入您的管理员凭据以进入管理控制台</p>
+
+                <div id="loginAlertBanner" class="login-alert-banner" role="alert" aria-live="assertive">
+                    <i class="fa fa-exclamation-circle login-alert-icon" id="loginAlertIcon" aria-hidden="true"></i>
+                    <span class="login-alert-text" id="loginAlertText"></span>
+                    <button type="button" class="login-alert-close" id="loginAlertClose" aria-label="关闭提示">&times;</button>
                 </div>
-                @if (Utils.GetSetting("SystemSetting:AdminLoginWithCode") == "1")
-                {
-                    <div class="form-group login-captcha-group">
-                        <div class="login-captcha-row">
-                            <input type="text" name="code" id="code" class="form-control" placeholder="验证码" required="">
-                            <span class="input-group-addon login-captcha-addon">
-                                <img src="~/VerifyCode/MixVerifyCode" onclick="this.src='/VerifyCode/MixVerifyCode?'+Math.random()" alt="验证码" />
-                            </span>
+
+                <form asp-controller="Login" asp-area="AdminCP" asp-action="Login" id="loginForm" role="form" method="post" asp-antiforgery="true" autocomplete="off">
+                    <div class="login-field-group">
+                        <label class="login-field-label" for="username">管理员账号</label>
+                        <div class="login-input-shell">
+                            <i class="fa fa-user login-input-icon" aria-hidden="true"></i>
+                            <input type="text" name="username" id="username" class="form-control" placeholder="请输入用户名" required autocomplete="username">
                         </div>
                     </div>
-                }
-                <button type="submit" class="btn btn-primary block full-width m-b">登 录</button>
-                <p class="text-muted text-center">
-                    COMCMS © 2014-@DateTime.Now.Year
-                </p>
-            </form>
-        </div>
-    </div>
-    <!-- 全局js -->
+
+                    <div class="login-field-group">
+                        <label class="login-field-label" for="password">登录密码</label>
+                        <div class="login-input-shell">
+                            <i class="fa fa-lock login-input-icon" aria-hidden="true"></i>
+                            <input type="password" name="password" id="password" class="form-control" placeholder="请输入密码" required autocomplete="current-password">
+                            <button type="button" class="login-pwd-toggle" id="togglePasswordBtn" aria-label="显示或隐藏密码" title="显示或隐藏密码">
+                                <i class="fa fa-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    @if (Utils.GetSetting("SystemSetting:AdminLoginWithCode") == "1")
+                    {
+                        <div class="login-field-group">
+                            <label class="login-field-label" for="code">安全验证码</label>
+                            <div class="login-captcha-grid">
+                                <div class="login-input-shell">
+                                    <i class="fa fa-shield login-input-icon" aria-hidden="true"></i>
+                                    <input type="text" name="code" id="code" class="form-control" placeholder="请输入验证码" required autocomplete="off">
+                                </div>
+                                <div class="login-captcha-box" title="点击刷新验证码" onclick="refreshCaptcha()">
+                                    <img id="captchaImg" src="~/VerifyCode/MixVerifyCode" alt="验证码" />
+                                </div>
+                            </div>
+                        </div>
+                    }
+
+                    <button type="submit" class="login-submit-btn">
+                        <i class="fa fa-sign-in" aria-hidden="true"></i> 登 录
+                    </button>
+
+                    <p class="login-footer-copy">
+                        COMCMS © 2014-@DateTime.Now.Year · 后台安全管理系统
+                    </p>
+                </form>
+            </div>
+        </section>
+    </main>
+
     <environment names="Development">
         <script src="~/js/jquery-3.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/bootstrap5/bootstrap.bundle.min.js"></script>
         <script src="~/js/validation/jquery.validate.js"></script>
         <script src="~/js/validation/messages_zh.js"></script>
-        <script src="~/js/layer/layer.js"></script>
-        <script src="~/js/jquery.form.js"></script>
-        <script src="~/js/rtpost.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="~/js/jquery-3.min.js"></script>
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/bootstrap5/bootstrap.bundle.min.js"></script>
         <script src="~/js/validation/jquery.validate.min.js"></script>
         <script src="~/js/validation/messages_zh.min.js"></script>
-        <script src="~/js/layer/layer.js"></script>
-        <script src="~/js/jquery.form.min.js"></script>
-        <script src="~/js/rtpost.js"></script>
     </environment>
     <script>
-        $(function () {
-            var rules = {
-                password: {
-                    required: true,
-                    minlength: 5,
-                    maxlength: 128
-                }
-            };
-            DoAdminLogin("loginForm", rules);
-        });
-        // --- 科技感粒子连线动画特效 (原生JS实现，无需引入额外库) ---
-        (function() {
-            var canvas = document.getElementById('canvas-bg');
-            var ctx = canvas.getContext('2d');
-            var width, height;
-            var particles = [];
+        function refreshCaptcha() {
+            var img = document.getElementById('captchaImg');
+            if (img) {
+                img.src = '/VerifyCode/MixVerifyCode?t=' + Date.now();
+            }
+        }
 
-            // 特效配置
+        function showLoginBanner(type, message) {
+            var $banner = $('#loginAlertBanner');
+            var $icon = $('#loginAlertIcon');
+            var $text = $('#loginAlertText');
+            var iconClass = type === 'success'
+                ? 'fa-check-circle'
+                : (type === 'info' ? 'fa-info-circle' : 'fa-exclamation-circle');
+
+            $banner.removeClass('is-error is-success is-info is-shake is-visible');
+            $icon.attr('class', 'fa ' + iconClass + ' login-alert-icon');
+            $text.text(message || '');
+            // Trigger reflow for shake animation on repeated errors
+            void $banner[0].offsetWidth;
+            $banner.addClass('is-visible is-' + type);
+            if (type === 'error') {
+                $banner.addClass('is-shake');
+            }
+        }
+
+        function hideLoginBanner() {
+            $('#loginAlertBanner').removeClass('is-visible is-error is-success is-info is-shake');
+        }
+
+        function showLoginToast(type, message, duration) {
+            var host = document.getElementById('loginToastHost');
+            if (!host) return;
+            host.innerHTML = '';
+
+            var toast = document.createElement('div');
+            toast.className = 'login-toast is-' + (type || 'info');
+
+            var icon = document.createElement('i');
+            icon.className = 'fa ' + (type === 'success' ? 'fa-check-circle' : (type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'));
+            icon.style.color = type === 'success' ? '#34d399' : (type === 'error' ? '#fb7185' : '#38bdf8');
+            icon.style.fontSize = '15px';
+
+            var span = document.createElement('span');
+            span.textContent = message || '';
+
+            toast.appendChild(icon);
+            toast.appendChild(span);
+            host.appendChild(toast);
+
+            var ms = duration || 2800;
+            window.setTimeout(function () {
+                toast.classList.add('is-leaving');
+                window.setTimeout(function () {
+                    if (toast.parentNode) toast.parentNode.removeChild(toast);
+                }, 220);
+            }, ms);
+        }
+
+        $(function () {
+            // Sync & toggle Light / Dark theme (shares comcms_admin_theme with AdminCP console)
+            function syncLoginThemeBtn(theme) {
+                var isDark = theme === 'dark';
+                var $btn = $('#loginThemeToggle');
+                $btn.attr('aria-pressed', isDark ? 'true' : 'false');
+                $btn.attr('title', isDark ? '切换为浅色风格' : '切换为深色风格');
+                $btn.find('i').attr('class', isDark ? 'fa fa-sun-o' : 'fa fa-moon-o');
+                $btn.find('span').text(isDark ? '浅色风格' : '深色风格');
+            }
+            function applyLoginTheme(theme) {
+                var mode = theme === 'dark' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', mode);
+                document.documentElement.setAttribute('data-bs-theme', mode);
+                try { localStorage.setItem('comcms_admin_theme', mode); } catch (e) { }
+                syncLoginThemeBtn(mode);
+            }
+            syncLoginThemeBtn(document.documentElement.getAttribute('data-theme') || 'light');
+            $('#loginThemeToggle').on('click', function () {
+                var cur = document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+                applyLoginTheme(cur === 'dark' ? 'light' : 'dark');
+            });
+
+            $('#loginAlertClose').on('click', hideLoginBanner);
+            $('#username, #password, #code').on('input', function () {
+                if ($('#loginAlertBanner').hasClass('is-error')) {
+                    hideLoginBanner();
+                }
+            });
+
+            $('#togglePasswordBtn').on('click', function () {
+                var $pwd = $('#password');
+                var $icon = $(this).find('i');
+                if ($pwd.attr('type') === 'password') {
+                    $pwd.attr('type', 'text');
+                    $icon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    $pwd.attr('type', 'password');
+                    $icon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            });
+
+            var $form = $('#loginForm');
+            var $submitBtn = $form.find('button[type="submit"]');
+            var defaultBtnHtml = $submitBtn.html();
+
+            function resetSubmitBtn() {
+                $submitBtn.prop('disabled', false).html(defaultBtnHtml);
+            }
+
+            $form.validate({
+                rules: {
+                    username: { required: true },
+                    password: { required: true, minlength: 5, maxlength: 128 },
+                    code: { required: true }
+                },
+                submitHandler: function (form) {
+                    hideLoginBanner();
+                    $submitBtn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> 正在验证...');
+
+                    $.ajax({
+                        type: 'POST',
+                        url: $form.attr('action'),
+                        data: $form.serialize(),
+                        dataType: 'json',
+                        success: function (data) {
+                            if (data && data.status === 'success') {
+                                var okMsg = data.message || '登录成功，正在进入管理控制台...';
+                                showLoginBanner('success', okMsg);
+                                showLoginToast('success', okMsg, 1500);
+                                $submitBtn.html('<i class="fa fa-check-circle" aria-hidden="true"></i> 登录成功，正在跳转...');
+                                window.setTimeout(function () {
+                                    window.location.href = data.returnUrl || '/AdminCP';
+                                }, 600);
+                                return;
+                            }
+
+                            resetSubmitBtn();
+                            refreshCaptcha();
+                            $('#code').val('');
+
+                            if (data && data.other === 'reload') {
+                                var reloadMsg = '页面访问已超时，正在为您刷新页面...';
+                                showLoginBanner('info', reloadMsg);
+                                showLoginToast('info', reloadMsg, 1800);
+                                window.setTimeout(function () {
+                                    window.location.reload();
+                                }, 1200);
+                                return;
+                            }
+
+                            var errMsg = (data && data.message) || '登录失败，请检查账号和密码后重试。';
+                            showLoginBanner('error', errMsg);
+                            showLoginToast('error', errMsg, 3000);
+                        },
+                        error: function (xhr) {
+                            resetSubmitBtn();
+                            refreshCaptcha();
+                            $('#code').val('');
+
+                            if (xhr && xhr.status === 429) {
+                                var limitMsg = '登录尝试过于频繁，请稍后再试。';
+                                showLoginBanner('error', limitMsg);
+                                showLoginToast('error', limitMsg, 3200);
+                            } else if (xhr && xhr.status === 400) {
+                                var expiredMsg = '页面安全令牌已失效，正在自动刷新...';
+                                showLoginBanner('info', expiredMsg);
+                                showLoginToast('info', expiredMsg, 1800);
+                                window.setTimeout(function () {
+                                    window.location.reload();
+                                }, 1200);
+                            } else {
+                                var netMsg = '网络请求异常，请检查网络连接后重试。';
+                                showLoginBanner('error', netMsg);
+                                showLoginToast('error', netMsg, 3200);
+                            }
+                        }
+                    });
+                    return false;
+                }
+            });
+        });
+
+        // Interactive Retina Constellation Particle Network
+        (function () {
+            var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var canvas = document.getElementById('canvas-bg');
+            if (!canvas || !canvas.getContext) return;
+            var ctx = canvas.getContext('2d');
+            var width = 0, height = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+            var particles = [];
+            var pointer = { x: null, y: null, radius: 150 };
+
             var config = {
-                count: 80,            // 粒子数量
-                dist: 160,            // 连线距离
-                radius: 2,            // 粒子大小
-                color: '26, 179, 148',// 主色调 RGB (#1ab394)
-                speed: 0.8            // 移动速度
+                count: 68,
+                dist: 150,
+                speed: 0.45
             };
 
             function resize() {
                 width = window.innerWidth;
                 height = window.innerHeight;
-                canvas.width = width;
-                canvas.height = height;
+                canvas.width = Math.floor(width * dpr);
+                canvas.height = Math.floor(height * dpr);
+                canvas.style.width = width + 'px';
+                canvas.style.height = height + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
             }
 
             function Particle() {
@@ -110,36 +385,42 @@
                 this.y = Math.random() * height;
                 this.vx = (Math.random() - 0.5) * config.speed;
                 this.vy = (Math.random() - 0.5) * config.speed;
+                this.r = 1.2 + Math.random() * 1.4;
+                this.hue = Math.random() > 0.45 ? '20, 184, 166' : '56, 189, 248';
             }
 
-            Particle.prototype.update = function() {
+            Particle.prototype.update = function () {
                 this.x += this.vx;
                 this.y += this.vy;
                 if (this.x < 0 || this.x > width) this.vx = -this.vx;
                 if (this.y < 0 || this.y > height) this.vy = -this.vy;
             };
 
-            Particle.prototype.draw = function() {
+            Particle.prototype.draw = function () {
+                var isLight = document.documentElement.getAttribute('data-theme') === 'light';
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, config.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(' + config.color + ', 0.6)';
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(' + this.hue + ', ' + (isLight ? '0.45' : '0.65') + ')';
                 ctx.fill();
             };
 
             function init() {
                 resize();
                 particles = [];
-                for (var i = 0; i < config.count; i++) {
+                var count = width < 768 ? 34 : config.count;
+                for (var i = 0; i < count; i++) {
                     particles.push(new Particle());
                 }
             }
 
-            function animate() {
+            function drawFrame() {
+                var isLight = document.documentElement.getAttribute('data-theme') === 'light';
+                var lineRgb = isLight ? '15, 118, 110' : '45, 212, 191';
+                var pointerRgb = isLight ? '2, 132, 199' : '56, 189, 248';
                 ctx.clearRect(0, 0, width, height);
-
                 for (var i = 0; i < particles.length; i++) {
                     var p1 = particles[i];
-                    p1.update();
+                    if (!reduceMotion) p1.update();
                     p1.draw();
 
                     for (var j = i + 1; j < particles.length; j++) {
@@ -147,25 +428,48 @@
                         var dx = p1.x - p2.x;
                         var dy = p1.y - p2.y;
                         var dist = Math.sqrt(dx * dx + dy * dy);
-
                         if (dist < config.dist) {
                             ctx.beginPath();
-                            ctx.strokeStyle = 'rgba(' + config.color + ',' + (1 - dist / config.dist) * 0.4 + ')';
-                            ctx.lineWidth = 1;
+                            ctx.strokeStyle = 'rgba(' + lineRgb + ', ' + ((1 - dist / config.dist) * (isLight ? 0.16 : 0.22)).toFixed(3) + ')';
+                            ctx.lineWidth = 0.9;
                             ctx.moveTo(p1.x, p1.y);
                             ctx.lineTo(p2.x, p2.y);
                             ctx.stroke();
                         }
                     }
+
+                    if (pointer.x !== null) {
+                        var mdx = p1.x - pointer.x;
+                        var mdy = p1.y - pointer.y;
+                        var mdist = Math.sqrt(mdx * mdx + mdy * mdy);
+                        if (mdist < pointer.radius) {
+                            ctx.beginPath();
+                            ctx.strokeStyle = 'rgba(' + pointerRgb + ', ' + ((1 - mdist / pointer.radius) * (isLight ? 0.28 : 0.36)).toFixed(3) + ')';
+                            ctx.lineWidth = 1;
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(pointer.x, pointer.y);
+                            ctx.stroke();
+                        }
+                    }
                 }
-                requestAnimationFrame(animate);
+                if (!reduceMotion) {
+                    requestAnimationFrame(drawFrame);
+                }
             }
 
-            window.addEventListener('resize', resize);
+            window.addEventListener('resize', init);
+            window.addEventListener('mousemove', function (e) {
+                pointer.x = e.clientX;
+                pointer.y = e.clientY;
+            });
+            window.addEventListener('mouseleave', function () {
+                pointer.x = null;
+                pointer.y = null;
+            });
+
             init();
-            animate();
+            drawFrame();
         })();
     </script>
-
 </body>
 </html>

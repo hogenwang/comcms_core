@@ -192,7 +192,7 @@
     function addImagesrow() {
         var newHtmlTr = htmlText.replace(/\{0\}/g, "new" + items);
         $('#MoreImages').append(newHtmlTr);
-        $("#newimg_new" + items).InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
+        $("#newimg_new" + items).comcmsUploader({ filesize: 10240, sendurl: "/AdminCP/Upload/UploadImage", filetypes: "gif,jpg,png,bmp,jpeg,webp", btntext: "上传图片", notwater: true });
         items += 1;
 
 
@@ -202,7 +202,7 @@
     }
     $(function () {
         //初始化上传控件
-        $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
+        $(".upload-img").comcmsUploader({ filesize: 10240, sendurl: "/AdminCP/Upload/UploadImage", filetypes: "gif,jpg,png,bmp,jpeg,webp", btntext: "上传图片", notwater: true });
         DoPost("addArticleForm");
         //
         $("#TitleColor").colorpicker();

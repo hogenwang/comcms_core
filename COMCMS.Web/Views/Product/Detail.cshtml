@@ -3,85 +3,91 @@
     ViewBag.title = Model.Title;
     ViewBag.keywords = Model.Keyword;
     ViewBag.description = Model.Description;
-
-    IList<Category> sameList = Category.FindAll(Category._.PId == 0, Category._.Rank.Asc(), null, 0, 0);
-
+    Category category = ViewBag.category as Category;
+    IList<Category> sameList = Category.FindAll(Category._.PId == 0 & Category._.IsHide == 0, Category._.Rank.Asc(), null, 0, 0);
+    string bannerBg = string.IsNullOrWhiteSpace(category?.BannerImg) ? "/images/tech/inner-banner.svg" : category.BannerImg;
+    string prodImg = string.IsNullOrWhiteSpace(Model.Pic) ? "/images/tech/placeholder-tech.svg" : Model.Pic;
 }
-<div class="banner normal sec-banner">
-    @if (string.IsNullOrEmpty(ViewBag.category.BannerImg))
-    {
-        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    }
-    else
-    {
-        <em style="background: url('@ViewBag.category.BannerImg') center top no-repeat; background-size: 100%;"></em>
-    }
-</div>
-<div class="banner mobile sec-banner">
-    @if (string.IsNullOrEmpty(ViewBag.category.BannerImg))
-    {
-        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    }
-    else
-    {
-        <em style="background: url('@ViewBag.category.BannerImg') center top no-repeat; background-size: 100%;"></em>
-    }
-</div>
 
-<div class="sec-nav">
-    <div class="cont">
-        <ul class="sec-nav-list">
-            @foreach (var k in sameList)
+<section class="tech-page-hero" style="background-image: url('@bannerBg');">
+    <div class="tech-container tech-page-hero-inner">
+        <div class="tech-breadcrumb">
+            <a href="/"><i class="fa fa-home"></i> 首页</a>
+            <span>/</span>
+            <a href="@ViewsHelper.EchoURL(Utils.CMSType.ProductCategory, 1)">产品中心</a>
+            @if (category != null)
             {
-                <li class="@(k.Id == Model.KId?"sec-on":"")"><a href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a></li>
+                <span>/</span>
+                <a href="@ViewsHelper.EchoURL(category)">@category.KindName</a>
             }
-        </ul>
-
-        <script type="text/javascript">
-            function mbSecNav() {
-                var num = $('.sec-nav-list li').length;
-                if (num >= 3) {
-                    $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
-                } else if (num == 2) {
-                    $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
-                } else if (num == 1) {
-                    $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
-                }
-            }
-        </script>
+            <span>/</span>
+            <span>@Model.Title</span>
+        </div>
+        <h1>@Model.Title</h1>
+        @if (!string.IsNullOrWhiteSpace(Model.SubTitle))
+        {
+            <p>@Model.SubTitle</p>
+        }
     </div>
-</div>
-<!-- 主体内容 -->
-<div class="content proD proC">
-    <div class="pro-bg">
-        <div class="cont">
-            <div class="proD-title">
-                <span>@Model.Title</span>
-            </div>
-            <div class="proD-text">
-                @if (!string.IsNullOrEmpty(Model.Pic))
+</section>
+
+@if (sameList != null && sameList.Count > 0)
+{
+    <div class="tech-subnav-bar">
+        <div class="tech-container">
+            <ul class="tech-subnav-list">
+                @foreach (var k in sameList)
                 {
-                <p style="text-align: center"><img alt="" src="@Model.Pic" style="width: 500px; height: 375px" /></p>
+                    <li class="@(k.Id == Model.KId ? "sec-on" : "")">
+                        <a href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a>
+                    </li>
                 }
-                
+            </ul>
+        </div>
+    </div>
+}
 
-                @Html.Raw(Model.Content)
-
+<section class="tech-section tech-section-alt">
+    <div class="tech-container">
+        <article class="tech-prose-card">
+            <div class="tech-product-hero">
+                <div class="tech-product-hero-img">
+                    <img src="@prodImg" alt="@Model.Title" onerror="this.onerror=null;this.src='/images/tech/placeholder-tech.svg';" />
+                </div>
+                <div>
+                    <span class="tech-eyebrow"><i class="fa fa-cube"></i> @(category?.KindName ?? "产品方案")</span>
+                    <h2 style="margin:0 0 12px;font-size:28px;font-weight:800;line-height:1.3;">@Model.Title</h2>
+                    <p style="margin:0 0 20px;font-size:15px;color:var(--tech-text-body);line-height:1.8;">
+                        @(!string.IsNullOrWhiteSpace(Model.Description) ? Model.Description : Utils.CutString(Utils.NoHTML(Model.Content ?? ""), 180))
+                    </p>
+                    <div class="tech-about-chips" style="margin-bottom:24px;">
+                        <span class="tech-chip"><i class="fa fa-check"></i> 跨平台稳定部署</span>
+                        <span class="tech-chip"><i class="fa fa-check"></i> 支持源码级定制</span>
+                        <span class="tech-chip"><i class="fa fa-eye"></i> 浏览 @Model.Hits 次</span>
+                    </div>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                        <a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, 5)" class="tech-btn tech-btn-primary">
+                            <i class="fa fa-paper-plane-o"></i> 获取方案与报价
+                        </a>
+                        @if (category != null)
+                        {
+                            <a href="@ViewsHelper.EchoURL(category)" class="tech-btn tech-btn-outline">
+                                <i class="fa fa-th-large"></i> 返回产品列表
+                            </a>
+                        }
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</div>
 
-<!-- 主体内容 -->
-<div class="content au">
-    <div class="au-bg">
-        <div class="cont">
-            @Html.Raw(Model.Content)
-        </div>
+            <div class="tech-prose">
+                @Html.Raw(Model.Content)
+            </div>
+        </article>
     </div>
-</div>
+</section>
+
 <script>
     $(function () {
         $("#nav_P").addClass("nav-on");
-    })
+    });
 </script>

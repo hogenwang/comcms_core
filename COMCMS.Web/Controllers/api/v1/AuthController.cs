@@ -27,9 +27,11 @@ namespace COMCMS.Web.Controllers.api.v1
         private readonly LoginAttemptService _loginAttempts;
         private readonly ILogger<AuthController> _logger;
         private readonly SecurityEventMetrics _securityMetrics;
+        private readonly AuthValidationCache _authCache;
 
         public AuthController(TokenService tokens, IAntiforgery antiforgery, PasswordRecoveryService passwordRecovery,
-            LoginAttemptService loginAttempts, ILogger<AuthController> logger, SecurityEventMetrics securityMetrics)
+            LoginAttemptService loginAttempts, ILogger<AuthController> logger, SecurityEventMetrics securityMetrics,
+            AuthValidationCache authCache)
         {
             _tokens = tokens;
             _antiforgery = antiforgery;
@@ -37,6 +39,7 @@ namespace COMCMS.Web.Controllers.api.v1
             _loginAttempts = loginAttempts;
             _logger = logger;
             _securityMetrics = securityMetrics;
+            _authCache = authCache;
         }
 
         [AllowAnonymous]
@@ -245,6 +248,7 @@ namespace COMCMS.Web.Controllers.api.v1
             session.IsRevoked = 1;
             session.RevokedUtc = DateTime.UtcNow;
             session.Update();
+            _authCache.InvalidateMember(session.SubjectId);
             _securityMetrics.SessionRevoked("session");
         }
 

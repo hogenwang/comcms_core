@@ -3,64 +3,84 @@
     ViewBag.title = Model.Title;
     ViewBag.keywords = Model.Keyword;
     ViewBag.description = Model.Description;
-    IList<Article> alist = Article.FindAll(Article._.KId == Model.KId, Article._.Sequence.Asc(), null, 0, 0);
-    int topkid = ViewBag.kind.PId >0? ViewBag.kind.PId : ViewBag.kind.Id;
-
+    ArticleCategory kind = ViewBag.kind as ArticleCategory;
+    IList<Article> alist = Article.FindAll(Article._.KId == Model.KId & Article._.IsHide == 0 & Article._.IsDel != 1, Article._.Sequence.Asc(), null, 0, 0);
+    int topkid = (kind != null && kind.PId > 0) ? kind.PId : (kind?.Id ?? 0);
+    string bannerBg = string.IsNullOrWhiteSpace(kind?.BannerImg) ? "/images/tech/inner-banner.svg" : kind.BannerImg;
 }
-<div class="banner normal sec-banner">
-    @if (string.IsNullOrEmpty(ViewBag.kind.BannerImg))
-    {
-        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    }
-    else
-    {
-        <em style="background: url('@ViewBag.kind.BannerImg') center top no-repeat; background-size: 100%;"></em>
-    }
-</div>
-<div class="banner mobile sec-banner">
-    @if (string.IsNullOrEmpty(ViewBag.kind.BannerImg))
-    {
-        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    }
-    else
-    {
-        <em style="background: url('@ViewBag.kind.BannerImg') center top no-repeat; background-size: 100%;"></em>
-    }
-</div>
 
-<div class="sec-nav">
-    <div class="cont">
-        <ul class="sec-nav-list">
-            @foreach (Article a in alist)
+<section class="tech-page-hero" style="background-image: url('@bannerBg');">
+    <div class="tech-container tech-page-hero-inner">
+        <div class="tech-breadcrumb">
+            <a href="/"><i class="fa fa-home"></i> 首页</a>
+            @if (kind != null)
             {
-                <li class="@(a.Id == Model.Id?"sec-on":"")"><a  href="@ViewsHelper.EchoURL(a)" title="@a.Title">@a.Title</a></li>
+                <span>/</span>
+                <a href="@ViewsHelper.EchoURL(kind)">@kind.KindName</a>
             }
-        </ul>
-
-        <script type="text/javascript">
-            function mbSecNav() {
-                var num = $('.sec-nav-list li').length;
-                if (num >= 3) {
-                    $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
-                } else if (num == 2) {
-                    $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
-                } else if (num == 1) {
-                    $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
-                }
-            }
-        </script>
+            <span>/</span>
+            <span>@Model.Title</span>
+        </div>
+        <h1>@(kind?.KindName ?? Model.Title)</h1>
+        @if (!string.IsNullOrWhiteSpace(Model.SubTitle))
+        {
+            <p>@Model.SubTitle</p>
+        }
     </div>
-</div>
-<!-- 主体内容 -->
-<div class="content au">
-    <div class="au-bg">
-        <div class="cont">
-            @Html.Raw(Model.Content)
+</section>
+
+@if (alist != null && alist.Count > 1)
+{
+    <div class="tech-subnav-bar">
+        <div class="tech-container">
+            <ul class="tech-subnav-list">
+                @foreach (Article a in alist)
+                {
+                    <li class="@(a.Id == Model.Id ? "sec-on" : "")">
+                        <a href="@ViewsHelper.EchoURL(a)" title="@a.Title">@a.Title</a>
+                    </li>
+                }
+            </ul>
         </div>
     </div>
-</div>
+}
+
+<section class="tech-section tech-section-alt">
+    <div class="tech-container">
+        <article class="tech-prose-card">
+            <header class="tech-detail-header">
+                <h2>@Model.Title</h2>
+                <div class="tech-detail-meta">
+                    <span><i class="fa fa-calendar-o"></i> @Model.AddTime.ToString("yyyy-MM-dd")</span>
+                    <span><i class="fa fa-eye"></i> 阅读 @Model.Hits 次</span>
+                    @if (!string.IsNullOrWhiteSpace(Model.Origin))
+                    {
+                        <span><i class="fa fa-bookmark-o"></i> 来源：@Model.Origin</span>
+                    }
+                </div>
+            </header>
+
+            <div class="tech-prose">
+                @Html.Raw(Model.Content)
+            </div>
+
+            <div class="tech-detail-footer">
+                @if (kind != null)
+                {
+                    <a href="@ViewsHelper.EchoURL(kind)" class="tech-btn tech-btn-outline">
+                        <i class="fa fa-arrow-left"></i> 返回 @kind.KindName
+                    </a>
+                }
+                <a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, 5)" class="tech-btn tech-btn-primary">
+                    <i class="fa fa-paper-plane-o"></i> 咨询解决方案
+                </a>
+            </div>
+        </article>
+    </div>
+</section>
+
 <script>
     $(function () {
         $("#nav_@(topkid)").addClass("nav-on");
-    })
+    });
 </script>

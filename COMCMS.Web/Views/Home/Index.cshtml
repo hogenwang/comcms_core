@@ -1,514 +1,356 @@
 ﻿@using COMCMS.Core.Models
 @{
-    Config cfg = ViewBag.cfg;
-    ViewBag.title = string.IsNullOrEmpty(cfg.IndexTitle) ? cfg.SiteName : cfg.IndexTitle;
-    ViewBag.keywords = cfg.Keyword;
-    ViewBag.description = cfg.Description;
+    Config cfg = ViewBag.cfg as Config ?? Config.GetSystemConfig();
+    ViewBag.title = string.IsNullOrEmpty(cfg?.IndexTitle) ? cfg?.SiteName : cfg.IndexTitle;
+    ViewBag.keywords = cfg?.Keyword;
+    ViewBag.description = cfg?.Description;
 
     Article about = ViewBag.about;
-    IList<Link> listLinks = Link.FindAll(Link._.KId == 1, Link._.Sequence.Asc(), null, 0, 0);
+    IList<Link> listLinks = Link.FindAll(Link._.KId == 1 & Link._.IsHide == false, Link._.Sequence.Asc(), null, 0, 0);
+    if (listLinks == null || listLinks.Count == 0)
+    {
+        listLinks = Link.FindAll(Link._.KId == 1, Link._.Sequence.Asc(), null, 0, 0);
+    }
 
-    //处理bannr广告
     var bannerPC = Ads.GetSlideAds(1);
-    var bannerMobile = Ads.GetSlideAds(2);
+    IList<Product> listProducts = Product.FindAll(Product._.IsHide == 0, Product._.Sequence.Asc(), null, 0, 6);
+    IList<Article> listNews1 = Article.FindAll(Article._.KId == 6 & Article._.IsHide != 1 & Article._.IsDel != 1, Article._.Sequence.Asc() & Article._.Id.Desc(), null, 0, 4);
+    IList<Article> listNews2 = Article.FindAll(Article._.KId == 7 & Article._.IsHide != 1 & Article._.IsDel != 1, Article._.Sequence.Asc() & Article._.Id.Desc(), null, 0, 4);
+
+    string aboutSummary = Utils.CutString(Utils.NoHTML(about?.Content ?? ""), 320);
+    if (string.IsNullOrWhiteSpace(aboutSummary))
+    {
+        aboutSummary = "专注于企业级数字化内容管理与多端业务协同平台研发，提供安全稳定、开源可控、高可扩展的一体化技术解决方案，助力企业快速完成数字化转型升级。";
+    }
+    string aboutImg = string.IsNullOrWhiteSpace(about?.Pic) ? "/images/tech/about-platform.svg" : about.Pic;
 }
 
-<!-- pc banner  -->
-<div class="banner normal">
-    <div class="swiper-container">
-        <div class="swiper-wrapper">
-            @{
-                if(bannerPC != null && bannerPC.Any())
-                {
-                    foreach (var img in bannerPC)
-                    {
-                        <div class="swiper-slide">
-                            <a href="@img.link" title="@(img.alt)" style="background: url('@img.img') center top no-repeat; background-size:cover"></a>
-                        </div>
-                    }
-                }
-            }
-        </div>
-        <div class="cont">
-            <span class="banner-prev"></span>
-            <span class="banner-next"></span>
-        </div>
-    </div>
-</div>
-<!-- mb banner -->
-<div class="banner mobile">
-    <div class="swiper-container">
-        <div class="swiper-wrapper">
-             @{
-                if(bannerPC != null && bannerPC.Any())
-                {
-                    foreach (var img in bannerPC)
-                    {
-                    <div class="swiper-slide">
-                        <a href="@img.link" title="@(img.alt)" style="background: url('@img.img') center top no-repeat; background-size: 100%;"></a>
-                    </div>
-                    }
-                }
-             }
-        </div>
-    </div>
-</div>
-
-<!-- 主体内容 -->
-<div class="content">
-    <!--电脑端 三大优势 -->
-    <div class="i-advantage normal">
-        <div class="cont">
-            <ul class="adv-list">
-                <li style="background: #3eb6ec;">
-                    <div class="adv-pic">
-                        <div class="pic-box">
-                            <i class="adv-ico1"></i>
-                        </div>
-                    </div>
-                    <div class="adv-text">
-                        <div class="text-box">
-                            <p>
-                                <span>基于Asp.net Core开发</span>
-                                <small>Development with Asp.net core</small>
-                            </p>
-                        </div>
-                    </div>
-                </li>
-                <li style="background: #19aaeb;">
-                    <div class="adv-pic">
-                        <div class="pic-box">
-                            <i class="adv-ico2"></i>
-                        </div>
-                    </div>
-                    <div class="adv-text">
-                        <div class="text-box">
-                            <p>
-                                <span>完全开源</span>
-                                <small>Open source</small>
-                            </p>
-                        </div>
-                    </div>
-                </li>
-                <li style="background: #00a1e9;">
-                    <div class="adv-pic" style="width: 140px; width: 1.4rem">
-                        <div class="pic-box" style="width: 140px; width: 1.4rem">
-                            <i class="adv-ico3"></i>
-                        </div>
-                    </div>
-                    <div class="adv-text">
-                        <div class="text-box">
-                            <p>
-                                <span>应用广泛</span>
-                                <small>Use everywhere</small>
-                            </p>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <!--手机端 三大优势 -->
-    <div class="i-advantage mobile">
-        <div class="cont">
-            <ul class="adv-list">
-                <li style="background: #3eb6ec;">
-                    <div class="adv-pic">
-                        <div class="pic-box">
-                            <i class="adv-ico1"></i>
-                        </div>
-                    </div>
-                    <!-- 这一块里面的文字，客户可以后台更换 -->
-                    <div class="adv-text">
-                        <div class="text-box">
-                            <p>
-                                <span>基于Asp.net Core开发</span>
-                                <small>Development with Asp.net core</small>
-                            </p>
-                        </div>
-                    </div>
-                </li>
-                <li style="background: #19aaeb;">
-                    <div class="adv-pic">
-                        <div class="pic-box">
-                            <i class="adv-ico2"></i>
-                        </div>
-                    </div>
-                    <!-- 这一块里面的文字，客户可以后台更换 -->
-                    <div class="adv-text">
-                        <div class="text-box">
-                            <p>
-                                <span>完全开源</span>
-                                <small>Open source</small>
-                            </p>
-                        </div>
-                    </div>
-                </li>
-                <li style="background: #00a1e9;">
-                    <div class="adv-pic" style="width: 140px; width: 1.4rem">
-                        <div class="pic-box" style="width: 140px; width: 1.4rem">
-                            <i class="adv-ico3"></i>
-                        </div>
-                    </div>
-                    <!-- 这一块里面的文字，客户可以后台更换 -->
-                    <div class="adv-text">
-                        <div class="text-box">
-                            <p>
-                                <span>应用广泛</span>
-                                <small>Use everywhere</small>
-                            </p>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-
-    <!-- 公司简介 -->
-    <div class="i-au">
-        <div class="cont">
-            <div class="i-title">
-                <p>
-                    <span>公司简介</span>
-                    <small>company profile</small>
-                </p>
+<!-- Obsidian Tech Hero -->
+<section class="tech-hero">
+    <div class="tech-container tech-hero-grid">
+        <div>
+            <div class="tech-hero-badge">
+                <span class="tech-pulse-dot"></span>
+                <span>ENTERPRISE DIGITAL PLATFORM</span>
             </div>
+            <h1 class="tech-hero-title">
+                构建面向未来的<br />
+                <span class="accent">企业级数字内容中枢</span>
+            </h1>
+            <p class="tech-hero-lead">
+                @(string.IsNullOrWhiteSpace(cfg?.Description) ? "基于现代跨平台架构打造，融合内容管理、产品矩阵展示、多终端适配与企业级安全防护，让品牌官网与数字业务高效协同演进。" : cfg.Description)
+            </p>
+            <div class="tech-hero-cta">
+                <a href="@ViewsHelper.EchoURL(Utils.CMSType.ProductCategory, 1)" class="tech-btn tech-btn-primary">
+                    <i class="fa fa-th-large"></i> 探索产品矩阵
+                </a>
+                <a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, 1)" class="tech-btn tech-btn-ghost">
+                    <i class="fa fa-compass"></i> 了解企业实力
+                </a>
+            </div>
+            <div class="tech-hero-stats">
+                <div class="tech-stat-item">
+                    <strong>100%</strong>
+                    <span>开源自主可控架构</span>
+                </div>
+                <div class="tech-stat-item">
+                    <strong>跨平台</strong>
+                    <span>高性能云原生部署</span>
+                </div>
+                <div class="tech-stat-item">
+                    <strong>全终端</strong>
+                    <span>PC · 移动 · 小程序协同</span>
+                </div>
+            </div>
+        </div>
 
-            <div class="i-au-cont">
-                <div class="i-au-left">
-                    <div class="pic-box">
-                        <a href="@(ViewsHelper.EchoArticleURL(1))" title="关于我们">
-                            <img src="@(about?.Pic)" alt="关于我们">
+        <div class="tech-hero-visual">
+            <div class="tech-showcase-frame">
+                <div class="tech-showcase-bar">
+                    <span class="tech-window-dots"><i></i><i></i><i></i></span>
+                    <span class="tech-window-label">comcms.platform // live-showcase</span>
+                </div>
+                <div class="tech-hero-slider">
+                    @if (bannerPC != null && bannerPC.Any())
+                    {
+                        <div class="swiper-container">
+                            <div class="swiper-wrapper">
+                                @foreach (var img in bannerPC)
+                                {
+                                    string slideHref = string.IsNullOrWhiteSpace(img.link) ? "javascript:;" : img.link;
+                                    <div class="swiper-slide">
+                                        <a href="@slideHref" title="@img.alt">
+                                            <img src="@img.img" alt="@img.alt" onerror="this.onerror=null;this.src='/images/tech/hero-tech.svg';" />
+                                            @if (!string.IsNullOrWhiteSpace(img.alt))
+                                            {
+                                                <div class="tech-hero-slider-caption">@img.alt</div>
+                                            }
+                                        </a>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        @if (bannerPC.Count > 1)
+                        {
+                            <button type="button" class="tech-slider-nav tech-slider-prev" aria-label="上一张"><i class="fa fa-angle-left"></i></button>
+                            <button type="button" class="tech-slider-nav tech-slider-next" aria-label="下一张"><i class="fa fa-angle-right"></i></button>
+                        }
+                    }
+                    else
+                    {
+                        <img src="/images/tech/hero-tech.svg" alt="@cfg?.SiteName" style="width:100%;height:100%;object-fit:cover;" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Floating Core Advantages -->
+<section class="tech-advantages">
+    <div class="tech-container">
+        <div class="tech-adv-grid">
+            <div class="tech-adv-card">
+                <div class="tech-adv-icon"><i class="fa fa-rocket"></i></div>
+                <div>
+                    <h3>跨平台高性能内核</h3>
+                    <p>基于现代 .NET Core 跨平台技术架构，支持 Windows / Linux / 容器化高并发稳定运行。</p>
+                </div>
+            </div>
+            <div class="tech-adv-card">
+                <div class="tech-adv-icon"><i class="fa fa-shield"></i></div>
+                <div>
+                    <h3>完全开源 · 安全可控</h3>
+                    <p>代码清晰开放，内置细粒度 RBAC 权限管控、防 CSRF 及全链路安全策略，二次开发无门槛。</p>
+                </div>
+            </div>
+            <div class="tech-adv-card">
+                <div class="tech-adv-icon"><i class="fa fa-cubes"></i></div>
+                <div>
+                    <h3>多场景业务广泛赋能</h3>
+                    <p>全面覆盖企业门户、产品展示、微商城、小程序及内容资讯站，灵活适配各类业务形态。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- About Enterprise Section -->
+<section class="tech-section">
+    <div class="tech-container tech-about-grid">
+        <div class="tech-about-media">
+            <div class="tech-about-img-wrap">
+                <a href="@(ViewsHelper.EchoArticleURL(1))" title="关于我们">
+                    <img src="@aboutImg" alt="关于我们" onerror="this.onerror=null;this.src='/images/tech/about-platform.svg';" />
+                </a>
+            </div>
+            <div class="tech-about-float">
+                <strong>Enterprise Ready</strong>
+                <span>稳定 · 安全 · 高扩展数字化底座</span>
+            </div>
+        </div>
+
+        <div class="tech-about-body">
+            <span class="tech-eyebrow"><i class="fa fa-cube"></i> About Us</span>
+            <h2 class="tech-section-title">以技术创新驱动企业数字化增长</h2>
+            <p>@aboutSummary</p>
+            <div class="tech-about-chips">
+                <span class="tech-chip"><i class="fa fa-check-circle"></i> 模块化插件体系</span>
+                <span class="tech-chip"><i class="fa fa-check-circle"></i> 响应式全端适配</span>
+                <span class="tech-chip"><i class="fa fa-check-circle"></i> 企业级安全加固</span>
+                <span class="tech-chip"><i class="fa fa-check-circle"></i> 可视化内容编排</span>
+            </div>
+            <a href="@(ViewsHelper.EchoArticleURL(1))" class="tech-btn tech-btn-primary">
+                了解更多企业详情 <i class="fa fa-arrow-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Product Matrix Showcase -->
+<section class="tech-section tech-section-alt">
+    <div class="tech-container">
+        <div class="tech-section-head">
+            <span class="tech-eyebrow"><i class="fa fa-th-large"></i> Product Matrix</span>
+            <h2 class="tech-section-title">核心产品与解决方案</h2>
+            <p class="tech-section-desc">面向不同规模企业的数字化场景需求，提供开箱即用、可持续演进的产品体系</p>
+        </div>
+
+        <div class="tech-product-grid">
+            @foreach (var p in listProducts)
+            {
+                string prodImg = string.IsNullOrWhiteSpace(p.Pic) ? "/images/tech/placeholder-tech.svg" : p.Pic;
+                string prodSummary = !string.IsNullOrWhiteSpace(p.Description)
+                    ? p.Description
+                    : Utils.CutString(Utils.NoHTML(p.Content ?? ""), 84);
+                if (string.IsNullOrWhiteSpace(prodSummary))
+                {
+                    prodSummary = "企业级模块化解决方案，支持灵活定制与多终端业务无缝协同。";
+                }
+                <article class="tech-product-card">
+                    <a href="@ViewsHelper.EchoURL(p)" title="@p.Title" class="tech-product-thumb">
+                        <img src="@prodImg" alt="@p.Title" onerror="this.onerror=null;this.src='/images/tech/placeholder-tech.svg';" />
+                    </a>
+                    <div class="tech-product-body">
+                        <h3 class="tech-product-title">
+                            <a href="@ViewsHelper.EchoURL(p)" title="@p.Title">@p.Title</a>
+                        </h3>
+                        <p class="tech-product-desc">@prodSummary</p>
+                        <a href="@ViewsHelper.EchoURL(p)" class="tech-card-link">
+                            查看方案详情 <i class="fa fa-long-arrow-right"></i>
                         </a>
                     </div>
-                </div>
-                <div class="i-au-right">
-                    <p>
-                        @(Utils.CutString(Utils.NoHTML(about?.Content), 700))
-                    </p>
-                    <a href="@(ViewsHelper.EchoArticleURL(1))" title="查看详情" class="read-d">查看详情</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 产品展示 -->
-    <div class="i-pro">
-        <div class="cont">
-            <div class="i-title">
-                <p>
-                    <span>产品展示</span>
-                    <small>product display</small>
-                </p>
-            </div>
-            @{
-            //获取前5个商品
-            IList<Product> listPorducts = Product.FindAll(null, null, null, 0, 5);
-                }
-                <div class="i-pro-cont" id="div1">
-                    <ul class="i-pro-list">
-                        @foreach(var p in listPorducts)
-                        {
-                        <li>
-                            <a href="@ViewsHelper.EchoURL(p)" title="@(p.Title)">
-                                <div class="i-pro-top">
-                                    <div class="i-pro-pic">
-                                        <div class="pic-box">
-                                            <img src="@p.Pic" alt="@(p.Title)">
-                                        </div>
-                                    </div>
-                                    <div class="i-pro-hover">
-                                        <i></i>
-                                        <span>@(p.Title)</span>
-
-                                    </div>
-                                </div>
-                                <div class="i-pro-text mobile">
-                                    <span>@(p.Title)</span>
-                                </div>
-                            </a>
-                        </li>
-                        }
-
-                    </ul>
-                </div>
-                <script type="text/javascript">
-                    function proShow() {
-                        mr = parseFloat($('.i-pro-list li').css('margin-right'));
-                        var odiv = document.getElementById('div1');
-                        var oul = odiv.getElementsByTagName('ul')[0];
-                        var ali = oul.getElementsByTagName('li');
-                        var spa = -2;
-                        oul.innerHTML = oul.innerHTML + oul.innerHTML;
-                        oul.style.width = (ali[0].offsetWidth + mr) * ali.length + 3 + 'px';
-
-                        function move() {
-                            if (oul.offsetLeft < -oul.offsetWidth / 2) {
-                                oul.style.left = 0;
-                            }
-                            oul.style.left = oul.offsetLeft + spa + 'px';
-                        }
-                        var timer = setInterval(move, 30);
-
-                        odiv.onmousemove = function () {
-                            clearInterval(timer);
-                        }
-                        odiv.onmouseout = function () {
-                            timer = setInterval(move, 30)
-                        };
-                    }
-                </script>
-
-                <a href="@ViewsHelper.EchoCategoryURL(1)" title="查看更多" class="read-d">查看更多<i></i></a>
-        </div>
-    </div>
-
-    <!-- 新闻资讯 -->
-    <div class="i-news">
-        <div class="cont">
-            <div class="i-title">
-                <p>
-                    <span>新闻资讯</span>
-                    <small>news information</small>
-                </p>
-            </div>
-            <div class="i-news-cont">
-                <div class="i-news-btn">
-                    <ul class="i-btn-list">
-                        <li class="i-news-on">公司新闻</li>
-                        <li>行业资讯</li>
-                    </ul>
-                </div>
-                <div class="i-news-main">
-                    @{
-                    IList<Article> listNews1 = Article.FindAll(Article._.KId == 6, Article._.Sequence.Asc(), null, 0,
-                        4);
-                        }
-                        <div class="i-news-box">
-                            <!-- 左边 -->
-                            @if (listNews1.Count > 0)
-                            {
-                            <div class="i-news-left">
-                                <a href="@(ViewsHelper.EchoURL(listNews1[0]))" title="@listNews1[0].Title">
-                                    <div class="i-news-pic">
-                                        <div class="pic-box">
-                                            <img src="@listNews1[0].Pic" alt="@listNews1[0].Title">
-                                        </div>
-                                    </div>
-                                    <div class="i-news-text">
-                                        <p class="i-news-title">
-                                            <span>@listNews1[0].Title</span>
-                                            <small>@listNews1[0].AddTime.ToString("yyyy-MM-dd")</small>
-                                        </p>
-                                        <p class="i-news-t"><span>@Utils.CutString(Utils.NoHTML(listNews1[0].Content),200)</span></p>
-                                        <b class="normal read-d">查看详情</b>
-                                    </div>
-                                </a>
-                            </div>
-                            }
-                            <!-- 右边 -->
-                            <div class="i-news-right">
-                                @if (listNews1.Count > 1)
-                                {
-                                <ul class="i-news-list">
-                                    @for(int i=1; i < listNews1.Count; i++) { <li>
-                                            <a href="@(ViewsHelper.EchoURL(listNews1[i]))" title="@listNews1[i].Title">
-                                            <div class="i-news-time">
-                                                <div class="pic-box">
-                                                    <p>
-                                                        <span>@listNews1[i].AddTime.ToString("dd")</span>
-                                                        <small>@listNews1[i].AddTime.ToString("yyyy-MM")</small>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div class="i-news-text2">
-                                                <span>@listNews1[i].Title</span>
-                                                <p>@Utils.CutString(Utils.NoHTML(listNews1[i].Content), 100)</p>
-                                            </div>
-                                        </a>
-                                        </li>
-                                        }
-
-                                </ul>
-                                }
-
-                            </div>
-                        </div>
-                        <div class="i-news-box">
-                            <!-- 左边 -->
-                            @{
-                            IList<Article> listNews2 = Article.FindAll(Article._.KId == 7, Article._.Sequence.Asc(),
-                                null, 0, 4);
-                                }
-                                @if (listNews2.Count > 0)
-                                {
-                                <div class="i-news-left">
-                                <a href="@(ViewsHelper.EchoURL(listNews2[0]))" title="@listNews2[0].Title">
-                                        <div class="i-news-pic">
-                                            <div class="pic-box">
-                                                <img src="@listNews2[0].Pic" alt="@listNews2[0].Title">
-                                            </div>
-                                        </div>
-                                        <div class="i-news-text">
-                                            <p class="i-news-title">
-                                                <span>@listNews2[0].Title</span>
-                                                <small>@listNews2[0].AddTime.ToString("yyyy-MM-dd")</small>
-                                            </p>
-                                            <p class="i-news-t"><span>@Utils.CutString(Utils.NoHTML(listNews2[0].Content),
-                                                    200)</span></p>
-                                            <b class="normal read-d">查看详情</b>
-                                        </div>
-                                    </a>
-                                </div>
-                                }
-                                <!-- 右边 -->
-                                <div class="i-news-right">
-                                    @if (listNews2.Count > 1)
-                                    {
-                                    <ul class="i-news-list">
-                                        @for (int i = 1; i < listNews2.Count; i++) { <li>
-                                            <a href="@(ViewsHelper.EchoURL(listNews2[i]))" title="@listNews2[i].Title">
-                                                <div class="i-news-time">
-                                                    <div class="pic-box">
-                                                        <p>
-                                                            <span>@listNews2[i].AddTime.ToString("dd")</span>
-                                                            <small>@listNews2[i].AddTime.ToString("yyyy-MM")</small>
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="i-news-text2">
-                                                    <span>@listNews2[i].Title</span>
-                                                    <p>@Utils.CutString(Utils.NoHTML(listNews2[i].Content), 100)</p>
-                                                </div>
-                                            </a>
-                                            </li>
-                                            }
-                                    </ul>
-                                    }
-                                </div>
-                        </div>
-                </div>
-            </div>
-        </div>
-
-        <script type="text/javascript">
-            iNews();
-
-            function iNews() {
-                var index = $('.i-news-on').index();
-                $('.i-news-box').eq(index).show();
-                var num = $('.i-btn-list li').length;
-
-                $('.i-btn-list').on('click', 'li', function () {
-                    index = $(this).index();
-                    for (var i = 0; i < num; i++) {
-                        $('.i-btn-list li').eq(i).removeClass('i-news-on');
-                        $('.i-news-box').eq(i).hide();
-                    }
-                    $(this).addClass('i-news-on');
-                    $('.i-news-box').eq(index).show();
-                });
+                </article>
             }
-        </script>
-    </div>
+        </div>
 
-    <!-- 合作伙伴 -->
-    <div class="i-coop">
-        <div class="cont">
-            <div class="i-title">
-                <p>
-                    <span>合作伙伴</span>
-                    <small>cooperative partner</small>
-                </p>
-            </div>
-            <div class="i-coop-cont">
-                <!-- 链接到对应logo的公司官网 -->
-                <div class="swiper-cont">
-                    <div class="swiper-container normal">
-                        <div class="swiper-wrapper">
-                            @foreach (var l in listLinks)
-                            {
-                            <div class="swiper-slide">
-                                <ul>
-
-                                    <li>
-                                        <a href="@l.LinkURL" class="pic-box" title="@l.Title" target="_blank">
-                                            <img src="@l.Logo" alt="@l.Title">
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            }
-                        </div>
-                        <div class="swiper-pagination"></div>
-                    </div>
-                    <div class="swiper-container mobile">
-                        <div class="swiper-wrapper">
-                            @foreach (var l in listLinks)
-                            {
-                            <div class="swiper-slide">
-                                <ul>
-                                    <li>
-                                        <a href="@l.LinkURL" class="pic-box" title="@l.Title" target="_blank">
-                                            <img src="@l.Logo" alt="@l.Title">
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            }
-                        </div>
-                        <div class="swiper-pagination"></div>
-                    </div>
-                </div>
-
-            </div>
-
-            <script type="text/javascript">
-                var mySwiper2;
-                var mySwiper3;
-
-                function coopSwiper() {
-                    if ($('#main').attr('class') === 'pc') {
-                        mySwiper3 = new Swiper('.i-coop-cont .normal', {
-                            loop: true,
-                            autoplay: 3000,
-                            slidesPerView: 5,
-                            nextButton: '.coop-next',
-                            prevButton: '.coop-prev',
-                        });
-                    } else if ($('#main').attr('class') === 'mb') {
-                        mySwiper4 = new Swiper('.i-coop-cont .mobile', {
-                            loop: true,
-                            autoplay: 3000,
-                            slidesPerView: 2,
-                            nextButton: '.coop-next',
-                            prevButton: '.coop-prev',
-                        });
-                    }
-                }
-                var mySwiper = new Swiper('.banner .swiper-container', {
-                    loop: true,
-
-                    // 如果需要前进后退按钮
-                    nextButton: '.banner-next',
-                    prevButton: '.banner-prev',
-                    autoplay: 3000,
-                });
-
-                $("#nav_0").addClass("nav-on");
-
-                var swiper = new Swiper('.i-coop-cont .swiper-container', {
-                    slidesPerView: 3,
-                    spaceBetween: 30,
-                    loop: true,
-                    autoplay: 3000,
-                    pagination: {
-                        el: '.swiper-pagination',
-                        clickable: true,
-                    },
-                });
-
-            </script>
+        <div class="tech-section-footer">
+            <a href="@ViewsHelper.EchoCategoryURL(1)" class="tech-btn tech-btn-outline">
+                查看全部产品 <i class="fa fa-angle-right"></i>
+            </a>
         </div>
     </div>
-</div>
+</section>
+
+<!-- News & Insights Tabs -->
+<section class="tech-section">
+    <div class="tech-container">
+        <div class="tech-section-head">
+            <span class="tech-eyebrow"><i class="fa fa-newspaper-o"></i> News &amp; Insights</span>
+            <h2 class="tech-section-title">新闻动态与行业洞察</h2>
+            <p class="tech-section-desc">持续追踪技术演进、产品迭代与企业数字化实践案例</p>
+        </div>
+
+        <div class="tech-tabs" role="tablist">
+            <button type="button" class="tech-tab-btn is-active" data-tab="newsPanelCompany">公司新闻</button>
+            <button type="button" class="tech-tab-btn" data-tab="newsPanelIndustry">行业资讯</button>
+        </div>
+
+        <!-- Panel 1: Company News -->
+        <div class="tech-news-panel is-active" id="newsPanelCompany">
+            @if (listNews1 != null && listNews1.Count > 0)
+            {
+                var lead1 = listNews1[0];
+                string lead1Img = string.IsNullOrWhiteSpace(lead1.Pic) ? "/images/tech/placeholder-tech.svg" : lead1.Pic;
+                <a href="@ViewsHelper.EchoURL(lead1)" title="@lead1.Title" class="tech-news-featured">
+                    <div class="tech-news-featured-img">
+                        <img src="@lead1Img" alt="@lead1.Title" onerror="this.onerror=null;this.src='/images/tech/placeholder-tech.svg';" />
+                    </div>
+                    <div class="tech-news-featured-body">
+                        <span class="tech-news-date"><i class="fa fa-calendar-o"></i> @lead1.AddTime.ToString("yyyy-MM-dd")</span>
+                        <h3>@lead1.Title</h3>
+                        <p>@Utils.CutString(Utils.NoHTML(lead1.Content ?? ""), 150)</p>
+                        <span class="tech-card-link">阅读全文 <i class="fa fa-long-arrow-right"></i></span>
+                    </div>
+                </a>
+
+                <div class="tech-news-stack">
+                    @for (int i = 1; i < listNews1.Count; i++)
+                    {
+                        var item = listNews1[i];
+                        <a href="@ViewsHelper.EchoURL(item)" title="@item.Title" class="tech-news-row">
+                            <div class="tech-date-badge">
+                                <strong>@item.AddTime.ToString("dd")</strong>
+                                <span>@item.AddTime.ToString("yyyy-MM")</span>
+                            </div>
+                            <div class="tech-news-row-body">
+                                <h4>@item.Title</h4>
+                                <p>@Utils.CutString(Utils.NoHTML(item.Content ?? ""), 96)</p>
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="tech-section-desc">暂无公司新闻记录。</p>
+            }
+        </div>
+
+        <!-- Panel 2: Industry News -->
+        <div class="tech-news-panel" id="newsPanelIndustry">
+            @if (listNews2 != null && listNews2.Count > 0)
+            {
+                var lead2 = listNews2[0];
+                string lead2Img = string.IsNullOrWhiteSpace(lead2.Pic) ? "/images/tech/placeholder-tech.svg" : lead2.Pic;
+                <a href="@ViewsHelper.EchoURL(lead2)" title="@lead2.Title" class="tech-news-featured">
+                    <div class="tech-news-featured-img">
+                        <img src="@lead2Img" alt="@lead2.Title" onerror="this.onerror=null;this.src='/images/tech/placeholder-tech.svg';" />
+                    </div>
+                    <div class="tech-news-featured-body">
+                        <span class="tech-news-date"><i class="fa fa-calendar-o"></i> @lead2.AddTime.ToString("yyyy-MM-dd")</span>
+                        <h3>@lead2.Title</h3>
+                        <p>@Utils.CutString(Utils.NoHTML(lead2.Content ?? ""), 150)</p>
+                        <span class="tech-card-link">阅读全文 <i class="fa fa-long-arrow-right"></i></span>
+                    </div>
+                </a>
+
+                <div class="tech-news-stack">
+                    @for (int i = 1; i < listNews2.Count; i++)
+                    {
+                        var item = listNews2[i];
+                        <a href="@ViewsHelper.EchoURL(item)" title="@item.Title" class="tech-news-row">
+                            <div class="tech-date-badge">
+                                <strong>@item.AddTime.ToString("dd")</strong>
+                                <span>@item.AddTime.ToString("yyyy-MM")</span>
+                            </div>
+                            <div class="tech-news-row-body">
+                                <h4>@item.Title</h4>
+                                <p>@Utils.CutString(Utils.NoHTML(item.Content ?? ""), 96)</p>
+                            </div>
+                        </a>
+                    }
+                </div>
+            }
+            else
+            {
+                <p class="tech-section-desc">暂无行业资讯记录。</p>
+            }
+        </div>
+
+        <div class="tech-section-footer">
+            <a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, 2)" class="tech-btn tech-btn-outline">
+                进入新闻中心 <i class="fa fa-angle-right"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Partners Strip -->
+@if (listLinks != null && listLinks.Count > 0)
+{
+    <section class="tech-section tech-section-alt">
+        <div class="tech-container">
+            <div class="tech-section-head">
+                <span class="tech-eyebrow"><i class="fa fa-handshake-o"></i> Ecosystem Partners</span>
+                <h2 class="tech-section-title">生态合作伙伴</h2>
+                <p class="tech-section-desc">携手行业优秀技术与服务伙伴，共同构建开放共赢的数字化生态</p>
+            </div>
+
+            <div class="tech-partners-grid">
+                @foreach (var l in listLinks)
+                {
+                    string partnerUrl = string.IsNullOrWhiteSpace(l.LinkURL) ? "javascript:;" : l.LinkURL;
+                    bool isExternal = partnerUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || partnerUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
+                    <a href="@partnerUrl" title="@l.Title" class="tech-partner-card" @(isExternal ? "target=\"_blank\" rel=\"noopener noreferrer\"" : "")>
+                        @if (!string.IsNullOrWhiteSpace(l.Logo))
+                        {
+                            <img src="@l.Logo" alt="@l.Title" onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex';" />
+                            <span class="tech-partner-fallback" style="display:none;"><i class="fa fa-building-o"></i> @l.Title</span>
+                        }
+                        else
+                        {
+                            <span class="tech-partner-fallback"><i class="fa fa-building-o"></i> @l.Title</span>
+                        }
+                    </a>
+                }
+            </div>
+        </div>
+    </section>
+}
+
+<script>
+    $(function () {
+        $("#nav_0").addClass("nav-on");
+    });
+</script>

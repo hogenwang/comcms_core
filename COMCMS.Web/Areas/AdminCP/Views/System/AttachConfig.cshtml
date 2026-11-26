@@ -156,7 +156,7 @@
 <script>
     $(function () {
         //加载上传
-        $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp", notwater: true });
+        $(".upload-img").comcmsUploader({ filesize: 10240, sendurl: "/AdminCP/Upload/UploadImage", filetypes: "gif,jpg,png,bmp,jpeg,webp", btntext: "上传图片", notwater: true });
         DoPost("editAttachConfigForm");
     })
 </script>

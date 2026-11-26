@@ -89,7 +89,7 @@
             }
         }
         //初始化的时候，再修改一下
-        var sysoldmenu = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+        var sysoldmenu = @COMCMS.Web.Common.SafeScriptJson.Serialize(Model);
         if (sysoldmenu.menu) {
             for (var i = 0; i < 3; i++) {
                 if (sysoldmenu.menu.button[i]) {
@@ -121,7 +121,7 @@
         var app = new Vue({
             el: '#app',
             data:{
-                menuList:@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model)),
+                menuList:@COMCMS.Web.Common.SafeScriptJson.Serialize(Model),
                 topitem:[0,1,2],
                 subitem: [0, 1, 2, 3, 4],
                 typelist: [

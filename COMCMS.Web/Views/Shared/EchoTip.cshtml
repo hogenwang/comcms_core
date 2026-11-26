@@ -1,46 +1,109 @@
 ﻿@{
     Layout = null;
     ViewBag.Title = "信息提示";
+    var isSuccess = ViewBag.IsSuccess is bool ok && ok;
+    var returnUrl = ViewBag.ReturnURL as string;
+    var safeReturnUrl = !string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl) ? returnUrl : "/";
 }
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/hplus/css/style.css" rel="stylesheet" />
+    <link href="~/lib/bootstrap5/bootstrap.min.css" rel="stylesheet" />
     <link href="~/hplus/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/hplus/css/animate.min.css" rel="stylesheet" />
-    <link href="~/hplus/css/login.css" rel="stylesheet" />
-
+    <link href="~/css/admin-tokens.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/admin-bs3-compat.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/admin-modern.css" rel="stylesheet" asp-append-version="true" />
+    <style>
+        html, body {
+            height: 100%;
+            background-color: #f3f3f4;
+            color: #333;
+        }
+        .tip-page-wrap {
+            min-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+        }
+        .tip-card {
+            width: 100%;
+            max-width: 540px;
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e7eaec;
+            box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06);
+            overflow: hidden;
+        }
+        .tip-card-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid #eef0f2;
+            background: #fafbfc;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+        }
+        .tip-card-body {
+            padding: 36px 28px 32px;
+            text-align: center;
+        }
+        .tip-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+        .tip-icon-info {
+            background: rgba(245, 158, 11, 0.12);
+            color: #d97706;
+        }
+        .tip-icon-success {
+            background: rgba(26, 179, 148, 0.12);
+            color: #1ab394;
+        }
+        .tip-title {
+            margin: 0 0 10px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .tip-message {
+            margin: 0 0 28px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #475569;
+            word-break: break-word;
+        }
+    </style>
 </head>
-
 <body class="gray-bg">
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>@ViewBag.Title</h5>
-                <div class="ibox-tools">
-                </div>
+    <div class="tip-page-wrap animated fadeIn">
+        <div class="tip-card">
+            <div class="tip-card-header">
+                <i class="fa @(isSuccess ? "fa-check-circle text-navy" : "fa-info-circle text-warning")"></i>
+                @ViewBag.Title
             </div>
-            <div class="ibox-content">
-                <h2>
-                    <i class="fa fa-info-circle"></i> 信息提示<br />
-                </h2>
-                <h3>
-                    @ViewBag.Message
-                </h3>
-                <p class="text-center">
-                    <a class="btn btn-primary" href="/">返回首页</a>
+            <div class="tip-card-body">
+                <div class="tip-icon @(isSuccess ? "tip-icon-success" : "tip-icon-info")">
+                    <i class="fa @(isSuccess ? "fa-check" : "fa-exclamation")"></i>
+                </div>
+                <h2 class="tip-title">@(isSuccess ? "操作成功" : "信息提示")</h2>
+                <p class="tip-message">@ViewBag.Message</p>
+                <p class="text-center" style="margin-bottom: 0;">
+                    <a class="btn btn-primary" style="min-width: 110px;" href="@safeReturnUrl"><i class="fa fa-arrow-left"></i> 返回</a>
                 </p>
             </div>
         </div>
-
-
     </div>
     <script src="~/js/jquery-3.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/lib/bootstrap5/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

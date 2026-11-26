@@ -13,7 +13,8 @@ namespace COMCMS.Web.Controllers
         public IActionResult Index(int statusCode)
         {
             var reExecute = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-            NewLife.Log.XTrace.WriteLine($"Unexpected Status Code: {statusCode}, OriginalPath: {reExecute.OriginalPath}");
+            var originalPath = reExecute?.OriginalPath ?? HttpContext.Request.Path.ToString();
+            NewLife.Log.XTrace.WriteLine($"Unexpected Status Code: {statusCode}, OriginalPath: {originalPath}");
             ViewBag.url = "";
             return View(statusCode);
         }

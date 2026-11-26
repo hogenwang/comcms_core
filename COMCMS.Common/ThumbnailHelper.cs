@@ -1,191 +1,96 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Text;
-using System.Drawing;
-using System.Net;
-using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using NewLife.Log;
 using SkiaSharp;
-using static System.Net.Mime.MediaTypeNames;
-using System.Net.Http;
-using System.Security.Policy;
 
 namespace COMCMS.Common
 {
     public class ThumbnailHelper
     {
-        /// <summary>
-        /// 目录分隔符
-        /// windows 下是 \ linux 下面是 \
-        /// </summary>
-        private static string DirectorySeparatorChar = Path.DirectorySeparatorChar.ToString();
-        /// <summary>
-        /// 程序绝对目录
-        /// </summary>
-        private static string _ContentRootPath = Environment.CurrentDirectory;
-        /// <summary>
-        /// 静态文件
-        /// </summary>
-        private static string _WebRootPath = _ContentRootPath + DirectorySeparatorChar + "wwwroot" + DirectorySeparatorChar;
-
-        #region 方式
         public enum CutMode
         {
-            /// <summary>
-            /// 指定高宽缩放（补白）
-            /// </summary>
             HW = 0,
-            /// <summary>
-            /// 指定宽，高按比例  
-            /// </summary>
             W = 1,
-            /// <summary>
-            /// 指定高，宽按比例
-            /// </summary>
             H = 2,
-            /// <summary>
-            /// 指定高宽裁减（不变形）
-            /// </summary>
             Cut = 3
         }
-        #endregion
 
-        #region 2012-2-19 新增生成图片缩略图方法
         /// <summary>
-        /// 生成缩略图
+        /// 生成缩略图（完整释放 SkiaSharp 原生资源并正确执行居中裁剪）
         /// </summary>
-        /// <param name="fileName">源图路径（绝对路径）</param>
-        /// <param name="newFileName">缩略图路径（绝对路径）</param>
-        /// <param name="width">缩略图宽度</param>
-        /// <param name="height">缩略图高度</param>
-        /// <param name="mode">生成缩略图的方式</param>    
         public static void MakeThumbnailImage(string fileName, string newFileName, int width, int height, CutMode mode)
         {
-            //Image originalImage = Image.FromFile(fileName);
-            var originalImage = SKBitmap.Decode(fileName);
-            int towidth = width;
-            int toheight = height;
+            if (string.IsNullOrWhiteSpace(fileName) || string.IsNullOrWhiteSpace(newFileName)) return;
+            if (width <= 0 && height <= 0) return;
 
-            int x = 0;
-            int y = 0;
+            using var originalImage = SKBitmap.Decode(fileName);
+            if (originalImage == null || originalImage.Width <= 0 || originalImage.Height <= 0) return;
+
+            int towidth = width > 0 ? width : originalImage.Width;
+            int toheight = height > 0 ? height : originalImage.Height;
+            int x = 0, y = 0;
             int ow = originalImage.Width;
             int oh = originalImage.Height;
 
             switch (mode)
             {
-                case CutMode.HW://指定高宽缩放（补白）
-                    if ((double)originalImage.Width / (double)originalImage.Height > (double)towidth / (double)toheight)
-                    {
-                        ow = originalImage.Width;
-                        oh = originalImage.Width * height / towidth;
-                        x = 0;
-                        y = (originalImage.Height - oh) / 2;
-                    }
-                    else
+                case CutMode.HW:
+                case CutMode.Cut:
+                    if ((double)originalImage.Width / originalImage.Height > (double)towidth / toheight)
                     {
                         oh = originalImage.Height;
-                        ow = originalImage.Height * towidth / toheight;
+                        ow = Math.Max(1, originalImage.Height * towidth / toheight);
                         y = 0;
-                        x = (originalImage.Width - ow) / 2;
-                    }
-                    break;
-                case CutMode.W://指定宽，高按比例                    
-                    toheight = originalImage.Height * width / originalImage.Width;
-                    break;
-                case CutMode.H://指定高，宽按比例
-                    towidth = originalImage.Width * height / originalImage.Height;
-                    break;
-                case CutMode.Cut://指定高宽裁减（不变形）                
-                    if ((double)originalImage.Width / (double)originalImage.Height > (double)towidth / (double)toheight)
-                    {
-                        oh = originalImage.Height;
-                        ow = originalImage.Height * towidth / toheight;
-                        y = 0;
-                        x = (originalImage.Width - ow) / 2;
+                        x = Math.Max(0, (originalImage.Width - ow) / 2);
                     }
                     else
                     {
                         ow = originalImage.Width;
-                        oh = originalImage.Width * height / towidth;
+                        oh = Math.Max(1, originalImage.Width * toheight / towidth);
                         x = 0;
-                        y = (originalImage.Height - oh) / 2;
+                        y = Math.Max(0, (originalImage.Height - oh) / 2);
                     }
                     break;
-                default:
+                case CutMode.W:
+                    toheight = Math.Max(1, originalImage.Height * towidth / originalImage.Width);
+                    break;
+                case CutMode.H:
+                    towidth = Math.Max(1, originalImage.Width * toheight / originalImage.Height);
                     break;
             }
 
+            var targetInfo = new SKImageInfo(Math.Max(1, towidth), Math.Max(1, toheight));
+            using var surface = SKSurface.Create(targetInfo);
+            if (surface == null) return;
 
-            var newImg = originalImage.Resize(new SKSizeI(towidth, toheight), new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear));
-            using var fs = new FileStream(newFileName, FileMode.Create);
-            //判断类型
-            SKEncodedImageFormat imgType = new SKEncodedImageFormat();
-            string sFullExtension = Utils.GetFileExtName(fileName).ToLower();//扩展名
-            switch (sFullExtension)
-            {
-                case ".jpg":
-                case ".jpeg":
-                    imgType = SKEncodedImageFormat.Jpeg;
-                    break;
-                case ".png":
-                    imgType = SKEncodedImageFormat.Png;
-                    break;
-                case ".gif":
-                    imgType = SKEncodedImageFormat.Gif;
-                    break;
-                case ".webp":
-                    imgType = SKEncodedImageFormat.Webp;
-                    break;
-                case ".bmp":
-                    imgType = SKEncodedImageFormat.Bmp;
-                    break;
-                default:
-                    imgType = SKEncodedImageFormat.Png;
-                    break;
-            }
-            newImg.Encode(fs, imgType, 100);
+            var canvas = surface.Canvas;
+            canvas.Clear(SKColors.Transparent);
+            var srcRect = new SKRect(x, y, x + ow, y + oh);
+            var dstRect = new SKRect(0, 0, targetInfo.Width, targetInfo.Height);
+            using var sourceImage = SKImage.FromBitmap(originalImage);
+            canvas.DrawImage(sourceImage, srcRect, dstRect, new SKSamplingOptions(SKFilterMode.Linear, SKMipmapMode.Linear));
+            canvas.Flush();
+
+            var imgType = ResolveImageFormat(fileName);
+            using var snapshot = surface.Snapshot();
+            using var encoded = snapshot.Encode(imgType, 90);
+            if (encoded == null) return;
+
+            using var fs = new FileStream(newFileName, FileMode.Create, FileAccess.Write, FileShare.None);
+            encoded.SaveTo(fs);
             fs.Flush();
-
-            //新建一个bmp图片
-            //Bitmap b = new Bitmap(towidth, toheight);
-            //try
-            //{
-            //    //新建一个画板
-            //    Graphics g = Graphics.FromImage(b);
-            //    //设置高质量插值法
-            //    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            //    //设置高质量,低速度呈现平滑程度
-            //    g.SmoothingMode = SmoothingMode.AntiAlias;
-            //    g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            //    //清空画布并以透明背景色填充
-            //    g.Clear(Color.White);
-            //    //g.Clear(Color.Transparent);
-            //    //在指定位置并且按指定大小绘制原图片的指定部分
-            //    g.DrawImage(originalImage, new Rectangle(0, 0, towidth, toheight), new Rectangle(x, y, ow, oh), GraphicsUnit.Pixel);
-
-            //    SaveImage(b, newFileName, GetCodecInfo("image/" + GetFormat(newFileName).ToString().ToLower()));
-            //}
-            //catch (System.Exception e)
-            //{
-            //    throw e;
-            //}
-            //finally
-            //{
-            //    originalImage.Dispose();
-            //    b.Dispose();
-            //}
         }
-        #endregion
 
-
-        #region 帮助方法
-        #endregion
-
+        private static SKEncodedImageFormat ResolveImageFormat(string fileName)
+        {
+            return Utils.GetFileExtName(fileName).ToLowerInvariant() switch
+            {
+                ".jpg" or ".jpeg" => SKEncodedImageFormat.Jpeg,
+                ".png" => SKEncodedImageFormat.Png,
+                ".gif" => SKEncodedImageFormat.Gif,
+                ".webp" => SKEncodedImageFormat.Webp,
+                ".bmp" => SKEncodedImageFormat.Bmp,
+                _ => SKEncodedImageFormat.Png
+            };
+        }
     }
-
-
 }

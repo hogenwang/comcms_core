@@ -1,0 +1,155 @@
+/* ==========================================================================
+   COMCMS Horizon Admin 2026 — Design Tokens (Light & Dark Dual Theme)
+   ========================================================================== */
+
+:root,
+[data-theme="light"] {
+    color-scheme: light;
+
+    /* Brand & Accent */
+    --adm-primary: #10b981;
+    --adm-primary-hover: #059669;
+    --adm-primary-soft: rgba(16, 185, 129, 0.12);
+    --adm-primary-ring: rgba(16, 185, 129, 0.24);
+    --adm-cyan: #0ea5e9;
+    --adm-brand-gradient: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+
+    /* Semantic Colors */
+    --adm-info: #0284c7;
+    --adm-info-soft: rgba(2, 132, 199, 0.12);
+    --adm-warning: #d97706;
+    --adm-warning-soft: rgba(217, 119, 6, 0.13);
+    --adm-danger: #e11d48;
+    --adm-danger-soft: rgba(225, 29, 72, 0.12);
+    --adm-success: #059669;
+    --adm-success-soft: rgba(5, 150, 105, 0.12);
+
+    /* Surfaces */
+    --adm-bg: #f1f5f9;
+    --adm-surface: #ffffff;
+    --adm-surface-subtle: #f8fafc;
+    --adm-surface-hover: #f1f5f9;
+    --adm-input-bg: #ffffff;
+    --adm-input-disabled: #f1f5f9;
+
+    /* Borders & Shadows */
+    --adm-border: #e2e8f0;
+    --adm-border-strong: #cbd5e1;
+    --adm-divider: #eef2f6;
+    --adm-shadow-xs: 0 1px 2px rgba(15, 23, 42, 0.04);
+    --adm-shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.05);
+    --adm-shadow-md: 0 10px 28px rgba(15, 23, 42, 0.08);
+    --adm-shadow-lg: 0 20px 48px rgba(15, 23, 42, 0.14);
+
+    /* Typography */
+    --adm-text: #0f172a;
+    --adm-text-secondary: #475569;
+    --adm-text-muted: #64748b;
+    --adm-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    --adm-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    /* Shell Chrome (Obsidian Sidebar + Crisp Light Workspace) */
+    --adm-sidebar-w: 240px;
+    --adm-sidebar-mini-w: 68px;
+    --adm-topbar-h: 56px;
+    --adm-tabs-h: 42px;
+    --adm-footer-h: 36px;
+
+    --adm-sidebar-bg: linear-gradient(180deg, #0b1324 0%, #0f172a 60%, #0b1628 100%);
+    --adm-sidebar-border: rgba(148, 163, 184, 0.12);
+    --adm-sidebar-text: #94a3b8;
+    --adm-sidebar-text-hover: #f8fafc;
+    --adm-sidebar-item-hover: rgba(255, 255, 255, 0.06);
+    --adm-sidebar-item-active: rgba(16, 185, 129, 0.16);
+    --adm-sidebar-sub-bg: rgba(2, 6, 23, 0.34);
+
+    --adm-topbar-bg: rgba(255, 255, 255, 0.92);
+    --adm-tabs-bg: #f8fafc;
+    --adm-tab-active-bg: #ffffff;
+    --adm-tab-active-text: #059669;
+
+    /* Radius */
+    --adm-radius-sm: 6px;
+    --adm-radius-md: 10px;
+    --adm-radius-lg: 14px;
+
+    /* Bootstrap 5 Variable Alignment */
+    --bs-primary: #10b981;
+    --bs-primary-rgb: 16, 185, 129;
+    --bs-body-bg: #f1f5f9;
+    --bs-body-color: #0f172a;
+    --bs-border-color: #e2e8f0;
+    --bs-secondary-bg: #f8fafc;
+    --bs-tertiary-bg: #f1f5f9;
+    --bs-link-color: #059669;
+    --bs-link-hover-color: #047857;
+}
+
+[data-theme="dark"] {
+    color-scheme: dark;
+
+    /* Brand & Accent */
+    --adm-primary: #10b981;
+    --adm-primary-hover: #34d399;
+    --adm-primary-soft: rgba(16, 185, 129, 0.18);
+    --adm-primary-ring: rgba(52, 211, 153, 0.28);
+    --adm-cyan: #38bdf8;
+    --adm-brand-gradient: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
+
+    /* Semantic Colors */
+    --adm-info: #38bdf8;
+    --adm-info-soft: rgba(56, 189, 248, 0.16);
+    --adm-warning: #fbbf24;
+    --adm-warning-soft: rgba(251, 191, 36, 0.16);
+    --adm-danger: #fb7185;
+    --adm-danger-soft: rgba(251, 113, 133, 0.16);
+    --adm-success: #34d399;
+    --adm-success-soft: rgba(52, 211, 153, 0.16);
+
+    /* Surfaces */
+    --adm-bg: #0b1120;
+    --adm-surface: #111827;
+    --adm-surface-subtle: #162033;
+    --adm-surface-hover: #1e293b;
+    --adm-input-bg: #0f172a;
+    --adm-input-disabled: #1e293b;
+
+    /* Borders & Shadows */
+    --adm-border: rgba(148, 163, 184, 0.16);
+    --adm-border-strong: rgba(148, 163, 184, 0.28);
+    --adm-divider: rgba(148, 163, 184, 0.12);
+    --adm-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.28);
+    --adm-shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.32);
+    --adm-shadow-md: 0 12px 32px rgba(0, 0, 0, 0.45);
+    --adm-shadow-lg: 0 24px 56px rgba(0, 0, 0, 0.6);
+
+    /* Typography */
+    --adm-text: #f1f5f9;
+    --adm-text-secondary: #cbd5e1;
+    --adm-text-muted: #94a3b8;
+
+    /* Shell Chrome */
+    --adm-sidebar-bg: linear-gradient(180deg, #060b16 0%, #0b1324 100%);
+    --adm-sidebar-border: rgba(148, 163, 184, 0.14);
+    --adm-sidebar-text: #94a3b8;
+    --adm-sidebar-text-hover: #ffffff;
+    --adm-sidebar-item-hover: rgba(255, 255, 255, 0.07);
+    --adm-sidebar-item-active: rgba(16, 185, 129, 0.2);
+    --adm-sidebar-sub-bg: rgba(2, 6, 23, 0.5);
+
+    --adm-topbar-bg: rgba(15, 23, 42, 0.94);
+    --adm-tabs-bg: #0f172a;
+    --adm-tab-active-bg: #1e293b;
+    --adm-tab-active-text: #34d399;
+
+    /* Bootstrap 5 Variable Alignment */
+    --bs-primary: #10b981;
+    --bs-primary-rgb: 16, 185, 129;
+    --bs-body-bg: #0b1120;
+    --bs-body-color: #f1f5f9;
+    --bs-border-color: rgba(148, 163, 184, 0.16);
+    --bs-secondary-bg: #162033;
+    --bs-tertiary-bg: #1e293b;
+    --bs-link-color: #34d399;
+    --bs-link-hover-color: #6ee7b7;
+}

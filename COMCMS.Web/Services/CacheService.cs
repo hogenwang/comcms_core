@@ -1,90 +1,90 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using COMCMS.Common;
 using COMCMS.Web.Models;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
-using NewLife.Caching;
-using NewLife.Caching.Services;
 
 namespace COMCMS.Web.Services
 {
-	public class CacheService : ICacheService
-	{
-		private readonly NewLife.Caching.ICacheProvider _cacheProvider;
-		private readonly CacheSettings _settings;
-		private readonly string _prefix;
+    public class CacheService : ICacheService
+    {
+        private readonly IDistributedCache _cache;
+        private readonly CacheSettings _settings;
+        private readonly string _prefix;
 
-		public CacheService(NewLife.Caching.ICacheProvider cacheProvider, IOptions<CacheSettings> settings)
-		{
-			_cacheProvider = cacheProvider;
-			_settings = settings.Value;
-			_prefix = Utils.PrefixKey ?? "comcms:";
-		}
+        public CacheService(IDistributedCache cache, IOptions<CacheSettings> settings)
+        {
+            _cache = cache;
+            _settings = settings.Value;
+            _prefix = Utils.PrefixKey ?? "comcms:";
+        }
 
-		private string BuildKey(string key) => string.Concat(_prefix, key ?? string.Empty);
+        private string BuildKey(string key) => string.Concat(_prefix, key ?? string.Empty);
 
-		public async Task<T> GetAsync<T>(string key)
-		{
-			return await Task.FromResult(_cacheProvider.Cache.Get<T>(BuildKey(key)));
-		}
+        public async Task<T> GetAsync<T>(string key)
+        {
+            var payload = await _cache.GetStringAsync(BuildKey(key));
+            if (string.IsNullOrEmpty(payload))
+                return default;
+            return JsonSerializer.Deserialize<T>(payload);
+        }
 
-		public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null)
-		{
-			var expireSeconds = (int)(expiration ?? _settings.DefaultExpiration).TotalSeconds;
-			_cacheProvider.Cache.Add(BuildKey(key), value, expireSeconds);
-			await Task.CompletedTask;
-		}
+        public async Task SetAsync<T>(string key, T value, TimeSpan? expiration = null)
+        {
+            var options = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = expiration ?? _settings.DefaultExpiration
+            };
+            var payload = JsonSerializer.Serialize(value);
+            await _cache.SetStringAsync(BuildKey(key), payload, options);
+        }
 
-		public async Task RemoveAsync(string key)
-		{
-			_cacheProvider.Cache.Remove(BuildKey(key));
-			await Task.CompletedTask;
-		}
+        public async Task RemoveAsync(string key)
+        {
+            await _cache.RemoveAsync(BuildKey(key));
+        }
 
-		public async Task RemoveByPatternAsync(string pattern)
-		{
-			// 暂不支持模式删除，保留占位实现
-			await Task.CompletedTask;
-		}
+        public Task RemoveByPatternAsync(string pattern)
+        {
+            // IDistributedCache does not support pattern deletion natively.
+            return Task.CompletedTask;
+        }
 
-		public async Task<bool> ExistsAsync(string key)
-		{
-			var val = _cacheProvider.Cache.Get<object>(BuildKey(key));
-			return await Task.FromResult(val != null);
-		}
+        public async Task<bool> ExistsAsync(string key)
+        {
+            var payload = await _cache.GetStringAsync(BuildKey(key));
+            return !string.IsNullOrEmpty(payload);
+        }
 
-		public async Task<T> GetOrSetAsync<T>(string key, Func<Task<T>> factory, TimeSpan? expiration = null)
-		{
-			var cacheKey = BuildKey(key);
-			var existed = _cacheProvider.Cache.Get<T>(cacheKey);
-			if (!EqualityComparer<T>.Default.Equals(existed, default)) return existed;
+        public async Task<T> GetOrSetAsync<T>(string key, Func<Task<T>> factory, TimeSpan? expiration = null)
+        {
+            var existed = await GetAsync<T>(key);
+            if (!EqualityComparer<T>.Default.Equals(existed, default))
+                return existed;
 
-			var data = await factory();
-			await SetAsync(key, data, expiration);
-			return data;
-		}
+            var data = await factory();
+            await SetAsync(key, data, expiration);
+            return data;
+        }
 
-		public async Task RefreshAsync(string key, TimeSpan expiration)
-		{
-			var cacheKey = BuildKey(key);
-			var val = _cacheProvider.Cache.Get<object>(cacheKey);
-			if (val != null) _cacheProvider.Cache.Add(cacheKey, val, (int)expiration.TotalSeconds);
-			await Task.CompletedTask;
-		}
+        public async Task RefreshAsync(string key, TimeSpan expiration)
+        {
+            var fullKey = BuildKey(key);
+            var payload = await _cache.GetStringAsync(fullKey);
+            if (!string.IsNullOrEmpty(payload))
+            {
+                await _cache.SetStringAsync(fullKey, payload, new DistributedCacheEntryOptions
+                {
+                    AbsoluteExpirationRelativeToNow = expiration
+                });
+            }
+        }
 
-		public async Task<long> GetCacheSizeAsync()
-		{
-			// 暂无法获取容量，返回0
-			return await Task.FromResult(0L);
-		}
+        public Task<long> GetCacheSizeAsync() => Task.FromResult(0L);
 
-		public async Task ClearAllAsync()
-		{
-			// 暂不提供全清功能
-			await Task.CompletedTask;
-		}
-	}
+        public Task ClearAllAsync() => Task.CompletedTask;
+    }
 }

@@ -186,7 +186,7 @@
                         <div class="col-sm-8">
                             <div class="input-group">
                                 <input id="video_Src" name="video_Src" maxlength="250" type="text" class="form-control upload-path" placeholder="请输入视频地址，必须是h264编码MP4" value="">
-                                <span class="input-group-addon my-upload-span upload-img"></span>
+                                <span class="input-group-addon my-upload-span upload-video"></span>
                             </div>
                         </div>
                     </div>
@@ -258,7 +258,7 @@
         var lastitem = items - 1;
         var newHtmlTr = htmlText.replace(/\{0\}/g, items);
         $('#SildeImgs').append(newHtmlTr);
-        $("#basic-addon_" + items).InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
+        $("#basic-addon_" + items).comcmsUploader({ filesize: 10240, sendurl: "/AdminCP/Upload/UploadImage", filetypes: "gif,jpg,png,bmp,jpeg,webp", btntext: "上传图片", notwater: true });
         items += 1;
         $("#sildeTable").tableDnD();
     }
@@ -269,7 +269,8 @@
 
     $(function () {
         //初始化上传控件
-        $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
+        $(".upload-img").comcmsUploader({ filesize: 10240, sendurl: "/AdminCP/Upload/UploadImage", filetypes: "gif,jpg,png,bmp,jpeg,webp", btntext: "上传图片", notwater: true });
+        $(".upload-video").comcmsUploader({ filesize: 51200, sendurl: "/AdminCP/Upload/UploadVideo", filetypes: "mp4,webm,mov", btntext: "上传视频", icon: "fa-film" });
         DoPost("addAdsForm");
         $("#sildeTable").tableDnD();
     })

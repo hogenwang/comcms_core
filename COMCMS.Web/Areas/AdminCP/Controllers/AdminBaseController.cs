@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using COMCMS.Common;
-using COMCMS.Core;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Authorization;
 using COMCMS.Common.Security;
+using COMCMS.Core;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -18,16 +13,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
     {
         public JsonTip tip = new JsonTip();
 
-        /// <summary>
-        /// 如果没登录
-        /// </summary>
-        /// <param name="context"></param>
         #region 获取验证第一条错误
         /// <summary>
         /// 获取服务端验证的第一条错误信息
         /// </summary>
         /// <returns></returns>
-        public string GetModelStateError()
+        [NonAction]
+        protected string GetModelStateError()
         {
             foreach (var item in ModelState.Values)
             {
@@ -49,12 +41,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         /// <param name="isCloseDialog">是否关闭掉dialog</param>
         /// <param name="backURL">后退地址，为空则默认上一页</param>
         /// <returns></returns>
-        public IActionResult EchoTipPage(string message, int type = 0, bool isCloseDialog = false, string backURL = "")
+        [NonAction]
+        protected IActionResult EchoTipPage(string message, int type = 0, bool isCloseDialog = false, string backURL = "")
         {
             ViewBag.Message = message;
             ViewBag.Type = type;
             ViewBag.IsCloseDialog = isCloseDialog;
-            ViewBag.BackURL = backURL;
+            ViewBag.BackURL = Url != null && !string.IsNullOrWhiteSpace(backURL) && Url.IsLocalUrl(backURL) ? backURL : "";
             return View("TipPage");
         }
         #endregion

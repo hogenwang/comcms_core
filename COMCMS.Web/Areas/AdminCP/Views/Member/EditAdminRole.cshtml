@@ -1,4 +1,4 @@
-﻿@model AdminRoles
+@model AdminRoles
 @{
     ViewBag.title = "查看/编辑管理组详情";
     List<int> aclist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<int>>(Model.AuthorizedArticleCagegory);
@@ -17,13 +17,13 @@
                 <div class="tabs-container">
                     <ul class="nav nav-tabs">
                         <li class="active">
-                            <a data-toggle="tab" href="#tab-1" aria-expanded="true"> 管理组基本设置</a>
+                            <a data-bs-toggle="tab" href="#tab-1" aria-expanded="true"> 管理组基本设置</a>
                         </li>
                         <li class="">
-                            <a data-toggle="tab" href="#tab-2" aria-expanded="false"> 管理组权限设置</a>
+                            <a data-bs-toggle="tab" href="#tab-2" aria-expanded="false"> 管理组权限设置</a>
                         </li>
                         <li class="">
-                            <a data-toggle="tab" href="#tab-3" aria-expanded="false"> 授权文章、商品权限</a>
+                            <a data-bs-toggle="tab" href="#tab-3" aria-expanded="false"> 授权文章、商品权限</a>
                         </li>
                     </ul>
                     <div class="tab-content">
@@ -193,8 +193,8 @@
 @if (Model.IsSuperAdmin == 0)
 {
     <script>
-            var menus = @Html.Raw(Model.Menus);
-            var powers = @Html.Raw(Model.Powers);
+            var menus = @COMCMS.Web.Common.SafeScriptJson.FromRawJson(Model.Menus, "[]");
+            var powers = @COMCMS.Web.Common.SafeScriptJson.FromRawJson(Model.Powers, "[]");
             $(function () {
                 menus.map(function(item){
                     $("#menuid_"+item.Id).prop("checked","checked");

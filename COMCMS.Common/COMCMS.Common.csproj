@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="HtmlSanitizer" Version="9.1.973" />
-    <PackageReference Include="NewLife.Core" Version="11.16.2026.601" />
+    <PackageReference Include="HtmlSanitizer" Version="11.0.26" />
+    <PackageReference Include="NewLife.Core" Version="12.0.2026.1024" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="PinYinConverterCore" Version="1.0.2" />
-    <PackageReference Include="SkiaSharp" Version="3.119.4" />
-    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="3.119.4" />
-    <PackageReference Include="SkiaSharp.QrCode" Version="0.12.0" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.10" />
+    <PackageReference Include="SkiaSharp" Version="4.157.0" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="4.157.0" />
+    <PackageReference Include="SkiaSharp.QrCode" Version="1.2.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="11.0.0" />
   </ItemGroup>
 
 </Project>

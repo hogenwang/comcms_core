@@ -40,8 +40,6 @@ using System.Threading.RateLimiting;
 using ComCmsAuthSchemes = COMCMS.Common.Security.AuthenticationSchemes;
 using Microsoft.AspNetCore.DataProtection;
 using StackExchange.Redis;
-using NewLife.Caching;
-using NewLife.Caching.Services;
 using Newtonsoft.Json.Serialization;
 using Senparc.CO2NET;
 using Senparc.CO2NET.Cache;
@@ -117,11 +115,20 @@ namespace COMCMS.Web
                         QueueLimit = 0,
                         AutoReplenishment = true
                     }));
+                options.AddPolicy("guestbook", context => RateLimitPartition.GetFixedWindowLimiter(
+                    context.Connection.RemoteIpAddress?.ToString() ?? "unknown",
+                    _ => new FixedWindowRateLimiterOptions
+                    {
+                        PermitLimit = 5,
+                        Window = TimeSpan.FromMinutes(10),
+                        QueueLimit = 0,
+                        AutoReplenishment = true
+                    }));
                 options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
                 options.OnRejected = (context, _) =>
                 {
                     context.HttpContext.RequestServices.GetRequiredService<SecurityEventMetrics>()
-                        .RateLimitRejected("login");
+                        .RateLimitRejected("request");
                     return ValueTask.CompletedTask;
                 };
             });
@@ -160,11 +167,18 @@ namespace COMCMS.Web
             });
             // 绑定缓存设置
             services.Configure<CacheSettings>(Configuration.GetSection("CacheSettings"));
+            services.AddMemoryCache();
             // 响应缓存
             services.AddResponseCaching();
-            services.AddSingleton<ICacheProvider, RedisCacheProvider>();
-            // 缓存服务封装
+            // 缓存服务封装（统一基于 IDistributedCache）
             services.AddSingleton<ICacheService, CacheService>();
+            // 点击量内存聚合后台刷盘服务
+            services.AddSingleton<HitCounterService>();
+            services.AddHostedService(sp => sp.GetRequiredService<HitCounterService>());
+            // 鉴权状态短时缓存
+            services.AddSingleton<AuthValidationCache>();
+            // 前台内容视图服务
+            services.AddScoped<PublicContentService>();
             //部分系统配置
             services.Configure<SystemSetting>(Configuration.GetSection("SystemSetting"));
             services.Configure<AuthenticationSettings>(Configuration.GetSection("Authentication"));
@@ -181,7 +195,7 @@ namespace COMCMS.Web
             services.AddSingleton<PaymentIdempotencyService>();
             services.AddSingleton<LoginAttemptService>();
             services.AddSingleton<SecurityEventMetrics>();
-            services.AddSingleton<IContentSanitizer, ContentSanitizer>();
+            services.AddScoped<IContentSanitizer, ContentSanitizer>();
             services.AddAuthorization();
             services.AddSingleton<IAuthorizationPolicyProvider, AdminPermissionPolicyProvider>();
             services.AddSingleton<IAuthorizationHandler, AdminPermissionHandler>();
@@ -349,8 +363,9 @@ namespace COMCMS.Web
             {
                 app.Use(async (context, next) =>
                 {
-                    if (context.Request.Path.StartsWithSegments("/install") ||
-                        context.Request.Path.StartsWithSegments("/Home/Install"))
+                    if (context.Request.Path.StartsWithSegments("/install", StringComparison.OrdinalIgnoreCase) ||
+                        context.Request.Path.StartsWithSegments("/Home/Install", StringComparison.OrdinalIgnoreCase) ||
+                        context.Request.Path.StartsWithSegments("/Home/DoInstall", StringComparison.OrdinalIgnoreCase))
                     {
                         context.Response.StatusCode = StatusCodes.Status404NotFound;
                         return;
@@ -417,10 +432,8 @@ namespace COMCMS.Web
                 return context.HttpContext.SignOutAsync(ComCmsAuthSchemes.AdminCookie);
             }
 
-            var admin = Admin.Find(Admin._.Id == ComCmsClaimTypes.GetSubjectId(context.Principal));
-            var actualStamp = context.Principal.FindFirstValue(ComCmsClaimTypes.SecurityStamp);
-            var expectedStamp = admin == null ? null : SecurityStampService.Compute("admin", admin.Id, admin.PassWord, admin.RoleId, admin.IsLock);
-            if (admin == null || admin.IsLock == 1 || !SecurityStampService.Equals(expectedStamp, actualStamp))
+            var authCache = context.HttpContext.RequestServices.GetRequiredService<AuthValidationCache>();
+            if (!authCache.ValidateAdmin(context.Principal))
             {
                 context.RejectPrincipal();
                 return context.HttpContext.SignOutAsync(ComCmsAuthSchemes.AdminCookie);
@@ -436,7 +449,8 @@ namespace COMCMS.Web
                 return context.HttpContext.SignOutAsync(ComCmsAuthSchemes.MemberCookie);
             }
             var tokenService = context.HttpContext.RequestServices.GetRequiredService<TokenService>();
-            if (!tokenService.ValidateActiveSession(context.Principal))
+            var authCache = context.HttpContext.RequestServices.GetRequiredService<AuthValidationCache>();
+            if (!authCache.ValidateMemberSession(context.Principal, tokenService))
             {
                 context.RejectPrincipal();
                 return context.HttpContext.SignOutAsync(ComCmsAuthSchemes.MemberCookie);
@@ -447,7 +461,8 @@ namespace COMCMS.Web
         private static Task ValidateBearerToken(TokenValidatedContext context)
         {
             var tokenService = context.HttpContext.RequestServices.GetRequiredService<TokenService>();
-            if (!tokenService.ValidateActiveSession(context.Principal))
+            var authCache = context.HttpContext.RequestServices.GetRequiredService<AuthValidationCache>();
+            if (!authCache.ValidateMemberSession(context.Principal, tokenService))
                 context.Fail("The account session is no longer valid.");
             return Task.CompletedTask;
         }

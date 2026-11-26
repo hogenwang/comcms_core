@@ -1,245 +1,154 @@
-﻿<!DOCTYPE html>
-<html>
+﻿@{
+    Config cfg = ViewBag.cfg as Config ?? Config.GetSystemConfig();
+    string siteName = string.IsNullOrWhiteSpace(cfg?.SiteName) ? "COMCMS" : cfg.SiteName;
+    string siteTel = string.IsNullOrWhiteSpace(cfg?.SiteTel) ? "+86-20-88888888" : cfg.SiteTel;
+    string siteEmail = string.IsNullOrWhiteSpace(cfg?.SiteEmail) ? "hogenwang@vip.qq.com" : cfg.SiteEmail;
+
+    IList<ArticleCategory> allArticleCategorys = ArticleCategory.GetListTree(0, -1, false, false);
+    IList<Article> aboutlist = Article.FindAll(Article._.KId == 1 & Article._.IsHide == 0 & Article._.IsDel != 1, Article._.Sequence.Asc(), null, 0, 0);
+    IList<Category> allCategorys = Category.FindAll(Category._.PId == 0 & Category._.IsHide == 0, Category._.Rank.Asc(), null, 0, 0);
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>@ViewBag.title</title>
     <meta name="renderer" content="webkit" />
     <meta name="keywords" content="@ViewBag.keywords">
     <meta name="description" content="@ViewBag.description">
+    <link href="~/hplus/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/js/swpier/swiper.min.css" rel="stylesheet" />
-    <link href="~/images/default/style.css" rel="stylesheet" />
-    <script src="~/js/html5shiv.min.js"></script>
+    <link href="~/css/site-tech.css" rel="stylesheet" asp-append-version="true" />
     <script src="~/js/jquery-3.min.js"></script>
-    <script src="~/js/layer/layer.js"></script>
-    <script src="~/js/jquery.form.js"></script>
     <script src="~/js/swpier/swiper.min.js"></script>
-    <script src="~/js/public.js"></script>
+    <script src="~/js/site-tech.js" asp-append-version="true"></script>
 </head>
-<body>
-    <div class="pc" id="main" data-change="1">
-        <!-- 头部内容 -->
-        <div class="header">
-            <div class="cont">
-                <a href="/" title="@ViewBag.cfg.SiteName" class="logo">
-                    <img src="@ViewBag.cfg.SiteLogo" alt="@ViewBag.cfg.SiteName">
+<body class="tech-site">
+    <!-- Sticky Tech Glass Header -->
+    <header class="tech-header" id="siteHeader">
+        <div class="tech-container tech-header-inner">
+            <a href="/" title="@siteName" class="tech-brand">
+                @if (!string.IsNullOrWhiteSpace(cfg?.SiteLogo))
+                {
+                    <img src="@cfg.SiteLogo" alt="@siteName" class="tech-brand-logo" onerror="this.style.display='none'" />
+                }
+                <span class="tech-brand-name">@siteName</span>
+            </a>
+
+            <nav class="tech-nav-wrap" id="siteNavWrap" aria-label="主导航">
+                <ul class="tech-nav">
+                    <li id="nav_0"><a href="/" title="首页">首页</a></li>
+                    <li id="nav_1"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, 1)" title="关于我们">关于我们</a></li>
+                    <li id="nav_P"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ProductCategory, 1)" title="产品中心">产品中心</a></li>
+                    <li id="nav_2"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, 2)" title="新闻资讯">新闻资讯</a></li>
+                    <li id="nav_3"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, 3)" title="项目案例">项目案例</a></li>
+                    <li id="nav_4"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, 4)" title="用户服务">用户服务</a></li>
+                    <li id="nav_5"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, 5)" title="联系我们">联系我们</a></li>
+                </ul>
+            </nav>
+
+            <div class="tech-header-actions">
+                <a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, 5)" class="tech-btn-nav">
+                    <i class="fa fa-paper-plane-o"></i> 在线咨询
                 </a>
-                <div class="menu-btn" onclick="mbNav()"><p class="pic-box"><i></i></p></div>
-
-                <div class="menu-box">
-                    <div class="menu-bg"></div>
-                    <ul class="nav-list">
-                        <li id="nav_0"><a href="/" title="首页">首页</a><i></i></li>
-
-                        <li id="nav_1"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory,1)" title="关于我们">关于我们</a><i></i></li>
-                        <li id="nav_P"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ProductCategory,1)" title="产品中心">产品中心</a><i></i></li>
-                        <li id="nav_2"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory,2)" title="新闻资讯">新闻资讯</a><i></i></li>
-                        <li id="nav_3"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory,3)" title="项目案例">项目案例</a><i></i></li>
-                        <li id="nav_4"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory,4)" title="用户服务">用户服务</a><i></i></li>
-                        <li id="nav_5"><a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory,5)" title="联系我们">联系我们</a><i></i></li>
-                    </ul>
-                </div>
+                <button type="button" class="tech-mobile-toggle" id="mobileNavToggle" aria-label="展开导航菜单" aria-expanded="false">
+                    <i class="fa fa-bars"></i>
+                </button>
             </div>
         </div>
+    </header>
+
+    <main>
         @RenderBody()
-        <!-- 底部内容 -->
-        @{ 
-            IList<ArticleCategory> allArticleCategorys = ArticleCategory.GetListTree(0, -1, false, false);
-            IList<Article> aboutlist = Article.FindAll(Article._.KId == 1 & Article._.IsHide ==0, Article._.Sequence.Asc(), null, 0, 0);
+    </main>
 
-            IList<Category> allCategorys = Category.FindAll(Category._.PId==0 & Category._.IsHide ==0, Category._.Rank.Asc(),null,0,0);
-        }
-        <div class="footer">
-            <div class="foot-top">
-                <!-- 底部导航栏 移动端下显示 -->
-                <div class="foot-nav mobile">
-                    <ul class="foot-list">
+    <!-- Dark Enterprise Tech Footer -->
+    <footer class="tech-footer">
+        <div class="tech-container tech-footer-main">
+            <div>
+                <div class="tech-footer-brand">@siteName</div>
+                <div class="tech-footer-sub">ENTERPRISE DIGITAL CONTENT PLATFORM</div>
+                <ul class="tech-footer-contact">
+                    <li><i class="fa fa-phone"></i><span>服务热线：@siteTel</span></li>
+                    <li><i class="fa fa-envelope-o"></i><span>联系邮箱：<a href="mailto:@siteEmail">@siteEmail</a></span></li>
+                    <li><i class="fa fa-map-marker"></i><span>公司地址：广东省广州市天河区天河城</span></li>
+                </ul>
+            </div>
 
-                        <li>
-                            <a href="javascript:;">关于我们<i></i></a>
-                            <ul class="foot-sec-nav">
-                                @foreach (Article a in aboutlist)
-                                {
-                                    <li><a asp-controller="Article" asp-action="Detail" asp-route-id="@(a.Id)" title="@a.Title">@a.Title</a></li>
-                                }
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:;">产品中心<i></i></a>
-                            <ul class="foot-sec-nav">
-                                @foreach(Category c in allCategorys)
-                                {
-                                <li><a asp-controller="Product" asp-action="Index" asp-route-id="@(c.Id)" title="@(c.KindName)">@(c.KindName)</a></li>
-                                }
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:;">新闻资讯<i></i></a>
-                            <ul class="foot-sec-nav">
-                                @foreach (ArticleCategory ac in allArticleCategorys)
-                                {
-                                    if (ac.PId == 2)
-                                    {
-                                        <li><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></li>
-                                    }
-                                }
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:;">用户服务<i></i></a>
-                            <ul class="foot-sec-nav">
-                                @foreach (ArticleCategory ac in allArticleCategorys)
-                                {
-                                    if (ac.PId == 4)
-                                    {
-                                        <li><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></li>
-                                    }
-                                }
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="javascript:;">联系我们<i></i></a>
-                            <ul class="foot-sec-nav">
-                                @foreach (ArticleCategory ac in allArticleCategorys)
-                                {
-                                    if (ac.PId == 5)
-                                    {
-                                        <li><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></li>
-                                    }
-                                }
-                            </ul>
-                        </li>
+            <div class="tech-footer-links">
+                <div class="tech-footer-col">
+                    <h4>关于我们</h4>
+                    <ul>
+                        @foreach (Article a in aboutlist)
+                        {
+                            <li><a asp-controller="Article" asp-action="Detail" asp-route-id="@(a.Id)" title="@a.Title">@a.Title</a></li>
+                        }
                     </ul>
-                    <script type="text/javascript">
-                        $('.foot-list').on('click', 'a', function () {
-                            var num = $('.foot-list > li').length;
-                            var showed = $(this).parent('li').find('.foot-sec-nav').is(':visible');
-                            var length = $(this).parent('li').find('.foot-sec-nav').length;
-                            if (!showed) {
-                                for (var i = 0; i < num; i++) {
-                                    $('.foot-sec-nav').eq(i).slideUp('slow');
-                                    $('.foot-list > li').eq(i).find('i').stop().removeClass('round1');
-                                }
-                                if (length > 0) {
-                                    $(this).parent('li').find('.foot-sec-nav').slideDown('slow');
-                                    $(this).parent('li').find('i').addClass('round1');
-                                }
-                            } else {
-                                if (length > 0) {
-                                    $(this).parent('li').find('.foot-sec-nav').slideUp('slow');
-                                    $(this).parent('li').find('i').removeClass('round1');
-                                }
-                            }
-                        });
-                    </script>
                 </div>
-                <div class="cont">
-                    <!-- 底部公司信息 -->
-                    <div class="foot-info">
-                        <div class="foot-title">
-                            <span>COMCMS 内容管理系统</span>
-                            <small>COMCMS Technology Co.，Ltd</small>
-                        </div>
-                        <div class="foot-info-cont">
-                            <ul>
-                                <li><span><i class="foot-ico3"></i>电话：</span><span>+86-20-88888888</span></li>
-                                <li><span><i class="foot-ico1"></i>传真：</span><span>+86-20-88888888</span></li>
-                                <li><span><i class="foot-ico2"></i>邮箱：</span><span>hogenwang@vip.qq.com</span></li>
-                                <li><span><i class="foot-ico4"></i>地址：</span><span class="foot-address">广东省广州市天河区天河城</span></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <!-- 底部在线留言 -->
-                    <div class="foot-msg">
-                        <span>在线留言</span>
-                        <form class="foot-msg-box" id="footerMessageForm" name="footerMessageForm" onsubmit="return doPostFooterMessage();" asp-antiforgery="true">
-                            <p><input type="text" name="name" id="name" value="" placeholder="姓名" required></p>
-                            <p><input type="text" name="phone" id="phone" value="" placeholder="电话" required></p>
-                            <p class="f-ta"><textarea name="content" id="content" rows="8" cols="80" placeholder="留言内容" required></textarea></p>
-                            <p><button type="submit">提    交</button></p>
-                        </form>
-                    </div>
-                    <!-- 底部导航栏 PC版下显示-->
-                    <div class="foot-nav normal">
-                        <dl class="foot-nav-list">
-                            <dt>关于我们</dt>
-                            @foreach (Article a in aboutlist)
+
+                <div class="tech-footer-col">
+                    <h4>产品与方案</h4>
+                    <ul>
+                        @foreach (Category c in allCategorys)
+                        {
+                            <li><a asp-controller="Product" asp-action="Index" asp-route-id="@(c.Id)" title="@(c.KindName)">@(c.KindName)</a></li>
+                        }
+                        @foreach (ArticleCategory ac in allArticleCategorys)
+                        {
+                            if (ac.PId == 4)
                             {
-                                <dd><a asp-controller="Article" asp-action="Detail" asp-route-id="@(a.Id)" title="@a.Title">@a.Title</a></dd>
+                                <li><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></li>
                             }
-                        </dl>
-                        <dl class="foot-nav-list">
-                            <dt>新闻资讯</dt>
-                            @foreach (ArticleCategory ac in allArticleCategorys)
+                        }
+                    </ul>
+                </div>
+
+                <div class="tech-footer-col">
+                    <h4>资讯与支持</h4>
+                    <ul>
+                        @foreach (ArticleCategory ac in allArticleCategorys)
+                        {
+                            if (ac.PId == 2 || ac.PId == 5)
                             {
-                                if (ac.PId == 2)
-                                {
-                                    <dd><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></dd>
-                                }
+                                <li><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></li>
                             }
-                        </dl>
-                        <dl class="foot-nav-list">
-                            <dt>产品中心</dt>
-                            @foreach (Category c in allCategorys)
-                            {
-                                <dd><a asp-controller="Product" asp-action="Index" asp-route-id="@(c.Id)" title="@(c.KindName)">@(c.KindName)</a></dd>
-                            }
-                        </dl>
-                        <dl class="foot-nav-list">
-                            <dt>用户服务</dt>
-                            @foreach (ArticleCategory ac in allArticleCategorys)
-                            {
-                                if (ac.PId == 4)
-                                {
-                                    <dd><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></dd>
-                                }
-                            }
-                        </dl>
-                        <dl class="foot-nav-list">
-                            <dt>联系我们</dt>
-                            @foreach (ArticleCategory ac in allArticleCategorys)
-                            {
-                                if (ac.PId == 5)
-                                {
-                                    <dd><a asp-controller="Article" asp-action="Index" asp-route-id="@(ac.Id)" title="@ac.KindName">@ac.KindName</a></dd>
-                                }
-                            }
-                        </dl>
-                    </div>
+                        }
+                    </ul>
                 </div>
             </div>
-            <div class="foot-bottom">
-                <div class="cont">
-                    <span>@ViewBag.cfg.Copyright <a href="http://www.comcms.com/" target="_blank"> 技术支持：COMCMS</a>&nbsp;<a href="http://www.miitbeian.gov.cn/" target="_blank">粤ICP备8888888号-1</a> Powered by .NET @(System.Environment.Version) on @COMCMS.Common.Utils.GetOSPlatform() Server</span>
+
+            <div class="tech-footer-form">
+                <h4><i class="fa fa-comments-o"></i> 快速留言咨询</h4>
+                <form id="footerMessageForm" name="footerMessageForm" onsubmit="return doPostFooterMessage();" asp-antiforgery="true">
+                    <input type="text" name="name" id="name" class="tech-footer-input" placeholder="您的姓名" required />
+                    <input type="text" name="phone" id="phone" class="tech-footer-input" placeholder="联系电话" required />
+                    <textarea name="content" id="content" rows="3" class="tech-footer-textarea" placeholder="请简述您的项目需求或咨询内容..." required></textarea>
+                    <button type="submit" class="tech-btn tech-btn-primary" style="width:100%;padding:10px 18px;font-size:14px;">
+                        <i class="fa fa-send-o"></i> 提交留言
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="tech-footer-bottom">
+            <div class="tech-container tech-footer-bottom-inner">
+                <div>
+                    @cfg?.Copyright
+                    @if (!string.IsNullOrWhiteSpace(cfg?.ICP))
+                    {
+                        <span> · @cfg.ICP</span>
+                    }
+                    <span> · <a href="https://www.comcms.com/" target="_blank" rel="noopener noreferrer">Powered by COMCMS</a></span>
+                </div>
+                <div class="tech-footer-bottom-links">
+                    <a href="/sitemap.html">网站地图</a>
+                    <a href="/Tag">标签索引</a>
+                    <a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, 5)">联系我们</a>
                 </div>
             </div>
         </div>
-    </div>
-
-    <script type="text/javascript">
-        init();
-        $(window).resize(function () {
-            init();
-        });
-        if (!IsPC()) {
-            cds();
-        }
-        //proShow();
-        //coopSwiper();
-        var mySwiper = new Swiper('.banner .swiper-container', {
-            loop: true,
-
-            // 如果需要前进后退按钮
-            nextButton: '.banner-next',
-            prevButton: '.banner-prev',
-            autoplay: 3000,
-        })
-
-        var mySwiper1 = new Swiper('.banner .mobile', {
-            loop: true,
-            autoplay: 3000,
-        });
-    </script>
+    </footer>
 </body>
 </html>

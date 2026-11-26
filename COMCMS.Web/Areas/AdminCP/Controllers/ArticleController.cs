@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using COMCMS.Common;
-using COMCMS.Core;
-using XCode;
-using Newtonsoft.Json;
-using COMCMS.Web.Common;
-using Microsoft.AspNetCore.Http;
 using COMCMS.Common.Security;
+using COMCMS.Core;
+using COMCMS.Web.Common;
 using COMCMS.Web.Services;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using XCode;
 
 namespace COMCMS.Web.Areas.AdminCP.Controllers
 {
@@ -27,12 +26,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             _contentSanitizer = contentSanitizer;
             _remoteImages = remoteImages;
         }
+
         #region 文章栏目
-        /// <summary>
-        /// 文章栏目列表
-        /// </summary>
-        /// <returns></returns>
-        [MyAuthorize( "viewlist",  "articlecategory")]
+        [MyAuthorize("viewlist", "articlecategory")]
         [DisplayName("文章栏目")]
         public IActionResult ArticleCategoryList()
         {
@@ -41,133 +37,48 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             return View(list);
         }
 
-        [MyAuthorize( "add",  "articlecategory")]
+        [MyAuthorize("add", "articlecategory")]
         public IActionResult AddArticleCategory()
         {
-            //获取上级栏目
-            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, true);
-            ViewBag.ListTree = list;
-            //获取模板 模板规则，以Index_开头的，为栏目列表，以Detial_开头的为文章详情
-            List<string> listTpls = new List<string>();
-            var asms = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var asmItem in asms)
-            {
-                string fullName = asmItem.GetName().ToString();
-                if (fullName.IndexOf("COMCMS.Web") > -1)
-                {
-                    var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
-                    if (types.Count == 0) continue;
-                    foreach (var type in types)
-                    {
-                        string viewName = type.Name.Replace("Views_Article_", "") + ".cshtml";
-                        listTpls.Add(viewName);
-                    }
-                }
-            }
-            ViewBag.ListTpl = listTpls;
+            ViewBag.ListTree = ArticleCategory.GetListTree(0, -1, true, true);
+            ViewBag.ListTpl = GetArticleTemplateNames();
             Core.Admin.WriteLogActions("查看添加文章栏目页面；");
             return View();
         }
 
         [HttpPost]
-        [MyAuthorize( "add",  "articlecategory", "JSON")]
+        [MyAuthorize("add", "articlecategory", "JSON")]
         public IActionResult AddArticleCategory(ArticleCategory model)
         {
-            //获取上级栏目
             if (string.IsNullOrWhiteSpace(model.KindName))
             {
                 tip.Message = "文章栏目标题不能为空！";
                 return Json(tip);
             }
 
-            if (!string.IsNullOrEmpty(model.FilePath))
+            if (!ValidateCategoryFilePath(model.FilePath, 0, out var pathError))
             {
-                if (!model.FilePath.StartsWith("/"))
-                {
-                    tip.Message = "栏目路径请以/开头！";
-                    return Json(tip);
-                }
-                if (model.FilePath.EndsWith("/"))
-                {
-                    tip.Message = "栏目路径结尾不用加上/";
-                    return Json(tip);
-                }
-
-                if (model.FilePath.Count(x => x == '/') > 4)
-                {
-                    tip.Message = "最多只能四级路径！";
-                    return Json(tip);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(model.FilePath) && !AdminUtils.CheckFilePathIsOK(model.FilePath, 0, 0))
-            {
-                tip.Message = "栏目路径不可用，请重新填写！";
+                tip.Message = pathError;
                 return Json(tip);
             }
-            //判断过滤IP地址
-            if (!string.IsNullOrEmpty(model.AllowIp))
+
+            if (!ValidateAllowIpList(model.AllowIp, out var ipError))
             {
-                string[] strRows = model.AllowIp.Split(new string[] { "\n" }, StringSplitOptions.None);
-                if (strRows != null && strRows.Length > 0)
-                {
-                    foreach (var row in strRows)
-                    {
-                        if (!string.IsNullOrEmpty(row))
-                        {
-                            if (row.IndexOf("-") > -1)
-                            {
-                                string[] arrIps = row.Split(new string[] { "-" }, StringSplitOptions.None);
-                                if (arrIps != null && arrIps.Length > 0)
-                                {
-                                    if (arrIps.Length != 2)
-                                    {
-                                        tip.Message = "每一行只能有一个“-”，如果需要限制多个ip段，请换行再输入！";
-                                        return Json(tip);
-                                    }
-                                    //判断ip是否符合规则
-                                    foreach (var ip in arrIps)
-                                    {
-                                        if (!Utils.IsIP(ip))
-                                        {
-                                            tip.Message = "您输入的IP地址有误：" + ip;
-                                            return Json(tip);
-                                        }
-                                    }
-                                    long ip1 = Utils.GetLongIP(arrIps[0]);
-                                    long ip2 = Utils.GetLongIP(arrIps[1]);
-                                    if (ip1 > ip2)
-                                    {
-                                        tip.Message = "您输入的IP地址段有误，请按小到大输入";
-                                        return Json(tip);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (!Utils.IsIP(row))
-                                {
-                                    tip.Message = "您输入的IP地址有误：" + row;
-                                    return Json(tip);
-                                }
-                            }
-                        }
-                    }
-                }
+                tip.Message = ipError;
+                return Json(tip);
             }
 
+            model.PageSize = model.PageSize <= 0 ? 15 : model.PageSize;
             model.KindInfo = _contentSanitizer.Sanitize(model.KindInfo);
             model.Insert();
             Core.Admin.WriteLogActions("添加文章栏目(id:" + model.Id + ");");
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "添加文章栏目成功";
             tip.ReturnUrl = "close";
-
             return Json(tip);
         }
 
-        //编辑栏目
-        [MyAuthorize( "edit",  "articlecategory")]
+        [MyAuthorize("edit", "articlecategory")]
         public IActionResult EditArticleCategory(int id)
         {
             ArticleCategory entity = ArticleCategory.Find(ArticleCategory._.Id == id);
@@ -175,40 +86,20 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             {
                 return EchoTipPage("系统找不到本记录！");
             }
-            //获取上级栏目
-            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, true);
-            ViewBag.ListTree = list;
-
-            //获取模板 模板规则，以Index_开头的，为栏目列表，以Detial_开头的为文章详情
-            List<string> listTpls = new List<string>();
-            var asms = AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var asmItem in asms)
-            {
-                string fullName = asmItem.GetName().ToString();
-                if (fullName.IndexOf("COMCMS.Web") > -1)
-                {
-                    var types = asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Article")).ToList();
-                    if (types.Count == 0) continue;
-                    foreach (var type in types)
-                    {
-                        string viewName = type.Name.Replace("Views_Article_", "") + ".cshtml";
-                        listTpls.Add(viewName);
-                    }
-                }
-            }
-            ViewBag.ListTpl = listTpls;
+            ViewBag.ListTree = ArticleCategory.GetListTree(0, -1, true, true);
+            ViewBag.ListTpl = GetArticleTemplateNames();
             Core.Admin.WriteLogActions("查看/编辑文章栏目（id:" + id + "）页面；");
             return View(entity);
         }
 
         [HttpPost]
-        [MyAuthorize( "edit",  "articlecategory", "JSON")]
+        [MyAuthorize("edit", "articlecategory", "JSON")]
         public IActionResult EditArticleCategory(ArticleCategory model)
         {
             if (model.Id <= 0)
             {
                 tip.Message = "错误参数传递！";
-                Json(tip);
+                return Json(tip);
             }
             if (string.IsNullOrWhiteSpace(model.KindName))
             {
@@ -220,34 +111,18 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             if (entity == null)
             {
                 tip.Message = "系统找不到本记录！";
-                Json(tip);
+                return Json(tip);
             }
 
-            if (!string.IsNullOrEmpty(model.FilePath))
+            if (!ValidateCategoryFilePath(model.FilePath, entity.Id, out var pathError))
             {
-                if (!model.FilePath.StartsWith("/"))
-                {
-                    tip.Message = "栏目路径请以/开头！";
-                    return Json(tip);
-                }
-                if (model.FilePath.EndsWith("/"))
-                {
-                    tip.Message = "栏目路径结尾不用加上/";
-                    return Json(tip);
-                }
-
-                if (model.FilePath.Count(x => x == '/') > 4)
-                {
-                    tip.Message = "最多只能四级路径！";
-                    return Json(tip);
-                }
+                tip.Message = pathError;
+                return Json(tip);
             }
 
-
-
-            if (!string.IsNullOrEmpty(model.FilePath) && !AdminUtils.CheckFilePathIsOK(model.FilePath, entity.Id, 0))
+            if (!ValidateAllowIpList(model.AllowIp, out var ipError))
             {
-                tip.Message = "栏目路径不可用，请重新填写！";
+                tip.Message = ipError;
                 return Json(tip);
             }
 
@@ -261,20 +136,18 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 entity.PId = model.PId;
                 entity.Location = ArticleCategory.GetNewLocation(model.PId);
                 entity.Level = ArticleCategory.GetNewLevel(model.PId);
-                //修改文章的location
                 IList<Article> alist = Article.FindAll(Article._.KId == model.Id, Article._.Id.Desc(), null, 0, 0);
                 if (alist != null && alist.Count > 0)
                 {
                     foreach (var a in alist)
                     {
                         a.Location = entity.Location + "," + entity.Id;
-                        //a.FilePath = entity.FilePath;
                     }
                     alist.Save();
                 }
             }
-            bool idNeedUpdateAllArticleFilePath = entity.FilePath == model.FilePath;
-            //赋值
+
+            bool isNeedUpdateAllArticleFilePath = !string.Equals(entity.FilePath, model.FilePath, StringComparison.Ordinal);
             entity.PId = model.PId;
             entity.KindName = model.KindName;
             entity.SubTitle = model.SubTitle;
@@ -295,71 +168,14 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.KindInfo = _contentSanitizer.Sanitize(model.KindInfo);
             entity.KindDomain = model.KindDomain;
             entity.Rank = model.Rank;
-            entity.Pic = model.Pic;
             entity.FilePath = model.FilePath;
-
-            //判断过滤IP地址
-            if (!string.IsNullOrEmpty(model.AllowIp))
-            {
-                string[] strRows = model.AllowIp.Split(new string[] { "\n" }, StringSplitOptions.None);
-                if (strRows != null && strRows.Length > 0)
-                {
-                    foreach (var row in strRows)
-                    {
-                        if (!string.IsNullOrEmpty(row))
-                        {
-                            if (row.IndexOf("-") > -1)
-                            {
-                                string[] arrIps = row.Split(new string[] { "-" }, StringSplitOptions.None);
-                                if (arrIps != null && arrIps.Length > 0)
-                                {
-                                    if (arrIps.Length != 2)
-                                    {
-                                        tip.Message = "每一行只能有一个“-”，如果需要限制多个ip段，请换行再输入！";
-                                        return Json(tip);
-                                    }
-                                    //判断ip是否符合规则
-                                    foreach (var ip in arrIps)
-                                    {
-                                        if (!Utils.IsIP(ip))
-                                        {
-                                            tip.Message = "您输入的IP地址有误1：" + ip;
-                                            return Json(tip);
-                                        }
-                                    }
-                                    long ip1 = Utils.GetLongIP(arrIps[0]);
-                                    long ip2 = Utils.GetLongIP(arrIps[1]);
-                                    if (ip1 > ip2)
-                                    {
-                                        tip.Message = "您输入的IP地址段有误，请按小到大输入";
-                                        return Json(tip);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (!Utils.IsIP(row))
-                                {
-                                    tip.Message = "您输入的IP地址有误2：" + row;
-                                    return Json(tip);
-                                }
-                            }
-                        }
-                    }
-                }
-                entity.AllowIp = model.AllowIp;
-            }
-            else
-            {
-                entity.AllowIp = "";
-            }
+            entity.AllowIp = string.IsNullOrWhiteSpace(model.AllowIp) ? "" : model.AllowIp;
 
             entity.Save();
-            //修改所有文章的路径
-            if (idNeedUpdateAllArticleFilePath)
+            if (isNeedUpdateAllArticleFilePath)
             {
                 IList<Article> listArticles = Article.FindAll(Article._.KId == entity.Id, Article._.Id.Desc(), null, 0, 0);
-                if(listArticles !=null && listArticles.Count > 0)
+                if (listArticles != null && listArticles.Count > 0)
                 {
                     foreach (var item in listArticles)
                     {
@@ -372,13 +188,11 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "修改文章栏目成功";
             tip.ReturnUrl = "close";
-
             return Json(tip);
         }
 
-        //删除栏目
         [HttpPost]
-        [MyAuthorize( "del",  "articlecategory", "JSON")]
+        [MyAuthorize("del", "articlecategory", "JSON")]
         public JsonResult DelArticleCategory(int id)
         {
             ArticleCategory entity = ArticleCategory.Find(ArticleCategory._.Id == id);
@@ -392,7 +206,6 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "本栏目有下级栏目，不允许删除！";
                 return Json(tip);
             }
-            //删除文章
             IList<Article> list = Article.FindAll(Article._.KId == entity.Id, null, null, 0, 0);
             if (list != null && list.Count > 0)
             {
@@ -427,17 +240,11 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         #endregion
 
         #region 文章
-        /// <summary>
-        /// 文章栏目管理
-        /// </summary>
-        /// <returns></returns>
         [MyAuthorize("viewlist", "article")]
         [DisplayName("文章")]
         public IActionResult ArticleList()
         {
-            //获取上级栏目
-            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, true);
-            ViewBag.ListKinds = list;
+            ViewBag.ListKinds = ArticleCategory.GetListTree(0, -1, true, true);
             Core.Admin.WriteLogActions("查看文章列表;");
             return View();
         }
@@ -445,25 +252,19 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         [MyAuthorize("viewlist", "article", "JSON")]
         public IActionResult GetArticleList(string keyword, int page = 1, int limit = 20)
         {
-            int numPerPage, currentPage, startRowIndex;
-
-            numPerPage = limit;
-            currentPage = page;
-            startRowIndex = (currentPage - 1) * numPerPage;
-            Expression ex = new Expression(); ;
+            int numPerPage = Math.Clamp(limit, 1, 100);
+            int currentPage = Math.Max(page, 1);
+            int startRowIndex = (currentPage - 1) * numPerPage;
+            Expression ex = new Expression();
 
             Admin my = Admin.GetMyInfo();
-            List<int> aclist = new List<int>();
-            if (my.Roles.IsSuperAdmin != 1)
+            if (my?.Roles != null && my.Roles.IsSuperAdmin != 1)
             {
-                aclist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedArticleCagegory)?"[]": my.Roles.AuthorizedArticleCagegory);
-                if (aclist == null) aclist = new List<int>();
+                var aclist = ParseAuthorizedIds(my.Roles.AuthorizedArticleCagegory);
                 if (aclist.Count > 0)
                 {
                     ex &= Article._.KId.In(aclist);
                 }
-                
-                //仅显示有权限内容
                 if (my.Roles.OnlyEditMyselfArticle == 1)
                     ex &= Article._.AuthorId == my.Id;
             }
@@ -483,47 +284,38 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             string isshowsub = Request.Query["isshowsub"];
             if (Utils.IsInt(kid) && int.Parse(kid) > 0)
             {
-                //获取栏目
+                int kidVal = int.Parse(kid);
                 if (isshowsub == "1")
                 {
-                    List<int> kids = new List<int>();
-                    kids.Add(int.Parse(kid));
-                    IList<ArticleCategory> subkinds = ArticleCategory.FindByParentID(int.Parse(kid));
+                    List<int> kids = new List<int> { kidVal };
+                    IList<ArticleCategory> subkinds = ArticleCategory.FindByParentID(kidVal);
                     if (subkinds != null && subkinds.Count > 0)
                     {
-                        foreach (var item in subkinds)
-                        {
-                            kids.Add(item.Id);
-                        }
-                        ex &= Article._.KId.In(kids);
+                        kids.AddRange(subkinds.Select(s => s.Id));
                     }
+                    ex &= Article._.KId.In(kids);
                 }
                 else
                 {
-                    ex &= Article._.KId == int.Parse(kid);
+                    ex &= Article._.KId == kidVal;
                 }
             }
 
             IList<Article> list = Article.FindAll(ex, Article._.Sequence.Asc().And(Article._.Id.Desc()), null, startRowIndex, numPerPage);
             long totalCount = Article.FindCount(ex, Article._.Sequence.Asc().And(Article._.Id.Desc()), null, startRowIndex, numPerPage);
-            //return Content(Newtonsoft.Json.JsonConvert.SerializeObject(new { total = totalCount, rows = list }), "text/plain");
             return Json(new { total = totalCount, rows = list });
         }
 
-        //添加文章
         [HttpGet]
         [MyAuthorize("add", "article")]
         public IActionResult AddArticle()
         {
-            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, true);
-            ViewBag.ListKinds = list;
-            string lastkid = SessionHelper.GetSession("com_add_article_kid").ToString();
-            ViewBag.lastkid = lastkid;
+            ViewBag.ListKinds = ArticleCategory.GetListTree(0, -1, true, true);
+            ViewBag.lastkid = SessionHelper.GetSession("com_add_article_kid").ToString();
             Core.Admin.WriteLogActions("查看添加文章页面;");
             return View();
         }
 
-        //执行添加文章
         [HttpPost]
         [MyAuthorize("add", "article", "JSON")]
         public async Task<IActionResult> AddArticle(Article model)
@@ -555,36 +347,24 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
 
             Admin my = Admin.GetMyInfo();
-            List<int> aclist = new List<int>();
-            if (my.Roles.IsSuperAdmin != 1)
+            if (!CanAccessArticle(my, model.KId, authorId: null, out var deniedReason))
             {
-                aclist = JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedArticleCagegory) ? "[]" : my.Roles.AuthorizedArticleCagegory);
-                if (aclist == null) aclist = new List<int>();
-                if (aclist.Count > 0)
-                {
-                    if (aclist.FindIndex(x => x == model.KId) == -1)
-                    {
-                        tip.Message = "当前选择栏目不存在，或者您没这个栏目的权限！";
-                        return Json(tip);
-                    }
-                }
+                tip.Message = deniedReason;
+                return Json(tip);
             }
 
-            //处理文章更多图片
             string[] moreImgSrc = Request.Form["nImgUrl"];
-            string morIMG = string.Empty;//更多图片的时候用到
+            string morIMG = string.Empty;
             if (moreImgSrc != null && moreImgSrc.Length > 0)
             {
                 foreach (string s in moreImgSrc)
                 {
                     if (Utils.IsImgFilename(s))
-                    {
-                        morIMG += s + "|||";//使用“|||”分隔图片
-                    }
+                        morIMG += s + "|||";
                 }
             }
             string content = model.Content;
-            if(Request.Form["autoSaveRemoteImg"] == "1" && !string.IsNullOrEmpty(content))
+            if (Request.Form["autoSaveRemoteImg"] == "1" && !string.IsNullOrEmpty(content))
             {
                 content = await _remoteImages.ImportAsync(content, HttpContext.RequestAborted);
                 model.Content = content;
@@ -595,7 +375,6 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             model.Insert();
             ArticleCategory.UpdateDetailCount(model.KId);
             SessionHelper.WriteSession("com_add_article_kid", model.KId);
-            //添加TAG
             Tags.InsertTags(model.Tags, Utils.CMSType.Article, model.Id, model.Title);
             Core.Admin.WriteLogActions("添加文章(id:" + model.Id + ");");
             tip.Status = JsonTip.SUCCESS;
@@ -604,22 +383,23 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             return Json(tip);
         }
 
-        //编辑文章
         [HttpGet]
         [MyAuthorize("edit", "article")]
         public IActionResult EditArticle(int id)
         {
-            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, true);
-            ViewBag.ListKinds = list;
-
             Article entity = Article.Find(Article._.Id == id);
             if (entity == null)
             {
                 return EchoTipPage("系统找不到本记录！");
             }
+            Admin my = Admin.GetMyInfo();
+            if (!CanAccessArticle(my, entity.KId, entity.AuthorId, out var deniedReason))
+            {
+                return EchoTipPage(deniedReason);
+            }
 
+            ViewBag.ListKinds = ArticleCategory.GetListTree(0, -1, true, true);
             Core.Admin.WriteLogActions("查看文章(" + id + ");");
-
             return View(entity);
         }
 
@@ -627,11 +407,10 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         [MyAuthorize("edit", "article", "JSON")]
         public async Task<IActionResult> EditArticle(Article model)
         {
-
             if (model.Id <= 0)
             {
                 tip.Message = "错误参数传递！";
-                Json(tip);
+                return Json(tip);
             }
             Article entity = Article.Find(Article._.Id == model.Id);
             if (entity == null)
@@ -654,7 +433,6 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "文章图片填写的不是图片格式！";
                 return Json(tip);
             }
-            //处理
             if (!string.IsNullOrEmpty(model.FileName) && !Utils.ChekHTMLFileNameIsOK(model.FileName))
             {
                 tip.Message = "静态化文件名错误，请填写正确的，或者留空！";
@@ -662,54 +440,32 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
 
             Admin my = Admin.GetMyInfo();
-            List<int> aclist = new List<int>();
-            if (my.Roles.IsSuperAdmin != 1)
+            // 同时校验原文章栏目+作者归属 以及 目标栏目权限，防止跨栏目劫持
+            if (!CanAccessArticle(my, entity.KId, entity.AuthorId, out var deniedReason) ||
+                !CanAccessArticle(my, model.KId, authorId: null, out deniedReason))
             {
-                aclist = JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedArticleCagegory) ? "[]" : my.Roles.AuthorizedArticleCagegory); 
-                if (aclist == null) aclist = new List<int>();
-                if (aclist.Count > 0)
-                {
-                    if (aclist.FindIndex(x => x == model.KId) == -1)
-                    {
-                        tip.Message = "当前选择栏目不存在，或者您没这个栏目的权限！";
-                        return Json(tip);
-                    }
-                }
-
-                if(my.Roles.OnlyEditMyselfArticle ==1 && entity.AuthorId != my.Id)
-                {
-                    tip.Message = "系统限制，您无法编辑非自己添加的文章！";
-                    return Json(tip);
-                }
+                tip.Message = deniedReason;
+                return Json(tip);
             }
 
-            //处理文章更多图片
             string[] moreImgSrc = Request.Form["nImgUrl"];
-            string morIMG = string.Empty;//更多图片的时候用到
+            string morIMG = string.Empty;
             if (moreImgSrc != null && moreImgSrc.Length > 0)
             {
                 foreach (string s in moreImgSrc)
                 {
                     if (Utils.IsImgFilename(s))
-                    {
-                        morIMG += s + "|||";//使用“|||”分隔图片
-                    }
+                        morIMG += s + "|||";
                 }
             }
-            string isnew = Request.Form["IsNew"];
-            model.IsNew = isnew == "1" ? 1 : 0;
 
-            string IsRecommend = Request.Form["IsRecommend"];
-            model.IsRecommend = IsRecommend == "1" ? 1 : 0;
-
-            string IsHide = Request.Form["IsHide"];
-            model.IsHide = IsHide == "1" ? 1 : 0;
-            //处理三个勾选属性的
-
+            model.IsNew = Request.Form["IsNew"] == "1" ? 1 : 0;
+            model.IsRecommend = Request.Form["IsRecommend"] == "1" ? 1 : 0;
+            model.IsHide = Request.Form["IsHide"] == "1" ? 1 : 0;
             model.Hits = entity.Hits;
             model.UpdateTime = DateTime.Now;
-
             model.ItemImg = morIMG;
+
             string content = model.Content;
             if (Request.Form["autoSaveRemoteImg"] == "1" && !string.IsNullOrEmpty(content))
             {
@@ -717,7 +473,6 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 model.Content = content;
             }
             model.Content = _contentSanitizer.Sanitize(model.Content);
-
 
             entity.AddTime = model.AddTime;
             entity.AdsId = model.AdsId;
@@ -753,17 +508,15 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             entity.UpdateTime = DateTime.Now;
             entity.FileName = model.FileName;
 
-            //model.AuthorId = Core.Admin.GetMyInfo().Id;
             entity.Update();
             Tags.ModifyTags(model.Tags, Utils.CMSType.Article, model.Id, model.Title);
             Core.Admin.WriteLogActions("编辑文章(id:" + model.Id + ");");
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "编辑文章详情成功";
             tip.ReturnUrl = "close";
-
             return Json(tip);
         }
-        //删除文章
+
         [HttpPost]
         [MyAuthorize("del", "article", "JSON")]
         public JsonResult DelArticle(int id)
@@ -776,29 +529,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
             }
 
             Admin my = Admin.GetMyInfo();
-            List<int> aclist = new List<int>();
-            if (my.Roles.IsSuperAdmin != 1)
+            if (!CanAccessArticle(my, entity.KId, entity.AuthorId, out var deniedReason))
             {
-                aclist = JsonConvert.DeserializeObject<List<int>>(string.IsNullOrEmpty(my.Roles.AuthorizedArticleCagegory) ? "[]" : my.Roles.AuthorizedArticleCagegory);
-                if (aclist == null) aclist = new List<int>();
-                if (aclist.Count > 0)
-                {
-                    if (aclist.FindIndex(x => x == entity.KId) == -1)
-                    {
-                        tip.Message = "者您没这个栏目的权限，无法删除该栏目文章！";
-                        return Json(tip);
-                    }
-                }
-
-                if (my.Roles.OnlyEditMyselfArticle == 1 && entity.AuthorId != my.Id)
-                {
-                    tip.Message = "系统限制，您无法删除非自己添加的文章！";
-                    return Json(tip);
-                }
+                tip.Message = deniedReason;
+                return Json(tip);
             }
 
-            int kid = entity.Id;
-            //删除TAG
+            int kid = entity.KId;
             Tags.DeleteTag(entity.Tags, Utils.CMSType.Article, entity.Id);
             Core.Admin.WriteLogActions("删除文章(id:" + entity.Id + ");");
             entity.Delete();
@@ -820,6 +557,12 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "系统找不到本记录";
                 return Json(tip);
             }
+            Admin my = Admin.GetMyInfo();
+            if (!CanAccessArticle(my, entity.KId, entity.AuthorId, out var deniedReason))
+            {
+                tip.Message = deniedReason;
+                return Json(tip);
+            }
             entity.Sequence = rank;
             entity.Update();
             Admin.WriteLogActions($"修改文章排序(id:{id},排序:{rank});");
@@ -834,11 +577,10 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         [MyAuthorize("batch", "article")]
         public IActionResult MoveArticle()
         {
-            //获取上级栏目
-            IList<ArticleCategory> list = ArticleCategory.GetListTree(0, -1, true, false);
-            ViewBag.ListKinds = list;
+            ViewBag.ListKinds = ArticleCategory.GetListTree(0, -1, true, false);
             return View();
         }
+
         [HttpPost]
         [MyAuthorize("batch", "article", "JSON")]
         public IActionResult MoveArticle(int from, int to)
@@ -853,8 +595,23 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
                 tip.Message = "迁移前后栏目一致，无法迁移";
                 return Json(tip);
             }
-            Article.Update("KId=" + to, "KId=" + from);
-            Core.Admin.WriteLogActions("迁移文章(from:" + from + ",to:" + to + ");");
+
+            Admin my = Admin.GetMyInfo();
+            if (my?.Roles != null && my.Roles.IsSuperAdmin != 1 && my.Roles.OnlyEditMyselfArticle == 1)
+            {
+                tip.Message = "当前管理组仅允许操作本人文章，禁止整栏目迁移！";
+                return Json(tip);
+            }
+            if (!CanAccessArticle(my, from, null, out var deniedReason) || !CanAccessArticle(my, to, null, out deniedReason))
+            {
+                tip.Message = deniedReason;
+                return Json(tip);
+            }
+
+            Article.Update(new[] { Article.__.KId }, new object[] { to }, new[] { Article.__.KId }, new object[] { from });
+            ArticleCategory.UpdateDetailCount(from);
+            ArticleCategory.UpdateDetailCount(to);
+            Core.Admin.WriteLogActions($"迁移文章(from:{from},to:{to});");
             tip.Status = JsonTip.SUCCESS;
             tip.Message = "迁移文章成功";
             tip.ReturnUrl = "close";
@@ -862,143 +619,208 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         }
         #endregion
 
-        #region 批量隐藏文章
+        #region 批量隐藏/显示/删除文章
         [HttpPost]
         [MyAuthorize("batch", "article", "JSON")]
-        public IActionResult DoBatchHideArticle(string ids)
+        public IActionResult DoBatchHideArticle(string ids) => ExecuteBatchArticleAction(ids, "隐藏", list =>
         {
-            if (string.IsNullOrEmpty(ids))
-            {
-                tip.Message = "请最少选择一篇文章！";
-                return Json(tip);
-            }
-            List<int> listIds = new List<int>();
-            try
-            {
-                listIds = JsonConvert.DeserializeObject<List<int>>(ids);
-            }
-            catch (Exception ex)
-            {
-                tip.Message = "转换出错：" + ex.Message;
-                return Json(tip);
-            }
-
-            if (listIds == null || listIds.Count < 1)
-            {
-                tip.Message = "请至少选择一篇文章！";
-                return Json(tip);
-            }
-
-            IList<Article> list = Article.FindAll(Article._.Id.In(listIds), null, null, 0, 0);
-            if (list == null || list.Count < 1)
-            {
-                tip.Message = "请至少选择一篇文章！";
-                return Json(tip);
-            }
-
-            foreach (var item in list)
-            {
-                item.IsHide = 1;
-            }
-            
+            foreach (var item in list) item.IsHide = 1;
             list.Update();
-            Admin.WriteLogActions($"批量隐藏文章：{ids};");
-            tip.Message = "批量隐藏文章成功！";
-            tip.Status = JsonTip.SUCCESS;
-            return Json(tip);
-        }
-        #endregion
+        });
 
-        #region 批量显示文章
         [HttpPost]
         [MyAuthorize("batch", "article", "JSON")]
-        public IActionResult DoBatchShowArticle(string ids)
+        public IActionResult DoBatchShowArticle(string ids) => ExecuteBatchArticleAction(ids, "显示", list =>
         {
-            if (string.IsNullOrEmpty(ids))
-            {
-                tip.Message = "请最少选择一篇文章！";
-                return Json(tip);
-            }
-            List<int> listIds = new List<int>();
-            try
-            {
-                listIds = JsonConvert.DeserializeObject<List<int>>(ids);
-            }
-            catch (Exception ex)
-            {
-                tip.Message = "转换出错：" + ex.Message;
-                return Json(tip);
-            }
-
-            if (listIds == null || listIds.Count < 1)
-            {
-                tip.Message = "请至少选择一篇文章！";
-                return Json(tip);
-            }
-
-            IList<Article> list = Article.FindAll(Article._.Id.In(listIds), null, null, 0, 0);
-            if (list == null || list.Count < 1)
-            {
-                tip.Message = "请至少选择一篇文章！";
-                return Json(tip);
-            }
-
-            foreach (var item in list)
-            {
-                item.IsHide = 0;
-            }
+            foreach (var item in list) item.IsHide = 0;
             list.Update();
-            Admin.WriteLogActions($"批量显示文章：{ids};");
-            tip.Message = "批量显示文章成功！";
-            tip.Status = JsonTip.SUCCESS;
-            return Json(tip);
-        }
-        #endregion
+        });
 
-        #region 批量删除文章
         [HttpPost]
         [MyAuthorize("batch", "article", "JSON")]
-        public IActionResult DoBatchDelArticle(string ids)
+        public IActionResult DoBatchDelArticle(string ids) => ExecuteBatchArticleAction(ids, "删除", list =>
         {
-            if (string.IsNullOrEmpty(ids))
-            {
-                tip.Message = "请最少选择一篇文章！";
-                return Json(tip);
-            }
-            List<int> listIds = new List<int>();
-            try
-            {
-                listIds = JsonConvert.DeserializeObject<List<int>>(ids);
-            }
-            catch (Exception ex)
-            {
-                tip.Message = "转换出错：" + ex.Message;
-                return Json(tip);
-            }
-
-            if (listIds == null || listIds.Count < 1)
-            {
-                tip.Message = "请至少选择一篇文章！";
-                return Json(tip);
-            }
-
-            IList<Article> list = Article.FindAll(Article._.Id.In(listIds), null, null, 0, 0);
-            if (list == null || list.Count < 1)
-            {
-                tip.Message = "请至少选择一篇文章！";
-                return Json(tip);
-            }
-
+            var affectedKinds = list.Select(a => a.KId).Distinct().ToList();
             foreach (var item in list)
             {
-                item.IsHide = 0;
+                Tags.DeleteTag(item.Tags, Utils.CMSType.Article, item.Id);
             }
             list.Delete();
-            Admin.WriteLogActions($"批量删除文章：{ids};");
-            tip.Message = "批量删除文章成功！";
+            foreach (var kid in affectedKinds)
+            {
+                ArticleCategory.UpdateDetailCount(kid);
+            }
+        });
+
+        private IActionResult ExecuteBatchArticleAction(string ids, string actionName, Action<IList<Article>> operation)
+        {
+            if (string.IsNullOrEmpty(ids))
+            {
+                tip.Message = "请最少选择一篇文章！";
+                return Json(tip);
+            }
+
+            List<int> listIds;
+            try
+            {
+                listIds = JsonConvert.DeserializeObject<List<int>>(ids);
+            }
+            catch (JsonException)
+            {
+                tip.Message = "参数格式错误！";
+                return Json(tip);
+            }
+
+            if (listIds == null || listIds.Count < 1 || listIds.Count > 200)
+            {
+                tip.Message = "请至少选择一篇文章（单次最多 200 篇）！";
+                return Json(tip);
+            }
+
+            IList<Article> list = Article.FindAll(Article._.Id.In(listIds), null, null, 0, 0);
+            if (list == null || list.Count < 1)
+            {
+                tip.Message = "请至少选择一篇文章！";
+                return Json(tip);
+            }
+
+            Admin my = Admin.GetMyInfo();
+            foreach (var item in list)
+            {
+                if (!CanAccessArticle(my, item.KId, item.AuthorId, out var deniedReason))
+                {
+                    tip.Message = deniedReason;
+                    return Json(tip);
+                }
+            }
+
+            operation(list);
+            Admin.WriteLogActions($"批量{actionName}文章(数量:{list.Count});");
+            tip.Message = $"批量{actionName}文章成功！";
             tip.Status = JsonTip.SUCCESS;
             return Json(tip);
         }
+        #endregion
+
+        #region 权限与校验辅助方法
+        internal static bool CanAccessArticle(Admin admin, int categoryId, int? authorId, out string reason)
+        {
+            reason = null;
+            if (admin?.Roles == null)
+            {
+                reason = "当前登录状态无效！";
+                return false;
+            }
+            if (admin.Roles.IsSuperAdmin == 1) return true;
+
+            var aclist = ParseAuthorizedIds(admin.Roles.AuthorizedArticleCagegory);
+            if (aclist.Count > 0 && !aclist.Contains(categoryId))
+            {
+                reason = "当前选择栏目不存在，或者您没有该栏目的操作权限！";
+                return false;
+            }
+            if (authorId.HasValue && admin.Roles.OnlyEditMyselfArticle == 1 && authorId.Value != admin.Id)
+            {
+                reason = "系统限制，您无法操作非自己添加的文章！";
+                return false;
+            }
+            return true;
+        }
+
+        private static List<int> ParseAuthorizedIds(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json)) return new List<int>();
+            try
+            {
+                return JsonConvert.DeserializeObject<List<int>>(json) ?? new List<int>();
+            }
+            catch (JsonException)
+            {
+                return new List<int>();
+            }
+        }
+
+        private static bool ValidateCategoryFilePath(string filePath, int excludeId, out string error)
+        {
+            error = null;
+            if (string.IsNullOrEmpty(filePath)) return true;
+            if (!filePath.StartsWith("/", StringComparison.Ordinal))
+            {
+                error = "栏目路径请以/开头！";
+                return false;
+            }
+            if (filePath.EndsWith("/", StringComparison.Ordinal))
+            {
+                error = "栏目路径结尾不用加上/";
+                return false;
+            }
+            if (filePath.Count(x => x == '/') > 4)
+            {
+                error = "最多只能四级路径！";
+                return false;
+            }
+            if (!AdminUtils.CheckFilePathIsOK(filePath, excludeId, 0))
+            {
+                error = "栏目路径不可用，请重新填写！";
+                return false;
+            }
+            return true;
+        }
+
+        private static bool ValidateAllowIpList(string allowIp, out string error)
+        {
+            error = null;
+            if (string.IsNullOrWhiteSpace(allowIp)) return true;
+            var rows = allowIp.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+            foreach (var rawRow in rows)
+            {
+                var row = rawRow.Trim();
+                if (string.IsNullOrEmpty(row)) continue;
+                if (row.Contains('-'))
+                {
+                    var arrIps = row.Split('-', StringSplitOptions.None);
+                    if (arrIps.Length != 2)
+                    {
+                        error = "每一行只能有一个“-”，如果需要限制多个ip段，请换行再输入！";
+                        return false;
+                    }
+                    var startIp = arrIps[0].Trim();
+                    var endIp = arrIps[1].Trim();
+                    if (!Utils.IsIP(startIp) || !Utils.IsIP(endIp))
+                    {
+                        error = "您输入的IP地址有误：" + row;
+                        return false;
+                    }
+                    if (Utils.GetLongIP(startIp) > Utils.GetLongIP(endIp))
+                    {
+                        error = "您输入的IP地址段有误，请按小到大输入";
+                        return false;
+                    }
+                }
+                else if (!Utils.IsIP(row))
+                {
+                    error = "您输入的IP地址有误：" + row;
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static readonly Lazy<List<string>> CachedArticleTemplates = new(() =>
+        {
+            var listTpls = new List<string>();
+            foreach (var asmItem in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (asmItem.GetName().Name?.Contains("COMCMS.Web", StringComparison.OrdinalIgnoreCase) != true) continue;
+                foreach (var type in asmItem.GetTypes().Where(e => e.Name.StartsWith("Views_Article", StringComparison.Ordinal)))
+                {
+                    listTpls.Add(type.Name.Replace("Views_Article_", "") + ".cshtml");
+                }
+            }
+            return listTpls;
+        });
+
+        private static List<string> GetArticleTemplateNames() => CachedArticleTemplates.Value;
         #endregion
     }
 }

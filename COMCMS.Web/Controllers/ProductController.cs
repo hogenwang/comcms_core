@@ -1,121 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using COMCMS.Web.Common;
+using COMCMS.Web.Services;
 using Microsoft.AspNetCore.Mvc;
-using COMCMS.Common;
-using COMCMS.Core;
-using COMCMS.Core.Models;
-using COMCMS.Web.Common;
-using XCode;
-using static Google.Protobuf.WellKnownTypes.Field.Types;
 
 namespace COMCMS.Web.Controllers
 {
     public class ProductController : HomeBaseController
     {
-        #region 分类页面
+        private readonly PublicContentService _contentService;
+
+        public ProductController(PublicContentService contentService)
+        {
+            _contentService = contentService;
+        }
+
         [HttpGet]
         public IActionResult Index(int id = 0, int page = 1)
         {
-            Category entity = null;
-            if (id > 0)
-            {
-                entity = Category.FindById(id);
-                if (entity == null)
-                {
-                    return EchoTip("系统找不到本分类！");
-                }
-            }
-            else
-            {
-                entity = new Category()
-                {
-                    Id = 0,
-                    KindName = "所有分类",
-                    Keyword = "所有分类",
-                    Description = "所有分类",
-                    PageSize = 10
-                };
-            }
-            Expression ex = Product._.IsHide == 0;
-            if (entity.Id > 0)
-            {
-                ex &= Product._.KId == entity.Id;
-            }
-
-            //计算分页
-            int numPerPage, currentPage, startRowIndex;
-            long totalCount = 0;
-
-            numPerPage = 10;
-            currentPage = page;
-            startRowIndex = (currentPage - 1) * numPerPage;
-
-            IList<Product> list = Product.FindAll(ex, null, null, startRowIndex, numPerPage);
-            totalCount = Product.FindCount(ex, null, null, startRowIndex, numPerPage);
-
-            ViewBag.totalCount = totalCount;
-            ViewBag.page = page;
-            ViewBag.pagesize = numPerPage;
-            ViewBag.cfg = cfg;
-            ViewBag.list = list;
-
-            string templatesname = "Index.cshtml";//模板名称
-            if (!string.IsNullOrEmpty(entity.TemplateFile))
-            {
-                templatesname = entity.TemplateFile;
-                //return Content(templatesname);
-            }
-
-            return View("~/Views/Product/" + templatesname, entity);
+            return RenderContentResult(_contentService.BuildProductCategory(id, page, cfg));
         }
-        #endregion
 
-        #region 商品详情
         [HttpGet]
         public IActionResult Detail(int id)
         {
-            Product entity = Product.FindById(id);
-            if (entity == null || entity.IsHide == 1)
-            {
-                return EchoTip("系统找不到本记录！");
-            }
-            Category kind = Category.FindById(entity.KId);
-            if (kind == null)
-            {
-                return AlertAndGoBack("系统找不到本文章栏目！");
-            }
-            //文章更多图片列表
-            if (!string.IsNullOrEmpty(entity.ItemImg))
-            {
-                string[] arrimg = entity.ItemImg.Split(new string[] { "|||" }, StringSplitOptions.None);
-                List<string> listimg = new List<string>();
-                foreach (string s in arrimg)
-                {
-                    if (!string.IsNullOrEmpty(s) && Utils.IsImgFilename(s))
-                    {
-                        listimg.Add(s.Trim());
-                    }
-                }
-                ViewBag.ListImg = listimg;
-            }
-            entity.Hits++;
-            entity.Update();
-            ViewBag.cfg = cfg;
-            ViewBag.category = entity.Category;
-
-            string templatesname = "";//模板名称
-            if (!string.IsNullOrEmpty(kind.TemplateFile))
-            {
-                templatesname = kind.DetailTemplateFile;//.Replace(".cshtml", "").Replace(".aspx", "");
-                return View("~/Views/Product/" + templatesname, entity);
-            }
-            else
-            {
-                return View("~/Views/Product/Detail.cshtml", entity);
-            }
+            return RenderContentResult(_contentService.BuildProductDetail(id, cfg));
         }
-        #endregion
     }
 }

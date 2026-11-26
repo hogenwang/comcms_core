@@ -21,6 +21,21 @@ jobs:
         with:
           dotnet-version: 10.0.x
 
+      - name: Reject legacy insecure assets
+        shell: pwsh
+        run: |
+          $swfFiles = Get-ChildItem -Path COMCMS.Web/wwwroot -Recurse -Filter *.swf -ErrorAction SilentlyContinue
+          if ($swfFiles) {
+            throw "Legacy Flash (.swf) files must not exist under COMCMS.Web/wwwroot."
+          }
+          if (Test-Path "COMCMS.Web/wwwroot/lib/jquery") {
+            throw "Legacy unmaintained jQuery directory COMCMS.Web/wwwroot/lib/jquery must not be reintroduced."
+          }
+          $webuploaderFiles = Get-ChildItem -Path COMCMS.Web/wwwroot -Recurse -Filter *webuploader* -ErrorAction SilentlyContinue
+          if ($webuploaderFiles) {
+            throw "Unmaintained WebUploader assets must not be reintroduced under COMCMS.Web/wwwroot."
+          }
+
       - name: Restore
         run: dotnet restore COMCMS_NETCORE.sln
 

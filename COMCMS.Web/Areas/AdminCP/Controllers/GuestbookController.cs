@@ -107,11 +107,9 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         [MyAuthorize("viewlist", "guestbook","JSON")]
         public IActionResult GetGuesbookList(string keyword, int page = 1, int limit = 20)
         {
-            int numPerPage, currentPage, startRowIndex;
-
-            numPerPage = limit;
-            currentPage = page;
-            startRowIndex = (currentPage - 1) * numPerPage;
+            int numPerPage = Math.Clamp(limit, 1, 100);
+            int currentPage = Math.Max(page, 1);
+            int startRowIndex = (currentPage - 1) * numPerPage;
             Expression ex = Guestbook._.Id > 0;
 
             if (!string.IsNullOrWhiteSpace(keyword))

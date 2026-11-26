@@ -10,6 +10,7 @@ using System.Security.Claims;
 using COMCMS.Common.Security;
 using COMCMS.Web.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Logging;
 
@@ -22,19 +23,22 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         private readonly LoginAttemptService _loginAttempts;
         private readonly ILogger<LoginController> _logger;
         private readonly SecurityEventMetrics _securityMetrics;
+        private readonly AuthValidationCache _authCache;
 
         public LoginController(LoginAttemptService loginAttempts, ILogger<LoginController> logger,
-            SecurityEventMetrics securityMetrics)
+            SecurityEventMetrics securityMetrics, AuthValidationCache authCache)
         {
             _loginAttempts = loginAttempts;
             _logger = logger;
             _securityMetrics = securityMetrics;
+            _authCache = authCache;
         }
 
         #region 登录页面
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            if (Admin.IsAdminLogin())
+            var adminAuth = await HttpContext.AuthenticateAsync(AuthenticationSchemes.AdminCookie);
+            if (adminAuth.Succeeded && adminAuth.Principal != null)
             {
                 return Redirect("/AdminCP");
             }
@@ -142,10 +146,13 @@ namespace COMCMS.Web.Areas.AdminCP.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
+        [Authorize(AuthenticationSchemes = AuthenticationSchemes.AdminCookie)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
+            var adminId = ComCmsClaimTypes.GetSubjectId(User);
             await HttpContext.SignOutAsync(AuthenticationSchemes.AdminCookie);
+            _authCache.InvalidateAdmin(adminId);
             Admin.ClearInfo();
             return Redirect("~/AdminCP/Login");
         }

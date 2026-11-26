@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using COMCMS.Common;
 using COMCMS.Core;
-using XCode;
+using COMCMS.Web.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace COMCMS.Web.Common
 {
@@ -22,42 +19,67 @@ namespace COMCMS.Web.Common
             cfg = Config.GetSystemConfig();
         }
 
+        [NonAction]
+        protected IActionResult RenderContentResult(PublicContentResult result)
+        {
+            if (result == null)
+                return EchoTip("系统找不到本记录！");
+
+            if (result.IsError)
+                return EchoTip(result.ErrorMessage);
+
+            if (result.IsRedirect)
+                return Redirect(result.RedirectUrl);
+
+            foreach (var pair in result.ViewData)
+                ViewData[pair.Key] = pair.Value;
+
+            return View(result.ViewPath, result.Model);
+        }
+
         /// <summary>
-        /// Alert提示并返回
+        /// 提示并返回（统一走安全视图，禁止直接输出内联脚本）
         /// </summary>
         /// <param name="str">提示内容</param>
-        public IActionResult AlertAndGoBack(string str)
+        [NonAction]
+        protected IActionResult AlertAndGoBack(string str)
         {
-            if (!string.IsNullOrWhiteSpace(str)) str = str.Replace("'", "\\'");
-            return Content($"<script type=\"text/javascript\">alert('{str}');window.history.go(-1)</script>", "text/html", System.Text.Encoding.UTF8);
+            return EchoTip(str ?? string.Empty, false, "/");
         }
+
         /// <summary>
-        /// Alert提示并跳转到指定URL
+        /// 提示并跳转到指定本地URL
         /// </summary>
         /// <param name="str">提示内容</param>
         /// <param name="url">跳转地址</param>
-        public IActionResult AlertAndRedirect(string str, string url)
+        [NonAction]
+        protected IActionResult AlertAndRedirect(string str, string url)
         {
-            if (!string.IsNullOrWhiteSpace(str)) str = str.Replace("'", "\\'");
-            return Content($"<script type=\"text/javascript\">alert('{str}');window.location='{url}'</script>", "text/html", System.Text.Encoding.UTF8);
+            var safeUrl = IsSafeLocalUrl(url) ? url : "/";
+            return EchoTip(str ?? string.Empty, false, safeUrl);
         }
 
-        #region MyRegion
         /// <summary>
         /// 显示提示页面
         /// </summary>
-        /// <param name="Message">提示语</param>
-        /// <param name="IsSuccess">成功/失败</param>
-        /// <param name="ReturnURL">返回URL</param>
-        /// <returns></returns>
-        public IActionResult EchoTip(string Message, bool IsSuccess = false, string ReturnURL = "")
+        [NonAction]
+        protected IActionResult EchoTip(string Message, bool IsSuccess = false, string ReturnURL = "")
         {
             ViewBag.IsSuccess = IsSuccess;
             ViewBag.Message = Message;
-            ViewBag.ReturnURL = ReturnURL;
+            ViewBag.ReturnURL = IsSafeLocalUrl(ReturnURL) ? ReturnURL : "/";
             ViewBag.cfg = cfg;
             return View("EchoTip");
         }
-        #endregion
+
+        [NonAction]
+        protected bool IsSafeLocalUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url)) return false;
+            if (Url != null) return Url.IsLocalUrl(url);
+            return url.StartsWith("/", StringComparison.Ordinal) &&
+                   !url.StartsWith("//", StringComparison.Ordinal) &&
+                   !url.StartsWith("/\\", StringComparison.Ordinal);
+        }
     }
 }

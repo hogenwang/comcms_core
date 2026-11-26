@@ -1,127 +1,127 @@
 ﻿@model COMCMS.Core.Article
 @{
+    Config cfg = ViewBag.cfg as Config ?? Config.GetSystemConfig();
+    string siteName = string.IsNullOrWhiteSpace(cfg?.SiteName) ? "COMCMS 内容管理系统" : cfg.SiteName;
+    string siteTel = string.IsNullOrWhiteSpace(cfg?.SiteTel) ? "+86-20-88888888" : cfg.SiteTel;
+    string siteEmail = string.IsNullOrWhiteSpace(cfg?.SiteEmail) ? "hogenwang@vip.qq.com" : cfg.SiteEmail;
+
     ViewBag.title = Model.Title;
     ViewBag.keywords = Model.Keyword;
     ViewBag.description = Model.Description;
-    IList<Article> alist = Article.FindAll(Article._.KId == Model.KId, Article._.Sequence.Asc(), null, 0, 0);
-    int topkid = ViewBag.kind.PId > 0 ? ViewBag.kind.PId : ViewBag.kind.Id;
-    //获取同级分类
-    IList<ArticleCategory> sameList = ArticleCategory.FindAll(ArticleCategory._.PId == ViewBag.kind.PId, ArticleCategory._.Rank.Asc(), null, 0, 0);
+    ArticleCategory kind = ViewBag.kind as ArticleCategory;
+    int topkid = (kind != null && kind.PId > 0) ? kind.PId : (kind?.Id ?? 5);
+    IList<ArticleCategory> sameList = kind != null
+        ? ArticleCategory.FindAll(ArticleCategory._.PId == kind.PId & ArticleCategory._.IsHide == 0, ArticleCategory._.Rank.Asc(), null, 0, 0)
+        : new List<ArticleCategory>();
+    string bannerBg = string.IsNullOrWhiteSpace(kind?.BannerImg) ? "/images/tech/inner-banner.svg" : kind.BannerImg;
 }
-<script type="text/javascript" src="//api.map.baidu.com/api?v=1.5&ak=VR85PcmdMnsofqPUCk6bD4ay"></script>
-<div class="banner normal sec-banner">
-    @if (string.IsNullOrEmpty(ViewBag.kind.BannerImg))
-    {
-        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    }
-    else
-    {
-        <em style="background: url('@ViewBag.kind.BannerImg') center top no-repeat; background-size: 100%;"></em>
-    }
-</div>
-<div class="banner mobile sec-banner">
-    @if (string.IsNullOrEmpty(ViewBag.kind.BannerImg))
-    {
-        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    }
-    else
-    {
-        <em style="background: url('@ViewBag.kind.BannerImg') center top no-repeat; background-size: 100%;"></em>
-    }
-</div>
 
-<div class="sec-nav">
-    <div class="cont">
-        <ul class="sec-nav-list">
-            @foreach (var k in sameList)
-            {
-                <li class="@(k.Id == Model.KId?"sec-on":"")"><a  href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a></li>
-            }
-        </ul>
-
-        <script type="text/javascript">
-            function mbSecNav() {
-                var num = $('.sec-nav-list li').length;
-                if (num >= 3) {
-                    $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
-                } else if (num == 2) {
-                    $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
-                } else if (num == 1) {
-                    $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
-                }
-            }
-        </script>
+<section class="tech-page-hero" style="background-image: url('@bannerBg');">
+    <div class="tech-container tech-page-hero-inner">
+        <div class="tech-breadcrumb">
+            <a href="/"><i class="fa fa-home"></i> 首页</a>
+            <span>/</span>
+            <span>@(kind?.KindName ?? "联系我们")</span>
+        </div>
+        <h1>@Model.Title</h1>
+        <p>欢迎通过电话、邮件或在线表单与我们的技术及商务团队取得联系</p>
     </div>
-</div>
-<!-- 主体内容 -->
-<div class="content cu au">
-    <div class="cu-bg">
-        <div class="cont">
-            <div class="cu-box">
-                <!-- 地图 -->
-                <div class="cu-left">
-                    <div class="maptxt" style="display:none">广东省广州市天河区天河城</div>
-                    <div id="map"></div>
+</section>
 
-                    <script type="text/javascript">
-                        // 获取地址
-                        function map() {
-                            var index;
-                            var address = $(".maptxt").text();
-                            var title = $(".maptxt").text();
-                            showMap(address, title);
-                        }
-                        // 显示地图
-                        function showMap(address, title) {
-                            var map = new BMap.Map("map");
-                            map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
-                            map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
-                            map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
-                            map.addControl(new BMap.OverviewMapControl({ isOpen: false, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开, 控制地图的移动
-                            map.clearOverlays(); //清空原来的标注
+@if (sameList != null && sameList.Count > 0)
+{
+    <div class="tech-subnav-bar">
+        <div class="tech-container">
+            <ul class="tech-subnav-list">
+                @foreach (var k in sameList)
+                {
+                    <li class="@(k.Id == Model.KId ? "sec-on" : "")">
+                        <a href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+}
 
-                            // 根据地址获取经纬度
-                            var localSearch = new BMap.LocalSearch(map);
-                            searchByStationName();
-                            function searchByStationName() {
-                                // 显示地图
-                                localSearch.setSearchCompleteCallback(function (searchResult) {
-                                    var poi = searchResult.getPoi(0);
-                                    console.log(searchResult.getPoi(0));
-                                    var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));   // 创建标注，为要查询的地方对应的经纬度
-                                    map.centerAndZoom(poi.point, 15);
-                                    map.addOverlay(marker);  //将标注添加到地图中
-                                    marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-                                });
-                                localSearch.search(address);
-                            }
-                        }
-                    </script>
+<section class="tech-section tech-section-alt">
+    <div class="tech-container">
+        <div class="tech-contact-grid">
+            <div class="tech-map-card" style="background:linear-gradient(145deg,#050b18 0%,#0b1a33 55%,#072330 100%);color:#f8fafc;display:flex;flex-direction:column;justify-content:space-between;padding:38px 34px;border-color:rgba(56,189,248,0.25);">
+                <div>
+                    <span class="tech-hero-badge" style="margin-bottom:16px;">
+                        <span class="tech-pulse-dot"></span>
+                        <span>HEADQUARTERS LOCATION</span>
+                    </span>
+                    <h3 style="margin:0 0 10px;font-size:24px;font-weight:800;color:#ffffff;">广东省广州市天河区天河城</h3>
+                    <p style="margin:0;font-size:14px;color:#94a3b8;line-height:1.8;">
+                        毗邻广州天河核心商务区，交通便利，地铁 1 号线 / 3 号线体育西路站直达。欢迎预约莅临交流技术合作与项目定制方案。
+                    </p>
                 </div>
-                <!-- 公司信息 -->
-                <div class="cu-right">
-                    <div class="cu-title">
-                        <span>COMCMS 内容管理系统</span>
-                        <small>COMCMS Technology Co.，Ltd</small>
-                    </div>
-                    <div class="cu-info">
-                        <ul>
-                            <li>电话：+86-20-88888888</li>
-                            <li>传真：+86-20-88888888</li>
-                            <li>邮箱：<a href="hogenwang@vip.qq.com">hogenwang@vip.qq.com</a></li>
-                            <li>地址：广东省广州市天河区天河城</li>
-                        </ul>
 
+                <div style="margin:26px 0;padding:18px 20px;border-radius:12px;background:rgba(15,23,42,0.7);border:1px solid rgba(56,189,248,0.2);display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                    <div>
+                        <div style="font-size:12px;color:#64748b;margin-bottom:4px;">服务时间</div>
+                        <div style="font-size:14px;font-weight:600;color:#e2e8f0;">周一至周五 09:00 - 18:00</div>
+                    </div>
+                    <div>
+                        <div style="font-size:12px;color:#64748b;margin-bottom:4px;">坐标定位</div>
+                        <div style="font-size:14px;font-weight:600;color:#34d399;">23.132° N, 113.321° E</div>
                     </div>
                 </div>
+
+                <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                    <a href="https://uri.amap.com/search?keyword=%E5%B9%BF%E4%B8%9C%E7%9C%81%E5%B9%BF%E5%B7%9E%E5%B8%82%E5%A4%A9%E6%B2%B3%E5%8C%BA%E5%A4%A9%E6%B2%B3%E5%9F%8E" target="_blank" rel="noopener noreferrer" class="tech-btn tech-btn-primary" style="padding:10px 20px;font-size:14px;">
+                        <i class="fa fa-location-arrow"></i> 高德地图导航
+                    </a>
+                    <a href="@ViewsHelper.EchoURL(Utils.CMSType.ArticleCategory, 5)" class="tech-btn tech-btn-ghost" style="padding:10px 20px;font-size:14px;">
+                        <i class="fa fa-comments-o"></i> 在线预约来访
+                    </a>
+                </div>
+            </div>
+
+            <div class="tech-info-card">
+                <span class="tech-eyebrow"><i class="fa fa-headphones"></i> Contact Info</span>
+                <h2 style="margin:0 0 6px;font-size:24px;font-weight:800;">@siteName</h2>
+                <p style="margin:0;font-size:13px;color:var(--tech-text-muted);letter-spacing:0.5px;">COMCMS Technology Co., Ltd</p>
+
+                <ul class="tech-contact-list">
+                    <li>
+                        <i class="fa fa-phone"></i>
+                        <div>
+                            <div style="font-size:12px;color:var(--tech-text-muted);">服务热线</div>
+                            <div style="font-weight:600;color:var(--tech-text);">@siteTel</div>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-fax"></i>
+                        <div>
+                            <div style="font-size:12px;color:var(--tech-text-muted);">商务传真</div>
+                            <div style="font-weight:600;color:var(--tech-text);">@siteTel</div>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-envelope-o"></i>
+                        <div>
+                            <div style="font-size:12px;color:var(--tech-text-muted);">电子邮箱</div>
+                            <div style="font-weight:600;"><a href="mailto:@siteEmail" style="color:var(--tech-primary-dark);">@siteEmail</a></div>
+                        </div>
+                    </li>
+                    <li>
+                        <i class="fa fa-map-marker"></i>
+                        <div>
+                            <div style="font-size:12px;color:var(--tech-text-muted);">公司地址</div>
+                            <div style="font-weight:600;color:var(--tech-text);">广东省广州市天河区天河城</div>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>
-</div>
+</section>
 
 <script>
     $(function () {
         $("#nav_@(topkid)").addClass("nav-on");
-        map();
-    })
+    });
 </script>

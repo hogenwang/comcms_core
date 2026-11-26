@@ -3,102 +3,90 @@
     ViewBag.title = Model.KindName;
     ViewBag.keywords = Model.Keyword;
     ViewBag.description = Model.Description;
-    //获取同级分类
-    IList<ArticleCategory> sameList = ArticleCategory.FindAll(ArticleCategory._.PId == Model.PId, ArticleCategory._.Rank.Asc(), null, 0, 0);
+    IList<ArticleCategory> sameList = ArticleCategory.FindAll(ArticleCategory._.PId == Model.PId & ArticleCategory._.IsHide == 0, ArticleCategory._.Rank.Asc(), null, 0, 0);
     int topkid = Model.PId > 0 ? Model.PId : Model.Id;
+    string bannerBg = string.IsNullOrWhiteSpace(Model.BannerImg) ? "/images/tech/inner-banner.svg" : Model.BannerImg;
+    IList<Article> list = ViewBag.list as IList<Article>;
 }
 
-<div class="banner normal sec-banner">
-    @if (string.IsNullOrEmpty(Model.BannerImg))
-    {
-        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    }
-    else
-    {
-        <em style="background: url('@Model.BannerImg') center top no-repeat; background-size: 100%;"></em>
-    }
-</div>
-<!-- mb banner -->
-<div class="banner mobile sec-banner">
-    @if (string.IsNullOrEmpty(Model.BannerImg))
-    {
-        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    }
-    else
-    {
-        <em style="background: url('@Model.BannerImg') center top no-repeat; background-size: 100%;"></em>
-    }
-</div>
-@if (Model.PId > 0)
+<section class="tech-page-hero" style="background-image: url('@bannerBg');">
+    <div class="tech-container tech-page-hero-inner">
+        <div class="tech-breadcrumb">
+            <a href="/"><i class="fa fa-home"></i> 首页</a>
+            <span>/</span>
+            <span>@Model.KindName</span>
+        </div>
+        <h1>@Model.KindName</h1>
+        @if (!string.IsNullOrWhiteSpace(Model.KindInfo))
+        {
+            <p>@Utils.NoHTML(Model.KindInfo)</p>
+        }
+        else if (!string.IsNullOrWhiteSpace(Model.Description))
+        {
+            <p>@Model.Description</p>
+        }
+    </div>
+</section>
+
+@if (Model.PId > 0 && sameList != null && sameList.Count > 0)
 {
-    <div class="sec-nav">
-        <div class="cont">
-            <ul class="sec-nav-list">
+    <div class="tech-subnav-bar">
+        <div class="tech-container">
+            <ul class="tech-subnav-list">
                 @foreach (var k in sameList)
                 {
-                    <li class="@(k.Id == Model.Id?"sec-on":"")"><a href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a></li>
+                    <li class="@(k.Id == Model.Id ? "sec-on" : "")">
+                        <a href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a>
+                    </li>
                 }
             </ul>
-
-            <script type="text/javascript">
-                function mbSecNav() {
-                    var num = $('.sec-nav-list li').length;
-                    if (num >= 3) {
-                        $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
-                    } else if (num == 2) {
-                        $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
-                    } else if (num == 1) {
-                        $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
-                    }
-                }
-            </script>
         </div>
     </div>
 }
 
-<div class="content newsC">
-    <div class="news-bg">
-        <div class="cont">
-            <ul class="news-list" id="listComment">
-                @foreach (Article a in ViewBag.list)
+<section class="tech-section tech-section-alt">
+    <div class="tech-container">
+        @if (list != null && list.Count > 0)
+        {
+            <div class="tech-article-list" id="listComment">
+                @foreach (Article a in list)
                 {
-                    <li>
-                        <a href="@ViewsHelper.EchoArticleURL(a)" title="@a.Title">
-                            @if (!string.IsNullOrEmpty(a.Pic))
-                            {
-                                <div class="news-pic">
-                                    <div class="pic-box">
-
-                                        <img src="@a.Pic" alt="@a.Title">
-                                    </div>
-                                </div>
-                            }
-
-                            <div class="news-text">
-                                <span>@a.Title</span>
-                                <p>@Utils.CutString(Utils.NoHTML(a.Content), 200)</p>
-                                <small>@a.AddTime.ToString("yyyy-MM-dd HH:mm")</small>
-                                <b class="normal">查看详情</b>
+                    bool hasPic = !string.IsNullOrWhiteSpace(a.Pic);
+                    <a href="@ViewsHelper.EchoArticleURL(a)" title="@a.Title" class="tech-article-item @(hasPic ? "" : "no-thumb")">
+                        @if (hasPic)
+                        {
+                            <div class="tech-article-thumb">
+                                <img src="@a.Pic" alt="@a.Title" onerror="this.onerror=null;this.src='/images/tech/placeholder-tech.svg';" />
                             </div>
-                        </a>
-                    </li>
+                        }
+                        <div class="tech-article-body">
+                            <h3>@a.Title</h3>
+                            <p>@Utils.CutString(Utils.NoHTML(a.Content ?? ""), 180)</p>
+                            <div class="tech-article-meta">
+                                <span><i class="fa fa-clock-o"></i> @a.AddTime.ToString("yyyy-MM-dd HH:mm")</span>
+                                <span class="tech-card-link">查看详情 <i class="fa fa-long-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
                 }
-                @if (ViewBag.list == null || ViewBag.list.Count < 1)
-                {
-                    <li>暂无相关记录...</li>
-                }
-            </ul>
-            <!-- 分页按钮 $"/Article/Index/{Model.Id}" + "?page={0}"-->
-            <div class="normal">
-                @Html.Raw(Pages.GetPageStr(ViewBag.pagesize, (int)ViewBag.totalCount, ViewBag.page, ViewsHelper.EchoURL(Model), 3, 10, ""))
             </div>
-            <!-- 点击加载更多 -->
+        }
+        else
+        {
+            <div class="tech-prose-card" style="text-align:center;color:var(--tech-text-muted);">
+                <i class="fa fa-inbox" style="font-size:36px;color:#cbd5e1;margin-bottom:12px;"></i>
+                <p style="margin:0;">暂无相关内容记录</p>
+            </div>
+        }
+
+        <div class="tech-pagination">
+            @Html.Raw(Pages.GetPageStr(ViewBag.pagesize, (int)ViewBag.totalCount, ViewBag.page, ViewsHelper.EchoURL(Model), 3, 10, ""))
         </div>
     </div>
-</div>
+</section>
 
 <script>
     $(function () {
         $("#nav_@(topkid)").addClass("nav-on");
-    })
+    });
 </script>

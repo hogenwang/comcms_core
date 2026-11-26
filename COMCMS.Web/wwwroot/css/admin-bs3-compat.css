@@ -1,0 +1,471 @@
+/* ==========================================================================
+   COMCMS AdminCP — Bootstrap 3 -> Bootstrap 5 Structural Compatibility Bridge
+   Ensures all 78 legacy Razor views render cleanly & modernly on Bootstrap 5.3
+   ========================================================================== */
+
+/* 1. Utility & Visibility Shims */
+.hidden {
+    display: none !important;
+}
+
+.pull-left {
+    float: left !important;
+}
+
+.pull-right {
+    float: right !important;
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+.white-bg {
+    background-color: var(--adm-surface) !important;
+}
+
+@media (min-width: 576px) {
+    .col-sm-offset-1 { margin-left: 8.33333333%; }
+    .col-sm-offset-2 { margin-left: 16.66666667%; }
+    .col-sm-offset-3 { margin-left: 25%; }
+    .col-sm-offset-4 { margin-left: 33.33333333%; }
+    .col-sm-offset-5 { margin-left: 41.66666667%; }
+    .col-sm-offset-6 { margin-left: 50%; }
+}
+
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.block {
+    display: block;
+}
+
+.clear {
+    display: block;
+    overflow: hidden;
+}
+
+.no-margins {
+    margin: 0 !important;
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.m-t { margin-top: 15px !important; }
+.m-t-xs { margin-top: 5px !important; }
+.m-t-sm { margin-top: 10px !important; }
+.m-t-md { margin-top: 20px !important; }
+.m-b { margin-bottom: 15px !important; }
+.m-b-xs { margin-bottom: 5px !important; }
+.m-b-sm { margin-bottom: 10px !important; }
+.m-b-none { margin-bottom: 0 !important; }
+.m-l-xs { margin-left: 5px !important; }
+.m-r-xs { margin-right: 5px !important; }
+.p-m { padding: 15px !important; }
+
+.font-bold {
+    font-weight: 600;
+}
+
+.text-xs {
+    font-size: 12px;
+}
+
+.text-navy {
+    color: var(--adm-primary) !important;
+}
+
+.hr-line-dashed {
+    border-top: 1px dashed var(--adm-border);
+    color: transparent;
+    background-color: transparent;
+    height: 1px;
+    margin: 20px 0;
+}
+
+/* 2. Bootstrap 3 Form Horizontal -> Modern Flexbox Grid */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-horizontal .form-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    margin-left: -10px;
+    margin-right: -10px;
+    margin-bottom: 18px;
+}
+
+.form-horizontal .form-group > [class*="col-"] {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.form-horizontal .control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--adm-text-secondary);
+}
+
+@media (min-width: 576px) {
+    .form-horizontal .control-label {
+        text-align: right;
+    }
+}
+
+.help-block {
+    display: block;
+    margin-top: 6px;
+    margin-bottom: 4px;
+    font-size: 12.5px;
+    color: var(--adm-text-muted);
+}
+
+.checkbox-inline,
+.radio-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-right: 18px;
+    margin-bottom: 4px;
+    padding-top: 6px;
+    font-size: 13.5px;
+    font-weight: 400;
+    color: var(--adm-text);
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+/* BS3 Input Sizing */
+.input-sm {
+    height: 32px;
+    padding: 4px 10px;
+    font-size: 12.5px;
+    border-radius: var(--adm-radius-sm);
+}
+
+.input-lg {
+    height: 44px;
+    padding: 8px 16px;
+    font-size: 15px;
+}
+
+/* 3. BS3 Input Group Addon & Button Group -> Modern BS5 Input Group */
+.input-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    width: 100%;
+}
+
+.input-group > .form-control,
+.input-group > .form-select {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+}
+
+.input-group-addon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--adm-text-secondary);
+    text-align: center;
+    white-space: nowrap;
+    background-color: var(--adm-surface-subtle);
+    border: 1px solid var(--adm-border-strong);
+    border-radius: var(--adm-radius-sm);
+}
+
+.input-group-addon.btn,
+a.input-group-addon.btn {
+    padding: 0 12px;
+    text-decoration: none;
+    color: #ffffff;
+    background: var(--adm-primary);
+    border-color: var(--adm-primary);
+}
+
+.input-group-addon.btn:hover,
+a.input-group-addon.btn:hover {
+    background: var(--adm-primary-hover);
+    border-color: var(--adm-primary-hover);
+    color: #ffffff;
+}
+
+.input-group-addon.my-upload-span {
+    padding: 0;
+    border: none;
+    background: transparent;
+}
+
+.input-group-btn {
+    display: inline-flex;
+    align-items: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.input-group-btn > .btn {
+    border-radius: var(--adm-radius-sm);
+}
+
+.input-group > :not(:first-child) {
+    margin-left: -1px;
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+}
+
+.input-group > :not(:last-child) {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.input-group > .input-group-btn.my-preview {
+    align-items: center;
+    justify-content: center;
+    background: var(--adm-surface-subtle);
+    border: 1px solid var(--adm-border-strong);
+    border-radius: var(--adm-radius-sm) 0 0 var(--adm-radius-sm);
+    padding: 2px 6px;
+    min-width: 40px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.input-group > .input-group-btn.my-preview img {
+    max-height: 30px;
+    max-width: 44px;
+    object-fit: contain;
+    border-radius: 3px;
+}
+
+.input-group > .input-group-btn.my-preview > .btn {
+    border: none;
+    background: transparent;
+    color: var(--adm-primary);
+    padding: 4px 8px;
+}
+
+/* 4. BS3 Panels -> Modern Cards */
+.panel {
+    background-color: var(--adm-surface);
+    border: 1px solid var(--adm-border);
+    border-radius: var(--adm-radius-md);
+    margin-bottom: 18px;
+    box-shadow: var(--adm-shadow-xs);
+}
+
+.panel-heading {
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--adm-divider);
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--adm-text);
+    background-color: var(--adm-surface-subtle);
+    border-top-left-radius: calc(var(--adm-radius-md) - 1px);
+    border-top-right-radius: calc(var(--adm-radius-md) - 1px);
+}
+
+.panel-body {
+    padding: 20px;
+}
+
+.panel-default {
+    border-color: var(--adm-border);
+}
+
+.panel-primary > .panel-heading {
+    background: var(--adm-primary-soft);
+    color: var(--adm-primary);
+    border-bottom-color: var(--adm-border);
+}
+
+/* 5. BS3 Labels -> Soft Modern Pill Badges */
+.label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1.25;
+    border-radius: 999px;
+    white-space: nowrap;
+}
+
+.label-default {
+    background: var(--adm-surface-hover);
+    color: var(--adm-text-secondary);
+}
+
+.label-primary,
+.label-success {
+    background: var(--adm-success-soft);
+    color: var(--adm-success);
+}
+
+.label-info {
+    background: var(--adm-info-soft);
+    color: var(--adm-info);
+}
+
+.label-warning {
+    background: var(--adm-warning-soft);
+    color: var(--adm-warning);
+}
+
+.label-danger {
+    background: var(--adm-danger-soft);
+    color: var(--adm-danger);
+}
+
+/* 6. BS3 Buttons & Dropdowns */
+.btn-xs {
+    padding: 3px 8px;
+    font-size: 12px;
+    line-height: 1.4;
+    border-radius: 6px;
+}
+
+.btn-default,
+.btn-white {
+    color: var(--adm-text);
+    background-color: var(--adm-surface);
+    border: 1px solid var(--adm-border-strong);
+}
+
+.btn-default:hover,
+.btn-white:hover,
+.btn-default:focus,
+.btn-white:focus {
+    color: var(--adm-primary);
+    background-color: var(--adm-surface-subtle);
+    border-color: var(--adm-primary);
+}
+
+.btn-outline.btn-default,
+.btn-outline.btn-white {
+    background-color: var(--adm-surface);
+    color: var(--adm-text-secondary);
+}
+
+.btn-outline.btn-primary {
+    color: var(--adm-primary);
+    background-color: transparent;
+    border-color: var(--adm-primary);
+}
+
+.btn-outline.btn-primary:hover {
+    color: #ffffff;
+    background-color: var(--adm-primary);
+}
+
+.caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    margin-left: 4px;
+    vertical-align: middle;
+    border-top: 4px solid currentColor;
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+}
+
+/* Prevent double-caret arrows where legacy BS3 <span class="caret"> meets BS5 .dropdown-toggle::after */
+.dropdown-toggle > .caret,
+.fixed-table-toolbar .caret {
+    display: none !important;
+}
+
+.dropdown-menu > li > a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 14px;
+    font-size: 13px;
+    color: var(--adm-text);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.dropdown-menu > li > a:hover {
+    background-color: var(--adm-surface-hover);
+    color: var(--adm-primary);
+}
+
+.dropdown-menu > .divider {
+    height: 1px;
+    margin: 5px 0;
+    background-color: var(--adm-divider);
+}
+
+.dropdown-menu-right {
+    right: 0;
+    left: auto;
+}
+
+/* 7. BS3 Alert Close Button Shim */
+.alert .close {
+    float: right;
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    line-height: 1;
+    color: inherit;
+    opacity: 0.65;
+    cursor: pointer;
+}
+
+.alert .close:hover {
+    opacity: 1;
+}
+
+/* 8. BS3 Responsive Visibility Helpers */
+@media (max-width: 767.98px) {
+    .hidden-xs {
+        display: none !important;
+    }
+}
+
+.img-circle {
+    border-radius: 50%;
+}
+
+/* 9. BS3 Glyphicon Fallback (safety net for any dynamically injected HTML) */
+.glyphicon {
+    display: inline-block;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+.glyphicon-plus::before { content: "\f067"; }
+.glyphicon-pencil::before { content: "\f040"; }
+.glyphicon-remove::before { content: "\f00d"; }
+.glyphicon-trash::before { content: "\f1f8"; }
+.glyphicon-move::before { content: "\f047"; }
+.glyphicon-search::before { content: "\f002"; }
+.glyphicon-refresh::before { content: "\f021"; }
+.glyphicon-list-alt::before { content: "\f022"; }
+.glyphicon-th::before { content: "\f00a"; }
+.glyphicon-chevron-down::before { content: "\f107"; }
+.glyphicon-chevron-right::before { content: "\f105"; }

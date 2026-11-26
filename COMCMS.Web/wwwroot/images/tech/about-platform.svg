@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+  <defs>
+    <linearGradient id="platBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#071122"/>
+      <stop offset="55%" stop-color="#0c1c36"/>
+      <stop offset="100%" stop-color="#082431"/>
+    </linearGradient>
+    <radialGradient id="platHalo" cx="50%" cy="46%" r="52%">
+      <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.34"/>
+      <stop offset="55%" stop-color="#10b981" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#071122" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="accentLine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="glassLayer" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.78"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.48"/>
+    </linearGradient>
+    <filter id="softGlow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="7" result="b"/>
+      <feMerge>
+        <feMergeNode in="b"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="dotGrid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#38bdf8" fill-opacity="0.16"/>
+    </pattern>
+  </defs>
+
+  <rect width="1200" height="900" fill="url(#platBg)"/>
+  <rect width="1200" height="900" fill="url(#dotGrid)"/>
+  <rect width="1200" height="900" fill="url(#platHalo)"/>
+
+  <!-- Layered Modular Platform Stack -->
+  <g transform="translate(600, 470)">
+    <!-- Layer 3: Infrastructure Foundation -->
+    <g transform="translate(0, 150)">
+      <polygon points="0,-95 290,18 0,130 -290,18" fill="url(#glassLayer)" stroke="#38bdf8" stroke-opacity="0.35" stroke-width="1.5"/>
+      <polygon points="-290,18 0,130 0,152 -290,40" fill="#091529" stroke="#38bdf8" stroke-opacity="0.2"/>
+      <polygon points="290,18 0,130 0,152 290,40" fill="#061f29" stroke="#10b981" stroke-opacity="0.2"/>
+    </g>
+
+    <!-- Layer 2: Core Engine & Security -->
+    <g transform="translate(0, 20)">
+      <polygon points="0,-95 255,6 0,108 -255,6" fill="url(#glassLayer)" stroke="url(#accentLine)" stroke-opacity="0.58" stroke-width="1.8"/>
+      <polygon points="-255,6 0,108 0,126 -255,24" fill="#0369a1" fill-opacity="0.34"/>
+      <polygon points="255,6 0,108 0,126 255,24" fill="#059669" fill-opacity="0.32"/>
+      <!-- Circuit lines on mid plate -->
+      <path d="M -140 6 L -50 -30 L 40 6 L 135 -28" fill="none" stroke="#38bdf8" stroke-opacity="0.6" stroke-width="2"/>
+      <path d="M -90 36 L 0 0 L 90 36" fill="none" stroke="#10b981" stroke-opacity="0.65" stroke-width="2"/>
+    </g>
+
+    <!-- Layer 1: Application Matrix Cards -->
+    <g transform="translate(0, -125)">
+      <polygon points="0,-90 220,-2 0,86 -220,-2" fill="url(#accentLine)" fill-opacity="0.16" stroke="url(#accentLine)" stroke-opacity="0.8" stroke-width="2"/>
+      <!-- 4 floating app tiles -->
+      <g transform="translate(-85, -18)">
+        <polygon points="0,-30 62,-5 0,20 -62,-5" fill="#0f172a" fill-opacity="0.86" stroke="#38bdf8" stroke-width="1.5"/>
+        <circle cx="0" cy="-5" r="7" fill="#38bdf8" filter="url(#softGlow)"/>
+      </g>
+      <g transform="translate(85, -18)">
+        <polygon points="0,-30 62,-5 0,20 -62,-5" fill="#0f172a" fill-opacity="0.86" stroke="#10b981" stroke-width="1.5"/>
+        <circle cx="0" cy="-5" r="7" fill="#10b981" filter="url(#softGlow)"/>
+      </g>
+      <g transform="translate(0, -54)">
+        <polygon points="0,-28 58,-4 0,20 -58,-4" fill="#0f172a" fill-opacity="0.92" stroke="#7dd3fc" stroke-width="1.6"/>
+        <circle cx="0" cy="-4" r="7" fill="#e0f2fe" filter="url(#softGlow)"/>
+      </g>
+      <g transform="translate(0, 22)">
+        <polygon points="0,-28 58,-4 0,20 -58,-4" fill="#0f172a" fill-opacity="0.88" stroke="#34d399" stroke-width="1.6"/>
+        <circle cx="0" cy="-4" r="7" fill="#34d399" filter="url(#softGlow)"/>
+      </g>
+    </g>
+
+    <!-- Vertical energy beams connecting layers -->
+    <g stroke="url(#accentLine)" stroke-width="1.6" stroke-dasharray="5 6" stroke-opacity="0.55">
+      <line x1="0" y1="-215" x2="0" y2="255"/>
+      <line x1="-150" y1="-100" x2="-150" y2="180"/>
+      <line x1="150" y1="-100" x2="150" y2="180"/>
+    </g>
+  </g>
+
+  <!-- Corner decorative UI glass chips -->
+  <g transform="translate(84, 96)">
+    <rect x="0" y="0" width="210" height="74" rx="14" fill="#0f172a" fill-opacity="0.68" stroke="#38bdf8" stroke-opacity="0.35"/>
+    <circle cx="30" cy="37" r="10" fill="#10b981" filter="url(#softGlow)"/>
+    <rect x="54" y="24" width="110" height="10" rx="5" fill="#e2e8f0" fill-opacity="0.72"/>
+    <rect x="54" y="44" width="76" height="8" rx="4" fill="#38bdf8" fill-opacity="0.5"/>
+  </g>
+
+  <g transform="translate(906, 710)">
+    <rect x="0" y="0" width="210" height="74" rx="14" fill="#0f172a" fill-opacity="0.68" stroke="#10b981" stroke-opacity="0.35"/>
+    <rect x="22" y="22" width="14" height="30" rx="4" fill="#38bdf8"/>
+    <rect x="44" y="30" width="14" height="22" rx="4" fill="#0ea5e9"/>
+    <rect x="66" y="16" width="14" height="36" rx="4" fill="#10b981"/>
+    <rect x="98" y="24" width="88" height="10" rx="5" fill="#e2e8f0" fill-opacity="0.72"/>
+    <rect x="98" y="44" width="60" height="8" rx="4" fill="#10b981" fill-opacity="0.55"/>
+  </g>
+</svg>

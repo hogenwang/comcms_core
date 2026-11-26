@@ -11,6 +11,7 @@ namespace COMCMS.Web.Services
     public sealed class LoginAttemptService
     {
         private const int AttemptLimit = 10;
+        private const int MaxLocalEntries = 10_000;
         private static readonly TimeSpan Window = TimeSpan.FromMinutes(15);
         private readonly IConnectionMultiplexer _redis;
         private readonly ConcurrentDictionary<string, AttemptBucket> _local = new();
@@ -79,11 +80,30 @@ namespace COMCMS.Web.Services
         private void IncrementLocal(string key)
         {
             var now = DateTimeOffset.UtcNow;
+            if (_local.Count >= MaxLocalEntries)
+            {
+                EvictExpiredLocalEntries(now);
+            }
             _local.AddOrUpdate(key,
                 _ => new AttemptBucket(1, now.Add(Window)),
                 (_, current) => current.ExpiresUtc <= now
                     ? new AttemptBucket(1, now.Add(Window))
                     : new AttemptBucket(current.Count + 1, current.ExpiresUtc));
+        }
+
+        private void EvictExpiredLocalEntries(DateTimeOffset now)
+        {
+            foreach (var entry in _local)
+            {
+                if (entry.Value.ExpiresUtc <= now)
+                {
+                    _local.TryRemove(entry.Key, out _);
+                }
+            }
+            if (_local.Count >= MaxLocalEntries)
+            {
+                _local.Clear();
+            }
         }
 
         private static long Parse(RedisValue value) => value.TryParse(out long count) ? count : 0;

@@ -1,4 +1,4 @@
-﻿@{
+@{
     ViewBag.title = "数据字典管理";
 }
 <script src="~/js/vue/vue.min.js"></script>
@@ -27,7 +27,7 @@
                     </div>
                     <div id="toolbar" class="btn-group">
                         <button id="btn_add" type="button" class="btn btn-outline btn-default" onclick="app.getDataDictionary(0)">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                            <i class="fa fa-plus" aria-hidden="true"></i>新增
                         </button>
                     </div>
                     <table id="tb_departments"></table>
@@ -201,7 +201,7 @@
                     <div v-show="showDetail">
                         <div id="toolbar" class="btn-group">
                             <button id="btn_add" type="button" class="btn btn-outline btn-default" v-on:click="addDetail">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                                <i class="fa fa-plus" aria-hidden="true"></i>新增
                             </button>
                         </div>
                         <table class="table table-bordered">

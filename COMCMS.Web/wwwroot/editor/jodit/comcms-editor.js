@@ -2,9 +2,11 @@
     "use strict";
 
     var instances = new Map();
-    var imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp"];
+    var imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp"];
     var maxImageSize = 10 * 1024 * 1024;
     var maxUploadSize = 50 * 1024 * 1024;
+    var activeBrowserCallback = null;
+    var activeBrowserEditor = null;
 
     function csrfToken() {
         var input = document.querySelector("input[name='__RequestVerificationToken']");
@@ -18,156 +20,147 @@
         return payload && payload.message ? payload.message : fallback;
     }
 
-    async function upload(url, file) {
-        var formData = new FormData();
-        formData.append("upload", file, file.name);
-        var response = await fetch(url, {
-            method: "POST",
-            credentials: "same-origin",
-            headers: { "RequestVerificationToken": csrfToken() },
-            body: formData
-        });
-        var payload;
+    function isImageFile(file) {
+        if (!file || !file.name) return false;
+        var ext = file.name.split(".").pop().toLowerCase();
+        return imageExtensions.indexOf(ext) !== -1;
+    }
+
+    function openAttachBrowser(editor, callback, onlyImages) {
+        activeBrowserCallback = typeof callback === "function" ? callback : null;
+        activeBrowserEditor = editor || null;
+
         try {
-            payload = await response.json();
-        } catch (_) {
-            throw new Error("服务器返回了无法识别的上传结果。");
-        }
-        if (!response.ok || !payload.success) {
-            throw new Error(errorMessage(payload, "上传失败，请稍后重试。"));
-        }
-        return payload.data.files[0];
-    }
-
-    function chooseFile(accept, callback) {
-        var input = document.createElement("input");
-        input.type = "file";
-        input.accept = accept;
-        input.hidden = true;
-        input.addEventListener("change", function () {
-            if (input.files && input.files.length) callback(input.files[0]);
-            input.remove();
-        });
-        window.addEventListener("focus", function () {
-            window.setTimeout(function () {
-                if (!input.files || !input.files.length) input.remove();
-            }, 0);
-        }, { once: true });
-        document.body.appendChild(input);
-        input.click();
-    }
-
-    async function uploadWithLock(editor, url, file) {
-        if (!editor.lock("comcms-upload")) return null;
-        try {
-            return await upload(url, file);
-        } catch (error) {
-            editor.message.error(error && error.message ? error.message : "上传失败，请稍后重试。");
-            return null;
-        } finally {
-            editor.unlock();
-        }
-    }
-
-    function uploadAttachment(editor) {
-        chooseFile(".pdf,.txt,.csv,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar,.7z,.mp3,.wav", function (file) {
-            if (file.size > maxUploadSize) {
-                editor.message.error("附件不能超过 50 MiB。");
-                return;
+            if (editor && editor.events) {
+                editor.events.fire("closeAllPopups");
             }
-            (async function () {
-                var url = await uploadWithLock(editor, "/AdminCP/Upload/JoditUploadFile", file);
-                if (!url) return;
-                var link = document.createElement("a");
-                link.href = url;
-                link.target = "_blank";
-                link.rel = "noopener";
-                link.textContent = file.name;
-                editor.s.insertHTML(link.outerHTML);
-                editor.message.info("附件上传成功。");
-            })();
-        });
+        } catch (_) { }
+
+        var query = "?mode=jodit" + (onlyImages ? "&type=image" : "");
+        var url = "/AdminCP/Attach/Index" + query;
+        var title = onlyImages ? "选择图片 - 附件管理器" : "选择文件 - 附件管理器";
+
+        if (window.layer && typeof window.layer.open === "function") {
+            window.layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: 0.35,
+                maxmin: true,
+                area: ["92%", "88%"],
+                content: url,
+                end: function () {
+                    activeBrowserCallback = null;
+                    activeBrowserEditor = null;
+                }
+            });
+            return;
+        }
+
+        window.open(url, "comcmsAttachBrowser", "width=1120,height=720,scrollbars=yes,resizable=yes");
     }
 
-    function uploadVideo(editor) {
-        chooseFile("video/mp4,video/webm,video/ogg,.mp4,.webm,.ogv,.ogg", function (file) {
-            if (file.size > maxUploadSize) {
-                editor.message.error("视频不能超过 50 MiB。");
-                return;
-            }
-            (async function () {
-                var url = await uploadWithLock(editor, "/AdminCP/Upload/JoditUploadVideo", file);
-                if (!url) return;
-                var video = document.createElement("video");
-                video.controls = true;
-                video.preload = "metadata";
-                video.setAttribute("playsinline", "");
-                video.src = url;
-                video.style.maxWidth = "100%";
-                video.style.height = "auto";
-                editor.s.insertHTML(video.outerHTML + "<p><br></p>");
-                editor.message.info("视频上传成功。");
-            })();
-        });
+    function completeBrowserSelection(items) {
+        if (!items || !items.length) return;
+
+        var normalized = {
+            baseurl: "",
+            files: items.map(function (item) { return item.url; }),
+            isImages: items.map(function (item) { return Boolean(item.isImage); }),
+            items: items.map(function (item) { return { file: item.url, isImage: Boolean(item.isImage) }; })
+        };
+
+        var cb = activeBrowserCallback;
+        var ed = activeBrowserEditor;
+        activeBrowserCallback = null;
+        activeBrowserEditor = null;
+
+        if (typeof cb === "function") {
+            cb(normalized);
+            return;
+        }
+
+        // Fallback direct insert if callback was cleared
+        if (ed && ed.s) {
+            items.forEach(function (item) {
+                if (item.isImage) {
+                    ed.s.insertImage(item.url);
+                } else {
+                    var link = document.createElement("a");
+                    link.href = item.url;
+                    link.target = "_blank";
+                    link.rel = "noopener";
+                    link.textContent = item.name || item.url;
+                    ed.s.insertHTML(link.outerHTML);
+                }
+            });
+        }
     }
 
     function makeOptions(element, options) {
-        var uploadAttachmentButton = {
-            name: "comcmsUploadAttachment",
-            icon: "file",
-            tooltip: "上传附件",
-            exec: function (editor) { uploadAttachment(editor); }
-        };
-        var uploadVideoButton = {
-            name: "comcmsUploadVideo",
-            icon: "video",
-            tooltip: "上传视频",
-            exec: function (editor) { uploadVideo(editor); }
-        };
-        var token = csrfToken();
-        var height = element.id === "KindInfo" ? 360 : 520;
+        var height = element.id === "KindInfo" ? 380 : 560;
 
         return Object.assign({
             language: "zh_cn",
             height: height,
-            minHeight: 280,
-            maxHeight: 900,
-            toolbarAdaptive: true,
+            minHeight: 320,
+            maxHeight: 960,
+            // Display full Jodit v4 fat toolbar across 2 clean rows (no buttons hidden behind "...")
+            toolbarAdaptive: false,
             toolbarSticky: false,
             showCharsCounter: true,
             showWordsCounter: true,
             showXPathInStatusbar: false,
             enableDragAndDropFileToEditor: true,
-            buttons: [
-                "source", "|", "bold", "italic", "underline", "strikethrough", "eraser", "|",
-                "ul", "ol", "outdent", "indent", "|", "font", "fontsize", "brush", "paragraph", "lineHeight", "|",
-                "image", uploadAttachmentButton, uploadVideoButton, "table", "link", "hr", "symbols", "|",
-                "left", "center", "right", "justify", "|", "undo", "redo", "find", "fullsize", "preview"
-            ],
+            imageDefaultWidth: null,
+            // Enables the "Browse" tab in Image / File / Image-Properties dialogs
+            filebrowser: {
+                ajax: {
+                    url: "/AdminCP/Attach/Index"
+                }
+            },
             uploader: {
-                url: "/AdminCP/Upload/JoditUploadImage",
+                url: "/AdminCP/Upload/JoditUpload",
                 method: "POST",
                 withCredentials: true,
-                headers: { "RequestVerificationToken": token },
+                headers: { "RequestVerificationToken": csrfToken() },
                 filesVariableName: function () { return "upload"; },
                 imagesExtensions: imageExtensions,
+                prepareData: function (formData) {
+                    var token = csrfToken();
+                    if (token && formData && typeof formData.set === "function") {
+                        formData.set("__RequestVerificationToken", token);
+                    }
+                    return formData;
+                },
                 isSuccess: function (response) { return Boolean(response && response.success); },
-                getMessage: function (response) { return errorMessage(response, "图片上传失败。"); },
+                getMessage: function (response) { return errorMessage(response, "文件上传失败。"); },
                 process: function (response) { return response.data; },
                 beforeUpload: function (files) {
-                    if (files.length !== 1) {
-                        this.jodit.message.error("请一次上传一张图片。");
-                        return false;
-                    }
+                    if (!files || files.length === 0) return false;
                     for (var i = 0; i < files.length; i += 1) {
-                        if (files[i].size > maxImageSize) {
-                            this.jodit.message.error("图片不能超过 10 MiB。");
+                        var file = files[i];
+                        var limit = isImageFile(file) ? maxImageSize : maxUploadSize;
+                        if (file.size > limit) {
+                            this.jodit.message.error(isImageFile(file) ? "图片不能超过 10 MiB。" : "文件不能超过 50 MiB。");
                             return false;
                         }
                     }
                 }
             }
         }, options || {});
+    }
+
+    function bindAttachFileBrowser(editor) {
+        if (!editor) return;
+        // Override lazy filebrowser getter / open method so clicking "Browse" always launches COMCMS Attach Manager
+        var fb = editor.filebrowser;
+        if (fb && typeof fb.open === "function") {
+            fb.open = function (callback, onlyImages) {
+                openAttachBrowser(editor, callback, Boolean(onlyImages));
+                return Promise.resolve();
+            };
+        }
     }
 
     function create(target, options) {
@@ -177,6 +170,7 @@
         if (instances.has(element.id)) return instances.get(element.id);
 
         var editor = window.Jodit.make(element, makeOptions(element, options));
+        bindAttachFileBrowser(editor);
         instances.set(element.id, editor);
         return editor;
     }
@@ -190,6 +184,8 @@
     window.COMCMSEditor = {
         create: create,
         syncAll: syncAll,
-        instances: instances
+        instances: instances,
+        openAttachBrowser: openAttachBrowser,
+        completeBrowserSelection: completeBrowserSelection
     };
 })(window, document);

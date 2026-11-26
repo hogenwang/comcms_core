@@ -1,0 +1,269 @@
+@{
+    Layout = null;
+    var pdfUrl = ViewBag.pdfUrl as string ?? "";
+    var fileName = ViewBag.fileName as string ?? "PDF 文档";
+    var appBase = Url.Content("~").TrimEnd('/');
+}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@fileName - PDF 预览</title>
+    <link href="~/hplus/css/font-awesome.min.css" rel="stylesheet" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: #1e2430;
+            color: #e2e8f0;
+        }
+        #toolbar {
+            height: 50px;
+            background: #111827;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 18px;
+            position: relative;
+            user-select: none;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+        }
+        #fileName {
+            position: absolute;
+            left: 18px;
+            color: #cbd5e1;
+            font-size: 13px;
+            font-weight: 500;
+            max-width: 260px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+        #fileName i { color: #f87171; }
+        #toolbar .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 34px;
+            height: 32px;
+            padding: 0 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(148, 163, 184, 0.2);
+            border-radius: 6px;
+            color: #e2e8f0;
+            cursor: pointer;
+            font-size: 13px;
+            text-decoration: none;
+            transition: background 0.15s, border-color 0.15s;
+        }
+        #toolbar .btn:hover {
+            background: rgba(20, 184, 166, 0.2);
+            border-color: rgba(20, 184, 166, 0.55);
+            color: #ffffff;
+        }
+        #toolbar .sep {
+            width: 1px;
+            height: 20px;
+            background: rgba(148, 163, 184, 0.2);
+            margin: 0 4px;
+        }
+        #toolbar .info {
+            color: #94a3b8;
+            font-size: 13px;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        #pageInput {
+            width: 54px;
+            height: 30px;
+            text-align: center;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            background: rgba(15, 23, 42, 0.8);
+            color: #fff;
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+        }
+        #pageInput:focus { border-color: #14b8a6; }
+        #zoomLevel { min-width: 48px; text-align: center; color: #cbd5e1; font-size: 13px; }
+        #pdfContent {
+            height: calc(100vh - 50px);
+            overflow: auto;
+            text-align: center;
+            padding: 22px 16px;
+        }
+        #pdfContent canvas {
+            display: inline-block;
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+            background: #fff;
+            border-radius: 4px;
+        }
+        .loading, .error {
+            padding: 80px 20px;
+            font-size: 15px;
+        }
+        .loading { color: #94a3b8; }
+        .error { color: #fb7185; }
+        .loading i, .error i { font-size: 28px; display: block; margin-bottom: 12px; }
+        @@media (max-width: 720px) {
+            #fileName { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <span id="fileName" title="@fileName"><i class="fa fa-file-pdf-o"></i> @fileName</span>
+        <button class="btn" type="button" onclick="prevPage()" title="上一页"><i class="fa fa-chevron-left"></i></button>
+        <span class="info">
+            <input type="number" id="pageInput" min="1" value="1" onchange="goToPage(this.value)" />
+            <span>/</span>
+            <span id="pageCount">0</span>
+        </span>
+        <button class="btn" type="button" onclick="nextPage()" title="下一页"><i class="fa fa-chevron-right"></i></button>
+        <div class="sep"></div>
+        <button class="btn" type="button" onclick="zoom(-0.25)" title="缩小"><i class="fa fa-search-minus"></i></button>
+        <span id="zoomLevel">100%</span>
+        <button class="btn" type="button" onclick="zoom(0.25)" title="放大"><i class="fa fa-search-plus"></i></button>
+        <button class="btn" type="button" onclick="zoomFit()" title="适应宽度"><i class="fa fa-arrows-h"></i></button>
+        <div class="sep"></div>
+        <a class="btn" href="@pdfUrl" download="@fileName" title="下载 PDF"><i class="fa fa-download"></i></a>
+    </div>
+    <div id="pdfContent">
+        <div class="loading">
+            <i class="fa fa-spinner fa-spin"></i>
+            正在加载 PDF 文档...
+        </div>
+    </div>
+
+    <script src="~/js/pdfjs/pdf.min.js"></script>
+    <script>
+        var appBase = @COMCMS.Web.Common.SafeScriptJson.Serialize(appBase);
+        pdfjsLib.GlobalWorkerOptions.workerSrc = appBase + '/js/pdfjs/pdf.worker.min.js';
+
+        var pdfDoc = null;
+        var currentPage = 1;
+        var scale = 1.0;
+        var pdfUrl = @COMCMS.Web.Common.SafeScriptJson.Serialize(pdfUrl);
+        var rendering = false;
+
+        pdfjsLib.getDocument(pdfUrl).promise.then(function (pdf) {
+            pdfDoc = pdf;
+            document.getElementById('pageCount').textContent = pdf.numPages;
+            document.getElementById('pageInput').max = pdf.numPages;
+
+            pdf.getPage(1).then(function (page) {
+                var container = document.getElementById('pdfContent');
+                var viewport = page.getViewport({ scale: 1.0 });
+                scale = (container.clientWidth - 48) / viewport.width;
+                if (scale > 3) scale = 3;
+                if (scale < 0.5) scale = 0.5;
+                updateZoom();
+                renderPage(currentPage);
+            });
+        }).catch(function (error) {
+            var container = document.getElementById('pdfContent');
+            container.textContent = '';
+            var errDiv = document.createElement('div');
+            errDiv.className = 'error';
+            var ic = document.createElement('i');
+            ic.className = 'fa fa-exclamation-triangle';
+            errDiv.appendChild(ic);
+            errDiv.appendChild(document.createTextNode('PDF 加载失败：' + (error && error.message ? error.message : '未知错误')));
+            container.appendChild(errDiv);
+        });
+
+        function renderPage(num) {
+            if (!pdfDoc || rendering) return;
+            rendering = true;
+
+            pdfDoc.getPage(num).then(function (page) {
+                var viewport = page.getViewport({ scale: scale });
+                var dpr = Math.min(window.devicePixelRatio || 1, 2);
+                var canvas = document.createElement('canvas');
+                var ctx = canvas.getContext('2d');
+                canvas.width = Math.floor(viewport.width * dpr);
+                canvas.height = Math.floor(viewport.height * dpr);
+                canvas.style.width = Math.floor(viewport.width) + 'px';
+                canvas.style.height = Math.floor(viewport.height) + 'px';
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+                var container = document.getElementById('pdfContent');
+                container.textContent = '';
+                container.appendChild(canvas);
+
+                page.render({ canvasContext: ctx, viewport: viewport }).promise.then(function () {
+                    rendering = false;
+                }).catch(function () {
+                    rendering = false;
+                });
+
+                document.getElementById('pageInput').value = num;
+                currentPage = num;
+            }).catch(function () {
+                rendering = false;
+            });
+        }
+
+        function prevPage() {
+            if (currentPage <= 1) return;
+            renderPage(--currentPage);
+        }
+
+        function nextPage() {
+            if (!pdfDoc || currentPage >= pdfDoc.numPages) return;
+            renderPage(++currentPage);
+        }
+
+        function goToPage(val) {
+            var num = parseInt(val, 10);
+            if (!pdfDoc || isNaN(num) || num < 1 || num > pdfDoc.numPages) {
+                document.getElementById('pageInput').value = currentPage;
+                return;
+            }
+            currentPage = num;
+            renderPage(num);
+        }
+
+        function zoom(delta) {
+            scale += delta;
+            if (scale < 0.25) scale = 0.25;
+            if (scale > 4.0) scale = 4.0;
+            updateZoom();
+            renderPage(currentPage);
+        }
+
+        function zoomFit() {
+            if (!pdfDoc) return;
+            pdfDoc.getPage(currentPage).then(function (page) {
+                var container = document.getElementById('pdfContent');
+                var viewport = page.getViewport({ scale: 1.0 });
+                scale = (container.clientWidth - 48) / viewport.width;
+                updateZoom();
+                renderPage(currentPage);
+            });
+        }
+
+        function updateZoom() {
+            document.getElementById('zoomLevel').textContent = Math.round(scale * 100) + '%';
+        }
+
+        document.addEventListener('keydown', function (e) {
+            if (e.target.tagName === 'INPUT') return;
+            if (e.key === 'ArrowLeft' || e.key === 'PageUp') { prevPage(); e.preventDefault(); }
+            else if (e.key === 'ArrowRight' || e.key === 'PageDown') { nextPage(); e.preventDefault(); }
+            else if (e.key === '+' || e.key === '=') { zoom(0.25); e.preventDefault(); }
+            else if (e.key === '-') { zoom(-0.25); e.preventDefault(); }
+        });
+    </script>
+</body>
+</html>

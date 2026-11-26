@@ -1,72 +1,173 @@
 ﻿@{
     Layout = null;
     ViewBag.Title = "信息提示";
+    var isSuccess = ViewBag.Type is int t && t == 1;
+    var isCloseDialog = ViewBag.IsCloseDialog is bool close && close;
+    var backUrl = ViewBag.BackURL as string;
+    var safeBackUrl = !string.IsNullOrWhiteSpace(backUrl) && Url.IsLocalUrl(backUrl) ? backUrl : "";
 }
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/hplus/css/style.css" rel="stylesheet" />
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('comcms_admin_theme') === 'dark' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', t);
+                document.documentElement.setAttribute('data-bs-theme', t);
+            } catch (e) { }
+        })();
+    </script>
+    <link href="~/lib/bootstrap5/bootstrap.min.css" rel="stylesheet" />
     <link href="~/hplus/css/font-awesome.min.css" rel="stylesheet" />
-    <link href="~/hplus/css/animate.min.css" rel="stylesheet" />
-    <link href="~/hplus/css/login.css" rel="stylesheet" />
-
+    <link href="~/css/admin-tokens.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/admin-bs3-compat.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/admin-modern.css" rel="stylesheet" asp-append-version="true" />
+    <style>
+        html, body { height: 100%; }
+        .tip-page-wrap {
+            min-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+        }
+        .tip-card {
+            width: 100%;
+            max-width: 520px;
+            background: var(--adm-surface);
+            border-radius: var(--adm-radius-lg);
+            border: 1px solid var(--adm-border);
+            box-shadow: var(--adm-shadow-md);
+            overflow: hidden;
+        }
+        .tip-card-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--adm-divider);
+            background: var(--adm-surface-subtle);
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--adm-text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tip-card-body {
+            padding: 36px 28px 32px;
+            text-align: center;
+        }
+        .tip-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        .tip-icon-info { background: var(--adm-warning-soft); color: var(--adm-warning); }
+        .tip-icon-success { background: var(--adm-success-soft); color: var(--adm-success); }
+        .tip-title {
+            margin: 0 0 10px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--adm-text);
+        }
+        .tip-message {
+            margin: 0 0 28px;
+            font-size: 14.5px;
+            line-height: 1.75;
+            color: var(--adm-text-secondary);
+            word-break: break-word;
+        }
+        .tip-actions {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .tip-actions .btn { min-width: 100px; }
+    </style>
 </head>
-
 <body class="gray-bg">
-    <div class="wrapper wrapper-content animated fadeInRight">
-        <div class="ibox float-e-margins">
-            <div class="ibox-title">
-                <h5>@ViewBag.Title</h5>
-                <div class="ibox-tools">
+    <div class="tip-page-wrap">
+        <div class="tip-card">
+            <div class="tip-card-header">
+                <i class="fa @(isSuccess ? "fa-check-circle text-navy" : "fa-info-circle")" style="@(isSuccess ? "" : "color:var(--adm-warning);")"></i>
+                <span>@ViewBag.Title</span>
+            </div>
+            <div class="tip-card-body">
+                <div class="tip-icon @(isSuccess ? "tip-icon-success" : "tip-icon-info")">
+                    <i class="fa @(isSuccess ? "fa-check" : "fa-exclamation")"></i>
+                </div>
+                <h2 class="tip-title">@(isSuccess ? "操作成功" : "信息提示")</h2>
+                <p class="tip-message">@ViewBag.Message</p>
+                <div class="tip-actions">
+                    @if (!string.IsNullOrEmpty(safeBackUrl))
+                    {
+                        <a class="btn btn-primary" href="@safeBackUrl"><i class="fa fa-check"></i> 确定</a>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" onclick="confirmTipAction();"><i class="fa fa-check"></i> 确定</button>
+                    }
+                    <button type="button" class="btn btn-white" onclick="closethisdialog();"><i class="fa fa-times"></i> 关闭</button>
                 </div>
             </div>
-            <div class="ibox-content">
-                <h2>
-                    <i class="fa fa-info-circle"></i> 信息提示<br />
-                </h2>
-                <h3>
-                    @ViewBag.Message
-                </h3>
-                <p class="text-center">
-                    <a class="btn btn-primary" href="javascript:;">确定</a>
-                    <a class="btn btn-default" href="javascrip:;" onclick="closethisdialog();">关闭</a>
-                </p>
-            </div>
         </div>
-
-
     </div>
+
     <script src="~/js/jquery-3.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-    <script src="~/js/validation/jquery.validate.js"></script>
-    <script src="~/js/validation/messages_zh.js"></script>
+    <script src="~/lib/bootstrap5/bootstrap.bundle.min.js"></script>
     <script src="~/js/layer/layer.js"></script>
-    <script src="~/js/jquery.form.js"></script>
-    <script src="~/js/rtpost.js"></script>
-    <script src="~/hplus/js/plugins/bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="~/hplus/js/plugins/bootstrap-table/bootstrap-table-mobile.min.js"></script>
-    <script src="~/hplus/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
-    <!-- Bootstrap table -->
-    <script src="~/js/treegrid/jquery.treegrid.min.js"></script>
-    <script src="~/js/treegrid/jquery.treegrid.bootstrap3.js"></script>
-    <script src="~/hplus/js/content.js?v=1.0.0"></script>
-    <script src="~/hplus/js/common.js"></script>
-    <script src="~/hplus/js/plugins/iCheck/icheck.min.js"></script>
-    <script src="~/js/webuploader/webuploader.min.js"></script>
-    <script src="~/js/uploader.js"></script>
-    <script src="~/js/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
+    <script src="~/js/admin-modern.js" asp-append-version="true"></script>
     <script>
-        var index = parent.layer.getFrameIndex(window.name);
+        var isCloseDialog = @(isCloseDialog ? "true" : "false");
+        function getLayerIndex() {
+            try {
+                if (window.name && parent && parent.layer && typeof parent.layer.getFrameIndex === 'function') {
+                    return parent.layer.getFrameIndex(window.name);
+                }
+            } catch (e) { }
+            return undefined;
+        }
+        function closeAdminTab() {
+            try {
+                if (parent && parent.$) {
+                    var activeClose = parent.$('.J_menuTab.active .fa-times-circle');
+                    if (activeClose.length > 0) {
+                        activeClose.trigger('click');
+                        return true;
+                    }
+                }
+            } catch (e) { }
+            return false;
+        }
         function closethisdialog() {
-            parent.layer.close(index);
+            var idx = getLayerIndex();
+            if (idx !== undefined && idx !== null) {
+                parent.layer.close(idx);
+                return;
+            }
+            if (closeAdminTab()) return;
+            if (window.history.length > 1) window.history.back();
+            else window.location.href = '/AdminCP/Index/Main';
+        }
+        function confirmTipAction() {
+            if (isCloseDialog) { closethisdialog(); return; }
+            var idx = getLayerIndex();
+            if (idx !== undefined && idx !== null) {
+                parent.layer.close(idx);
+                return;
+            }
+            if (window.history.length > 1) window.history.back();
+            else if (!closeAdminTab()) window.location.href = '/AdminCP/Index/Main';
         }
     </script>
-
-
 </body>
-
 </html>

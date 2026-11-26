@@ -1,328 +1,522 @@
-/**
-* yyh & kimi from mb518.com
-* 2019-3-25
-**/
+/* ==========================================================================
+   COMCMS Horizon 2026 — Modern My97DatePicker Skin (Light & Dark Dual Theme)
+   Crisp inline SVG controls, zero legacy GIF sprites, full token alignment
+   ========================================================================== */
+
+:root,
+[data-theme="light"] {
+    --dp-bg: #ffffff;
+    --dp-surface: #f8fafc;
+    --dp-hover: #f1f5f9;
+    --dp-border: #e2e8f0;
+    --dp-border-strong: #cbd5e1;
+    --dp-text: #0f172a;
+    --dp-text-secondary: #475569;
+    --dp-text-muted: #94a3b8;
+    --dp-primary: #10b981;
+    --dp-primary-hover: #059669;
+    --dp-primary-soft: rgba(16, 185, 129, 0.14);
+    --dp-gradient: linear-gradient(135deg, #10b981 0%, #06b6d4 100%);
+    --dp-weekend: #e11d48;
+    --dp-shadow: 0 14px 36px rgba(15, 23, 42, 0.14), 0 2px 8px rgba(15, 23, 42, 0.06);
+    --dp-input-bg: #f1f5f9;
+    --dp-btn-bg: #f8fafc;
+    --dp-icon-filter: none;
+}
+
+[data-theme="dark"] {
+    --dp-bg: #111827;
+    --dp-surface: #162033;
+    --dp-hover: #1e293b;
+    --dp-border: rgba(148, 163, 184, 0.22);
+    --dp-border-strong: rgba(148, 163, 184, 0.34);
+    --dp-text: #f1f5f9;
+    --dp-text-secondary: #cbd5e1;
+    --dp-text-muted: #64748b;
+    --dp-primary: #10b981;
+    --dp-primary-hover: #34d399;
+    --dp-primary-soft: rgba(16, 185, 129, 0.22);
+    --dp-gradient: linear-gradient(135deg, #10b981 0%, #0ea5e9 100%);
+    --dp-weekend: #fb7185;
+    --dp-shadow: 0 18px 44px rgba(0, 0, 0, 0.58), 0 0 0 1px rgba(56, 189, 248, 0.14);
+    --dp-input-bg: #0f172a;
+    --dp-btn-bg: #1e293b;
+    --dp-icon-filter: brightness(1.85);
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: transparent;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
 .WdateDiv {
-    width: 216px;
-    background-color: #FFF;
-    border-radius: 5px;
-    border: 1px solid #cecece;
+    width: 268px;
+    background-color: var(--dp-bg);
+    border: 1px solid var(--dp-border);
+    border-radius: 12px;
+    color: var(--dp-text);
+    padding: 8px 10px 10px;
+    box-sizing: border-box;
+    user-select: none;
+    overflow: hidden;
 }
 
 .WdateDiv2 {
-    width: 432px;
+    width: 536px;
 }
 
-.WdateDiv > div:nth-child(3) {
-    padding: 0px 0.375em;
+.WdateDiv * {
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+/* Header Bar (#dpTitle) — explicit Flex order fixes My97 DOM NavImgrr/NavImgr swap */
+.WdateDiv #dpTitle {
+    height: 36px;
+    padding: 2px 0 6px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--dp-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2px;
+}
+
+.WdateDiv #dpTitle > .NavImgll { order: 1; }
+.WdateDiv #dpTitle > .NavImgl { order: 2; }
+.WdateDiv #dpTitle > div:nth-child(3) { order: 3; float: none !important; position: relative; }
+.WdateDiv #dpTitle > div:nth-child(4) { order: 4; float: none !important; position: relative; }
+.WdateDiv #dpTitle > .NavImgr { order: 5; }
+.WdateDiv #dpTitle > .NavImgrr { order: 6; }
+
+.WdateDiv .NavImg {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .WdateDiv .NavImg a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
     cursor: pointer;
-    display: block;
-    width: 1em;
-    height: 1em;
-    margin-top: 0.5em;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 14px 14px;
+    transition: background-color 0.15s ease;
+    filter: var(--dp-icon-filter);
+}
+
+.WdateDiv .NavImg a:hover {
+    background-color: var(--dp-hover);
 }
 
 .WdateDiv .NavImgll a {
-    float: left;
-    background: url(img.gif) no-repeat;
-    background-size: 400%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='11 17 6 12 11 7'/%3E%3Cpolyline points='18 17 13 12 18 7'/%3E%3C/svg%3E");
 }
 
 .WdateDiv .NavImgl a {
-    float: left;
-    background: url(img.gif) no-repeat -1em 0;
-    background-size: 400%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='15 18 9 12 15 6'/%3E%3C/svg%3E");
 }
 
 .WdateDiv .NavImgr a {
-    float: right;
-    background: url(img.gif) no-repeat -2em 0;
-    background-size: 400%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'/%3E%3C/svg%3E");
 }
 
 .WdateDiv .NavImgrr a {
-    float: right;
-    background: url(img.gif) no-repeat -3em 0;
-    background-size: 400%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='13 17 18 12 13 7'/%3E%3Cpolyline points='6 17 11 12 6 7'/%3E%3C/svg%3E");
 }
 
-.WdateDiv #dpTitle {
-    height: 1.875em;
-    padding: 0.1875em 0.3125em;
-}
-
-.WdateDiv #dpTitle > div:nth-child(3),
-.WdateDiv #dpTitle > div:nth-child(4) {
-    margin: 0px 0.8125em;
-}
-
-.WdateDiv .yminput {
-    margin-top: 0.375em;
+/* Year & Month Pill Inputs */
+.WdateDiv .yminput,
+.WdateDiv .yminputfocus {
+    height: 26px;
+    width: 58px;
     text-align: center;
-    border: 0px;
-    height: 1.75em;
-    width: 3.125em;
-    color: #333;
-    background-color: #eefaff;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    background-color: var(--dp-surface);
+    color: var(--dp-text);
+    font-size: 13px;
+    font-weight: 600;
     outline: none;
     cursor: pointer;
-    font-size: 0.8125em;
-    border-radius: 0;
+    padding: 0 4px;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+    font-variant-numeric: tabular-nums;
 }
 
+.WdateDiv .yminput:hover,
 .WdateDiv .yminputfocus {
-    font-size: 0.8125em;
-    margin-top: 0.375em;
-    text-align: center;
-    border: 0;
-    color: #333;
-    height: 1.25em;
-    width: 3.125em;
-    outline: none;
-    background-color: #eefaff;
+    background-color: var(--dp-primary-soft);
+    border-color: var(--dp-primary);
+    color: var(--dp-primary-hover);
 }
 
+/* Floating Year / Month / Time Selection Menus */
 .WdateDiv .menuSel {
-    z-index: 1;
+    z-index: 20;
     position: absolute;
-    background-color: #FFFFFF;
+    background-color: var(--dp-bg);
+    border: 1px solid var(--dp-border-strong);
+    border-radius: 10px;
+    padding: 5px;
+    box-shadow: var(--dp-shadow);
     display: none;
-    padding: 0.3125em;
-    border-radius: 3px;
-    box-shadow: rgb(204, 204, 204) 0px 0px 2px 2px;
+}
+
+.WdateDiv .menuSel table {
+    border-collapse: separate;
+    border-spacing: 2px;
 }
 
 .WdateDiv .menu {
     cursor: pointer;
-    background-color: #fff;
-    color: #333;
+    background-color: var(--dp-bg);
+    color: var(--dp-text-secondary);
     text-align: center;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Quick Select Overlay ($d.qsDivSel = 2nd child of .WdateDiv) — opaque card above calendar grid */
+.WdateDiv > div:nth-child(2) {
+    background-color: var(--dp-bg) !important;
+    border: 1px solid var(--dp-border);
+    border-radius: 10px;
+    box-shadow: var(--dp-shadow);
+    z-index: 15;
+    padding: 4px 6px;
+    box-sizing: border-box;
+}
+
+.WdateDiv > div:nth-child(2) .WdayTable {
+    margin: 0;
+    border-spacing: 0 2px;
+    height: 100%;
+    background-color: var(--dp-bg);
+}
+
+.WdateDiv > div:nth-child(2) .MTitle td {
+    background-color: var(--dp-surface);
+    color: var(--dp-text);
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 5px 6px;
+    border-radius: 7px;
+    border-bottom: 1px solid var(--dp-border);
+    line-height: 1.4;
+    height: auto;
+}
+
+.WdateDiv > div:nth-child(2) td.menu,
+.WdateDiv > div:nth-child(2) td.menuOn {
+    height: auto;
+    line-height: 1.5;
+    padding: 4px 8px;
+    text-align: left !important;
+    border-radius: 6px;
 }
 
 .WdateDiv .menuOn {
     cursor: pointer;
     text-align: center;
-    background-color: #d6f2ff;
-    border-radius: 3px;
+    background-color: var(--dp-primary-soft);
+    color: var(--dp-primary-hover);
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
 }
 
 .WdateDiv .invalidMenu {
-    color: #aaa;
+    color: var(--dp-text-muted);
+    opacity: 0.5;
+    padding: 4px 8px;
 }
 
 .WdateDiv .YMenu {
-    margin-top: 1.875em;
+    top: 30px;
+    left: 0;
+    margin-top: 0;
 }
 
 .WdateDiv .MMenu {
-    margin-top: 1.875em;
-    box-shadow: rgb(204, 204, 204) 0px 0px 2px 2px;
-    padding: 0.3125em;
-    border-radius: 3px;
-    *width: 3.875em;
+    top: 30px;
+    left: 0;
+    margin-top: 0;
 }
 
 .WdateDiv .hhMenu {
-    margin-top: -5.625em;
-    margin-left: 1.625em;
+    margin-top: -110px;
+    margin-left: 26px;
 }
 
 .WdateDiv .mmMenu {
-    margin-top: -2.875em;
-    margin-left: 1.625em;
+    margin-top: -64px;
+    margin-left: 26px;
 }
 
 .WdateDiv .ssMenu {
-    margin-top: -1.5em;
-    margin-left: 1.625em;
+    margin-top: -36px;
+    margin-left: 26px;
 }
 
-.WdateDiv .Wweek {
-    text-align: center;
-    background: #DAF3F5;
-    border-right: #BDEBEE 1px solid;
-}
-
-.WdateDiv .MTitle {
-    background-color: #f3f3f3;
-    border-radius: 5px;
-    color: #666;
-}
-
+/* Calendar Table Grid */
 .WdateDiv .WdayTable2 {
     border-collapse: collapse;
+    width: 100%;
 }
 
 .WdateDiv .WdayTable2 table {
     border: 0;
+    width: 100%;
 }
 
 .WdateDiv .WdayTable {
-    font-size: 0.75em;
-    line-height: 1.5em;
-    color: #333;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 2px 3px;
+    color: var(--dp-text);
+    margin: 2px 0 4px;
+}
+
+.WdateDiv .MTitle {
+    background-color: transparent;
+    color: var(--dp-text-muted);
+}
+
+.WdateDiv .MTitle td {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 4px 0 6px;
+    border: none;
+    text-align: center;
 }
 
 .WdateDiv .WdayTable td {
     text-align: center;
-    border-bottom: 1px solid #f3f3f3;
-    padding: 0.1875em 0;
+    height: 30px;
+    line-height: 28px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+    transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.WdateDiv .Wweek {
+    text-align: center;
+    background: var(--dp-surface);
+    color: var(--dp-text-muted);
+    font-size: 11px;
+    border-radius: 6px;
 }
 
 .WdateDiv .Wday {
     cursor: pointer;
+    color: var(--dp-text);
 }
 
 .WdateDiv .WdayOn {
     cursor: pointer;
-    border-radius: 3px;
-    background-color: #C0EBEF;
+    background-color: var(--dp-primary-soft);
+    color: var(--dp-primary-hover);
+    font-weight: 600;
 }
 
 .WdateDiv .Wwday {
     cursor: pointer;
-    color: #ab1e1e;
+    color: var(--dp-weekend);
 }
 
 .WdateDiv .WwdayOn {
     cursor: pointer;
-    border-radius: 3px;
-    background-color: #C0EBEF;
+    background-color: var(--dp-primary-soft);
+    color: var(--dp-primary-hover);
+    font-weight: 600;
 }
 
 .WdateDiv .Wtoday {
     cursor: pointer;
-    color: blue;
+    color: var(--dp-primary);
+    font-weight: 700;
+    box-shadow: inset 0 0 0 1px var(--dp-primary);
 }
 
 .WdateDiv .Wselday {
-    background-color: #35baf6;
-    border-radius: 3px;
-    color: #fff;
+    background: var(--dp-gradient);
+    color: #ffffff !important;
+    font-weight: 700;
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.34);
 }
 
 .WdateDiv .WspecialDay {
-    background-color: #66F4DF;
+    background-color: var(--dp-primary-soft);
+    color: var(--dp-primary-hover);
 }
 
 .WdateDiv .WotherDay {
     cursor: pointer;
-    color: #8585e1;
+    color: var(--dp-text-muted);
+    opacity: 0.65;
 }
 
 .WdateDiv .WotherDayOn {
     cursor: pointer;
-    background-color: #d6f2ff;
-    border-radius: 3px;
+    background-color: var(--dp-hover);
+    color: var(--dp-text-secondary);
 }
 
 .WdateDiv .WinvalidDay {
-    color: #aaa;
+    color: var(--dp-text-muted);
+    opacity: 0.32;
+    cursor: not-allowed;
 }
 
+/* Time Selection Row (#dpTime) */
 .WdateDiv #dpTime {
-    margin: 0.1875em 0 0.1875em 0.625em;
+    margin: 6px 0 8px;
+    padding: 7px 8px;
+    border: 1px solid var(--dp-border);
+    background: var(--dp-surface);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .WdateDiv #dpTime #dpTimeStr {
-    margin-left: 0.0625em;
-    color: #333;
-    font-size: 0.75em;
-}
-
-.WdateDiv #dpTime table:nth-child(4) {
-    font-size: 100%;
-}
-
-.WdateDiv #dpTime table:nth-child(-n+3) {
-    font-size: 0.75em;
+    margin-right: 6px;
+    color: var(--dp-text-secondary);
+    font-size: 12px;
+    font-weight: 600;
 }
 
 .WdateDiv #dpTime input {
     -webkit-appearance: none;
-    font-size: 0.75em;
-    height: 1.25em;
-    width: 1.875em;
+    height: 24px;
+    width: 28px;
     text-align: center;
-    color: #333;
-    border: 0;
-    background-color: #eefaff;
-    border-radius: 0;
+    color: var(--dp-text);
+    border: 1px solid var(--dp-border-strong);
+    background-color: var(--dp-input-bg);
+    border-radius: 5px;
+    font-size: 12.5px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
     padding: 0;
+    outline: none;
+}
+
+.WdateDiv #dpTime input:focus {
+    border-color: var(--dp-primary);
 }
 
 .WdateDiv #dpTime input:disabled {
-    background-color: #e7e7e7;
-}
-
-.WdateDiv #dpTime .tB {
-    border-right: 0px;
-}
-
-.WdateDiv #dpTime .tE {
-    border-left: 0;
-    border-right: 0;
+    opacity: 0.5;
 }
 
 .WdateDiv #dpTime .tm {
-    width: 0.9375em;
-    border-left: 0;
-    border-right: 0;
+    width: 12px;
+    border: none;
+    background: transparent;
+    color: var(--dp-text-muted);
+    font-weight: 700;
 }
 
-/*.WdateDiv #dpTime button {
-    font-size: 0.75em;
-}*/
+.WdateDiv #dpTime #dpTimeUp,
+.WdateDiv #dpTime #dpTimeDown {
+    display: block;
+    height: 12px;
+    width: 18px;
+    margin-left: 4px;
+    border: 1px solid var(--dp-border-strong);
+    border-radius: 4px;
+    background-color: var(--dp-btn-bg);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 10px 10px;
+    cursor: pointer;
+    filter: var(--dp-icon-filter);
+}
 
 .WdateDiv #dpTime #dpTimeUp {
-    height: 0.625em;
-    width: 0.8125em;
-    border: 0px;
-    background: url(img.gif) no-repeat -2em -1em;
-    background-size: 450%;
-    overflow: hidden;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='18 15 12 9 6 15'/%3E%3C/svg%3E");
+    margin-bottom: 1px;
 }
 
 .WdateDiv #dpTime #dpTimeDown {
-    height: 0.625em;
-    width: 0.8125em;
-    border: 0px;
-    background: url(img.gif) no-repeat -2em -1.625em;
-    background-size: 450%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
 }
 
+/* Quick Select & Footer Action Buttons */
 .WdateDiv #dpQS {
     float: left;
-    margin-right: 0.1875em;
-    margin-top: 0.3125em;
-    background: url(img.gif) no-repeat 0px -1em;
-    background-size: 320%;
-    width: 1.25em;
-    height: 1.25em;
+    margin: 2px 0 0 0;
+    width: 27px;
+    height: 27px;
+    border-radius: 7px;
+    background: var(--dp-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpolyline points='12 7 12 12 15 14'/%3E%3C/svg%3E") center / 14px 14px no-repeat;
+    border: 1px solid var(--dp-border-strong);
     cursor: pointer;
-    margin-left: 0.375em;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.WdateDiv #dpQS:hover {
+    border-color: var(--dp-primary);
+    background-color: var(--dp-primary-soft);
 }
 
 .WdateDiv #dpControl {
     text-align: right;
-    margin-top: 0.1875em;
-    padding: 0 0.3125em;
-    padding-bottom: 0.1875em;
+    margin-top: 2px;
+    padding-top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
 }
 
 .WdateDiv .dpButton {
-    font-size: 0.75em;
     -webkit-appearance: none;
-    padding-top: 0;
-    height: 1.75em;
-    width: 2.8125em;
-    border: 0;
-    margin-top: 0.1875em;
-    margin-right: 0.1875em;
-    background: #35baf6;
-    color: #fff;
-    border-radius: 0;
+    height: 27px;
+    min-width: 48px;
+    padding: 0 10px;
+    border: 1px solid var(--dp-border-strong);
+    border-radius: 7px;
+    background: var(--dp-btn-bg);
+    color: var(--dp-text-secondary);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.WdateDiv .dpButton:hover {
+    border-color: var(--dp-primary);
+    color: var(--dp-primary-hover);
+    background: var(--dp-primary-soft);
+}
+
+.WdateDiv #dpOkInput {
+    background: var(--dp-gradient);
+    border-color: transparent;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.28);
+}
+
+.WdateDiv #dpOkInput:hover {
+    filter: brightness(1.06);
+    color: #ffffff;
 }

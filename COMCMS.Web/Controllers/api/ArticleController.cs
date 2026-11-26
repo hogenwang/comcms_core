@@ -1,50 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using COMCMS.Common;
 using COMCMS.Core;
-using COMCMS.Core.Models;
+using COMCMS.Web.Services;
+using Microsoft.AspNetCore.Mvc;
 using XCode;
-using System.Web;
-using NewLife.Log;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Senparc.Weixin.WxOpen;
 
 namespace COMCMS.Web.Controllers.api
 {
     public class ArticleController : APIBaseController
     {
+        private readonly HitCounterService _hitCounter;
+
+        public ArticleController(HitCounterService hitCounter)
+        {
+            _hitCounter = hitCounter;
+        }
+
         #region 获取文章列表
-        /// <summary>
-        /// 获取文章列表
-        /// </summary>
-        /// <param name="kid"></param>
-        /// <param name="pagesize"></param>
-        /// <param name="page"></param>
-        /// <returns></returns>
         [HttpGet]
         public object GetArticleList(int kid, int pagesize = 10, int page = 1)
         {
             pagesize = Math.Clamp(pagesize, 1, 100);
-            var where = Article._.IsHide != 1;
+            var where = Article._.IsHide != 1 & Article._.IsDel != 1;
             if (kid > 0)
                 where &= Article._.KId == kid;
 
             if (page <= 0) page = 1;
-            //计算分页
-            int numPerPage, currentPage, startRowIndex;
-
-            numPerPage = pagesize;
-            currentPage = page;
-            startRowIndex = (currentPage - 1) * numPerPage;
+            int numPerPage = pagesize;
+            int startRowIndex = (page - 1) * numPerPage;
 
             IList<Article> list = Article.FindAll(where, Article._.Sequence.Asc(), null, startRowIndex, numPerPage);
-            long totalCount = Article.FindCount(where, Article._.Sequence.Asc(), null, startRowIndex, numPerPage);
-            List<object> relist = new List<object>();
+            long totalCount = Article.FindCount(where, null, null, 0, 0);
+            var relist = new List<object>();
             if (list != null && list.Count > 0)
             {
                 foreach (var item in list)
@@ -67,36 +54,24 @@ namespace COMCMS.Web.Controllers.api
             reJson.message = "获取成功";
             reJson.detail = re;
             return reJson;
-
         }
         #endregion
 
-        #region 获取文章列表
-        /// <summary>
-        /// 获取文章列表
-        /// </summary>
-        /// <param name="kid"></param>
-        /// <param name="pagesize"></param>
-        /// <param name="page"></param>
-        /// <returns></returns>
+        #region 获取文章列表（含子栏目）
         [HttpGet]
         public object GetArticleListWidthSub(int kid, int pagesize = 10, int page = 1, string key = "")
         {
             pagesize = Math.Clamp(pagesize, 1, 100);
 
-            var where = Article._.IsHide != 1;
+            var where = Article._.IsHide != 1 & Article._.IsDel != 1;
             if (kid > 0)
             {
-                //获取下属
-                List<int> kids = new List<int>();
-                kids.Add(kid);
+                var kids = new List<int> { kid };
                 IList<ArticleCategory> subkinds = ArticleCategory.FindByParentID(kid);
                 if (subkinds != null && subkinds.Count > 0)
                 {
                     foreach (var item in subkinds)
-                    {
                         kids.Add(item.Id);
-                    }
                 }
                 where &= Article._.KId.In(kids);
             }
@@ -105,16 +80,12 @@ namespace COMCMS.Web.Controllers.api
                 where &= Article._.Title.Contains(key);
             }
             if (page <= 0) page = 1;
-            //计算分页
-            int numPerPage, currentPage, startRowIndex;
-
-            numPerPage = pagesize;
-            currentPage = page;
-            startRowIndex = (currentPage - 1) * numPerPage;
+            int numPerPage = pagesize;
+            int startRowIndex = (page - 1) * numPerPage;
 
             IList<Article> list = Article.FindAll(where, Article._.Sequence.Asc(), null, startRowIndex, numPerPage);
-            long totalCount = Article.FindCount(where, Article._.Sequence.Asc(), null, startRowIndex, numPerPage);
-            List<object> relist = new List<object>();
+            long totalCount = Article.FindCount(where, null, null, 0, 0);
+            var relist = new List<object>();
             if (list != null && list.Count > 0)
             {
                 foreach (var item in list)
@@ -137,33 +108,31 @@ namespace COMCMS.Web.Controllers.api
             reJson.message = "获取成功";
             reJson.detail = re;
             return reJson;
-
         }
         #endregion
 
         #region 获取文章详情
-        /// <summary>
-        /// 获取文章详情
-        /// </summary>
-        /// <param name="id">文章id</param>
-        /// <param name="random"></param>
-        /// <param name="timeStamp"></param>
-        /// <param name="signature"></param>
-        /// <returns></returns>
         [HttpGet]
         public object GetArticleDetail(int id)
         {
-            //获取商品
             Article entity = Article.FindById(id);
-            if (entity == null || entity.IsHide == 1)
+            if (entity == null || entity.IsHide == 1 || entity.IsDel == 1)
             {
                 reJson.code = 40000;
                 reJson.message = "系统找不到本记录";
                 return reJson;
             }
-            entity.Hits++;
-            entity.Update();
-            return new
+            ArticleCategory category = ArticleCategory.FindById(entity.KId);
+            if (category == null || category.IsHide == 1 || !string.IsNullOrWhiteSpace(category.AllowIp))
+            {
+                reJson.code = 40000;
+                reJson.message = "系统找不到本记录";
+                return reJson;
+            }
+            _hitCounter.IncrementArticleHit(entity.Id);
+            reJson.code = 0;
+            reJson.message = "获取成功";
+            reJson.detail = new
             {
                 id = entity.Id,
                 categoryId = entity.KId,
@@ -180,6 +149,7 @@ namespace COMCMS.Web.Controllers.api
                 hits = entity.Hits,
                 addTime = entity.AddTime
             };
+            return reJson;
         }
         #endregion
 
@@ -188,16 +158,18 @@ namespace COMCMS.Web.Controllers.api
         public object GetArticleCategory(int id)
         {
             ArticleCategory entity = ArticleCategory.FindById(id);
-            if (entity == null)
+            if (entity == null || entity.IsHide == 1 || !string.IsNullOrWhiteSpace(entity.AllowIp))
             {
+                reJson.code = 40000;
                 reJson.message = "系统找不到本记录";
                 return reJson;
             }
 
-            //获取下属栏目
-            IList<ArticleCategory> listsub = ArticleCategory.FindAll(ArticleCategory._.PId == entity.Id & ArticleCategory._.IsHide == 0, ArticleCategory._.Rank.Asc(), null, 0, 0);
+            IList<ArticleCategory> listsub = ArticleCategory.FindAll(
+                ArticleCategory._.PId == entity.Id & ArticleCategory._.IsHide == 0,
+                ArticleCategory._.Rank.Asc(), null, 0, 0);
 
-            List<object> reListSubs = new List<object>();
+            var reListSubs = new List<object>();
             if (listsub != null && listsub.Count > 0)
             {
                 foreach (var item in listsub)

@@ -106,7 +106,7 @@ INSERT INTO `AdminMenu` VALUES (35, 'wxkeywordreply', '关键字回复', NULL, N
 INSERT INTO `AdminMenu` VALUES (36, 'clickreplyrule', '点击事件自动回复', NULL, NULL, 'Weixin/ClickReplyRule', 32, 1, '0,32,', 0, 0, NULL, NULL);
 INSERT INTO `AdminMenu` VALUES (37, 'robots', 'Robots文档设置', NULL, NULL, 'System/Robots', 2, 1, '0,2,', 0, 3, NULL, NULL);
 INSERT INTO `AdminMenu` VALUES (38, 'admincplog', '后台管理日志', NULL, NULL, 'Member/AdminCPLogList', 18, 1, '0,18,', 0, 10, NULL, NULL);
-INSERT INTO `AdminMenu` VALUES (39, 'attach', '附件管理', NULL, NULL, 'Attach/AttachList', 2, 1, '0,2,', 0, 99, NULL, NULL);
+INSERT INTO `AdminMenu` VALUES (39, 'attach', '附件管理', NULL, NULL, 'Attach/Index', 2, 1, '0,2,', 0, 99, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for adminmenuevent

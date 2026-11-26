@@ -1,19 +1,54 @@
 ﻿@{
     ViewBag.title = "网站地图";
     ViewBag.keywords = "网站地图";
-    ViewBag.description = "网站地图";
+    ViewBag.description = "全站栏目与内容导航索引";
+    IList<ArticleCategory> articleCats = ArticleCategory.GetListTree(0, -1, false, false);
+    IList<Category> productCats = Category.FindAll(Category._.IsHide == 0, Category._.Rank.Asc(), null, 0, 0);
 }
-    <div class="banner mobile sec-banner">
-       <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
+
+<section class="tech-page-hero" style="background-image: url('/images/tech/inner-banner.svg');">
+    <div class="tech-container tech-page-hero-inner">
+        <div class="tech-breadcrumb">
+            <a href="/"><i class="fa fa-home"></i> 首页</a>
+            <span>/</span>
+            <span>网站地图</span>
+        </div>
+        <h1>网站地图</h1>
+        <p>快速浏览全站文章栏目、产品分类与服务入口</p>
     </div>
-    <div class="banner normal sec-banner">
-       <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    </div>
-    <div class="content au">
-        <div class="au-bg">
-            <div class="cont">
-                @* 请自行将网站栏目显示于此 *@
-                网站地图。
+</section>
+
+<section class="tech-section tech-section-alt">
+    <div class="tech-container">
+        <div class="tech-prose-card">
+            <div style="margin-bottom:36px;">
+                <span class="tech-eyebrow"><i class="fa fa-cubes"></i> Product Categories</span>
+                <h2 style="margin:0 0 18px;font-size:22px;font-weight:800;">产品中心栏目</h2>
+                <div class="tech-tag-cloud">
+                    @foreach (var c in productCats)
+                    {
+                        <a href="@ViewsHelper.EchoURL(c)" class="tech-tag-pill">
+                            <i class="fa fa-angle-right" style="color:var(--tech-primary);"></i> @c.KindName
+                        </a>
+                    }
+                </div>
+            </div>
+
+            <div>
+                <span class="tech-eyebrow"><i class="fa fa-sitemap"></i> Content Channels</span>
+                <h2 style="margin:0 0 18px;font-size:22px;font-weight:800;">文章与资讯栏目</h2>
+                <div class="tech-tag-cloud">
+                    @foreach (var ac in articleCats)
+                    {
+                        if (ac.IsHide == 0)
+                        {
+                            <a href="@ViewsHelper.EchoURL(ac)" class="tech-tag-pill">
+                                <i class="fa fa-folder-open-o" style="color:var(--tech-cyan);"></i> @ac.KindName
+                            </a>
+                        }
+                    }
+                </div>
             </div>
         </div>
     </div>
+</section>

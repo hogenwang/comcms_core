@@ -3,98 +3,100 @@
     ViewBag.title = Model.KindName;
     ViewBag.keywords = Model.Keyword;
     ViewBag.description = Model.Description;
-    //获取同级分类
-    IList<Category> sameList = Category.FindAll(Category._.PId == 0, Category._.Rank.Asc(), null, 0, 0);
-
+    IList<Category> sameList = Category.FindAll(Category._.PId == 0 & Category._.IsHide == 0, Category._.Rank.Asc(), null, 0, 0);
+    string bannerBg = string.IsNullOrWhiteSpace(Model.BannerImg) ? "/images/tech/inner-banner.svg" : Model.BannerImg;
+    IList<Product> list = ViewBag.list as IList<Product>;
 }
 
-<div class="banner normal sec-banner">
-    @if (string.IsNullOrEmpty(Model.BannerImg))
-    {
-        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    }
-    else
-    {
-        <em style="background: url('@Model.BannerImg') center top no-repeat; background-size: 100%;"></em>
-    }
-</div>
-<div class="banner mobile sec-banner">
-    @if (string.IsNullOrEmpty(Model.BannerImg))
-    {
-        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    }
-    else
-    {
-        <em style="background: url('@Model.BannerImg') center top no-repeat; background-size: 100%;"></em>
-    }
-</div>
-    <div class="sec-nav">
-        <div class="cont">
-            <ul class="sec-nav-list">
+<section class="tech-page-hero" style="background-image: url('@bannerBg');">
+    <div class="tech-container tech-page-hero-inner">
+        <div class="tech-breadcrumb">
+            <a href="/"><i class="fa fa-home"></i> 首页</a>
+            <span>/</span>
+            <span>产品中心</span>
+            <span>/</span>
+            <span>@Model.KindName</span>
+        </div>
+        <h1>@Model.KindName</h1>
+        @if (!string.IsNullOrWhiteSpace(Model.KindInfo))
+        {
+            <p>@Utils.NoHTML(Model.KindInfo)</p>
+        }
+        else if (!string.IsNullOrWhiteSpace(Model.Description))
+        {
+            <p>@Model.Description</p>
+        }
+        else
+        {
+            <p>探索面向企业级场景构建的模块化软件产品与行业数字化解决方案</p>
+        }
+    </div>
+</section>
+
+@if (sameList != null && sameList.Count > 0)
+{
+    <div class="tech-subnav-bar">
+        <div class="tech-container">
+            <ul class="tech-subnav-list">
                 @foreach (var k in sameList)
                 {
-                    <li class="@(k.Id == Model.Id?"sec-on":"")"><a href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a></li>
+                    <li class="@(k.Id == Model.Id ? "sec-on" : "")">
+                        <a href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a>
+                    </li>
                 }
             </ul>
-
-            <script type="text/javascript">
-                function mbSecNav() {
-                    var num = $('.sec-nav-list li').length;
-                    if (num >= 3) {
-                        $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
-                    } else if (num == 2) {
-                        $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
-                    } else if (num == 1) {
-                        $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
-                    }
-                }
-            </script>
         </div>
     </div>
-<!-- 主体内容 -->
-<div class="content proC">
-    <div class="pro-bg">
-        <div class="cont">
-            <!-- 产品列表 -->
-            <div class="pro-cont">
-                <ul class="pro-list" id="listComment">
-                    @foreach (Product p in ViewBag.list)
+}
+
+<section class="tech-section tech-section-alt">
+    <div class="tech-container">
+        @if (list != null && list.Count > 0)
+        {
+            <div class="tech-product-grid" id="listComment">
+                @foreach (Product p in list)
+                {
+                    string prodImg = string.IsNullOrWhiteSpace(p.Pic) ? "/images/tech/placeholder-tech.svg" : p.Pic;
+                    string prodSummary = !string.IsNullOrWhiteSpace(p.Description)
+                        ? p.Description
+                        : Utils.CutString(Utils.NoHTML(p.Content ?? ""), 88);
+                    if (string.IsNullOrWhiteSpace(prodSummary))
                     {
-                        <li>
-                            <a href="@ViewsHelper.EchoURL(p)" title="@p.Title">
-                                <div class="pro-pic">
-                                    <div class="pic-box">
-                                        <img src="@p.Pic" alt="@p.Title">
-                                    </div>
-                                </div>
-                                <div class="pro-text">
-                                    <div class="text-box">
-                                        <span>@p.Title</span>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
+                        prodSummary = "企业级软件解决方案，支持快速部署与深度二次开发扩展。";
                     }
-                </ul>
+                    <article class="tech-product-card">
+                        <a href="@ViewsHelper.EchoURL(p)" title="@p.Title" class="tech-product-thumb">
+                            <img src="@prodImg" alt="@p.Title" onerror="this.onerror=null;this.src='/images/tech/placeholder-tech.svg';" />
+                        </a>
+                        <div class="tech-product-body">
+                            <h3 class="tech-product-title">
+                                <a href="@ViewsHelper.EchoURL(p)" title="@p.Title">@p.Title</a>
+                            </h3>
+                            <p class="tech-product-desc">@prodSummary</p>
+                            <a href="@ViewsHelper.EchoURL(p)" class="tech-card-link">
+                                查看方案详情 <i class="fa fa-long-arrow-right"></i>
+                            </a>
+                        </div>
+                    </article>
+                }
             </div>
+        }
+        else
+        {
+            <div class="tech-prose-card" style="text-align:center;color:var(--tech-text-muted);">
+                <i class="fa fa-cubes" style="font-size:36px;color:#cbd5e1;margin-bottom:12px;"></i>
+                <p style="margin:0;">当前分类暂无产品记录</p>
+            </div>
+        }
 
-            <!-- 分页按钮 -->
-            <div class="normal">
-                @Html.Raw(Pages.GetPageStr(ViewBag.pagesize, (int)ViewBag.totalCount, ViewBag.page, $"/Product/Index/{Model.Id}" + "?page={0}", 99, 10, ""))
-            </div>
-            <!-- 点击加载更多 -->
-            <div class="click-more mobile" onclick="ShowNextPro();">
-                <i></i>
-            </div>
-            <input type="hidden" name="page" value="1" id="page" />
-            <input type="hidden" name="id" value="1" id="id" />
+        <div class="tech-pagination">
+            @Html.Raw(Pages.GetPageStr(ViewBag.pagesize, (int)ViewBag.totalCount, ViewBag.page, $"/Product/Index/{Model.Id}" + "?page={0}", 99, 10, ""))
         </div>
     </div>
-</div>
-
+</section>
 
 <script>
     $(function () {
         $("#nav_P").addClass("nav-on");
-    })
+    });
 </script>

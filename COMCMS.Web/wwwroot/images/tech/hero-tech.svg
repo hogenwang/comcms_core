@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900">
+  <defs>
+    <radialGradient id="bgGlow1" cx="72%" cy="38%" r="58%">
+      <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.34"/>
+      <stop offset="45%" stop-color="#0f766e" stop-opacity="0.16"/>
+      <stop offset="100%" stop-color="#060c1a" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="bgGlow2" cx="25%" cy="72%" r="48%">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.24"/>
+      <stop offset="55%" stop-color="#0284c7" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#060c1a" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="baseBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050a16"/>
+      <stop offset="52%" stop-color="#091326"/>
+      <stop offset="100%" stop-color="#071a26"/>
+    </linearGradient>
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="glassCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.72"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.45"/>
+    </linearGradient>
+    <linearGradient id="isoTop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.42"/>
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.18"/>
+    </linearGradient>
+    <linearGradient id="isoLeft" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.34"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.12"/>
+    </linearGradient>
+    <linearGradient id="isoRight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#059669" stop-opacity="0.30"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.10"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse">
+      <path d="M 60 0 L 0 0 0 60" fill="none" stroke="#38bdf8" stroke-opacity="0.065" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="900" fill="url(#baseBg)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect width="1600" height="900" fill="url(#bgGlow1)"/>
+  <rect width="1600" height="900" fill="url(#bgGlow2)"/>
+
+  <!-- Subtle perspective horizon arcs -->
+  <g fill="none" stroke="url(#cyanGrad)" stroke-opacity="0.14">
+    <ellipse cx="1080" cy="450" rx="520" ry="175" stroke-width="1.2"/>
+    <ellipse cx="1080" cy="450" rx="400" ry="132" stroke-width="1" stroke-dasharray="6 8"/>
+    <ellipse cx="1080" cy="450" rx="285" ry="92" stroke-width="1.2"/>
+  </g>
+
+  <!-- Flowing data stream curves -->
+  <g fill="none" stroke-linecap="round">
+    <path d="M 80 680 C 380 560, 620 710, 920 490 S 1350 260, 1580 310" stroke="url(#cyanGrad)" stroke-opacity="0.28" stroke-width="2"/>
+    <path d="M 120 760 C 440 620, 690 760, 1020 530 S 1380 330, 1590 390" stroke="#38bdf8" stroke-opacity="0.16" stroke-width="1.5"/>
+    <path d="M 0 320 C 300 220, 560 390, 860 310 S 1260 150, 1600 180" stroke="#10b981" stroke-opacity="0.18" stroke-width="1.5" stroke-dasharray="4 7"/>
+  </g>
+
+  <!-- Central isometric cloud-platform core (right-center composition) -->
+  <g transform="translate(1080, 440)">
+    <!-- Base glass platform -->
+    <polygon points="0,-130 220,-20 0,90 -220,-20" fill="url(#glassCard)" stroke="#38bdf8" stroke-opacity="0.35" stroke-width="1.5"/>
+    <polygon points="-220,-20 0,90 0,114 -220,4" fill="#0f172a" fill-opacity="0.7" stroke="#38bdf8" stroke-opacity="0.2"/>
+    <polygon points="220,-20 0,90 0,114 220,4" fill="#091326" fill-opacity="0.75" stroke="#10b981" stroke-opacity="0.2"/>
+
+    <!-- Mid luminous circuit slab -->
+    <polygon points="0,-168 175,-80 0,8 -175,-80" fill="url(#isoTop)" stroke="url(#cyanGrad)" stroke-opacity="0.65" stroke-width="1.5"/>
+    <polygon points="-175,-80 0,8 0,24 -175,-64" fill="url(#isoLeft)"/>
+    <polygon points="175,-80 0,8 0,24 175,-64" fill="url(#isoRight)"/>
+
+    <!-- Floating top core cube -->
+    <g transform="translate(0, -110)" filter="url(#glow)">
+      <polygon points="0,-78 86,-35 0,8 -86,-35" fill="url(#cyanGrad)" fill-opacity="0.82" stroke="#e0f2fe" stroke-opacity="0.8" stroke-width="1.2"/>
+      <polygon points="-86,-35 0,8 0,68 -86,25" fill="#0284c7" fill-opacity="0.68" stroke="#7dd3fc" stroke-opacity="0.45"/>
+      <polygon points="86,-35 0,8 0,68 86,25" fill="#059669" fill-opacity="0.62" stroke="#6ee7b7" stroke-opacity="0.45"/>
+      <!-- Inner diamond pulse -->
+      <polygon points="0,-54 44,-32 0,-10 -44,-32" fill="#ffffff" fill-opacity="0.24"/>
+    </g>
+
+    <!-- Satellite service modules -->
+    <g transform="translate(-250, -110)">
+      <polygon points="0,-32 54,-5 0,22 -54,-5" fill="url(#glassCard)" stroke="#38bdf8" stroke-opacity="0.65" stroke-width="1.2"/>
+      <polygon points="-54,-5 0,22 0,40 -54,13" fill="#0369a1" fill-opacity="0.42"/>
+      <polygon points="54,-5 0,22 0,40 54,13" fill="#0f766e" fill-opacity="0.42"/>
+      <line x1="54" y1="8" x2="155" y2="55" stroke="#38bdf8" stroke-opacity="0.45" stroke-width="1.4" stroke-dasharray="4 4"/>
+    </g>
+
+    <g transform="translate(248, -95)">
+      <polygon points="0,-30 50,-5 0,20 -50,-5" fill="url(#glassCard)" stroke="#10b981" stroke-opacity="0.7" stroke-width="1.2"/>
+      <polygon points="-50,-5 0,20 0,38 -50,13" fill="#0284c7" fill-opacity="0.38"/>
+      <polygon points="50,-5 0,20 0,38 50,13" fill="#059669" fill-opacity="0.46"/>
+      <line x1="-50" y1="6" x2="-142" y2="48" stroke="#10b981" stroke-opacity="0.45" stroke-width="1.4" stroke-dasharray="4 4"/>
+    </g>
+
+    <g transform="translate(-210, 125)">
+      <polygon points="0,-28 48,-4 0,20 -48,-4" fill="url(#glassCard)" stroke="#38bdf8" stroke-opacity="0.55" stroke-width="1.2"/>
+      <line x1="40" y1="-10" x2="115" y2="-48" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1.3"/>
+    </g>
+
+    <g transform="translate(220, 128)">
+      <polygon points="0,-28 48,-4 0,20 -48,-4" fill="url(#glassCard)" stroke="#10b981" stroke-opacity="0.55" stroke-width="1.2"/>
+      <line x1="-40" y1="-10" x2="-115" y2="-48" stroke="#10b981" stroke-opacity="0.4" stroke-width="1.3"/>
+    </g>
+  </g>
+
+  <!-- Glowing telemetry nodes -->
+  <g filter="url(#glow)">
+    <circle cx="830" cy="330" r="5" fill="#38bdf8"/>
+    <circle cx="1328" cy="345" r="5" fill="#10b981"/>
+    <circle cx="870" cy="565" r="4.5" fill="#38bdf8"/>
+    <circle cx="1300" cy="568" r="4.5" fill="#10b981"/>
+    <circle cx="1080" cy="252" r="6" fill="#e0f2fe"/>
+    <circle cx="490" cy="612" r="3.5" fill="#38bdf8" opacity="0.7"/>
+    <circle cx="310" cy="276" r="3.5" fill="#10b981" opacity="0.65"/>
+  </g>
+
+  <!-- Floating ambient micro-dots -->
+  <g fill="#7dd3fc" opacity="0.45">
+    <circle cx="160" cy="180" r="2"/>
+    <circle cx="420" cy="140" r="2.5"/>
+    <circle cx="670" cy="210" r="2"/>
+    <circle cx="930" cy="120" r="2.2"/>
+    <circle cx="1440" cy="150" r="2.5"/>
+    <circle cx="1490" cy="660" r="2"/>
+    <circle cx="240" cy="790" r="2.5"/>
+    <circle cx="640" cy="760" r="2"/>
+  </g>
+</svg>

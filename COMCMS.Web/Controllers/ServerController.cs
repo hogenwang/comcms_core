@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using COMCMS.Common;
 using COMCMS.Core;
-using COMCMS.Core.Models;
 using COMCMS.Web.Common;
-using XCode;
 
 namespace COMCMS.Web.Controllers
 {
@@ -19,32 +15,37 @@ namespace COMCMS.Web.Controllers
         #region 提交前台底部留言
         [HttpPost]
         [AutoValidateAntiforgeryToken]
-        public IActionResult DoPostMessage(string name,string phone,string content)
+        [EnableRateLimiting("guestbook")]
+        public IActionResult DoPostMessage(string name, string phone, string content)
         {
-            if (string.IsNullOrWhiteSpace(name))
+            var cleanName = Utils.NoHTML(name ?? string.Empty).Trim();
+            var cleanPhone = (phone ?? string.Empty).Trim();
+            var cleanContent = Utils.NoHTML(content ?? string.Empty).Trim();
+
+            if (string.IsNullOrWhiteSpace(cleanName) || cleanName.Length > 50)
             {
-                tip.Message = "请填写您的姓名！";
+                tip.Message = "请填写有效的姓名（不超过50字）！";
                 return Json(tip);
             }
-            if (!Utils.IsTel(phone))
+            if (!Utils.IsTel(cleanPhone))
             {
                 tip.Message = "请填写正确的手机号码！";
                 return Json(tip);
             }
-            if (string.IsNullOrWhiteSpace(content))
+            if (string.IsNullOrWhiteSpace(cleanContent) || cleanContent.Length > 2000)
             {
-                tip.Message = "请填写您的留言内容！";
+                tip.Message = "请填写有效的留言内容（不超过2000字）！";
                 return Json(tip);
             }
 
-            Guestbook entity = new Guestbook()
+            Guestbook entity = new Guestbook
             {
                 AddTime = DateTime.Now,
                 IP = Utils.GetIP(),
                 KId = 1,
-                Nickname = name,
-                Content = Utils.NoHTML(content),
-                Tel = phone
+                Nickname = cleanName,
+                Content = cleanContent,
+                Tel = cleanPhone
             };
             entity.Insert();
 

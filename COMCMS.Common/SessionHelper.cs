@@ -47,7 +47,25 @@ namespace COMCMS.Common
         /// <param name="value">值</param>
         public static void WriteSession(string strName, object value)
         {
+            if (MyHttpContext.Current?.Session == null) return;
+            if (value == null)
+            {
+                MyHttpContext.Current.Session.Remove(strName);
+                return;
+            }
             MyHttpContext.Current.Session.Set(strName, ByteConvertHelper.Object2Bytes(value));
+        }
+
+        public static void RemoveSession(string strName)
+        {
+            try
+            {
+                MyHttpContext.Current?.Session?.Remove(strName);
+            }
+            catch (Exception ex)
+            {
+                XTrace.WriteLine($"移除Session出错：{ex.Message}");
+            }
         }
         #endregion
 

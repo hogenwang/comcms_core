@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 500" width="1920" height="500">
+  <defs>
+    <linearGradient id="bannerBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050b18"/>
+      <stop offset="50%" stop-color="#0b1830"/>
+      <stop offset="100%" stop-color="#07222d"/>
+    </linearGradient>
+    <radialGradient id="bannerGlow" cx="76%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.32"/>
+      <stop offset="55%" stop-color="#10b981" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#050b18" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="waveStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.05"/>
+      <stop offset="45%" stop-color="#38bdf8" stop-opacity="0.55"/>
+      <stop offset="78%" stop-color="#10b981" stop-opacity="0.58"/>
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.06"/>
+    </linearGradient>
+    <pattern id="bannerGrid" width="52" height="52" patternUnits="userSpaceOnUse">
+      <path d="M 52 0 L 0 0 0 52" fill="none" stroke="#38bdf8" stroke-opacity="0.07" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1920" height="500" fill="url(#bannerBg)"/>
+  <rect width="1920" height="500" fill="url(#bannerGrid)"/>
+  <rect width="1920" height="500" fill="url(#bannerGlow)"/>
+
+  <!-- Sweeping digital waves -->
+  <g fill="none">
+    <path d="M 0 360 C 380 250, 720 430, 1140 280 S 1620 140, 1920 240" stroke="url(#waveStroke)" stroke-width="2.2"/>
+    <path d="M 0 410 C 420 310, 780 460, 1220 310 S 1680 190, 1920 290" stroke="url(#waveStroke)" stroke-width="1.5" opacity="0.72"/>
+    <path d="M 0 300 C 340 210, 680 360, 1080 230 S 1580 100, 1920 190" stroke="#38bdf8" stroke-opacity="0.16" stroke-width="1.2" stroke-dasharray="6 8"/>
+  </g>
+
+  <!-- Right-side geometric accent nodes -->
+  <g transform="translate(1480, 235)" opacity="0.72">
+    <polygon points="0,-95 160,-15 0,65 -160,-15" fill="#0f172a" fill-opacity="0.45" stroke="#38bdf8" stroke-opacity="0.4" stroke-width="1.4"/>
+    <polygon points="0,-60 105,-8 0,44 -105,-8" fill="#10b981" fill-opacity="0.12" stroke="#10b981" stroke-opacity="0.55" stroke-width="1.4"/>
+    <circle cx="0" cy="-8" r="7" fill="#38bdf8"/>
+    <circle cx="-160" cy="-15" r="4" fill="#38bdf8"/>
+    <circle cx="160" cy="-15" r="4" fill="#10b981"/>
+  </g>
+</svg>

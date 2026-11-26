@@ -27,6 +27,7 @@ namespace COMCMS.Web.Models
         public long MaxUploadBytes { get; set; } = 52_428_800;
         public string LegacyPasswordMigrationEndsUtc { get; set; }
         public string PrivateUploadRoot { get; set; }
+        public string PublicBaseUrl { get; set; }
         public string[] KnownProxies { get; set; } = System.Array.Empty<string>();
         public bool EnforceContentSecurityPolicy { get; set; } = true;
     }

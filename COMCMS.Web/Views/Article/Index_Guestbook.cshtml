@@ -3,87 +3,88 @@
     ViewBag.title = Model.KindName;
     ViewBag.keywords = Model.Keyword;
     ViewBag.description = Model.Description;
-    //获取同级分类
-    IList<ArticleCategory> sameList = ArticleCategory.FindAll(ArticleCategory._.PId == Model.PId, ArticleCategory._.Rank.Asc(), null, 0, 0);
+    IList<ArticleCategory> sameList = ArticleCategory.FindAll(ArticleCategory._.PId == Model.PId & ArticleCategory._.IsHide == 0, ArticleCategory._.Rank.Asc(), null, 0, 0);
     int topkid = Model.PId > 0 ? Model.PId : Model.Id;
+    string bannerBg = string.IsNullOrWhiteSpace(Model.BannerImg) ? "/images/tech/inner-banner.svg" : Model.BannerImg;
 }
 
-<div class="banner normal sec-banner">
-    @if (string.IsNullOrEmpty(Model.BannerImg))
-    {
-        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    }
-    else
-    {
-        <em style="background: url('@Model.BannerImg') center top no-repeat; background-size: 100%;"></em>
-    }
-</div>
-<div class="banner mobile sec-banner">
-    @if (string.IsNullOrEmpty(Model.BannerImg))
-    {
-        <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-    }
-    else
-    {
-        <em style="background: url('@Model.BannerImg') center top no-repeat; background-size: 100%;"></em>
-    }
-</div>
-@if (Model.PId > 0)
+<section class="tech-page-hero" style="background-image: url('@bannerBg');">
+    <div class="tech-container tech-page-hero-inner">
+        <div class="tech-breadcrumb">
+            <a href="/"><i class="fa fa-home"></i> 首页</a>
+            <span>/</span>
+            <span>@Model.KindName</span>
+        </div>
+        <h1>@Model.KindName</h1>
+        <p>请填写您的需求信息，我们将在第一时间安排专人与您对接</p>
+    </div>
+</section>
+
+@if (Model.PId > 0 && sameList != null && sameList.Count > 0)
 {
-    <div class="sec-nav">
-        <div class="cont">
-            <ul class="sec-nav-list">
+    <div class="tech-subnav-bar">
+        <div class="tech-container">
+            <ul class="tech-subnav-list">
                 @foreach (var k in sameList)
                 {
-                    <li class="@(k.Id == Model.Id?"sec-on":"")"><a  href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a></li>
+                    <li class="@(k.Id == Model.Id ? "sec-on" : "")">
+                        <a href="@ViewsHelper.EchoURL(k)" title="@k.KindName">@k.KindName</a>
+                    </li>
                 }
             </ul>
-
-            <script type="text/javascript">
-                function mbSecNav() {
-                    var num = $('.sec-nav-list li').length;
-                    if (num >= 3) {
-                        $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
-                    } else if (num == 2) {
-                        $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
-                    } else if (num == 1) {
-                        $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
-                    }
-                }
-            </script>
         </div>
     </div>
 }
 
-
-<!-- 主体内容 -->
-<div class="content msg au">
-    <div class="cu-bg">
-        <div class="cont">
-            <div class="msg-box">
-                <div class="msg-title">
-                    <span>在线留言</span>
-                </div>
-                <form class="msg-form" id="msgForm" onsubmit="return doPostMessage();" asp-antiforgery="true">
-                    <p><label class="normal">姓       名：</label><input type="text" name="name_txt" id="name_txt" value="" placeholder="姓       名："></p>
-                    <p><label class="normal">联系电话：</label><input type="text" name="tel_txt" id="tel_txt" value="" placeholder="联系电话："></p>
-                    <p class="msg-ta"><label class="normal">留言内容：</label><textarea name="content_txt" id="content_txt" rows="8" cols="80" placeholder="留言内容："></textarea></p>
-                    <p><label class="normal">验证码：</label><input type="text" name="tel_code" id="tel_code" value="" placeholder="验证码" style="width:240px">
-                        <img src="/VerifyCode/MixVerifyCode" alt="验证码" style="cursor:pointer" onclick="getNewCode()" id="codeimg" />
-                    </p>
-                    <p><button type="submit">提交留言</button></p>
-                </form>
+<section class="tech-section tech-section-alt">
+    <div class="tech-container">
+        <div class="tech-form-card">
+            <div style="text-align:center;margin-bottom:28px;">
+                <span class="tech-eyebrow"><i class="fa fa-envelope-open-o"></i> Online Message</span>
+                <h2 style="margin:0 0 8px;font-size:26px;font-weight:800;">在线留言咨询</h2>
+                <p style="margin:0;color:var(--tech-text-muted);font-size:14px;">提交您的联系方式与业务需求，获取定制化技术方案</p>
             </div>
+
+            <form id="msgForm" onsubmit="return doPostMessage();" asp-antiforgery="true">
+                <div class="tech-form-grid">
+                    <div class="tech-field">
+                        <label for="name_txt">您的姓名 *</label>
+                        <input type="text" name="name_txt" id="name_txt" class="tech-input" placeholder="请输入您的姓名" required />
+                    </div>
+                    <div class="tech-field">
+                        <label for="tel_txt">联系电话 *</label>
+                        <input type="text" name="tel_txt" id="tel_txt" class="tech-input" placeholder="请输入手机或座机号码" required />
+                    </div>
+                </div>
+
+                <div class="tech-field">
+                    <label for="content_txt">留言内容 *</label>
+                    <textarea name="content_txt" id="content_txt" rows="5" class="tech-textarea" placeholder="请详细描述您的项目需求、合作意向或问题反馈..." required></textarea>
+                </div>
+
+                <div class="tech-field">
+                    <label for="tel_code">安全验证码</label>
+                    <div class="tech-captcha-row">
+                        <input type="text" name="tel_code" id="tel_code" class="tech-input" placeholder="请输入右侧验证码" style="max-width:220px;" />
+                        <img src="/VerifyCode/MixVerifyCode" alt="验证码" title="点击刷新验证码" class="tech-captcha-img" onclick="getNewCode()" id="codeimg" />
+                    </div>
+                </div>
+
+                <div style="margin-top:24px;text-align:center;">
+                    <button type="submit" class="tech-btn tech-btn-primary" style="min-width:200px;">
+                        <i class="fa fa-paper-plane-o"></i> 提交留言
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-</div>
-
+</section>
 
 <script>
-    function getNewCode(){
-        $("#codeimg").attr("src", '/VerifyCode/MixVerifyCode?rnd='+Math.random())
+    function getNewCode() {
+        $("#codeimg").attr("src", '/VerifyCode/MixVerifyCode?rnd=' + Math.random());
     }
     $(function () {
         $("#nav_@(topkid)").addClass("nav-on");
-    })
+    });
 </script>

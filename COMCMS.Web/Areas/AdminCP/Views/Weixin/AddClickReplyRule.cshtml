@@ -150,15 +150,15 @@
             var newHtmlTr = htmlText.replace(/\{0\}/g, items);
             $('#SildeImgs').append(newHtmlTr);
             items += 1;
-            $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
+            $(".upload-img").comcmsUploader({ filesize: 10240, sendurl: "/AdminCP/Upload/UploadImage", filetypes: "gif,jpg,png,bmp,jpeg,webp", btntext: "上传图片", notwater: true });
         }
         function delmySlideRow(id) {
             $("#slideTR_" + id).remove();
         }
         $(function () {
             //初始化上传控件
-            $(".upload-img").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderImage", swf: "/js/webuploader/uploader.swf", filetypes: "gif,jpg,png,bmp,jpeg", notwater: true });
-            $(".upload-mp3").InitUploader({ filesize: "10240", sendurl: "/AdminCP/Upload/DoWebuploaderFile", swf: "/js/webuploader/uploader.swf", filetypes: "mp3", notwater: true });
+            $(".upload-img").comcmsUploader({ filesize: 10240, sendurl: "/AdminCP/Upload/UploadImage", filetypes: "gif,jpg,png,bmp,jpeg,webp", btntext: "上传图片", notwater: true });
+            $(".upload-mp3").comcmsUploader({ filesize: 10240, sendurl: "/AdminCP/Upload/UploadFile", filetypes: "mp3", btntext: "上传音频", icon: "fa-music", notwater: true });
             $('.i-checks').iCheck({
                 checkboxClass: 'icheckbox_square-green',
                 radioClass: 'iradio_square-green',

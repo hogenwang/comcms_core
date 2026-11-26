@@ -1,0 +1,1760 @@
+@{
+    ViewBag.title = "附件管理";
+    var folderJson = ViewBag.folderJson as string ?? "[]";
+    var fieldId = ViewBag.fieldId as string ?? "";
+    var mode = ViewBag.mode as string ?? "";
+    var initialType = ViewBag.type as string ?? "";
+    var callbackName = ViewBag.callback as string ?? "";
+    var isMultiSelect = ViewBag.multiSelect is bool m && m;
+    var attachBaseUrl = ViewBag.attachBaseUrl as string ?? "/userfiles";
+    var appBase = Url.Content("~").TrimEnd('/');
+}
+
+<style>
+    .attach-page {
+        padding: 16px;
+        background: #f3f6f9;
+        min-height: calc(100vh - 20px);
+    }
+
+    .attach-layout {
+        display: flex;
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    /* Sidebar Folder Panel */
+    .attach-sidebar {
+        width: 264px;
+        min-width: 240px;
+        flex-shrink: 0;
+        background: #ffffff;
+        border: 1px solid #e5e9f0;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .attach-panel-head {
+        padding: 14px 16px;
+        border-bottom: 1px solid #eef1f6;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #fafbfd;
+    }
+
+    .attach-panel-title {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: #1e293b;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .attach-panel-title i {
+        color: #1ab394;
+    }
+
+    .attach-icon-btn {
+        width: 28px;
+        height: 28px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        color: #64748b;
+        border-radius: 6px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s ease;
+    }
+
+    .attach-icon-btn:hover {
+        border-color: #1ab394;
+        color: #1ab394;
+        background: #f0fdfa;
+    }
+
+    .attach-tree-body {
+        padding: 12px;
+        flex: 1;
+        min-height: 560px;
+        max-height: calc(100vh - 110px);
+        overflow-y: auto;
+    }
+
+    .attach-tree-body .jstree-default .jstree-wholerow-clicked {
+        background: linear-gradient(90deg, rgba(26, 179, 148, 0.14), rgba(26, 179, 148, 0.06)) !important;
+        border-radius: 6px;
+    }
+
+    .attach-tree-body .jstree-default .jstree-wholerow-hovered {
+        background: #f1f5f9 !important;
+        border-radius: 6px;
+    }
+
+    .attach-tree-body .jstree-default .jstree-clicked {
+        color: #0f766e !important;
+        font-weight: 600;
+    }
+
+    .attach-tree-body .jstree-default .jstree-icon.fa-folder,
+    .attach-tree-body .jstree-default .jstree-icon.fa-folder-open {
+        color: #f59e0b;
+    }
+
+    /* Main Workspace Panel */
+    .attach-main {
+        flex: 1;
+        min-width: 0;
+        background: #ffffff;
+        border: 1px solid #e5e9f0;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    /* Picker Mode Banner */
+    .attach-picker-bar {
+        display: none;
+        padding: 10px 18px;
+        background: linear-gradient(90deg, #ecfdf5 0%, #f0f9ff 100%);
+        border-bottom: 1px solid #a7f3d0;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .attach-picker-bar.is-visible {
+        display: flex;
+    }
+
+    .attach-picker-hint {
+        font-size: 13px;
+        color: #065f46;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 500;
+    }
+
+    .attach-picker-actions {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .attach-selected-badge {
+        display: none;
+        padding: 3px 10px;
+        border-radius: 999px;
+        background: #d1fae5;
+        color: #047857;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    /* Toolbar */
+    .attach-toolbar {
+        padding: 12px 18px;
+        border-bottom: 1px solid #eef1f6;
+        background: #fafbfd;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .attach-toolbar-left,
+    .attach-toolbar-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .attach-btn {
+        height: 32px;
+        padding: 0 12px;
+        border-radius: 7px;
+        border: 1px solid #dce3ec;
+        background: #ffffff;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        transition: all 0.16s ease;
+    }
+
+    .attach-btn:hover {
+        border-color: #94a3b8;
+        background: #f8fafc;
+        color: #0f172a;
+    }
+
+    .attach-btn-primary {
+        background: #1ab394;
+        border-color: #1ab394;
+        color: #ffffff;
+    }
+
+    .attach-btn-primary:hover {
+        background: #159a7e;
+        border-color: #159a7e;
+        color: #ffffff;
+        box-shadow: 0 3px 10px rgba(26, 179, 148, 0.28);
+    }
+
+    .attach-btn-accent {
+        background: #0ea5e9;
+        border-color: #0ea5e9;
+        color: #ffffff;
+    }
+
+    .attach-btn-accent:hover {
+        background: #0284c7;
+        border-color: #0284c7;
+        color: #ffffff;
+    }
+
+    .attach-btn-danger:hover {
+        background: #fef2f2;
+        border-color: #fca5a5;
+        color: #dc2626;
+    }
+
+    .attach-btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .attach-search-box {
+        position: relative;
+        width: 190px;
+    }
+
+    .attach-search-box i {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 13px;
+        pointer-events: none;
+    }
+
+    .attach-search-box input {
+        width: 100%;
+        height: 32px;
+        padding: 0 10px 0 30px;
+        border: 1px solid #dce3ec;
+        border-radius: 7px;
+        font-size: 13px;
+        color: #1e293b;
+        background: #ffffff;
+        outline: none;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .attach-search-box input:focus {
+        border-color: #1ab394;
+        box-shadow: 0 0 0 3px rgba(26, 179, 148, 0.14);
+    }
+
+    .attach-view-toggle {
+        display: inline-flex;
+        border: 1px solid #dce3ec;
+        border-radius: 7px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .attach-view-toggle button {
+        width: 32px;
+        height: 30px;
+        border: none;
+        background: transparent;
+        color: #64748b;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .attach-view-toggle button.active {
+        background: #1ab394;
+        color: #ffffff;
+    }
+
+    /* Breadcrumb + Filter Bar */
+    .attach-subbar {
+        padding: 10px 18px;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        background: #ffffff;
+    }
+
+    .attach-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        font-size: 13px;
+        color: #64748b;
+    }
+
+    .attach-crumb-link {
+        color: #334155;
+        cursor: pointer;
+        padding: 2px 7px;
+        border-radius: 5px;
+        transition: background 0.15s ease, color 0.15s ease;
+        text-decoration: none;
+    }
+
+    .attach-crumb-link:hover {
+        background: #f1f5f9;
+        color: #0f766e;
+    }
+
+    .attach-crumb-current {
+        color: #0f766e;
+        font-weight: 600;
+        padding: 2px 7px;
+        border-radius: 5px;
+        background: #f0fdfa;
+    }
+
+    .attach-filter-pills {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    .attach-pill {
+        height: 26px;
+        padding: 0 11px;
+        border-radius: 999px;
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        color: #475569;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+
+    .attach-pill:hover {
+        border-color: #cbd5e1;
+        color: #0f172a;
+    }
+
+    .attach-pill.active {
+        background: #0f766e;
+        border-color: #0f766e;
+        color: #ffffff;
+    }
+
+    .attach-count-text {
+        font-size: 12px;
+        color: #94a3b8;
+        margin-left: 4px;
+    }
+
+    /* File Stage */
+    .attach-stage {
+        position: relative;
+        flex: 1;
+        min-height: 520px;
+        max-height: calc(100vh - 205px);
+        overflow-y: auto;
+        padding: 18px;
+        background: #ffffff;
+    }
+
+    /* Drag & Drop Overlay */
+    #dropOverlay {
+        display: none;
+        position: absolute;
+        inset: 12px;
+        background: rgba(240, 253, 250, 0.92);
+        border: 2px dashed #1ab394;
+        border-radius: 12px;
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 10px;
+        color: #0f766e;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    #dropOverlay.is-visible {
+        display: flex;
+    }
+
+    /* Grid View */
+    .attach-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 14px;
+    }
+
+    .file-card {
+        position: relative;
+        background: #ffffff;
+        border: 1px solid #e5e9f0;
+        border-radius: 10px;
+        padding: 10px;
+        cursor: pointer;
+        transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+        user-select: none;
+    }
+
+    .file-card:hover {
+        transform: translateY(-2px);
+        border-color: #cbd5e1;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    }
+
+    .file-card.active,
+    .file-card.selected {
+        border-color: #1ab394;
+        background: #f0fdfa;
+        box-shadow: 0 0 0 2px rgba(26, 179, 148, 0.22);
+    }
+
+    .file-thumb {
+        position: relative;
+        height: 104px;
+        border-radius: 7px;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 9px;
+        background: #f8fafc;
+    }
+
+    .file-thumb.is-image-bg {
+        background-image:
+            linear-gradient(45deg, #f1f5f9 25%, transparent 25%),
+            linear-gradient(-45deg, #f1f5f9 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #f1f5f9 75%),
+            linear-gradient(-45deg, transparent 75%, #f1f5f9 75%);
+        background-size: 14px 14px;
+        background-position: 0 0, 0 7px, 7px -7px, -7px 0;
+        background-color: #ffffff;
+    }
+
+    .file-thumb img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+    .file-thumb > i {
+        font-size: 44px;
+    }
+
+    .file-type-tag {
+        position: absolute;
+        left: 6px;
+        bottom: 6px;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        background: rgba(15, 23, 42, 0.68);
+        color: #ffffff;
+    }
+
+    .file-quick-actions {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        display: flex;
+        gap: 5px;
+        opacity: 0;
+        transform: translateY(-2px);
+        transition: opacity 0.16s ease, transform 0.16s ease;
+        z-index: 3;
+    }
+
+    .file-card:hover .file-quick-actions {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .file-quick-btn {
+        width: 26px;
+        height: 26px;
+        padding: 0;
+        border-radius: 6px;
+        border: 1px solid rgba(255, 255, 255, 0.28);
+        color: #ffffff;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.22);
+        transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease;
+    }
+
+    .file-quick-btn i {
+        font-size: 12px !important;
+        line-height: 1;
+    }
+
+    .file-quick-btn:hover {
+        transform: scale(1.08);
+        filter: brightness(1.06);
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.28);
+    }
+
+    .file-quick-btn.is-preview {
+        background: rgba(16, 185, 129, 0.92);
+    }
+
+    .file-quick-btn.is-edit {
+        background: rgba(14, 165, 233, 0.92);
+    }
+
+    .file-quick-btn.is-copy {
+        background: rgba(245, 158, 11, 0.92);
+    }
+
+    .attach-icon-btn.is-preview { color: #059669; border-color: #a7f3d0; background: #ecfdf5; }
+    .attach-icon-btn.is-preview:hover { color: #fff; border-color: #10b981; background: #10b981; }
+    .attach-icon-btn.is-edit { color: #0284c7; border-color: #bae6fd; background: #f0f9ff; }
+    .attach-icon-btn.is-edit:hover { color: #fff; border-color: #0ea5e9; background: #0ea5e9; }
+    .attach-icon-btn.is-copy { color: #d97706; border-color: #fde68a; background: #fffbeb; }
+    .attach-icon-btn.is-copy:hover { color: #fff; border-color: #f59e0b; background: #f59e0b; }
+
+    .file-card .multi-check {
+        display: none;
+        position: absolute;
+        top: 8px;
+        left: 8px;
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        border: 2px solid #cbd5e1;
+        background: rgba(255, 255, 255, 0.92);
+        color: #ffffff;
+        font-size: 11px;
+        align-items: center;
+        justify-content: center;
+        z-index: 4;
+    }
+
+    .multi-select-mode .file-card .multi-check {
+        display: inline-flex;
+    }
+
+    .file-card.selected .multi-check {
+        background: #1ab394;
+        border-color: #1ab394;
+    }
+
+    .file-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: #1e293b;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-bottom: 2px;
+    }
+
+    .file-meta {
+        font-size: 11px;
+        color: #94a3b8;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    /* List View */
+    .attach-list-head {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr) 90px 100px 160px 110px;
+        align-items: center;
+        padding: 9px 14px;
+        background: #f8fafc;
+        border: 1px solid #eef1f6;
+        border-radius: 8px 8px 0 0;
+        font-size: 12px;
+        font-weight: 600;
+        color: #64748b;
+    }
+
+    .file-list-row {
+        display: grid;
+        grid-template-columns: 44px minmax(0, 1fr) 90px 100px 160px 110px;
+        align-items: center;
+        padding: 9px 14px;
+        border: 1px solid #eef1f6;
+        border-top: none;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+        user-select: none;
+    }
+
+    .file-list-row:hover {
+        background: #f8fafc;
+    }
+
+    .file-list-row.active,
+    .file-list-row.selected {
+        background: #f0fdfa;
+    }
+
+    .file-list-thumb {
+        width: 34px;
+        height: 34px;
+        border-radius: 6px;
+        background: #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        font-size: 18px;
+    }
+
+    .file-list-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .file-list-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: #1e293b;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding-right: 12px;
+    }
+
+    .file-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 500;
+    }
+
+    .badge-folder { background: #fef3c7; color: #b45309; }
+    .badge-image { background: #dcfce7; color: #15803d; }
+    .badge-pdf { background: #fee2e2; color: #b91c1c; }
+    .badge-video { background: #e0f2fe; color: #0369a1; }
+    .badge-file { background: #f1f5f9; color: #475569; }
+
+    .attach-empty {
+        text-align: center;
+        padding: 72px 20px;
+        color: #94a3b8;
+    }
+
+    .attach-empty i {
+        font-size: 46px;
+        margin-bottom: 12px;
+        color: #cbd5e1;
+        display: block;
+    }
+
+    /* Context Menu */
+    .context-menu {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        min-width: 172px;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+        padding: 6px;
+        font-size: 13px;
+    }
+
+    .context-menu.show { display: block; }
+
+    .context-menu-item {
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        color: #334155;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: background-color 0.14s ease;
+    }
+
+    .context-menu-item:hover { background: #f1f5f9; color: #0f172a; }
+    .context-menu-item i { width: 16px; text-align: center; color: #64748b; }
+    .context-menu-item.text-danger { color: #dc2626; }
+    .context-menu-item.text-danger i { color: #dc2626; }
+    .context-menu-item.text-danger:hover { background: #fef2f2; }
+    .context-menu-item.text-success { color: #0f766e; font-weight: 600; }
+    .context-menu-item.text-success i { color: #1ab394; }
+    .context-menu-item.text-success:hover { background: #f0fdfa; }
+    .context-menu-divider { height: 1px; background: #eef1f6; margin: 5px 4px; }
+
+    @@media (max-width: 900px) {
+        .attach-layout { flex-direction: column; }
+        .attach-sidebar { width: 100%; }
+        .attach-tree-body { min-height: 180px; max-height: 240px; }
+        .attach-list-head, .file-list-row {
+            grid-template-columns: 40px minmax(0, 1fr) 85px 90px;
+        }
+        .attach-list-head > :nth-child(3),
+        .attach-list-head > :nth-child(5),
+        .file-list-row > :nth-child(3),
+        .file-list-row > :nth-child(5) { display: none; }
+    }
+</style>
+
+<!-- 右键菜单 -->
+<div id="contextMenu" class="context-menu">
+    <div class="context-menu-item text-success" id="ctxSelect" onclick="ctxConfirmSelect()">
+        <i class="fa fa-check-circle"></i> <span>确认选择</span>
+    </div>
+    <div class="context-menu-divider" id="ctxSelectDivider"></div>
+    <div class="context-menu-item" id="ctxOpen" onclick="ctxOpenFolder()">
+        <i class="fa fa-folder-open"></i> <span>打开文件夹</span>
+    </div>
+    <div class="context-menu-item" id="ctxPreview" onclick="ctxPreview()">
+        <i class="fa fa-eye"></i> <span id="ctxPreviewText">预览</span>
+    </div>
+    <div class="context-menu-item" id="ctxEditImage" onclick="ctxEditImage()">
+        <i class="fa fa-paint-brush"></i> <span>编辑图片</span>
+    </div>
+    <div class="context-menu-item" id="ctxDownload" onclick="ctxDownload()">
+        <i class="fa fa-download"></i> <span>下载文件</span>
+    </div>
+    <div class="context-menu-divider"></div>
+    <div class="context-menu-item" onclick="ctxRename()">
+        <i class="fa fa-pencil"></i> <span>重命名</span>
+    </div>
+    <div class="context-menu-item" onclick="ctxCopyLink()">
+        <i class="fa fa-link"></i> <span>复制链接</span>
+    </div>
+    <div class="context-menu-divider"></div>
+    <div class="context-menu-item text-danger" onclick="ctxDelete()">
+        <i class="fa fa-trash"></i> <span>删除</span>
+    </div>
+</div>
+
+<div class="attach-page">
+    <div class="attach-layout">
+        <!-- 左侧目录树 -->
+        <aside class="attach-sidebar">
+            <div class="attach-panel-head">
+                <h5 class="attach-panel-title"><i class="fa fa-folder-open"></i> 目录导航</h5>
+                <button type="button" class="attach-icon-btn" onclick="reloadDirectoryTree()" title="刷新目录树">
+                    <i class="fa fa-refresh"></i>
+                </button>
+            </div>
+            <div class="attach-tree-body">
+                <div id="folderTree"></div>
+            </div>
+        </aside>
+
+        <!-- 右侧文件区 -->
+        <section class="attach-main">
+            <!-- 选择器模式提示条 -->
+            <div id="pickerBar" class="attach-picker-bar">
+                <div class="attach-picker-hint">
+                    <i class="fa fa-check-circle" style="font-size:16px;color:#10b981;"></i>
+                    <span id="pickerHintText">选择模式：单击选中文件，双击或点击“确认选择”立即插入</span>
+                </div>
+                <div class="attach-picker-actions">
+                    <span class="attach-selected-badge" id="multiSelectCount">已选 0 个</span>
+                    <button type="button" class="attach-btn attach-btn-primary" id="btnConfirmSelect" onclick="confirmSelect()">
+                        <i class="fa fa-check"></i> 确认选择
+                    </button>
+                </div>
+            </div>
+
+            <!-- 操作工具栏 -->
+            <div class="attach-toolbar">
+                <div class="attach-toolbar-left">
+                    <button type="button" class="attach-btn attach-btn-primary" onclick="uploadFile()">
+                        <i class="fa fa-cloud-upload"></i> 上传文件
+                    </button>
+                    <button type="button" class="attach-btn" onclick="createFolder()">
+                        <i class="fa fa-folder-o"></i> 新建文件夹
+                    </button>
+                    <button type="button" class="attach-btn" id="btnEditImage" onclick="editImage()" disabled>
+                        <i class="fa fa-paint-brush"></i> 编辑图片
+                    </button>
+                    <button type="button" class="attach-btn" id="btnPreviewSelected" onclick="previewSelected()" disabled>
+                        <i class="fa fa-eye"></i> 预览
+                    </button>
+                    <button type="button" class="attach-btn" id="btnRename" onclick="renameFile()" disabled>
+                        <i class="fa fa-pencil"></i> 重命名
+                    </button>
+                    <button type="button" class="attach-btn" id="btnCopyLink" onclick="copyLink()" disabled>
+                        <i class="fa fa-link"></i> 复制链接
+                    </button>
+                    <button type="button" class="attach-btn attach-btn-danger" id="btnDelete" onclick="deleteSelected()" disabled>
+                        <i class="fa fa-trash"></i> 删除
+                    </button>
+                    <button type="button" class="attach-btn" onclick="refreshFiles()" title="刷新当前目录">
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                </div>
+                <div class="attach-toolbar-right">
+                    <div class="attach-search-box">
+                        <i class="fa fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="搜索当前目录..." oninput="applyFiltersAndRender()" />
+                    </div>
+                    <div class="attach-view-toggle">
+                        <button type="button" class="active" id="btnViewGrid" onclick="switchView('grid')" title="缩略图视图"><i class="fa fa-th-large"></i></button>
+                        <button type="button" id="btnViewList" onclick="switchView('list')" title="列表视图"><i class="fa fa-list"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 面包屑 + 类型筛选 -->
+            <div class="attach-subbar">
+                <div class="attach-breadcrumb" id="breadcrumbBar"></div>
+                <div class="attach-filter-pills" id="typeFilterBar">
+                    <button type="button" class="attach-pill active" data-filter="" onclick="setTypeFilter('')">全部</button>
+                    <button type="button" class="attach-pill" data-filter="image" onclick="setTypeFilter('image')">图片</button>
+                    <button type="button" class="attach-pill" data-filter="pdf" onclick="setTypeFilter('pdf')">PDF</button>
+                    <button type="button" class="attach-pill" data-filter="video" onclick="setTypeFilter('video')">视频</button>
+                    <span class="attach-count-text" id="fileCountLabel"></span>
+                </div>
+            </div>
+
+            <!-- 文件画布区 -->
+            <div class="attach-stage" id="fileContainer">
+                <div id="dropOverlay">
+                    <i class="fa fa-cloud-upload fa-3x"></i>
+                    <span>松开鼠标即可上传到当前目录</span>
+                </div>
+                <div id="fileList">
+                    <div class="attach-empty"><i class="fa fa-spinner fa-spin"></i>正在加载附件...</div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<input type="file" id="fileInput" multiple style="display:none" onchange="doUpload()" />
+
+<script>
+    var appBase = @COMCMS.Web.Common.SafeScriptJson.Serialize(appBase);
+    var attachBaseUrl = @COMCMS.Web.Common.SafeScriptJson.Serialize(attachBaseUrl);
+    var folders = @COMCMS.Web.Common.SafeScriptJson.FromRawJson(folderJson, "[]");
+    var fieldId = @COMCMS.Web.Common.SafeScriptJson.Serialize(fieldId);
+    var pickerMode = @COMCMS.Web.Common.SafeScriptJson.Serialize(mode);
+    var requiredType = @COMCMS.Web.Common.SafeScriptJson.Serialize(initialType);
+    var callbackFuncName = @COMCMS.Web.Common.SafeScriptJson.Serialize(callbackName);
+    var isMultiSelect = @(isMultiSelect ? "true" : "false");
+
+    var currentPath = "";
+    var selectedFile = null;
+    var selectedFiles = [];
+    var currentView = localStorage.getItem('COMCMS_Attach_View') || 'grid';
+    var activeTypeFilter = requiredType || '';
+    var currentFilesData = [];
+    var storageKey = 'COMCMS_Attach_LastPath';
+    var contextMenuFile = null;
+
+    function isJoditMode() {
+        return pickerMode === 'jodit';
+    }
+
+    function isSelectMode() {
+        return isJoditMode() || isMultiSelect || !!fieldId || !!callbackFuncName || pickerMode === 'select';
+    }
+
+    function buildFileUrl(file) {
+        if (!file) return '';
+        if (file.url) return appBase + file.url;
+        return appBase + attachBaseUrl + '/' + String(file.path || '').replace(/^\/+/, '');
+    }
+
+    $(function () {
+        if (currentView === 'list') {
+            $('#btnViewGrid').removeClass('active');
+            $('#btnViewList').addClass('active');
+        }
+
+        if (isSelectMode()) {
+            $('#pickerBar').addClass('is-visible');
+            if (isMultiSelect) {
+                $('#multiSelectCount').show();
+                $('#fileContainer').addClass('multi-select-mode');
+            }
+            var typeNames = { image: '图片', pdf: 'PDF 文档', video: '视频', file: '文件' };
+            if (requiredType && typeNames[requiredType]) {
+                $('#pickerHintText').text('当前为 ' + typeNames[requiredType] + ' 选择模式：单击选中，双击立即插入');
+                activeTypeFilter = requiredType;
+                syncFilterPills();
+            }
+        }
+
+        initTree();
+        renderBreadcrumb('');
+
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('.context-menu').length) {
+                hideContextMenu();
+            }
+            if (!$(e.target).closest('.file-card, .file-list-row, .attach-toolbar, .attach-picker-bar, .context-menu').length) {
+                clearSelection();
+            }
+        });
+
+        $(document).on('keydown', function (e) {
+            if (e.key === 'Escape') hideContextMenu();
+        });
+
+        // Drag and Drop upload
+        var $container = $('#fileContainer');
+        var $overlay = $('#dropOverlay');
+        var dragCounter = 0;
+
+        $container.on('dragenter', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter++;
+            $overlay.addClass('is-visible');
+        });
+        $container.on('dragover', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        });
+        $container.on('dragleave', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter = Math.max(0, dragCounter - 1);
+            if (dragCounter === 0) $overlay.removeClass('is-visible');
+        });
+        $container.on('drop', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            dragCounter = 0;
+            $overlay.removeClass('is-visible');
+            var files = e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.files;
+            if (files && files.length > 0) handleDroppedFiles(files);
+        });
+    });
+
+    function clearSelection() {
+        $('.file-card, .file-list-row').removeClass('active');
+        selectedFile = null;
+        updateToolbarButtons();
+    }
+
+    function updateToolbarButtons() {
+        var hasSelection = !!selectedFile;
+        var isFile = hasSelection && !selectedFile.isDir;
+        var isImage = isFile && selectedFile.type === 'image';
+        var canPreview = isFile && (selectedFile.type === 'image' || selectedFile.type === 'pdf' || selectedFile.type === 'video');
+
+        $('#btnEditImage').prop('disabled', !isImage).toggleClass('attach-btn-accent', isImage);
+        $('#btnPreviewSelected').prop('disabled', !canPreview);
+        $('#btnRename').prop('disabled', !hasSelection);
+        $('#btnCopyLink').prop('disabled', !isFile);
+        $('#btnDelete').prop('disabled', !hasSelection);
+    }
+
+    function switchView(view) {
+        currentView = view;
+        localStorage.setItem('COMCMS_Attach_View', view);
+        $('#btnViewGrid').toggleClass('active', view === 'grid');
+        $('#btnViewList').toggleClass('active', view === 'list');
+        applyFiltersAndRender();
+    }
+
+    function setTypeFilter(type) {
+        if (requiredType && type && type !== requiredType) {
+            layer.msg('当前选择模式限定为 ' + requiredType + ' 类型', { icon: 0 });
+            return;
+        }
+        activeTypeFilter = type;
+        syncFilterPills();
+        applyFiltersAndRender();
+    }
+
+    function syncFilterPills() {
+        $('#typeFilterBar .attach-pill').each(function () {
+            $(this).toggleClass('active', $(this).data('filter') === activeTypeFilter);
+        });
+    }
+
+    function renderBreadcrumb(path) {
+        var $bar = $('#breadcrumbBar').empty();
+        var parts = path ? path.split('/').filter(Boolean) : [];
+
+        if (parts.length === 0) {
+            $('<span class="attach-crumb-current"></span>').append('<i class="fa fa-home"></i> 根目录').appendTo($bar);
+            return;
+        }
+
+        $('<a class="attach-crumb-link" href="javascript:;"></a>')
+            .append('<i class="fa fa-home"></i> 根目录')
+            .on('click', function () { selectTreeNode(''); })
+            .appendTo($bar);
+
+        var accum = '';
+        parts.forEach(function (part, idx) {
+            $('<span style="color:#cbd5e1;">/</span>').appendTo($bar);
+            accum = accum ? (accum + '/' + part) : part;
+            var targetPath = accum;
+            if (idx === parts.length - 1) {
+                $('<span class="attach-crumb-current"></span>').text(part).appendTo($bar);
+            } else {
+                $('<a class="attach-crumb-link" href="javascript:;"></a>')
+                    .text(part)
+                    .on('click', function () { selectTreeNode(targetPath); })
+                    .appendTo($bar);
+            }
+        });
+    }
+
+    function initTree() {
+        var treeData = convertToJsTreeData(folders);
+        var rootNode = {
+            id: 'root',
+            text: '根目录',
+            state: { opened: true },
+            icon: 'fa fa-folder-open',
+            data: { path: '' },
+            children: treeData
+        };
+
+        $('#folderTree').jstree('destroy');
+        $('#folderTree').jstree({
+            core: { data: [rootNode], check_callback: true },
+            plugins: ['types', 'wholerow'],
+            types: { default: { icon: 'fa fa-folder' } }
+        }).on('select_node.jstree', function (e, data) {
+            var path = (data.node && data.node.data && data.node.data.path) ? data.node.data.path : '';
+            currentPath = path;
+            localStorage.setItem(storageKey, path);
+            renderBreadcrumb(path);
+            loadFiles(path);
+        }).on('ready.jstree', function (e, data) {
+            var lastPath = localStorage.getItem(storageKey);
+            var instance = data.instance;
+            var nodeToSelect = 'root';
+            if (lastPath && instance.get_node(lastPath)) {
+                nodeToSelect = lastPath;
+            }
+            instance.deselect_all();
+            instance.select_node(nodeToSelect);
+            if (nodeToSelect !== 'root') {
+                instance.open_node(instance.get_parent(nodeToSelect));
+            }
+        });
+    }
+
+    function reloadDirectoryTree() {
+        $.ajax({
+            url: appBase + '/AdminCP/Attach/GetDirList',
+            type: 'POST',
+            data: { subdir: '' },
+            success: function (res) {
+                if (res && res.code === 0) {
+                    folders = res.data || [];
+                    initTree();
+                } else {
+                    window.location.reload();
+                }
+            },
+            error: function () {
+                window.location.reload();
+            }
+        });
+    }
+
+    function selectTreeNode(path) {
+        var instance = $('#folderTree').jstree(true);
+        if (!instance) {
+            currentPath = path;
+            renderBreadcrumb(path);
+            loadFiles(path);
+            return;
+        }
+        var targetId = path || 'root';
+        if (instance.get_node(targetId)) {
+            instance.deselect_all();
+            instance.select_node(targetId);
+            instance.open_node(targetId);
+        } else {
+            currentPath = path;
+            renderBreadcrumb(path);
+            loadFiles(path);
+        }
+    }
+
+    function convertToJsTreeData(nodes) {
+        var data = [];
+        $.each(nodes || [], function (i, node) {
+            var item = {
+                id: node.path,
+                text: node.name,
+                icon: 'fa fa-folder',
+                data: { path: node.path },
+                children: []
+            };
+            if (node.subList && node.subList.length > 0) {
+                item.children = convertToJsTreeData(node.subList);
+            }
+            data.push(item);
+        });
+        return data;
+    }
+
+    function loadFiles(path) {
+        $('#fileList').html('<div class="attach-empty"><i class="fa fa-spinner fa-spin"></i>正在加载文件列表...</div>');
+        clearSelection();
+
+        $.ajax({
+            url: appBase + '/AdminCP/Attach/GetFileList',
+            type: 'POST',
+            data: { path: path },
+            success: function (res) {
+                if (res && res.code === 0) {
+                    currentFilesData = res.data || [];
+                    applyFiltersAndRender();
+                } else {
+                    layer.msg((res && res.message) || '加载失败', { icon: 2 });
+                }
+            },
+            error: function () {
+                layer.msg('加载文件列表失败', { icon: 2 });
+            }
+        });
+    }
+
+    function getFilteredFiles() {
+        var keyword = ($('#searchInput').val() || '').trim().toLowerCase();
+        var effectiveType = requiredType || activeTypeFilter;
+
+        return currentFilesData.filter(function (file) {
+            if (keyword && String(file.name || '').toLowerCase().indexOf(keyword) === -1) {
+                return false;
+            }
+            if (!file.isDir && effectiveType && file.type !== effectiveType) {
+                return false;
+            }
+            return true;
+        });
+    }
+
+    function applyFiltersAndRender() {
+        var files = getFilteredFiles();
+        $('#fileCountLabel').text('共 ' + files.length + ' 项');
+        renderFiles(files);
+    }
+
+    function createFileIconElement(file) {
+        if (file.isDir) return $('<i class="fa fa-folder" style="color:#f59e0b;"></i>');
+        if (file.type === 'image') return $('<img loading="lazy" />').attr('src', buildFileUrl(file)).attr('alt', file.name);
+        if (file.type === 'pdf') return $('<i class="fa fa-file-pdf-o" style="color:#ef4444;"></i>');
+        if (file.type === 'video') return $('<i class="fa fa-file-video-o" style="color:#0ea5e9;"></i>');
+        return $('<i class="fa fa-file-o" style="color:#64748b;"></i>');
+    }
+
+    function getTypeBadge(file) {
+        if (file.isDir) return $('<span class="file-badge badge-folder">文件夹</span>');
+        if (file.type === 'image') return $('<span class="file-badge badge-image">图片</span>');
+        if (file.type === 'pdf') return $('<span class="file-badge badge-pdf">PDF</span>');
+        if (file.type === 'video') return $('<span class="file-badge badge-video">视频</span>');
+        return $('<span class="file-badge badge-file">文件</span>');
+    }
+
+    function renderFiles(files) {
+        var $list = $('#fileList').empty();
+        if (!files || files.length === 0) {
+            $('<div class="attach-empty"></div>')
+                .append('<i class="fa fa-folder-open-o"></i>')
+                .append($('<div></div>').text(currentPath ? '当前目录暂无符合条件的文件，可点击上方“上传文件”或直接拖拽上传' : '暂无子目录或文件'))
+                .appendTo($list);
+            return;
+        }
+
+        if (currentView === 'grid') {
+            var $grid = $('<div class="attach-grid"></div>');
+            files.forEach(function (file) {
+                var isSelectedMulti = isMultiSelect && !file.isDir && selectedFiles.some(function (f) { return f.path === file.path; });
+                var $card = $('<div class="file-card"></div>');
+                if (isSelectedMulti) $card.addClass('selected');
+                if (selectedFile && selectedFile.path === file.path) $card.addClass('active');
+
+                if (!file.isDir) {
+                    $('<div class="multi-check"><i class="fa fa-check"></i></div>').appendTo($card);
+                }
+
+                var $thumb = $('<div class="file-thumb"></div>');
+                if (file.type === 'image') $thumb.addClass('is-image-bg');
+                $thumb.append(createFileIconElement(file));
+
+                if (!file.isDir && file.ext) {
+                    $('<span class="file-type-tag"></span>').text(file.ext.replace(/^\./, '')).appendTo($thumb);
+                }
+
+                // Quick hover action buttons
+                if (!file.isDir) {
+                    var $quick = $('<div class="file-quick-actions"></div>');
+                    if (file.type === 'image' || file.type === 'pdf' || file.type === 'video') {
+                        $('<button type="button" class="file-quick-btn is-preview" title="预览"><i class="fa fa-eye"></i></button>')
+                            .on('click', function (e) { e.stopPropagation(); previewFileItem(file); })
+                            .appendTo($quick);
+                    }
+                    if (file.type === 'image') {
+                        $('<button type="button" class="file-quick-btn is-edit" title="编辑图片"><i class="fa fa-paint-brush"></i></button>')
+                            .on('click', function (e) { e.stopPropagation(); openImageEditor(file.path); })
+                            .appendTo($quick);
+                    }
+                    $('<button type="button" class="file-quick-btn is-copy" title="复制链接"><i class="fa fa-link"></i></button>')
+                        .on('click', function (e) { e.stopPropagation(); copyTextToClipboard(buildFileUrl(file)); })
+                        .appendTo($quick);
+                    $thumb.append($quick);
+                }
+
+                $card.append($thumb);
+                $('<div class="file-name"></div>').attr('title', file.name).text(file.name).appendTo($card);
+
+                var $meta = $('<div class="file-meta"></div>');
+                $meta.append($('<span></span>').text(file.isDir ? '文件夹' : formatSize(file.size)));
+                if (file.updateTime) {
+                    $meta.append($('<span></span>').text(String(file.updateTime).replace('T', ' ').substring(5, 16)));
+                }
+                $card.append($meta);
+
+                $card.on('click', function (e) { e.stopPropagation(); handleItemClick(this, file); });
+                $card.on('dblclick', function (e) { e.stopPropagation(); handleItemDblClick(file); });
+                $card.on('contextmenu', function (e) { showContextMenu(e, file, this); return false; });
+
+                $grid.append($card);
+            });
+            $list.append($grid);
+        } else {
+            var $head = $('<div class="attach-list-head"></div>')
+                .append('<div></div><div>名称</div><div>类型</div><div style="text-align:right;">大小</div><div style="text-align:right;">修改时间</div><div style="text-align:right;">操作</div>');
+            $list.append($head);
+
+            files.forEach(function (file) {
+                var isSelectedMulti = isMultiSelect && !file.isDir && selectedFiles.some(function (f) { return f.path === file.path; });
+                var $row = $('<div class="file-list-row"></div>');
+                if (isSelectedMulti) $row.addClass('selected');
+                if (selectedFile && selectedFile.path === file.path) $row.addClass('active');
+
+                var $thumb = $('<div class="file-list-thumb"></div>').append(createFileIconElement(file));
+                var $name = $('<div class="file-list-name"></div>').attr('title', file.name).text(file.name);
+                var $type = $('<div></div>').append(getTypeBadge(file));
+                var $size = $('<div style="text-align:right;font-size:12px;color:#64748b;"></div>').text(file.isDir ? '-' : formatSize(file.size));
+                var $date = $('<div style="text-align:right;font-size:12px;color:#94a3b8;"></div>').text(file.updateTime ? String(file.updateTime).replace('T', ' ').substring(0, 16) : '-');
+                var $ops = $('<div style="text-align:right;display:flex;justify-content:flex-end;gap:4px;"></div>');
+
+                if (!file.isDir) {
+                    if (file.type === 'image' || file.type === 'pdf' || file.type === 'video') {
+                        $('<button type="button" class="attach-icon-btn is-preview" title="预览"><i class="fa fa-eye"></i></button>')
+                            .on('click', function (e) { e.stopPropagation(); previewFileItem(file); })
+                            .appendTo($ops);
+                    }
+                    if (file.type === 'image') {
+                        $('<button type="button" class="attach-icon-btn is-edit" title="编辑图片"><i class="fa fa-paint-brush"></i></button>')
+                            .on('click', function (e) { e.stopPropagation(); openImageEditor(file.path); })
+                            .appendTo($ops);
+                    }
+                    $('<button type="button" class="attach-icon-btn is-copy" title="复制链接"><i class="fa fa-link"></i></button>')
+                        .on('click', function (e) { e.stopPropagation(); copyTextToClipboard(buildFileUrl(file)); })
+                        .appendTo($ops);
+                }
+
+                $row.append($thumb, $name, $type, $size, $date, $ops);
+                $row.on('click', function (e) { e.stopPropagation(); handleItemClick(this, file); });
+                $row.on('dblclick', function (e) { e.stopPropagation(); handleItemDblClick(file); });
+                $row.on('contextmenu', function (e) { showContextMenu(e, file, this); return false; });
+                $list.append($row);
+            });
+        }
+    }
+
+    function handleItemClick(el, file) {
+        if (isMultiSelect && !file.isDir) {
+            var idx = selectedFiles.findIndex(function (f) { return f.path === file.path; });
+            if (idx > -1) {
+                selectedFiles.splice(idx, 1);
+                $(el).removeClass('selected');
+            } else {
+                selectedFiles.push(file);
+                $(el).addClass('selected');
+            }
+            $('#multiSelectCount').text('已选 ' + selectedFiles.length + ' 个');
+        }
+
+        $('.file-card, .file-list-row').removeClass('active');
+        $(el).addClass('active');
+        selectedFile = file;
+        updateToolbarButtons();
+    }
+
+    function handleItemDblClick(file) {
+        if (file.isDir) {
+            selectTreeNode(file.path);
+            return;
+        }
+        if (isSelectMode()) {
+            confirmSelectWithFiles([file]);
+            return;
+        }
+        previewFileItem(file);
+    }
+
+    function previewSelected() {
+        if (selectedFile && !selectedFile.isDir) {
+            previewFileItem(selectedFile);
+        }
+    }
+
+    function previewFileItem(file) {
+        if (!file || file.isDir) return;
+        if (file.type === 'pdf') {
+            var viewerUrl = appBase + '/AdminCP/Attach/PdfViewer?path=' + encodeURIComponent(file.path);
+            window.open(viewerUrl, '_blank');
+            return;
+        }
+        if (file.type === 'image') {
+            var images = currentFilesData.filter(function (f) { return !f.isDir && f.type === 'image'; });
+            var startIdx = 0;
+            var data = images.map(function (img, i) {
+                if (img.path === file.path) startIdx = i;
+                return { alt: img.name, pid: i, src: buildFileUrl(img), thumb: '' };
+            });
+            layer.photos({ photos: { title: '图片预览', id: 1, start: startIdx, data: data }, anim: 5 });
+            return;
+        }
+        window.open(buildFileUrl(file), '_blank');
+    }
+
+    function openImageEditor(path) {
+        var editorUrl = appBase + '/AdminCP/Attach/ImageEditor?path=' + encodeURIComponent(path);
+        window.open(editorUrl, '_blank');
+    }
+
+    function editImage() {
+        if (!selectedFile || selectedFile.isDir || selectedFile.type !== 'image') {
+            layer.msg('请先选择一张图片', { icon: 0 });
+            return;
+        }
+        openImageEditor(selectedFile.path);
+    }
+
+    function closePickerModal() {
+        try {
+            if (window.parent && window.parent !== window && window.parent.layer && window.name) {
+                var idx = window.parent.layer.getFrameIndex(window.name);
+                if (idx !== undefined && idx !== null) {
+                    window.parent.layer.close(idx);
+                    return;
+                }
+            }
+        } catch (e) { }
+        try { window.close(); } catch (e) { }
+    }
+
+    function confirmSelect() {
+        if (isMultiSelect) {
+            if (selectedFiles.length === 0) {
+                layer.msg('请先选择文件', { icon: 0 });
+                return;
+            }
+            confirmSelectWithFiles(selectedFiles);
+            return;
+        }
+        if (!selectedFile || selectedFile.isDir) {
+            layer.msg('请先选择一个文件', { icon: 0 });
+            return;
+        }
+        confirmSelectWithFiles([selectedFile]);
+    }
+
+    function confirmSelectWithFiles(files) {
+        var validFiles = (files || []).filter(function (f) { return f && !f.isDir; });
+        if (validFiles.length === 0) return;
+
+        if (requiredType) {
+            var mismatched = validFiles.some(function (f) { return f.type !== requiredType; });
+            if (mismatched) {
+                layer.msg('仅允许选择 ' + requiredType + ' 类型的文件', { icon: 2 });
+                return;
+            }
+        }
+
+        var items = validFiles.map(function (f) {
+            return {
+                url: buildFileUrl(f),
+                isImage: f.type === 'image',
+                name: f.name,
+                type: f.type
+            };
+        });
+
+        // 1. Jodit FileBrowser integration
+        if (isJoditMode()) {
+            try {
+                if (window.parent && window.parent !== window && window.parent.COMCMSEditor && typeof window.parent.COMCMSEditor.completeBrowserSelection === 'function') {
+                    window.parent.COMCMSEditor.completeBrowserSelection(items);
+                    closePickerModal();
+                    return;
+                }
+                if (window.opener && window.opener.COMCMSEditor && typeof window.opener.COMCMSEditor.completeBrowserSelection === 'function') {
+                    window.opener.COMCMSEditor.completeBrowserSelection(items);
+                    closePickerModal();
+                    return;
+                }
+            } catch (e) { }
+        }
+
+        // 2. Multi-select parent callback
+        if (isMultiSelect && window.parent && typeof window.parent.onMultiFilesSelected === 'function') {
+            window.parent.onMultiFilesSelected(items.map(function (x) { return x.url; }));
+            closePickerModal();
+            return;
+        }
+
+        var firstUrl = items[0].url;
+
+        // 3. fieldId parent callback
+        if (fieldId && window.parent && typeof window.parent.onFileSelected === 'function') {
+            window.parent.onFileSelected(fieldId, firstUrl);
+            closePickerModal();
+            return;
+        }
+
+        // 4. window.open callback (used by ImageEditor etc.)
+        if (callbackFuncName) {
+            try {
+                if (window.opener && typeof window.opener[callbackFuncName] === 'function') {
+                    window.opener[callbackFuncName](firstUrl);
+                    closePickerModal();
+                    return;
+                }
+            } catch (e) { }
+        }
+
+        copyTextToClipboard(firstUrl);
+    }
+
+    function createFolder() {
+        layer.prompt({ title: '请输入文件夹名称', formType: 0 }, function (text, index) {
+            layer.close(index);
+            $.ajax({
+                url: appBase + '/AdminCP/Attach/CreateDir',
+                type: 'POST',
+                data: { path: currentPath, name: text },
+                success: function (res) {
+                    if (res && res.code === 0) {
+                        layer.msg('创建成功', { icon: 1 });
+                        reloadDirectoryTree();
+                    } else {
+                        layer.msg((res && res.message) || '创建失败', { icon: 2 });
+                    }
+                }
+            });
+        });
+    }
+
+    function deleteFileItem(file) {
+        if (!file) return;
+        layer.confirm('确定要删除 "' + file.name + '" 吗？此操作不可恢复！', { icon: 3, title: '确认删除' }, function (index) {
+            layer.close(index);
+            $.ajax({
+                url: appBase + '/AdminCP/Attach/DeleteFile',
+                type: 'POST',
+                data: { path: file.path, isDir: file.isDir },
+                success: function (res) {
+                    if (res && res.code === 0) {
+                        layer.msg('删除成功', { icon: 1 });
+                        if (file.isDir) {
+                            reloadDirectoryTree();
+                        } else {
+                            refreshFiles();
+                        }
+                    } else {
+                        layer.msg((res && res.message) || '删除失败', { icon: 2 });
+                    }
+                }
+            });
+        });
+    }
+
+    function deleteSelected() {
+        if (!selectedFile) {
+            layer.msg('请先选择文件或文件夹', { icon: 0 });
+            return;
+        }
+        deleteFileItem(selectedFile);
+    }
+
+    function renameFileItem(file) {
+        if (!file) return;
+        layer.prompt({ title: '请输入新名称', formType: 0, value: file.name }, function (text, index) {
+            layer.close(index);
+            if (!text || text === file.name) return;
+            var loading = layer.load(1, { shade: [0.15, '#000'] });
+            $.ajax({
+                url: appBase + '/AdminCP/Attach/RenameFile',
+                type: 'POST',
+                data: { path: file.path, newName: text, isDir: file.isDir },
+                success: function (res) {
+                    layer.close(loading);
+                    if (res && res.code === 0) {
+                        layer.msg('重命名成功', { icon: 1 });
+                        if (file.isDir) {
+                            reloadDirectoryTree();
+                        } else {
+                            refreshFiles();
+                        }
+                    } else {
+                        layer.msg((res && res.message) || '重命名失败', { icon: 2 });
+                    }
+                },
+                error: function () {
+                    layer.close(loading);
+                    layer.msg('请求失败', { icon: 2 });
+                }
+            });
+        });
+    }
+
+    function renameFile() {
+        if (!selectedFile) {
+            layer.msg('请先选择文件或文件夹', { icon: 0 });
+            return;
+        }
+        renameFileItem(selectedFile);
+    }
+
+    function checkUploadPermission() {
+        if (!currentPath) {
+            layer.msg('根目录不允许直接上传文件，请先选择或新建子目录', { icon: 0 });
+            return false;
+        }
+        return true;
+    }
+
+    function uploadFile() {
+        if (!checkUploadPermission()) return;
+        $('#fileInput').click();
+    }
+
+    function doUpload() {
+        var files = $('#fileInput')[0].files;
+        if (!files || files.length === 0) return;
+        processUpload(files);
+    }
+
+    function handleDroppedFiles(files) {
+        if (!checkUploadPermission()) return;
+        processUpload(files);
+    }
+
+    function processUpload(files) {
+        var formData = new FormData();
+        for (var i = 0; i < files.length; i++) {
+            formData.append('files', files[i]);
+        }
+        formData.append('path', currentPath);
+
+        var loading = layer.load(1, { shade: [0.15, '#000'] });
+        $.ajax({
+            url: appBase + '/AdminCP/Attach/UploadFile',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                layer.close(loading);
+                $('#fileInput').val('');
+                if (res && res.code === 0) {
+                    layer.msg(res.message || '上传成功', { icon: 1 });
+                    refreshFiles();
+                } else {
+                    layer.msg((res && res.message) || '上传失败', { icon: 2, time: 3500 });
+                }
+            },
+            error: function () {
+                layer.close(loading);
+                $('#fileInput').val('');
+                layer.msg('上传请求出错', { icon: 2 });
+            }
+        });
+    }
+
+    function refreshFiles() {
+        loadFiles(currentPath);
+    }
+
+    function copyTextToClipboard(text) {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+                layer.msg('链接已复制', { icon: 1, time: 1500 });
+            }).catch(function () {
+                fallbackCopy(text);
+            });
+        } else {
+            fallbackCopy(text);
+        }
+    }
+
+    function fallbackCopy(text) {
+        var $temp = $('<input type="text" />').val(text).appendTo('body');
+        $temp[0].select();
+        document.execCommand('copy');
+        $temp.remove();
+        layer.msg('链接已复制', { icon: 1, time: 1500 });
+    }
+
+    function copyLink() {
+        if (!selectedFile || selectedFile.isDir) {
+            layer.msg('请选择一个文件', { icon: 0 });
+            return;
+        }
+        copyTextToClipboard(buildFileUrl(selectedFile));
+    }
+
+    function formatSize(bytes) {
+        if (!bytes) return '0 B';
+        var k = 1024;
+        var sizes = ['B', 'KB', 'MB', 'GB'];
+        var i = Math.min(sizes.length - 1, Math.floor(Math.log(bytes) / Math.log(k)));
+        return (bytes / Math.pow(k, i)).toFixed(i === 0 ? 0 : 1) + ' ' + sizes[i];
+    }
+
+    // ==================== 右键菜单 ====================
+    var $contextMenu = $('#contextMenu');
+
+    function hideContextMenu() {
+        $contextMenu.removeClass('show');
+        contextMenuFile = null;
+    }
+
+    function showContextMenu(e, file, el) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        contextMenuFile = file;
+        $('.file-card, .file-list-row').removeClass('active');
+        $(el).addClass('active');
+        selectedFile = file;
+        updateToolbarButtons();
+
+        var isDir = file.isDir;
+        var isImage = !isDir && file.type === 'image';
+        var isPdf = !isDir && file.type === 'pdf';
+        var isFile = !isDir;
+
+        var showSelect = isSelectMode() && isFile && (!requiredType || file.type === requiredType);
+        $('#ctxSelect, #ctxSelectDivider').toggle(showSelect);
+        $('#ctxOpen').toggle(isDir);
+        $('#ctxEditImage').toggle(isImage);
+        $('#ctxDownload').toggle(isFile);
+
+        if (isImage) {
+            $('#ctxPreview').show();
+            $('#ctxPreviewText').text('预览图片');
+        } else if (isPdf) {
+            $('#ctxPreview').show();
+            $('#ctxPreviewText').text('预览 PDF');
+        } else if (!isDir && file.type === 'video') {
+            $('#ctxPreview').show();
+            $('#ctxPreviewText').text('播放视频');
+        } else {
+            $('#ctxPreview').hide();
+        }
+
+        var menuW = 180;
+        var menuH = $contextMenu.outerHeight() || 240;
+        var posX = e.clientX;
+        var posY = e.clientY;
+        if (posX + menuW > window.innerWidth) posX = window.innerWidth - menuW - 10;
+        if (posY + menuH > window.innerHeight) posY = Math.max(10, posY - menuH);
+
+        $contextMenu.css({ left: posX + 'px', top: posY + 'px' }).addClass('show');
+    }
+
+    function ctxConfirmSelect() {
+        var f = contextMenuFile;
+        hideContextMenu();
+        if (f && !f.isDir) confirmSelectWithFiles([f]);
+    }
+
+    function ctxOpenFolder() {
+        var f = contextMenuFile;
+        hideContextMenu();
+        if (f && f.isDir) selectTreeNode(f.path);
+    }
+
+    function ctxPreview() {
+        var f = contextMenuFile;
+        hideContextMenu();
+        if (f && !f.isDir) previewFileItem(f);
+    }
+
+    function ctxEditImage() {
+        var f = contextMenuFile;
+        hideContextMenu();
+        if (f && !f.isDir && f.type === 'image') openImageEditor(f.path);
+    }
+
+    function ctxDownload() {
+        var f = contextMenuFile;
+        hideContextMenu();
+        if (!f || f.isDir) return;
+        var link = document.createElement('a');
+        link.href = buildFileUrl(f);
+        link.download = f.name;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function ctxRename() {
+        var f = contextMenuFile;
+        hideContextMenu();
+        if (f) renameFileItem(f);
+    }
+
+    function ctxCopyLink() {
+        var f = contextMenuFile;
+        hideContextMenu();
+        if (f && !f.isDir) copyTextToClipboard(buildFileUrl(f));
+    }
+
+    function ctxDelete() {
+        var f = contextMenuFile;
+        hideContextMenu();
+        if (f) deleteFileItem(f);
+    }
+</script>

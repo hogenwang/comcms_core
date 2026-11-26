@@ -3,59 +3,51 @@
     ViewBag.title = Model.TagName;
     ViewBag.keywords = Model.Keywords;
     ViewBag.description = Model.Description;
-
+    IList<TagsDetail> list = ViewBag.list as IList<TagsDetail>;
 }
 
-<div class="banner normal sec-banner">
-    <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-</div>
-<!-- mb banner -->
-<div class="banner mobile sec-banner">
-    <em style="background: url('/images/default/slide-1.jpg') center top no-repeat; background-size: 100%;"></em>
-</div>
-<div class="sec-nav">
-    <div class="cont">
-        <ul class="sec-nav-list">
-            <li class="sec-on">标签：@Model.TagName</li>
-        </ul>
-
-        <script type="text/javascript">
-            function mbSecNav() {
-                var num = $('.sec-nav-list li').length;
-                if (num >= 3) {
-                    $('.sec-nav-list li').css({ 'width': (640 / 3 / 100) + 'rem' });
-                } else if (num == 2) {
-                    $('.sec-nav-list li').css({ 'width': (640 / 2 / 100) + 'rem' });
-                } else if (num == 1) {
-                    $('.sec-nav-list li').css({ 'width': (213 / 100) + 'rem' });
-                }
-            }
-        </script>
+<section class="tech-page-hero" style="background-image: url('/images/tech/inner-banner.svg');">
+    <div class="tech-container tech-page-hero-inner">
+        <div class="tech-breadcrumb">
+            <a href="/"><i class="fa fa-home"></i> 首页</a>
+            <span>/</span>
+            <a href="/Tag">TAG标签</a>
+            <span>/</span>
+            <span>@Model.TagName</span>
+        </div>
+        <h1>标签：@Model.TagName</h1>
+        <p>共聚合 @(ViewBag.totalCount ?? 0) 篇相关内容</p>
     </div>
-</div>
+</section>
 
-
-<div class="content newsC">
-    <div class="news-bg">
-        <div class="cont">
-            <ul class="tag-list">
-                @foreach (TagsDetail a in ViewBag.list)
+<section class="tech-section tech-section-alt">
+    <div class="tech-container">
+        @if (list != null && list.Count > 0)
+        {
+            <div class="tech-article-list">
+                @foreach (TagsDetail a in list)
                 {
-                    <li>
-                        <a href="@ViewsHelper.EchoArticleURL(a.RId)" title="@a.Title">
-                            @a.Title
-                        </a>
-                    </li>
+                    <a href="@ViewsHelper.EchoArticleURL(a.RId)" title="@a.Title" class="tech-article-item no-thumb">
+                        <div class="tech-article-body">
+                            <h3 style="margin-bottom:8px;">@a.Title</h3>
+                            <div class="tech-article-meta">
+                                <span><i class="fa fa-tag"></i> @Model.TagName</span>
+                                <span class="tech-card-link">查看内容 <i class="fa fa-long-arrow-right"></i></span>
+                            </div>
+                        </div>
+                    </a>
                 }
-                @if (ViewBag.list == null || ViewBag.list.Count < 1)
-                {
-                    <li>暂无相关记录...</li>
-                }
-            </ul>
-            <div class="normal">
-                @Html.Raw(Pages.GetPageStr(ViewBag.pagesize, (int)ViewBag.totalCount, ViewBag.page, "/tag/"+Model.TagName+"/{0}", 3, 10, ""))
             </div>
-            <!-- 点击加载更多 -->
+        }
+        else
+        {
+            <div class="tech-prose-card" style="text-align:center;color:var(--tech-text-muted);">
+                <p style="margin:0;">暂无相关内容记录</p>
+            </div>
+        }
+
+        <div class="tech-pagination">
+            @Html.Raw(Pages.GetPageStr(ViewBag.pagesize, (int)ViewBag.totalCount, ViewBag.page, "/tag/" + Model.TagName + "/{0}", 3, 10, ""))
         </div>
     </div>
-</div>
+</section>

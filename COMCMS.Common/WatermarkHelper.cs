@@ -1,11 +1,6 @@
-﻿using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System;
 using System.IO;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
+using SkiaSharp;
 
 namespace COMCMS.Common
 {
@@ -14,140 +9,91 @@ namespace COMCMS.Common
     /// </summary>
     public class WatermarkHelper
     {
-
-        #region 加图片水印
         /// <summary>
-        /// 加图片水印
+        /// 加图片水印（完整释放 SkiaSharp 原生资源并正确应用透明度与压缩质量）
         /// </summary>
-        /// <p
-        /// <param name="filename">文件名</param>
-        /// <param name="watermarkFilename">水印文件名</param>
-        /// <param name="watermarkStatus">图片水印位置</param>
         public static void AddImageSignPic(string copyfullpath, string filename, string watermarkFilename, int watermarkStatus, int quality, int watermarkTransparency)
         {
-            var img = SKBitmap.Decode(copyfullpath);
-            using SKCanvas canvas = new(img);
+            using var img = SKBitmap.Decode(copyfullpath);
+            if (img == null) return;
 
-            //设置高质量插值法
-            //g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.High;
-            //设置高质量,低速度呈现平滑程度
-            //g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            var watermarkBitmap = SKBitmap.Decode(watermarkFilename);
-            SKImage watermark = SKImage.FromBitmap(watermarkBitmap);
+            using var watermarkBitmap = SKBitmap.Decode(watermarkFilename);
+            if (watermarkBitmap == null) return;
 
-            if (watermark.Height >= img.Height || watermark.Width >= img.Width)
+            using var watermark = SKImage.FromBitmap(watermarkBitmap);
+            if (watermark == null || watermark.Height >= img.Height || watermark.Width >= img.Width)
                 return;
+
+            using var canvas = new SKCanvas(img);
 
             int xpos = 0;
             int ypos = 0;
-
             switch (watermarkStatus)
             {
                 case 1:
-                    xpos = (int)(img.Width * (float).01);
-                    ypos = (int)(img.Height * (float).01);
+                    xpos = (int)(img.Width * 0.01f);
+                    ypos = (int)(img.Height * 0.01f);
                     break;
                 case 2:
-                    xpos = (int)((img.Width * (float).50) - (watermark.Width / 2));
-                    ypos = (int)(img.Height * (float).01);
+                    xpos = (int)((img.Width * 0.50f) - (watermark.Width / 2f));
+                    ypos = (int)(img.Height * 0.01f);
                     break;
                 case 3:
-                    xpos = (int)((img.Width * (float).99) - (watermark.Width));
-                    ypos = (int)(img.Height * (float).01);
+                    xpos = (int)((img.Width * 0.99f) - watermark.Width);
+                    ypos = (int)(img.Height * 0.01f);
                     break;
                 case 4:
-                    xpos = (int)(img.Width * (float).01);
-                    ypos = (int)((img.Height * (float).50) - (watermark.Height / 2));
+                    xpos = (int)(img.Width * 0.01f);
+                    ypos = (int)((img.Height * 0.50f) - (watermark.Height / 2f));
                     break;
                 case 5:
-                    xpos = (int)((img.Width * (float).50) - (watermark.Width / 2));
-                    ypos = (int)((img.Height * (float).50) - (watermark.Height / 2));
+                    xpos = (int)((img.Width * 0.50f) - (watermark.Width / 2f));
+                    ypos = (int)((img.Height * 0.50f) - (watermark.Height / 2f));
                     break;
                 case 6:
-                    xpos = (int)((img.Width * (float).99) - (watermark.Width));
-                    ypos = (int)((img.Height * (float).50) - (watermark.Height / 2));
+                    xpos = (int)((img.Width * 0.99f) - watermark.Width);
+                    ypos = (int)((img.Height * 0.50f) - (watermark.Height / 2f));
                     break;
                 case 7:
-                    xpos = (int)(img.Width * (float).01);
-                    ypos = (int)((img.Height * (float).99) - watermark.Height);
+                    xpos = (int)(img.Width * 0.01f);
+                    ypos = (int)((img.Height * 0.99f) - watermark.Height);
                     break;
                 case 8:
-                    xpos = (int)((img.Width * (float).50) - (watermark.Width / 2));
-                    ypos = (int)((img.Height * (float).99) - watermark.Height);
+                    xpos = (int)((img.Width * 0.50f) - (watermark.Width / 2f));
+                    ypos = (int)((img.Height * 0.99f) - watermark.Height);
                     break;
                 case 9:
-                    xpos = (int)((img.Width * (float).99) - (watermark.Width));
-                    ypos = (int)((img.Height * (float).99) - watermark.Height);
+                default:
+                    xpos = (int)((img.Width * 0.99f) - watermark.Width);
+                    ypos = (int)((img.Height * 0.99f) - watermark.Height);
                     break;
             }
-            SKPoint point = new SKPoint()
+
+            byte alpha = watermarkTransparency is >= 1 and <= 10
+                ? (byte)Math.Clamp(watermarkTransparency * 25, 25, 255)
+                : (byte)255;
+
+            using var paint = new SKPaint
             {
-                X = xpos,
-                Y = ypos
+                Color = SKColors.White.WithAlpha(alpha)
+            };
+            canvas.DrawImage(watermark, new SKPoint(Math.Max(0, xpos), Math.Max(0, ypos)), SKSamplingOptions.Default, paint);
+            canvas.Flush();
+
+            int safeQuality = quality is >= 1 and <= 100 ? quality : 90;
+            SKEncodedImageFormat imgType = Utils.GetFileExtName(filename).ToLowerInvariant() switch
+            {
+                ".jpg" or ".jpeg" => SKEncodedImageFormat.Jpeg,
+                ".png" => SKEncodedImageFormat.Png,
+                ".gif" => SKEncodedImageFormat.Gif,
+                ".webp" => SKEncodedImageFormat.Webp,
+                ".bmp" => SKEncodedImageFormat.Bmp,
+                _ => SKEncodedImageFormat.Png
             };
 
-            canvas.DrawImage(watermark, point);
-
-            //var newImg = SKImage.fo originalImage.Resize(new SKSizeI(towidth, toheight), SKFilterQuality.Medium);
-            //canvas.
-            using var fs = new FileStream(filename, FileMode.Create);
-            SKEncodedImageFormat imgType = new SKEncodedImageFormat();
-            string sFullExtension = Utils.GetFileExtName(filename).ToLower();//扩展名
-            switch (sFullExtension)
-            {
-                case ".jpg":
-                case ".jpeg":
-                    imgType = SKEncodedImageFormat.Jpeg;
-                    break;
-                case ".png":
-                    imgType = SKEncodedImageFormat.Png;
-                    break;
-                case ".gif":
-                    imgType = SKEncodedImageFormat.Gif;
-                    break;
-                case ".webp":
-                    imgType = SKEncodedImageFormat.Webp;
-                    break;
-                case ".bmp":
-                    imgType = SKEncodedImageFormat.Bmp;
-                    break;
-                default:
-                    imgType = SKEncodedImageFormat.Png;
-                    break;
-            }
-            img.Encode(fs, imgType, 100);
+            using var fs = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
+            img.Encode(fs, imgType, safeQuality);
             fs.Flush();
-
-
-            ////g.DrawImage(watermark, new Rectangle(xpos, ypos, watermark.Width, watermark.Height), 0, 0, watermark.Width, watermark.Height, GraphicsUnit.Pixel, imageAttributes);
-
-            //ImageCodecInfo[] codecs = ImageCodecInfo.GetImageEncoders();
-            //ImageCodecInfo ici = null;
-            //foreach (ImageCodecInfo codec in codecs)
-            //{
-            //    if (codec.MimeType.IndexOf("jpeg") > -1)
-            //        ici = codec;
-            //}
-            //EncoderParameters encoderParams = new EncoderParameters();
-            //long[] qualityParam = new long[1];
-            //if (quality < 0 || quality > 100)
-            //    quality = 80;
-
-            //qualityParam[0] = quality;
-
-            //EncoderParameter encoderParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, qualityParam);
-            //encoderParams.Param[0] = encoderParam;
-
-            //if (ici != null)
-            //    img.Save(filename, ici, encoderParams);
-            //else
-            //    img.Save(filename);
-
-            img.Dispose();
-            watermark.Dispose();
         }
-
-        #endregion
-
     }
 }

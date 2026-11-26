@@ -132,7 +132,12 @@ namespace COMCMS.Web.Controllers.api
             string rtimeStamp = Utils.GetTimeStamp();
 
             //创建请求统一订单接口参数
-            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(TenPayV3Info.AppId, TenPayV3Info.MchId, entity.Title, model.OrderNum, (int)(entity.TotalPay * 100), Utils.GetIP(), TenPayV3Info.TenPayV3Notify,  Senparc.Weixin.TenPay.TenPayV3Type.JSAPI, my.WeixinAppOpenId, TenPayV3Info.Key, nonceStr);
+            if (entity.TotalPay <= 0)
+            {
+                return BadRequest(new ReJson(40000, "订单支付金额无效！"));
+            }
+            var totalFeeFen = (int)Math.Round(entity.TotalPay * 100m, MidpointRounding.AwayFromZero);
+            var xmlDataInfo = new TenPayV3UnifiedorderRequestData(TenPayV3Info.AppId, TenPayV3Info.MchId, entity.Title, model.OrderNum, totalFeeFen, Utils.GetIP(), TenPayV3Info.TenPayV3Notify, Senparc.Weixin.TenPay.TenPayV3Type.JSAPI, my.WeixinAppOpenId, TenPayV3Info.Key, nonceStr);
 
                 //调用统一订单接口
                 var result = TenPayV3.Unifiedorder(xmlDataInfo);

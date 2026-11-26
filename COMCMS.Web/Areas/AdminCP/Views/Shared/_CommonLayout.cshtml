@@ -1,63 +1,53 @@
 ﻿<!DOCTYPE html>
-
-<html>
+<html lang="zh-CN">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewBag.title</title>
-    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/hplus/css/style.css" rel="stylesheet" />
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('comcms_admin_theme') === 'dark' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', t);
+                document.documentElement.setAttribute('data-bs-theme', t);
+            } catch (e) { }
+        })();
+    </script>
+    <link href="~/lib/bootstrap5/bootstrap.min.css" rel="stylesheet" />
     <link href="~/hplus/css/font-awesome.min.css" rel="stylesheet" />
     <link href="~/hplus/css/animate.min.css" rel="stylesheet" />
     <link href="~/hplus/js/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
-    <link href="~/hplus/css/plugins/iCheck/custom.css" rel="stylesheet" />
     <link href="~/js/treegrid/jquery.treegrid.css" rel="stylesheet" />
-    <link href="~/js/webuploader/webuploader.css" rel="stylesheet" />
-    <link href="~/js/bootstrap-colorpicker/css/bootstrap-colorpicker.css" rel="stylesheet" />
+    <link href="~/css/comcms-uploader.css" rel="stylesheet" asp-append-version="true" />
     <link href="~/js/jstree/themes/default/style.min.css" rel="stylesheet" />
     <link href="~/editor/jodit/jodit.min.css" rel="stylesheet" asp-append-version="true" />
-    <script src="~/js/my97/WdatePicker.js"></script>
-	<script src="~/js/jquery-3.min.js"></script>
+    <link href="~/css/admin-tokens.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/admin-bs3-compat.css" rel="stylesheet" asp-append-version="true" />
+    <link href="~/css/admin-modern.css" rel="stylesheet" asp-append-version="true" />
+    <script src="~/js/my97/WdatePicker.js" asp-append-version="true"></script>
+    <script src="~/js/jquery-3.min.js"></script>
+    <script src="~/lib/bootstrap5/bootstrap.bundle.min.js"></script>
     <environment names="Development">
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/validation/jquery.validate.js"></script>
-        <script src="~/js/validation/messages_zh.js"></script>
-        <script src="~/js/layer/layer.js"></script>
-        <script src="~/js/jquery.form.js"></script>
-        <script src="~/js/rtpost.js" asp-append-version="true"></script>
-        <script src="~/hplus/js/plugins/bootstrap-table/bootstrap-table.min.js" asp-append-version="true"></script>
-        <script src="~/hplus/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
-        <!-- Bootstrap table -->
-        <script src="~/js/treegrid/jquery.treegrid.min.js"></script>
-        <script src="~/js/treegrid/jquery.treegrid.bootstrap3.js"></script>
-        <script src="~/hplus/js/content.js?v=1.0.0"></script>
-        <script src="~/hplus/js/common.js"></script>
-        <script src="~/hplus/js/plugins/iCheck/icheck.min.js"></script>
-        <script src="~/js/webuploader/webuploader.min.js"></script>
-        <script src="~/js/uploader.js"></script>
-        <script src="~/js/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
-        <script src="~/js/jstree/jstree.min.js"></script>
     </environment>
     <environment names="Staging,Production">
-        <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
         <script src="~/js/validation/jquery.validate.min.js"></script>
-        <script src="~/js/validation/messages_zh.min.js"></script>
-        <script src="~/js/layer/layer.js"></script>
-        <script src="~/js/jquery.form.min.js"></script>
-        <script src="~/js/rtpost.js" asp-append-version="true"></script>
-        <script src="~/hplus/js/plugins/bootstrap-table/bootstrap-table.min.js" asp-append-version="true"></script>
-        <script src="~/hplus/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
-        <script src="~/js/treegrid/jquery.treegrid.min.js"></script>
-        <script src="~/js/treegrid/jquery.treegrid.bootstrap3.js"></script>
-        <script src="~/hplus/js/content.js?v=1.0.0"></script>
-        <script src="~/hplus/js/common.js"></script>
-        <script src="~/hplus/js/plugins/iCheck/icheck.min.js"></script>
-        <script src="~/js/webuploader/webuploader.min.js"></script>
-        <script src="~/js/uploader.js"></script>
-        <script src="~/js/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
-        <script src="~/js/jstree/jstree.min.js"></script>
     </environment>
+    <script src="~/js/validation/messages_zh.js"></script>
+    <script src="~/js/layer/layer.js"></script>
+    <script src="~/js/jquery.form.js"></script>
+    <script src="~/js/rtpost.js" asp-append-version="true"></script>
+    <script src="~/hplus/js/plugins/bootstrap-table/bootstrap-table.min.js" asp-append-version="true"></script>
+    <script src="~/hplus/js/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.min.js"></script>
+    <script src="~/js/treegrid/jquery.treegrid.min.js"></script>
+    <script src="~/js/treegrid/jquery.treegrid.fa.js" asp-append-version="true"></script>
+    <script src="~/hplus/js/content.js" asp-append-version="true"></script>
+    <script src="~/hplus/js/common.js" asp-append-version="true"></script>
+    <script src="~/js/comcms-uploader.js" asp-append-version="true"></script>
+    <script src="~/js/jstree/jstree.min.js"></script>
     <script src="~/editor/jodit/jodit.min.js" asp-append-version="true"></script>
     <script src="~/editor/jodit/comcms-editor.js" asp-append-version="true"></script>
+    <script src="~/js/admin-modern.js" asp-append-version="true"></script>
 </head>
 <body class="gray-bg">
     @Html.AntiForgeryToken()
@@ -66,16 +56,16 @@
         $.ajaxSetup({
             headers: { "RequestVerificationToken": $("input[name='__RequestVerificationToken']").first().val() }
         });
-        var index = window.name ? parent.layer.getFrameIndex(window.name) : null;
+        var index = (window.name && parent && parent.layer && typeof parent.layer.getFrameIndex === 'function')
+            ? parent.layer.getFrameIndex(window.name)
+            : null;
         function closethisdialog() {
-            parent.layer.close(index);
+            if (index !== null && index !== undefined && parent && parent.layer) {
+                parent.layer.close(index);
+            }
         }
         $(function () {
-            $('.i-checks').iCheck({
-                checkboxClass: 'icheckbox_square-green',
-                radioClass: 'iradio_square-green',
-            });
-            $(".my-preview").click(function () {
+            $(document).on("click", ".my-preview", function () {
                 var url = $(this).siblings(".upload-path").val();
                 if (url) {
                     var data = {
@@ -98,21 +88,8 @@
                         anim: 0
                     });
                 }
-            })
-        })
-        $("input").each(function (index, item) {
-            if ($(this).attr("placeholder") && $(this).attr("placeholder") != "") {
-                var tipstr = $(this).attr("placeholder");
-                var id = $(this).attr("id");
-                if (id) {
-                    $(this).on("focusin", function () {
-                        layer.tips(tipstr, '#' + id, {
-                            tips: [1, '#3595CC'] //还可配置颜色
-                        });
-                    });
-                }
-            }
-        })
+            });
+        });
     </script>
 </body>
 </html>
